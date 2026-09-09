@@ -2,7 +2,6 @@ parameters:
     level: 8
     paths:
         - packages
-        - apps/test-app/src
         - tests
     tmpDir: .phpstan-cache
     treatPhpDocTypesAsCertain: false

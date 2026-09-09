@@ -4,10 +4,10 @@ Nexum ist ein modularer, API-orientierter Backend-Baukasten auf Basis von PHP 8.
 
 ## Entwicklungsumgebung
 
-Die lokale Laufzeit wird vollständig durch Fabryq Harbor verwaltet. Die Harbor-Projektkonfiguration liegt unter `apps/.fabryq`; als Backend-Rolle ist dort direkt `test-app` eingetragen. Im Repository-Root werden weder ein Harbor-Verzeichnis noch ein künstlicher `backend`-Alias benötigt.
+Die lokale Laufzeit wird vollständig durch Fabryq Harbor verwaltet. Jede Anwendung ist ein eigenständiges Harbor-Projekt. Die Referenzumgebung liegt unter `apps/test-app`, ihre Harbor-Konfiguration unter `apps/test-app/.fabryq` und die frisch erzeugte Symfony-Anwendung unter `apps/test-app/app`. Dadurch können weitere Anwendungen mit eigenem Slug und eigener Laufzeit parallel daneben betrieben werden. Im Repository-Root liegen keine Harbor-Dateien.
 
 ```bash
-cd apps
+cd apps/test-app
 fabryq harbor build
 fabryq harbor up
 fabryq harbor ps
@@ -23,9 +23,9 @@ Nach dem Start:
 - Backend: `https://nexum-test-app.localhost/`
 - Mailpit: `https://tools.nexum-test-app.localhost/mp/`
 - phpMyAdmin: `https://tools.nexum-test-app.localhost/pma/`
-- Shell: `cd apps && fabryq harbor ssh php`
+- Shell: `cd apps/test-app && fabryq harbor ssh php`
 
-Harbor erzeugt `apps/test-app/.env.local` automatisch. Damit verwendet die Development-App MariaDB und Mailpit aus dem Harbor-Stack. Tests verwenden weiterhin eine isolierte SQLite-Datenbank.
+Harbor erzeugt `apps/test-app/app/.env.local` automatisch. Die Referenz-App beginnt bewusst als saubere Symfony-Anwendung; Nexum-Pakete werden anschließend wie bei einem echten Verbraucherprojekt installiert und konfiguriert.
 
 Der Composer-Lifecycle bereitet die bind-gemounteten Cache- und Logverzeichnisse automatisch für den lokalen PHP-Container vor. Das betrifft ausschließlich Development-Laufzeitordner; Produktionsrechte werden später über das jeweilige Deployment festgelegt.
 
@@ -58,6 +58,7 @@ composer cs:check
 - **health**: aggregierbare, fail-closed Health Checks
 - **management**: gemeinsame CLI-/API-Logik für Modulkonfigurationen
 - **search/notification/location/payment/reporting**: provider-neutrale optionale Fachverträge
-- `apps/test-app`: ausführbare Referenz-App für modulare und klassische Symfony-Strukturen
+- `apps/test-app`: isoliertes Harbor-Verbraucherprojekt mit einer frischen Symfony-App
+- `tests/Fixtures/Application`: interne Nexum-Testanwendung für Integrationstests
 
 Externe Provider – beispielsweise Stripe, S3, OpenSearch oder Push-Dienste – bleiben bewusst eigene Adapter. Das Framework erzwingt keine Anbieter-SDKs.

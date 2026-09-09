@@ -1,0 +1,101 @@
+server {
+  listen 80;
+  server_name ${SERVER_NAME};
+  resolver 127.0.0.11 ipv6=off valid=30s;
+
+  root ${APP_WEBROOT};
+  index index.php;
+
+  set $frontend_enabled ${FRONTEND_ENABLED};
+  set $frontend_flag 0;
+  if ($frontend_enabled = 1) { set $frontend_flag 1; }
+  set $frontend_upstream ${FRONTEND_UPSTREAM};
+  set $has_api_route ${HAS_API_ROUTE};
+
+  sub_filter_once off;
+  sub_filter_types text/html text/css application/javascript;
+
+  location ~ ^/index\.php(/|$) {
+    fastcgi_split_path_info ^(.+\.php)(/.*)$;
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME ${APP_WEBROOT}/index.php;
+    fastcgi_param SCRIPT_NAME     /index.php;
+    fastcgi_param PATH_INFO       $fastcgi_path_info;
+    fastcgi_param DOCUMENT_ROOT   ${APP_WEBROOT};
+    fastcgi_param HTTPS           off;
+    fastcgi_pass ${PHP_FPM_UPSTREAM};
+  }
+
+  location = /api {
+    if ($has_api_route = 0) { return 404; }
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME ${APP_WEBROOT}/index.php;
+    fastcgi_param SCRIPT_NAME     /api/index.php;
+    fastcgi_param PATH_INFO       /;
+    fastcgi_param DOCUMENT_ROOT   ${APP_WEBROOT};
+    fastcgi_param HTTPS           off;
+    fastcgi_pass ${PHP_FPM_UPSTREAM};
+  }
+
+  location ~ ^/api/(.*)$ {
+    if ($has_api_route = 0) { return 404; }
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME ${APP_WEBROOT}/index.php;
+    fastcgi_param SCRIPT_NAME     /api/index.php;
+    fastcgi_param PATH_INFO       /$1;
+    fastcgi_param DOCUMENT_ROOT   ${APP_WEBROOT};
+    fastcgi_param HTTPS           off;
+    fastcgi_pass ${PHP_FPM_UPSTREAM};
+  }
+
+  location ^~ /_wdt/      { try_files $uri /index.php$is_args$args; }
+  location ^~ /_profiler/ { try_files $uri /index.php$is_args$args; }
+  location ^~ /bundles/   { try_files $uri /index.php$is_args$args; }
+  location ^~ /build/     { try_files $uri /index.php$is_args$args; }
+  location ^~ /assets/    { try_files $uri /index.php$is_args$args; }
+
+  location ^~ /pma/ {
+    rewrite ^/pma/(.*)$ /$1 break;
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto http;
+    proxy_pass http://phpmyadmin:80/;
+    proxy_redirect off;
+    sub_filter 'href="/' 'href="/pma/';
+    sub_filter 'src="/'  'src="/pma/';
+  }
+
+  location = /mp {
+    return 301 /mp/;
+  }
+
+  location ^~ /mp/ {
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto http;
+    proxy_pass http://mailpit:8025;
+  }
+
+  location / {
+    error_page 418 = @frontend;
+    if ($frontend_flag = 1) { return 418; }
+    try_files $uri /index.php$is_args$args;
+  }
+
+  location @frontend {
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "upgrade";
+    proxy_set_header Host $host;
+    proxy_set_header X-Forwarded-Proto http;
+    proxy_pass $frontend_upstream$request_uri;
+  }
+
+  location ~ \.php$ {
+    if ($frontend_flag = 1) { return 404; }
+    fastcgi_split_path_info ^(.+\.php)(/.*)$;
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME ${APP_WEBROOT}$fastcgi_script_name;
+    fastcgi_param DOCUMENT_ROOT   ${APP_WEBROOT};
+    fastcgi_param HTTPS           off;
+    fastcgi_pass ${PHP_FPM_UPSTREAM};
+  }
+}

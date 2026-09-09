@@ -2,14 +2,5 @@
 /.idea/
 /.phpunit.cache/
 /.php-cs-fixer.cache
-/apps/test-app/vendor/
-/apps/test-app/var/
-/apps/test-app/storage/cache/*
-/apps/test-app/storage/logs/*
-/apps/test-app/storage/temp/*
-!/apps/test-app/storage/cache/.gitkeep
-!/apps/test-app/storage/logs/.gitkeep
-!/apps/test-app/storage/temp/.gitkeep
-/apps/.fabryq/harbor/runtime/
 /.deptrac.cache
 /.phpstan-cache/

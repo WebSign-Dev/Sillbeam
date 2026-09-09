@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 4,
+  "project": "Nexum Test App",
+  "slug": "nexum-test-app",
+  "createdWith": "1.0.0-beta.1",
+  "runtime": {
+    "php": {
+      "version": "8.4"
+    }
+  },
+  "stack": {
+    "backend": {
+      "type": "symfony",
+      "dir": "app",
+      "version": "7.4"
+    },
+    "frontend": {
+      "type": "none"
+    }
+  },
+  "services": {
+    "mailpit": true,
+    "phpmyadmin": true,
+    "elasticsearch": false,
+    "mercure": false
+  },
+  "routing": {
+    "entries": [
+      {
+        "id": "backend",
+        "target": "backend",
+        "host": "nexum-test-app.localhost",
+        "path": "/"
+      }
+    ]
+  }
+}
