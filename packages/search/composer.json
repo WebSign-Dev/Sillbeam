@@ -1,0 +1,9 @@
+{
+    "name": "nexum/search",
+    "description": "Provider-neutral search contracts and immutable result models.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {"php": "^8.4"},
+    "autoload": {"psr-4": {"Nexum\\Search\\": "src/"}},
+    "extra": {"branch-alias": {"dev-main": "0.1.x-dev"}}
+}
