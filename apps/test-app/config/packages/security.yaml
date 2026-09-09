@@ -1,0 +1,51 @@
+security:
+    password_hashers:
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: auto
+
+    providers:
+        nexum_users:
+            id: Nexum\User\Security\DoctrineUserProvider
+
+    firewalls:
+        dev:
+            pattern: ^/(_profiler|_wdt|assets|build)/
+            security: false
+
+        main:
+            lazy: true
+            stateless: true
+            provider: nexum_users
+            user_checker: Nexum\Security\Authentication\NexumUserChecker
+            entry_point: Nexum\Security\Http\ApiAuthenticationEntryPoint
+            access_denied_handler: Nexum\Security\Http\ApiAccessDeniedHandler
+
+            json_login:
+                check_path: nexum_security_token_issue
+                username_path: identifier
+                password_path: password
+                success_handler: Nexum\Security\Http\TokenAuthenticationSuccessHandler
+                failure_handler: Nexum\Security\Http\ApiAuthenticationFailureHandler
+
+            access_token:
+                token_handler: Nexum\Security\Authentication\AccessTokenHandler
+                failure_handler: Nexum\Security\Http\ApiAuthenticationFailureHandler
+
+            login_throttling:
+                max_attempts: 5
+                interval: '15 minutes'
+
+    access_control:
+        - { path: ^/api/auth/token$, roles: PUBLIC_ACCESS, methods: [POST], requires_channel: https }
+        - { path: ^/api/auth/mfa/verify$, roles: PUBLIC_ACCESS, methods: [POST], requires_channel: https }
+        - { path: ^/api/auth/passkeys/authenticate(?:/options)?$, roles: PUBLIC_ACCESS, methods: [POST], requires_channel: https }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY, requires_channel: https }
+        - { path: ^/, roles: PUBLIC_ACCESS, requires_channel: https }
+
+when@test:
+    security:
+        password_hashers:
+            Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+                algorithm: auto
+                cost: 4
+                time_cost: 3
+                memory_cost: 10

@@ -1,0 +1,5 @@
+nexum_security_passkey:
+    resource: '@NexumSecurityPasskeyBundle/config/routes.php'
+    type: php
+    prefix: /api/auth/passkeys
+    trailing_slash_on_root: false

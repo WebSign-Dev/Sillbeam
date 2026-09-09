@@ -1,0 +1,19 @@
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+    orm:
+        controller_resolver:
+            auto_mapping: false
+        mappings:
+            AppLegacy:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Entity'
+                prefix: 'App\Entity'
+                alias: AppLegacy
+            AppModules:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Module'
+                prefix: 'App\Module'
+                alias: AppModules

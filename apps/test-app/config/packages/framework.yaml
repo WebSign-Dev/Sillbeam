@@ -1,0 +1,14 @@
+framework:
+    secret: '%env(APP_SECRET)%'
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
+    trusted_hosts: ['%env(APP_TRUSTED_HOSTS)%']
+    router:
+        utf8: true
+    handle_all_throwables: true
+    php_errors:
+        log: true
+
+when@test:
+    framework:
+        test: true

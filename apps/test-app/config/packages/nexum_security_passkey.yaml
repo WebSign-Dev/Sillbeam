@@ -1,0 +1,12 @@
+nexum_security_passkey:
+    rp_id: nexum.localhost
+    allowed_origins:
+        - 'https://nexum.localhost'
+    challenge_ttl: 300
+    max_attempts: 5
+
+when@test:
+    nexum_security_passkey:
+        rp_id: localhost
+        allowed_origins:
+            - 'https://localhost'

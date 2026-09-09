@@ -1,0 +1,4 @@
+nexum_security_mfa:
+    issuer: Nexum
+    challenge_ttl: 300
+    max_attempts: 5

@@ -1,0 +1,5 @@
+# yaml-language-server: $schema=../vendor/symfony/routing/Loader/schema/routing.schema.json
+
+# Application-specific route imports can be added here.
+# Controller discovery is handled by NexumKernel so that disabled modules do
+# not leak routes while src/Controller remains backwards-compatible.

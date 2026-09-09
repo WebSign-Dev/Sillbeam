@@ -1,0 +1,4 @@
+nexum_security_mfa:
+    resource: '@NexumSecurityMfaBundle/config/routes.php'
+    type: php
+    prefix: /api/auth/mfa

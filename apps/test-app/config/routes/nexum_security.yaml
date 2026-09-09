@@ -1,0 +1,4 @@
+nexum_security:
+    resource: '@NexumSecurityBundle/config/routes.php'
+    type: php
+    prefix: /api/auth
