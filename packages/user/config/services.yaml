@@ -1,0 +1,27 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Nexum\User\Repository\DoctrineAccessTokenStore:
+        arguments:
+            $registry: '@doctrine'
+
+    Nexum\Security\Authentication\AccessTokenStoreInterface: '@Nexum\User\Repository\DoctrineAccessTokenStore'
+
+    Nexum\User\Security\DoctrineUserProvider:
+        arguments:
+            $registry: '@doctrine'
+            $userClass: '%nexum.user.entity_class%'
+
+    Symfony\Component\Security\Core\User\UserProviderInterface: '@Nexum\User\Security\DoctrineUserProvider'
+
+    Nexum\User\Security\PasswordManager: ~
+    Nexum\User\Security\PasswordManagerInterface:
+        alias: Nexum\User\Security\PasswordManager
+        public: true
+
+    Nexum\User\Command\CreateUserCommand:
+        arguments:
+            $registry: '@doctrine'
+            $userClass: '%nexum.user.entity_class%'
