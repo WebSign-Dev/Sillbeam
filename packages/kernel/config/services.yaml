@@ -1,0 +1,20 @@
+services:
+    Nexum\Kernel\Module\YamlModuleRegistry:
+        arguments:
+            $configurationFile: '%kernel.project_dir%/config/nexum/modules.yaml'
+
+    Nexum\Kernel\Module\ModuleRegistryInterface:
+        alias: Nexum\Kernel\Module\YamlModuleRegistry
+        public: true
+
+    Nexum\Kernel\Runtime\KernelInformation:
+        arguments:
+            $kernel: '@kernel'
+            $modules: '@Nexum\Kernel\Module\ModuleRegistryInterface'
+
+    Nexum\Kernel\Runtime\KernelInformationInterface: '@Nexum\Kernel\Runtime\KernelInformation'
+
+    Nexum\Kernel\Command\AboutCommand:
+        arguments:
+            $information: '@Nexum\Kernel\Runtime\KernelInformationInterface'
+        tags: ['console.command']
