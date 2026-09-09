@@ -17,4 +17,6 @@ interface ModuleRegistryInterface extends NexumComponentInterface
     public function has(string $id): bool;
 
     public function get(string $id): ModuleDefinition;
+
+    public function refresh(): void;
 }

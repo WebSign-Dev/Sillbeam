@@ -38,6 +38,11 @@ final class YamlModuleRegistry implements ModuleRegistryInterface
         return $this->all()[$id] ?? throw new \OutOfBoundsException(\sprintf('Unknown Nexum module "%s".', $id));
     }
 
+    public function refresh(): void
+    {
+        $this->modules = null;
+    }
+
     /** @return array<string, ModuleDefinition> */
     private function load(): array
     {

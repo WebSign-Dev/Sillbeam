@@ -1,0 +1,11 @@
+services:
+    _defaults: { autowire: true, autoconfigure: true }
+
+    Nexum\Management\:
+        resource: '../src/'
+        exclude: '../src/{DependencyInjection,NexumManagementBundle.php,Module/ModuleAction.php}'
+
+    Nexum\Management\Module\ModuleConfigurationManager:
+        arguments:
+            $configurationFile: '%kernel.project_dir%/config/nexum/modules.yaml'
+            $locks: '@lock.default.factory'
