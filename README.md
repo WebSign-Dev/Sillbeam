@@ -48,6 +48,15 @@ composer cs:check
 - `nexum/security-mfa`: verschlüsseltes TOTP, Recovery-Codes und kurzlebige Second-Factor-Challenges
 - `nexum/security-passkey`: WebAuthn-Passkeys mit usernameless Login, User Verification und Counter-Prüfung
 - `nexum/user`: erweiterbare Doctrine-Benutzerbasis, Token Store und Passwortverwaltung
+- **http/client**: Request-ID und begrenzte, vertrauenswürdige Client-Metadaten
+- **serializer/validator/exception**: sichere JSON-Defaults, wiederverwendbare Constraints und Exception-Verträge
+- **filesystem**: lokale oder Flysystem-basierte Speicherung mit Traversal-Schutz und Leselimits
+- **logger**: strukturierte, rekursive Redaction sensibler Kontextwerte
+- **messenger**: schlanker Symfony-Messenger-Vertrag mit konfigurierbarer Retry-Strategie
+- **mailer/qrcode**: begrenzter E-Mail-Versand und SVG-QR-Code-Erzeugung
+- **health**: aggregierbare, fail-closed Health Checks
+- **management**: gemeinsame CLI-/API-Logik für Modulkonfigurationen
+- **search/notification/location/payment/reporting**: provider-neutrale optionale Fachverträge
 - `apps/test-app`: ausführbare Referenz-App für modulare und klassische Symfony-Strukturen
 
-Die weiteren Paketordner bilden die geplanten, späteren Bausteine ab. Sie werden erst implementiert, wenn ihre Foundation-Schnittstellen feststehen.
+Externe Provider – beispielsweise Stripe, S3, OpenSearch oder Push-Dienste – bleiben bewusst eigene Adapter. Das Framework erzwingt keine Anbieter-SDKs.

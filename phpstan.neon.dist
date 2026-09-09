@@ -1,15 +1,7 @@
 parameters:
     level: 8
     paths:
-        - packages/core/src
-        - packages/kernel/src
-        - packages/entity/src
-        - packages/doctrine/src
-        - packages/api/src
-        - packages/security/src
-        - packages/security-mfa/src
-        - packages/security-passkey/src
-        - packages/user/src
+        - packages
         - apps/test-app/src
         - tests
     tmpDir: .phpstan-cache

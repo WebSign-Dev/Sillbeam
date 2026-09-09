@@ -1,14 +1,6 @@
 deptrac:
     paths:
-        - ./packages/core/src
-        - ./packages/kernel/src
-        - ./packages/entity/src
-        - ./packages/doctrine/src
-        - ./packages/api/src
-        - ./packages/security/src
-        - ./packages/security-mfa/src
-        - ./packages/security-passkey/src
-        - ./packages/user/src
+        - ./packages
     exclude_files:
         - '#.*\/tests\/.*#'
     layers:
@@ -48,6 +40,74 @@ deptrac:
           collectors:
               - type: directory
                 value: packages/security-passkey/src/.*
+        - name: Exception
+          collectors:
+              - type: directory
+                value: packages/exception/src/.*
+        - name: Http
+          collectors:
+              - type: directory
+                value: packages/http/src/.*
+        - name: Serializer
+          collectors:
+              - type: directory
+                value: packages/serializer/src/.*
+        - name: Validator
+          collectors:
+              - type: directory
+                value: packages/validator/src/.*
+        - name: Logger
+          collectors:
+              - type: directory
+                value: packages/logger/src/.*
+        - name: Filesystem
+          collectors:
+              - type: directory
+                value: packages/filesystem/src/.*
+        - name: Messenger
+          collectors:
+              - type: directory
+                value: packages/messenger/src/.*
+        - name: Health
+          collectors:
+              - type: directory
+                value: packages/health/src/.*
+        - name: Client
+          collectors:
+              - type: directory
+                value: packages/client/src/.*
+        - name: Mailer
+          collectors:
+              - type: directory
+                value: packages/mailer/src/.*
+        - name: Management
+          collectors:
+              - type: directory
+                value: packages/management/src/.*
+        - name: QrCode
+          collectors:
+              - type: directory
+                value: packages/qrcode/src/.*
+        - name: Search
+          collectors:
+              - type: directory
+                value: packages/search/src/.*
+        - name: Notification
+          collectors:
+              - type: directory
+                value: packages/notification/src/.*
+        - name: Location
+          collectors:
+              - type: directory
+                value: packages/location/src/.*
+        - name: Payment
+          collectors:
+              - type: directory
+                value: packages/payment/src/.*
+        - name: Reporting
+          collectors:
+              - type: directory
+                value: packages/reporting/src/.*
     ruleset:
         Core: []
         Kernel:
@@ -83,3 +143,30 @@ deptrac:
             - Entity
             - Security
             - User
+        Exception:
+            - Core
+        Http:
+            - Core
+        Serializer: []
+        Validator: []
+        Logger: []
+        Filesystem:
+            - Core
+        Messenger: []
+        Health: []
+        Client:
+            - Http
+        Mailer:
+            - Core
+        Management:
+            - Api
+            - Core
+            - Kernel
+            - Security
+        QrCode:
+            - Core
+        Search: []
+        Notification: []
+        Location: []
+        Payment: []
+        Reporting: []

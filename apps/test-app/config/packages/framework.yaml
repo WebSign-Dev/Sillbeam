@@ -6,9 +6,24 @@ framework:
     router:
         utf8: true
     handle_all_throwables: true
+    serializer:
+        enabled: true
+    messenger:
+        transports:
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 5
+                    delay: 1000
+                    multiplier: 2
+                    max_delay: 60000
+        routing: { }
     php_errors:
         log: true
 
 when@test:
     framework:
         test: true
+        messenger:
+            transports:
+                async: 'in-memory://'

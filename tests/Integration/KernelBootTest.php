@@ -40,6 +40,8 @@ final class KernelBootTest extends TestCase
         self::assertNotNull($routes->get('billing_invoice_replace'));
         self::assertNotNull($routes->get('billing_invoice_update'));
         self::assertNotNull($routes->get('billing_invoice_delete'));
+        self::assertNotNull($routes->get('nexum_management_modules'));
+        self::assertNotNull($routes->get('nexum_management_module_update'));
     }
 
     public function testModuleRegistryAndAboutCommandAreAvailable(): void

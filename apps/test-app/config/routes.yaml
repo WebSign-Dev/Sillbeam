@@ -3,3 +3,6 @@
 # Application-specific route imports can be added here.
 # Controller discovery is handled by NexumKernel so that disabled modules do
 # not leak routes while src/Controller remains backwards-compatible.
+nexum_management:
+    resource: '@NexumManagementBundle/config/routes.php'
+    prefix: /api/nexum

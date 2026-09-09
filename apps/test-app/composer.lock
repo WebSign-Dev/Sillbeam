@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e77a0a1e2d263a78d50530ccaa76888",
+    "content-hash": "34c3495d87e1e82457ffb4fcfc301004",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -412,16 +412,16 @@
         },
         {
             "name": "doctrine/doctrine-bundle",
-            "version": "3.3.1",
+            "version": "3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/DoctrineBundle.git",
-                "reference": "9b231f957020de52d6ac94fd72f0cbe8cf1eaad5"
+                "reference": "e6cd6aca912a5701fdc9bf4f0ad8f18f3f1448ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/9b231f957020de52d6ac94fd72f0cbe8cf1eaad5",
-                "reference": "9b231f957020de52d6ac94fd72f0cbe8cf1eaad5",
+                "url": "https://api.github.com/repos/doctrine/DoctrineBundle/zipball/e6cd6aca912a5701fdc9bf4f0ad8f18f3f1448ed",
+                "reference": "e6cd6aca912a5701fdc9bf4f0ad8f18f3f1448ed",
                 "shasum": ""
             },
             "require": {
@@ -441,7 +441,7 @@
             },
             "conflict": {
                 "doctrine/orm": "<3.0 || >=4.0",
-                "twig/twig": "<3.0.4"
+                "twig/twig": "<3.0.4 || >=5"
             },
             "require-dev": {
                 "doctrine/coding-standard": "^14",
@@ -465,7 +465,7 @@
                 "symfony/validator": "^6.4 || ^7.0 || ^8.0",
                 "symfony/web-profiler-bundle": "^6.4 || ^7.0 || ^8.0",
                 "symfony/yaml": "^6.4 || ^7.0 || ^8.0",
-                "twig/twig": "^3.21.1"
+                "twig/twig": "^3.21.1 || ^4"
             },
             "suggest": {
                 "doctrine/orm": "The Doctrine ORM integration is optional in the bundle.",
@@ -510,7 +510,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/DoctrineBundle/issues",
-                "source": "https://github.com/doctrine/DoctrineBundle/tree/3.3.1"
+                "source": "https://github.com/doctrine/DoctrineBundle/tree/3.3.2"
             },
             "funding": [
                 {
@@ -526,7 +526,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2026-07-23T10:37:01+00:00"
+            "time": "2026-09-09T11:58:04+00:00"
         },
         {
             "name": "doctrine/doctrine-migrations-bundle",
@@ -1675,6 +1675,38 @@
             }
         },
         {
+            "name": "nexum/client",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/client",
+                "reference": "71d79fcc4e6b99da12242b9bd3ff5a9adf421b90"
+            },
+            "require": {
+                "nexum/http": "^0.1",
+                "php": "^8.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Client\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "A request-scoped, privacy-conscious client information contract.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
             "name": "nexum/core",
             "version": "dev-main",
             "dist": {
@@ -1813,6 +1845,38 @@
             }
         },
         {
+            "name": "nexum/exception",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/exception",
+                "reference": "bba9df5def7a921608bf1b6921246fd2ac788598"
+            },
+            "require": {
+                "nexum/core": "^0.1",
+                "php": "^8.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Exception\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Small, consistent exception contracts for Nexum applications.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
             "name": "nexum/filesystem",
             "version": "dev-main",
             "dist": {
@@ -1866,6 +1930,74 @@
             }
         },
         {
+            "name": "nexum/health",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/health",
+                "reference": "4ca5e96f7f6d9c7d1a99dee20141335e644462be"
+            },
+            "require": {
+                "php": "^8.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Health\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Composable health checks with deterministic aggregate status.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
+            "name": "nexum/http",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/http",
+                "reference": "ee80ebf27c0638c22d2310ebffc93d70f8171655"
+            },
+            "require": {
+                "nexum/core": "^0.1",
+                "php": "^8.4",
+                "symfony/dependency-injection": "^7.4",
+                "symfony/framework-bundle": "^7.4",
+                "symfony/http-foundation": "^7.4",
+                "symfony/http-kernel": "^7.4",
+                "symfony/uid": "^7.4"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Http\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Request metadata and safe HTTP conventions for Nexum.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
             "name": "nexum/kernel",
             "version": "dev-main",
             "dist": {
@@ -1910,6 +2042,69 @@
                 "nexum",
                 "symfony"
             ],
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
+            "name": "nexum/location",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/location",
+                "reference": "b659362b05ffd6d11654df88d208c3fe4ccefb56"
+            },
+            "require": {
+                "php": "^8.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Location\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Small immutable location value objects for Nexum domains.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
+            "name": "nexum/logger",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/logger",
+                "reference": "7daef8d8204660f9f4a1fda173a7a189ab36d4ad"
+            },
+            "require": {
+                "php": "^8.4",
+                "psr/log": "^3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Logger\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Structured logging helpers with recursive sensitive-data redaction.",
             "transport-options": {
                 "symlink": false,
                 "relative": true
@@ -2024,19 +2219,88 @@
             }
         },
         {
+            "name": "nexum/messenger",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/messenger",
+                "reference": "cf98208788deab84bed15765c9fa4d1f4637eea8"
+            },
+            "require": {
+                "php": "^8.4",
+                "symfony/dependency-injection": "^7.4",
+                "symfony/framework-bundle": "^7.4",
+                "symfony/messenger": "^7.4"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Messenger\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "A minimal command and event dispatch contract backed by Symfony Messenger.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
+            "name": "nexum/notification",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/notification",
+                "reference": "c3617b548b8d3d4c41dc10feaceea16a1292d7f2"
+            },
+            "require": {
+                "php": "^8.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Notification\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Transport-neutral notifications with explicit channel routing.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
             "name": "nexum/pack-core",
             "version": "dev-main",
             "dist": {
                 "type": "path",
                 "url": "../../packages/pack-core",
-                "reference": "f7ca6e7ad4ada768659d90583844492a173eeb78"
+                "reference": "923bcb1fe9e6b45ff33c14ba9271adbde8fb5e0c"
             },
             "require": {
                 "nexum/api": "^0.1",
                 "nexum/core": "^0.1",
                 "nexum/doctrine": "^0.1",
                 "nexum/entity": "^0.1",
+                "nexum/exception": "^0.1",
+                "nexum/http": "^0.1",
                 "nexum/kernel": "^0.1",
+                "nexum/serializer": "^0.1",
+                "nexum/validator": "^0.1",
                 "php": "^8.4"
             },
             "type": "metapackage",
@@ -2055,6 +2319,37 @@
                 "package-set",
                 "symfony"
             ],
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
+            "name": "nexum/payment",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/payment",
+                "reference": "2124c9aa1487655368478f21e91600a7e70524e7"
+            },
+            "require": {
+                "php": "^8.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Payment\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Provider-neutral payment contracts using integer minor units.",
             "transport-options": {
                 "symlink": false,
                 "relative": true
@@ -2107,6 +2402,68 @@
                 "security",
                 "symfony"
             ],
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
+            "name": "nexum/reporting",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/reporting",
+                "reference": "5e1157a3ce306569e6aff1622349655c82158482"
+            },
+            "require": {
+                "php": "^8.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Reporting\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Format-neutral reporting contracts with safe JSON and CSV renderers.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
+            "name": "nexum/search",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/search",
+                "reference": "ea95b8a2c7026ff90e2d9b532c2b12ae1969444d"
+            },
+            "require": {
+                "php": "^8.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Search\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Provider-neutral search contracts and immutable result models.",
             "transport-options": {
                 "symlink": false,
                 "relative": true
@@ -2302,6 +2659,40 @@
             }
         },
         {
+            "name": "nexum/serializer",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/serializer",
+                "reference": "d7f8fb12a1acb3feb606b8f38de04b43322f0acf"
+            },
+            "require": {
+                "php": "^8.4",
+                "symfony/dependency-injection": "^7.4",
+                "symfony/framework-bundle": "^7.4",
+                "symfony/serializer": "^7.4"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Serializer\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Opinionated JSON serialization defaults without hiding Symfony Serializer.",
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
             "name": "nexum/user",
             "version": "dev-main",
             "dist": {
@@ -2352,6 +2743,40 @@
                 "symfony",
                 "user"
             ],
+            "transport-options": {
+                "symlink": false,
+                "relative": true
+            }
+        },
+        {
+            "name": "nexum/validator",
+            "version": "dev-main",
+            "dist": {
+                "type": "path",
+                "url": "../../packages/validator",
+                "reference": "6d4afbba8f52c45fff1bf2a8769f3e668e29c92b"
+            },
+            "require": {
+                "php": "^8.4",
+                "symfony/dependency-injection": "^7.4",
+                "symfony/framework-bundle": "^7.4",
+                "symfony/validator": "^7.4"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Nexum\\Validator\\": "src/"
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Reusable security-focused validation constraints for Nexum.",
             "transport-options": {
                 "symlink": false,
                 "relative": true
@@ -4917,6 +5342,100 @@
                 }
             ],
             "time": "2026-08-21T17:40:08+00:00"
+        },
+        {
+            "name": "symfony/messenger",
+            "version": "v7.4.18",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/messenger.git",
+                "reference": "b109f9f4e54470ee6835751bc39318fe3d8275e6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/messenger/zipball/b109f9f4e54470ee6835751bc39318fe3d8275e6",
+                "reference": "b109f9f4e54470ee6835751bc39318fe3d8275e6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=8.2",
+                "psr/log": "^1|^2|^3",
+                "symfony/clock": "^6.4|^7.0|^8.0",
+                "symfony/deprecation-contracts": "^2.5|^3"
+            },
+            "conflict": {
+                "symfony/console": "<7.2",
+                "symfony/event-dispatcher": "<6.4",
+                "symfony/event-dispatcher-contracts": "<2.5",
+                "symfony/framework-bundle": "<6.4",
+                "symfony/http-kernel": "<7.3",
+                "symfony/lock": "<7.4",
+                "symfony/serializer": "<6.4.32|>=7.3,<7.3.10|>=7.4,<7.4.4|>=8.0,<8.0.4"
+            },
+            "require-dev": {
+                "psr/cache": "^1.0|^2.0|^3.0",
+                "symfony/console": "^7.2|^8.0",
+                "symfony/dependency-injection": "^6.4|^7.0|^8.0",
+                "symfony/event-dispatcher": "^6.4|^7.0|^8.0",
+                "symfony/http-kernel": "^7.3|^8.0",
+                "symfony/lock": "^7.4|^8.0",
+                "symfony/process": "^6.4|^7.0|^8.0",
+                "symfony/property-access": "^6.4|^7.0|^8.0",
+                "symfony/rate-limiter": "^6.4|^7.0|^8.0",
+                "symfony/routing": "^6.4|^7.0|^8.0",
+                "symfony/serializer": "^6.4.32|~7.3.10|^7.4.4|^8.0.4",
+                "symfony/service-contracts": "^2.5|^3",
+                "symfony/stopwatch": "^6.4|^7.0|^8.0",
+                "symfony/validator": "^6.4|^7.0|^8.0",
+                "symfony/var-dumper": "^6.4|^7.0|^8.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\Component\\Messenger\\": ""
+                },
+                "exclude-from-classmap": [
+                    "/Tests/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Samuel Roze",
+                    "email": "samuel.roze@gmail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Helps applications send and receive messages to/from other applications or via message queues",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/messenger/tree/v7.4.18"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2026-08-30T00:47:26+00:00"
         },
         {
             "name": "symfony/mime",
