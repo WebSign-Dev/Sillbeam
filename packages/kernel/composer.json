@@ -1,0 +1,41 @@
+{
+    "name": "nexum/kernel",
+    "description": "Kernel, module registry, and application bootstrapping for the Nexum framework.",
+    "keywords": [
+        "kernel",
+        "modules",
+        "nexum",
+        "symfony"
+    ],
+    "type": "library",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "composer-runtime-api": "^2.2",
+        "nexum/core": "^0.1",
+        "symfony/config": "^7.4",
+        "symfony/dependency-injection": "^7.4",
+        "symfony/framework-bundle": "^7.4",
+        "symfony/http-kernel": "^7.4",
+        "symfony/routing": "^7.4",
+        "symfony/yaml": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nexum\\Kernel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nexum\\Kernel\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

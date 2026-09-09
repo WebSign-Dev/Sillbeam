@@ -1,0 +1,43 @@
+{
+    "name": "nexum/qrcode",
+    "description": "Small, configurable QR-code generation for Nexum applications.",
+    "type": "symfony-bundle",
+    "license": "proprietary",
+    "keywords": [
+        "barcode",
+        "generator",
+        "nexum",
+        "qr-code",
+        "security",
+        "symfony"
+    ],
+    "require": {
+        "php": "^8.4",
+        "endroid/qr-code": "^6.1",
+        "nexum/core": "^0.1",
+        "symfony/config": "^7.4",
+        "symfony/dependency-injection": "^7.4",
+        "symfony/framework-bundle": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nexum\\QrCode\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nexum\\QrCode\\Tests\\": "tests/"
+        }
+    },
+    "suggest": {
+        "ext-gd": "Enables PNG output in the default QR-code renderer."
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

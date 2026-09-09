@@ -1,0 +1,25 @@
+{
+    "name": "nexum/pack-core",
+    "description": "Core package set for new Nexum applications.",
+    "type": "metapackage",
+    "keywords": [
+        "nexum",
+        "symfony",
+        "framework",
+        "package-set"
+    ],
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "nexum/core": "^0.1",
+        "nexum/kernel": "^0.1",
+        "nexum/entity": "^0.1",
+        "nexum/doctrine": "^0.1",
+        "nexum/api": "^0.1"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

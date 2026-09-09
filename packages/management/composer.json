@@ -1,0 +1,48 @@
+{
+    "name": "nexum/management",
+    "description": "Shared command-line management and an optional secured administration API for Nexum applications.",
+    "type": "symfony-bundle",
+    "keywords": [
+        "nexum",
+        "symfony",
+        "management",
+        "console",
+        "administration"
+    ],
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "nexum/api": "^0.1",
+        "nexum/core": "^0.1",
+        "nexum/kernel": "^0.1",
+        "nexum/security": "^0.1",
+        "symfony/config": "^7.4",
+        "symfony/console": "^7.4",
+        "symfony/dependency-injection": "^7.4",
+        "symfony/filesystem": "^7.4",
+        "symfony/framework-bundle": "^7.4",
+        "symfony/http-foundation": "^7.4",
+        "symfony/http-kernel": "^7.4",
+        "symfony/lock": "^7.4",
+        "symfony/routing": "^7.4",
+        "symfony/yaml": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nexum\\Management\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nexum\\Management\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "name": "nexum/mailer",
+    "description": "Convention-driven transactional email support built on Symfony Mailer.",
+    "type": "symfony-bundle",
+    "license": "proprietary",
+    "keywords": [
+        "email",
+        "mailer",
+        "messaging",
+        "nexum",
+        "symfony",
+        "transactional"
+    ],
+    "require": {
+        "php": "^8.4",
+        "nexum/core": "^0.1",
+        "symfony/framework-bundle": "^7.4",
+        "symfony/mailer": "^7.4",
+        "symfony/mime": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nexum\\Mailer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nexum\\Mailer\\Tests\\": "tests/"
+        }
+    },
+    "suggest": {
+        "symfony/messenger": "Enables asynchronous mail dispatching."
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

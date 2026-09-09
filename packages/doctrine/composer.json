@@ -1,0 +1,42 @@
+{
+    "name": "nexum/doctrine",
+    "description": "Doctrine ORM integration, lifecycle handling, and persistence services for the Nexum framework.",
+    "keywords": [
+        "doctrine",
+        "nexum",
+        "orm",
+        "symfony"
+    ],
+    "type": "symfony-bundle",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/doctrine-migrations-bundle": "^4.0",
+        "doctrine/orm": "^3.6",
+        "nexum/core": "^0.1",
+        "nexum/entity": "^0.1",
+        "nexum/kernel": "^0.1",
+        "symfony/clock": "^7.4",
+        "symfony/dependency-injection": "^7.4",
+        "symfony/framework-bundle": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nexum\\Doctrine\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nexum\\Doctrine\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

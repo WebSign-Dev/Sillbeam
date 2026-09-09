@@ -1,0 +1,44 @@
+{
+    "name": "nexum/user",
+    "description": "Doctrine-backed user and role foundation for Nexum applications.",
+    "type": "symfony-bundle",
+    "license": "proprietary",
+    "keywords": [
+        "doctrine",
+        "identity",
+        "nexum",
+        "roles",
+        "security",
+        "symfony",
+        "user"
+    ],
+    "require": {
+        "php": "^8.4",
+        "doctrine/orm": "^3.6",
+        "nexum/doctrine": "^0.1",
+        "nexum/entity": "^0.1",
+        "nexum/security": "^0.1",
+        "symfony/dependency-injection": "^7.4",
+        "symfony/console": "^7.4",
+        "symfony/framework-bundle": "^7.4",
+        "symfony/security-core": "^7.4",
+        "symfony/serializer": "^7.4",
+        "symfony/uid": "^7.4",
+        "symfony/validator": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nexum\\User\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nexum\\User\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

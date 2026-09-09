@@ -1,0 +1,44 @@
+{
+    "name": "nexum/filesystem",
+    "description": "Provider-neutral application storage with secure defaults and filesystem adapters for Nexum.",
+    "type": "symfony-bundle",
+    "license": "proprietary",
+    "keywords": [
+        "filesystem",
+        "flysystem",
+        "nexum",
+        "storage",
+        "stream",
+        "symfony"
+    ],
+    "require": {
+        "php": "^8.4",
+        "league/flysystem": "^3.36",
+        "nexum/core": "^0.1",
+        "symfony/config": "^7.4",
+        "symfony/dependency-injection": "^7.4",
+        "symfony/filesystem": "^7.4",
+        "symfony/framework-bundle": "^7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nexum\\Filesystem\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nexum\\Filesystem\\Tests\\": "tests/"
+        }
+    },
+    "suggest": {
+        "league/flysystem-aws-s3-v3": "Adds an AWS S3 storage adapter."
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

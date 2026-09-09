@@ -1,0 +1,85 @@
+deptrac:
+    paths:
+        - ./packages/core/src
+        - ./packages/kernel/src
+        - ./packages/entity/src
+        - ./packages/doctrine/src
+        - ./packages/api/src
+        - ./packages/security/src
+        - ./packages/security-mfa/src
+        - ./packages/security-passkey/src
+        - ./packages/user/src
+    exclude_files:
+        - '#.*\/tests\/.*#'
+    layers:
+        - name: Core
+          collectors:
+              - type: directory
+                value: packages/core/src/.*
+        - name: Kernel
+          collectors:
+              - type: directory
+                value: packages/kernel/src/.*
+        - name: Entity
+          collectors:
+              - type: directory
+                value: packages/entity/src/.*
+        - name: Doctrine
+          collectors:
+              - type: directory
+                value: packages/doctrine/src/.*
+        - name: Api
+          collectors:
+              - type: directory
+                value: packages/api/src/.*
+        - name: Security
+          collectors:
+              - type: directory
+                value: packages/security/src/.*
+        - name: User
+          collectors:
+              - type: directory
+                value: packages/user/src/.*
+        - name: SecurityMfa
+          collectors:
+              - type: directory
+                value: packages/security-mfa/src/.*
+        - name: SecurityPasskey
+          collectors:
+              - type: directory
+                value: packages/security-passkey/src/.*
+    ruleset:
+        Core: []
+        Kernel:
+            - Core
+        Entity:
+            - Core
+        Doctrine:
+            - Core
+            - Entity
+            - Kernel
+        Api:
+            - Core
+            - Kernel
+            - Entity
+            - Doctrine
+        Security:
+            - Core
+            - Api
+        User:
+            - Core
+            - Entity
+            - Doctrine
+            - Security
+        SecurityMfa:
+            - Api
+            - Core
+            - Entity
+            - Security
+            - User
+        SecurityPasskey:
+            - Api
+            - Core
+            - Entity
+            - Security
+            - User

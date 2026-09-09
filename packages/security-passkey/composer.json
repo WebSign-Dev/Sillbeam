@@ -1,0 +1,53 @@
+{
+    "name": "nexum/security-passkey",
+    "description": "Optional passkey and WebAuthn integration boundaries for Nexum Security.",
+    "type": "symfony-bundle",
+    "license": "proprietary",
+    "keywords": [
+        "authentication",
+        "nexum",
+        "passkey",
+        "passwordless",
+        "security",
+        "symfony",
+        "webauthn"
+    ],
+    "require": {
+        "doctrine/doctrine-bundle": "^3.0",
+        "doctrine/orm": "^3.0",
+        "phpdocumentor/reflection-docblock": "^6.0",
+        "php": "^8.4",
+        "nexum/api": "^0.1",
+        "nexum/entity": "^0.1",
+        "nexum/security": "^0.1",
+        "nexum/user": "^0.1",
+        "symfony/cache-contracts": "^3.6",
+        "symfony/clock": "^7.4",
+        "symfony/config": "^7.4",
+        "symfony/dependency-injection": "^7.4",
+        "symfony/framework-bundle": "^7.4",
+        "symfony/http-foundation": "^7.4",
+        "symfony/property-info": "^7.4",
+        "symfony/rate-limiter": "^7.4",
+        "symfony/routing": "^7.4",
+        "symfony/security-core": "^7.4",
+        "symfony/serializer": "^7.4",
+        "symfony/uid": "^7.4",
+        "web-auth/webauthn-lib": "^5.3.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Nexum\\Security\\Passkey\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Nexum\\Security\\Passkey\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    }
+}

@@ -1,0 +1,49 @@
+{
+    "name": "nexum/monorepo",
+    "description": "Development monorepo for the modular, API-first Nexum framework.",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4"
+    },
+    "require-dev": {
+        "deptrac/deptrac": "^2.0",
+        "friendsofphp/php-cs-fixer": "^3.0",
+        "nexum/filesystem": "^0.1",
+        "nexum/mailer": "^0.1",
+        "nexum/management": "^0.1",
+        "nexum/pack-core": "^0.1",
+        "nexum/qrcode": "^0.1",
+        "nexum/security-mfa": "^0.1",
+        "nexum/security-passkey": "^0.1",
+        "nexum/user": "^0.1",
+        "phpstan/phpstan": "^2.0",
+        "phpunit/phpunit": "^12.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\": "apps/test-app/src/",
+            "Nexum\\Tests\\": "tests/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "packages/*",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
+    "config": {
+        "sort-packages": true
+    },
+    "scripts": {
+        "analyse": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --debug",
+        "architecture": "deptrac analyse --config-file=deptrac.yaml",
+        "cs:check": "php-cs-fixer check --diff --config=.php-cs-fixer.dist.php --allow-unsupported-php-version=yes --sequential",
+        "test": "phpunit --configuration=phpunit.xml.dist"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
