@@ -1,7 +1,7 @@
 nexum_security_passkey:
-    rp_id: nexum.localhost
+    rp_id: nexum-test-app.localhost
     allowed_origins:
-        - 'https://nexum.localhost'
+        - 'https://nexum-test-app.localhost'
     challenge_ttl: 300
     max_attempts: 5
 

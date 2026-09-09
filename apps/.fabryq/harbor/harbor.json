@@ -1,7 +1,7 @@
 {
   "schemaVersion": 4,
-  "project": "nexum",
-  "slug": "nexum",
+  "project": "Nexum Test App",
+  "slug": "nexum-test-app",
   "createdWith": "1.0.0-beta.1",
   "runtime": {
     "php": {
@@ -11,7 +11,7 @@
   "stack": {
     "backend": {
       "type": "symfony",
-      "dir": "backend",
+      "dir": "test-app",
       "version": "7.4"
     },
     "frontend": {
@@ -29,7 +29,7 @@
       {
         "id": "backend",
         "target": "backend",
-        "host": "nexum.localhost",
+        "host": "nexum-test-app.localhost",
         "path": "/"
       }
     ]
@@ -37,7 +37,7 @@
   "detected": {
     "backend": {
       "type": "symfony",
-      "dir": "backend",
+      "dir": "test-app",
       "source": "composer.lock",
       "version": "v7.4.18",
       "confidence": "high",

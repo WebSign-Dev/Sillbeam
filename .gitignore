@@ -10,6 +10,6 @@
 !/apps/test-app/storage/cache/.gitkeep
 !/apps/test-app/storage/logs/.gitkeep
 !/apps/test-app/storage/temp/.gitkeep
-/.fabryq/harbor/runtime/
+/apps/.fabryq/harbor/runtime/
 /.deptrac.cache
 /.phpstan-cache/

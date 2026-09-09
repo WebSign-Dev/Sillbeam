@@ -13,7 +13,7 @@ nexum_security_passkey:
     max_attempts: 5
 ```
 
-`rp_id` muss zur produktiven Domain passen. Origins werden exakt zugelassen und müssen HTTPS verwenden. Für Harbor sind `nexum.localhost` und `https://nexum.localhost` konfiguriert.
+`rp_id` muss zur produktiven Domain passen. Origins werden exakt zugelassen und müssen HTTPS verwenden. Für die Harbor-Test-App sind `nexum-test-app.localhost` und `https://nexum-test-app.localhost` konfiguriert.
 
 ```yaml
 nexum_security_passkey:

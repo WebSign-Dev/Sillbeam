@@ -4,13 +4,14 @@ Nexum ist ein modularer, API-orientierter Backend-Baukasten auf Basis von PHP 8.
 
 ## Entwicklungsumgebung
 
-Die lokale Laufzeit wird vollständig durch Fabryq Harbor verwaltet. Harbor erkennt das Backend über den flachen Kompatibilitätspfad `backend`, der auf `apps/test-app` zeigt. Dieser Alias ist nötig, weil Harbor 1.0 in Rollenpfaden noch keine verschachtelten Verzeichnisse wie `apps/test-app` unterstützt.
+Die lokale Laufzeit wird vollständig durch Fabryq Harbor verwaltet. Die Harbor-Projektkonfiguration liegt unter `apps/.fabryq`; als Backend-Rolle ist dort direkt `test-app` eingetragen. Im Repository-Root werden weder ein Harbor-Verzeichnis noch ein künstlicher `backend`-Alias benötigt.
 
 ```bash
-./tools/harbor build
-./tools/harbor up
-./tools/harbor status
-./tools/harbor down
+cd apps
+fabryq harbor build
+fabryq harbor up
+fabryq harbor ps
+fabryq harbor down
 ```
 
 Der Projekt-Starter setzt Harbors Node-Prozess auf die lokale `mkcert`-CA. Dadurch
@@ -19,10 +20,10 @@ CA ist zusätzlich im NSS-Truststore des lokalen Browsers hinterlegt.
 
 Nach dem Start:
 
-- Backend: `https://nexum.localhost/`
-- Mailpit: `https://tools.nexum.localhost/mp/`
-- phpMyAdmin: `https://tools.nexum.localhost/pma/`
-- Shell: `./tools/harbor ssh php`
+- Backend: `https://nexum-test-app.localhost/`
+- Mailpit: `https://tools.nexum-test-app.localhost/mp/`
+- phpMyAdmin: `https://tools.nexum-test-app.localhost/pma/`
+- Shell: `cd apps && fabryq harbor ssh php`
 
 Harbor erzeugt `apps/test-app/.env.local` automatisch. Damit verwendet die Development-App MariaDB und Mailpit aus dem Harbor-Stack. Tests verwenden weiterhin eine isolierte SQLite-Datenbank.
 
