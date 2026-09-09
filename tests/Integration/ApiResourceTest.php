@@ -133,6 +133,16 @@ final class ApiResourceTest extends TestCase
         self::assertSame(400, $unknownFilter->getStatusCode());
         self::assertSame('filter_not_allowed', $this->json($unknownFilter)['errors'][0]['code']);
 
+        $overflowingPage = $this->request('GET', '/api/billing/invoices?page%5Bnumber%5D='.\PHP_INT_MAX);
+        self::assertSame(400, $overflowingPage->getStatusCode());
+        self::assertSame('page_out_of_range', $this->json($overflowingPage)['errors'][0]['code']);
+
+        $invalidType = $this->request('PATCH', '/api/billing/invoices/'.$identifier, ['number' => ['not-a-string']]);
+        self::assertSame(422, $invalidType->getStatusCode());
+        $invalidTypeError = $this->json($invalidType)['errors'][0];
+        self::assertSame('invalid_payload', $invalidTypeError['code']);
+        self::assertSame('The JSON payload cannot be mapped to the requested resource.', $invalidTypeError['detail']);
+
         $deleted = $this->request('DELETE', '/api/billing/invoices/'.$identifier);
         self::assertSame(204, $deleted->getStatusCode());
         self::assertSame('', $deleted->getContent());

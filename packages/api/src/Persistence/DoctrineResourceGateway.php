@@ -85,6 +85,10 @@ final readonly class DoctrineResourceGateway
             $builder->addOrderBy('resource.'.$field, strtoupper($direction));
         }
 
+        if (($query->page - 1) > intdiv(\PHP_INT_MAX, $query->size)) {
+            throw ApiProblemException::badRequest('page[number] is too large.', 'page_out_of_range');
+        }
+
         $builder
             ->setFirstResult(($query->page - 1) * $query->size)
             ->setMaxResults($query->size);

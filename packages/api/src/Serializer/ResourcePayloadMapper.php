@@ -8,6 +8,7 @@ use Nexum\Api\Error\ApiProblemException;
 use Nexum\Api\Metadata\ResourceMetadata;
 use Nexum\Api\Operation\Operation;
 use Nexum\Entity\Contract\EntityInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
@@ -16,8 +17,10 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 final readonly class ResourcePayloadMapper
 {
-    public function __construct(private SerializerInterface $serializer)
-    {
+    public function __construct(
+        private SerializerInterface $serializer,
+        private LoggerInterface $logger,
+    ) {
     }
 
     public function map(
@@ -62,7 +65,12 @@ final readonly class ResourcePayloadMapper
         try {
             $mapped = $this->serializer->deserialize($request->getContent(), $metadata->entity, 'json', $context);
         } catch (ExceptionInterface $exception) {
-            throw new ApiProblemException(422, 'invalid_payload', 'Invalid payload', $exception->getMessage());
+            $this->logger->notice('A Nexum API payload could not be mapped to {resource}.', [
+                'exception' => $exception,
+                'resource' => $metadata->entity,
+            ]);
+
+            throw new ApiProblemException(422, 'invalid_payload', 'Invalid payload', 'The JSON payload cannot be mapped to the requested resource.');
         }
 
         if (!$mapped instanceof EntityInterface) {

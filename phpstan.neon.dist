@@ -5,3 +5,7 @@ parameters:
         - tests
     tmpDir: .phpstan-cache
     treatPhpDocTypesAsCertain: false
+    excludePaths:
+        analyse:
+            - tests/Fixtures/Application/var (?)
+            - tests/Fixtures/Application/config/reference.php (?)

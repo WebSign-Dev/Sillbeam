@@ -20,6 +20,7 @@ services:
     Nexum\Api\Serializer\ResourcePayloadMapper:
         arguments:
             $serializer: '@serializer'
+            $logger: '@logger'
 
     Nexum\Api\Serializer\ApiResponseFactory:
         arguments:

@@ -2,7 +2,9 @@
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__.'/packages')
-    ->in(__DIR__.'/tests');
+    ->in(__DIR__.'/tests')
+    ->exclude('Fixtures/Application/var')
+    ->notPath('Fixtures/Application/config/reference.php');
 
 return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
