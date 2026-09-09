@@ -1,0 +1,32 @@
+services:
+    Nexum\Api\Metadata\ResourceMetadataFactory: ~
+    Nexum\Api\Pagination\CursorCodec: ~
+    Nexum\Api\Pagination\ApiQueryParser: ~
+
+    Nexum\Api\Persistence\DoctrineResourceGateway:
+        arguments:
+            $registry: '@doctrine'
+            $cursorCodec: '@Nexum\Api\Pagination\CursorCodec'
+            $scope: '@Nexum\Api\Scope\ResourceScopeProviderInterface'
+
+    Nexum\Api\Scope\DefaultResourceScopeProvider:
+        arguments:
+            $tokenStorage: '@?security.token_storage'
+
+    Nexum\Api\Scope\ResourceScopeProviderInterface: '@Nexum\Api\Scope\DefaultResourceScopeProvider'
+
+    Nexum\Api\Serializer\ResourcePayloadMapper:
+        arguments:
+            $serializer: '@serializer'
+
+    Nexum\Api\Serializer\ApiResponseFactory:
+        arguments:
+            $normalizer: '@serializer'
+
+    Nexum\Api\Serializer\ApiResponseFactoryInterface: '@Nexum\Api\Serializer\ApiResponseFactory'
+
+    Nexum\Api\Error\ApiExceptionSubscriber:
+        arguments:
+            $responses: '@Nexum\Api\Serializer\ApiResponseFactoryInterface'
+            $logger: '@logger'
+        tags: ['kernel.event_subscriber']
