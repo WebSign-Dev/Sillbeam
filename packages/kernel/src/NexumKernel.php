@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Nexum\Kernel;
 
+use Composer\InstalledVersions;
 use Nexum\Kernel\Module\YamlModuleRegistry;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -15,6 +16,13 @@ abstract class NexumKernel extends BaseKernel
 
     public function getApplicationName(): string
     {
+        $rootPackage = InstalledVersions::getRootPackage();
+        $packageName = $rootPackage['pretty_name'] ?? $rootPackage['name'] ?? null;
+
+        if (\is_string($packageName) && '' !== trim($packageName)) {
+            return $packageName;
+        }
+
         return basename($this->getProjectDir());
     }
 
