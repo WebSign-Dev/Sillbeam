@@ -1,0 +1,7 @@
+services:
+    _defaults: { autowire: true, autoconfigure: true }
+    Nexum\Messenger\:
+        resource: '../src/'
+        exclude: '../src/{DependencyInjection,NexumMessengerBundle.php}'
+    Nexum\Messenger\MessageBusInterface:
+        alias: Nexum\Messenger\SymfonyMessageBus

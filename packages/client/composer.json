@@ -1,0 +1,9 @@
+{
+    "name": "nexum/client",
+    "description": "A request-scoped, privacy-conscious client information contract.",
+    "type": "library",
+    "license": "proprietary",
+    "require": {"php": "^8.4", "nexum/http": "^0.1"},
+    "autoload": {"psr-4": {"Nexum\\Client\\": "src/"}},
+    "extra": {"branch-alias": {"dev-main": "0.1.x-dev"}}
+}
