@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 4,
+  "project": "nexum",
+  "slug": "nexum",
+  "createdWith": "1.0.0-beta.1",
+  "runtime": {
+    "php": {
+      "version": "8.4"
+    }
+  },
+  "stack": {
+    "backend": {
+      "type": "symfony",
+      "dir": "backend",
+      "version": "7.4"
+    },
+    "frontend": {
+      "type": "none"
+    }
+  },
+  "services": {
+    "mailpit": true,
+    "phpmyadmin": true,
+    "elasticsearch": false,
+    "mercure": false
+  },
+  "routing": {
+    "entries": [
+      {
+        "id": "backend",
+        "target": "backend",
+        "host": "nexum.localhost",
+        "path": "/"
+      }
+    ]
+  },
+  "detected": {
+    "backend": {
+      "type": "symfony",
+      "dir": "backend",
+      "source": "composer.lock",
+      "version": "v7.4.18",
+      "confidence": "high",
+      "reasons": [
+        "Composer package symfony/framework-bundle detected."
+      ]
+    },
+    "runtime": {
+      "php": {
+        "version": "8.4",
+        "source": "cli",
+        "confidence": "high",
+        "reasons": [
+          "PHP version was explicitly provided."
+        ]
+      }
+    },
+    "packages": {
+      "symfony/framework-bundle": {
+        "version": "v7.4.18",
+        "source": "composer.lock"
+      }
+    }
+  }
+}

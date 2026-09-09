@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+readonly NEXUM_MKCERT_BIN="${NEXUM_MKCERT_BIN:-/home/oeffe/.local/bin/mkcert}"
+readonly NEXUM_FABRYQ_BIN="${NEXUM_FABRYQ_BIN:-/home/oeffe/.local/bin/fabryq}"
+
+if [[ ! -x "${NEXUM_MKCERT_BIN}" ]]; then
+    echo "mkcert wurde nicht unter ${NEXUM_MKCERT_BIN} gefunden." >&2
+    exit 1
+fi
+
+if [[ ! -x "${NEXUM_FABRYQ_BIN}" ]]; then
+    echo "Fabryq wurde nicht unter ${NEXUM_FABRYQ_BIN} gefunden." >&2
+    exit 1
+fi
+
+export PATH="${NEXUM_MKCERT_BIN%/*}:${PATH}"
+readonly NEXUM_MKCERT_ROOT="$(${NEXUM_MKCERT_BIN} -CAROOT)"
+export NODE_EXTRA_CA_CERTS="${NEXUM_MKCERT_ROOT}/rootCA.pem"
+
+exec "${NEXUM_FABRYQ_BIN}" harbor "$@"
