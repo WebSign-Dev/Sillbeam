@@ -43,6 +43,7 @@ services:
       APP_ENV: dev
     volumes:
       - ./${APP_CODE_DIR:-backend}:/var/www/html
+      - ../../packages:/packages:ro
     networks:
       - app
 

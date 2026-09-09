@@ -2,10 +2,8 @@
 
 namespace App;
 
-use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
-use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Nexum\Kernel\NexumKernel;
 
-class Kernel extends BaseKernel
+final class Kernel extends NexumKernel
 {
-    use MicroKernelTrait;
 }

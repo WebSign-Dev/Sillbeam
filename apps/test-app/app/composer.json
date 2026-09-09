@@ -3,20 +3,28 @@
     "description": "Isolated Symfony reference application for developing and testing Nexum packages.",
     "type": "project",
     "license": "proprietary",
-    "minimum-stability": "stable",
+    "minimum-stability": "dev",
     "prefer-stable": true,
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../../packages/*",
+            "options": {
+                "symlink": true
+            }
+        }
+    ],
     "require": {
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "nexum/pack-core": "^0.1",
         "symfony/console": "7.4.*",
         "symfony/dotenv": "7.4.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.4.*",
         "symfony/runtime": "7.4.*",
         "symfony/yaml": "7.4.*"
-    },
-    "require-dev": {
     },
     "config": {
         "allow-plugins": {
@@ -65,6 +73,7 @@
     "extra": {
         "symfony": {
             "allow-contrib": false,
+            "docker": false,
             "require": "7.4.*"
         }
     }
