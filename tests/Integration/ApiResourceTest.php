@@ -92,8 +92,11 @@ final class ApiResourceTest extends TestCase
         self::assertCount(2, $cursorData['data']);
         self::assertTrue($cursorData['meta']['pagination']['has_more']);
         self::assertIsString($cursorData['meta']['pagination']['next']);
+        $cursor = $cursorData['meta']['pagination']['next'];
+        $tampered = substr($cursor, 0, -1).('A' === substr($cursor, -1) ? 'B' : 'A');
+        self::assertSame(400, $this->request('GET', '/api/billing/invoices?page%5Bafter%5D='.rawurlencode($tampered))->getStatusCode());
 
-        $nextPage = $this->request('GET', '/api/billing/invoices?page%5Bafter%5D='.rawurlencode($cursorData['meta']['pagination']['next']).'&page%5Bsize%5D=2');
+        $nextPage = $this->request('GET', '/api/billing/invoices?page%5Bafter%5D='.rawurlencode($cursor).'&page%5Bsize%5D=2');
         $nextData = $this->json($nextPage);
         self::assertCount(1, $nextData['data']);
         self::assertFalse($nextData['meta']['pagination']['has_more']);

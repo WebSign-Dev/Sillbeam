@@ -1,0 +1,14 @@
+{
+    "name": "nexum/validator",
+    "description": "Reusable security-focused validation constraints for Nexum.",
+    "type": "symfony-bundle",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "symfony/dependency-injection": "^7.4",
+        "symfony/framework-bundle": "^7.4",
+        "symfony/validator": "^7.4"
+    },
+    "autoload": {"psr-4": {"Nexum\\Validator\\": "src/"}},
+    "extra": {"branch-alias": {"dev-main": "0.1.x-dev"}}
+}

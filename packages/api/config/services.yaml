@@ -1,6 +1,8 @@
 services:
     Nexum\Api\Metadata\ResourceMetadataFactory: ~
-    Nexum\Api\Pagination\CursorCodec: ~
+    Nexum\Api\Pagination\CursorCodec:
+        arguments:
+            $signingKey: '%kernel.secret%'
     Nexum\Api\Pagination\ApiQueryParser: ~
 
     Nexum\Api\Persistence\DoctrineResourceGateway:

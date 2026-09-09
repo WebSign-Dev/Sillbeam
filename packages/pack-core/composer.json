@@ -11,11 +11,15 @@
     "license": "proprietary",
     "require": {
         "php": "^8.4",
+        "nexum/api": "^0.1",
         "nexum/core": "^0.1",
-        "nexum/kernel": "^0.1",
-        "nexum/entity": "^0.1",
         "nexum/doctrine": "^0.1",
-        "nexum/api": "^0.1"
+        "nexum/entity": "^0.1",
+        "nexum/exception": "^0.1",
+        "nexum/http": "^0.1",
+        "nexum/kernel": "^0.1",
+        "nexum/serializer": "^0.1",
+        "nexum/validator": "^0.1"
     },
     "extra": {
         "branch-alias": {

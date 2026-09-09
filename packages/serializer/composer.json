@@ -1,0 +1,14 @@
+{
+    "name": "nexum/serializer",
+    "description": "Opinionated JSON serialization defaults without hiding Symfony Serializer.",
+    "type": "symfony-bundle",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "symfony/dependency-injection": "^7.4",
+        "symfony/framework-bundle": "^7.4",
+        "symfony/serializer": "^7.4"
+    },
+    "autoload": {"psr-4": {"Nexum\\Serializer\\": "src/"}},
+    "extra": {"branch-alias": {"dev-main": "0.1.x-dev"}}
+}
