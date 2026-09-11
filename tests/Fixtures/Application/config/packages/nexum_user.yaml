@@ -1,2 +1,0 @@
-nexum_user:
-    entity_class: App\Module\Identity\User\Entity\User

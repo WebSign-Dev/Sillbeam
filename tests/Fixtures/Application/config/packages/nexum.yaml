@@ -1,0 +1,40 @@
+nexum:
+    doctrine:
+        enabled: true
+    api:
+        enabled: true
+    user:
+        enabled: true
+        entity_class: App\Module\Identity\User\Entity\User
+    security:
+        enabled: true
+        access_token_ttl: 3600
+        role_permissions:
+            ROLE_ADMIN: [nexum.manage]
+            ROLE_BILLING_MANAGER:
+                - billing.invoice.read
+                - billing.invoice.create
+                - billing.invoice.update
+                - billing.invoice.delete
+        api:
+            enabled: true
+        mfa:
+            enabled: true
+            issuer: Nexum
+            challenge_ttl: 300
+            max_attempts: 5
+            api:
+                enabled: true
+        passkeys:
+            enabled: true
+            relying_party:
+                rp_id: localhost
+                allowed_origins: ['https://localhost']
+            challenge_ttl: 300
+            max_attempts: 5
+            api:
+                enabled: true
+    management:
+        enabled: true
+        api:
+            enabled: true

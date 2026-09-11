@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Nexum\Tests\Integration;
 
 use App\Kernel;
-use Nexum\Kernel\Module\ModuleRegistryInterface;
+use App\Module\Billing\BillingModule;
+use App\NexumTestKernel;
+use Nexum\Module\ModuleRegistryInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -41,14 +43,14 @@ final class KernelBootTest extends TestCase
         self::assertNotNull($routes->get('billing_invoice_update'));
         self::assertNotNull($routes->get('billing_invoice_delete'));
         self::assertNotNull($routes->get('nexum_management_modules'));
-        self::assertNotNull($routes->get('nexum_management_module_update'));
+        self::assertNull($routes->get('nexum_management_module_update'));
     }
 
     public function testModuleRegistryAndAboutCommandAreAvailable(): void
     {
         $registry = $this->kernel->getContainer()->get(ModuleRegistryInterface::class);
         self::assertInstanceOf(ModuleRegistryInterface::class, $registry);
-        self::assertTrue($registry->get('billing')->enabled);
+        self::assertTrue($registry->get(BillingModule::class)->enabled);
 
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
@@ -57,5 +59,21 @@ final class KernelBootTest extends TestCase
 
         self::assertStringContainsString('Nexum', $tester->getDisplay());
         self::assertStringContainsString('Symfony', $tester->getDisplay());
+    }
+
+    public function testOptionalNexumKernelHasTheSameRoutesWithoutDuplicates(): void
+    {
+        $kernel = new NexumTestKernel('test', true);
+        try {
+            $kernel->boot();
+            $router = $kernel->getContainer()->get('router');
+            self::assertInstanceOf(RouterInterface::class, $router);
+            $routes = $router->getRouteCollection();
+            self::assertNotNull($routes->get('app_home'));
+            self::assertNotNull($routes->get('billing_invoice_list'));
+            self::assertCount(1, array_filter(array_keys($routes->all()), static fn (string|int $name): bool => 'billing_invoice_list' === $name));
+        } finally {
+            $kernel->shutdown();
+        }
     }
 }

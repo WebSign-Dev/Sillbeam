@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Module\Billing\Invoice\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nexum\Entity\Entity\AbstractSoftDeletableEntity;
+use Nexum\Entity\AbstractSoftDeletableEntity;
 use Nexum\Security\Contract\SubjectUserInterface;
 use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;

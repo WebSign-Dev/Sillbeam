@@ -1,123 +1,177 @@
 deptrac:
     paths:
-        - ./packages
+        - ./src
     exclude_files:
         - '#.*\/tests\/.*#'
     layers:
         - name: Core
           collectors:
               - type: directory
-                value: packages/core/src/.*
+                value: src/Core/.*
         - name: Kernel
           collectors:
               - type: directory
-                value: packages/kernel/src/.*
+                value: src/Kernel/.*
+        - name: Architecture
+          collectors:
+              - type: directory
+                value: src/Architecture/.*
+        - name: Module
+          collectors:
+              - type: directory
+                value: src/Module/.*
+        - name: Project
+          collectors:
+              - type: directory
+                value: src/Project/.*
+        - name: Routing
+          collectors:
+              - type: directory
+                value: src/Routing/.*
+        - name: DependencyInjection
+          collectors:
+              - type: directory
+                value: src/DependencyInjection/.*
         - name: Entity
           collectors:
               - type: directory
-                value: packages/entity/src/.*
+                value: src/Entity/.*
         - name: Doctrine
           collectors:
               - type: directory
-                value: packages/doctrine/src/.*
+                value: src/Doctrine/.*
         - name: Api
           collectors:
               - type: directory
-                value: packages/api/src/.*
+                value: src/Api/.*
         - name: Security
           collectors:
               - type: directory
-                value: packages/security/src/.*
+                value: src/Security/(?!Mfa/|Passkey/).*
         - name: User
           collectors:
               - type: directory
-                value: packages/user/src/.*
+                value: src/User/.*
         - name: SecurityMfa
           collectors:
               - type: directory
-                value: packages/security-mfa/src/.*
+                value: src/Security/Mfa/.*
         - name: SecurityPasskey
           collectors:
               - type: directory
-                value: packages/security-passkey/src/.*
+                value: src/Security/Passkey/.*
         - name: Exception
           collectors:
               - type: directory
-                value: packages/exception/src/.*
+                value: src/Exception/.*
         - name: Http
           collectors:
               - type: directory
-                value: packages/http/src/.*
+                value: src/Http/.*
         - name: Serializer
           collectors:
               - type: directory
-                value: packages/serializer/src/.*
+                value: src/Serializer/.*
         - name: Validator
           collectors:
               - type: directory
-                value: packages/validator/src/.*
+                value: src/Validator/.*
         - name: Logger
           collectors:
               - type: directory
-                value: packages/logger/src/.*
+                value: src/Logger/.*
         - name: Filesystem
           collectors:
               - type: directory
-                value: packages/filesystem/src/.*
+                value: src/Filesystem/.*
         - name: Messenger
           collectors:
               - type: directory
-                value: packages/messenger/src/.*
+                value: src/Messenger/.*
         - name: Health
           collectors:
               - type: directory
-                value: packages/health/src/.*
+                value: src/Health/.*
         - name: Client
           collectors:
               - type: directory
-                value: packages/client/src/.*
+                value: src/Client/.*
         - name: Mailer
           collectors:
               - type: directory
-                value: packages/mailer/src/.*
+                value: src/Mailer/.*
         - name: Management
           collectors:
               - type: directory
-                value: packages/management/src/.*
+                value: src/Management/.*
         - name: QrCode
           collectors:
               - type: directory
-                value: packages/qrcode/src/.*
+                value: src/QrCode/.*
         - name: Search
           collectors:
               - type: directory
-                value: packages/search/src/.*
+                value: src/Search/.*
         - name: Notification
           collectors:
               - type: directory
-                value: packages/notification/src/.*
+                value: src/Notification/.*
         - name: Location
           collectors:
               - type: directory
-                value: packages/location/src/.*
+                value: src/Location/.*
         - name: Payment
           collectors:
               - type: directory
-                value: packages/payment/src/.*
+                value: src/Payment/.*
         - name: Reporting
           collectors:
               - type: directory
-                value: packages/reporting/src/.*
+                value: src/Reporting/.*
     ruleset:
         Core: []
         Kernel:
             - Core
+            - Module
+        Architecture:
+            - Module
+            - Project
+        Module:
+            - Architecture
+            - Project
+        Project:
+            - Architecture
+            - Module
+        Routing:
+            - Module
+            - Project
+        DependencyInjection:
+            - Api
+            - Architecture
+            - Core
+            - Doctrine
+            - Entity
+            - Filesystem
+            - Http
+            - Kernel
+            - Mailer
+            - Management
+            - Messenger
+            - Module
+            - Project
+            - QrCode
+            - Routing
+            - Security
+            - SecurityMfa
+            - SecurityPasskey
+            - Serializer
+            - User
+            - Validator
         Entity:
             - Core
         Doctrine:
             - Core
             - Entity
-            - Kernel
         Api:
             - Core
             - Kernel
@@ -143,6 +197,7 @@ deptrac:
             - Entity
             - Security
             - User
+            - Project
         Exception:
             - Core
         Http:
@@ -161,7 +216,8 @@ deptrac:
         Management:
             - Api
             - Core
-            - Kernel
+            - Module
+            - Project
             - Security
         QrCode:
             - Core

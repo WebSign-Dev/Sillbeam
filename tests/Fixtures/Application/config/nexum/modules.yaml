@@ -1,6 +1,0 @@
-version: 1
-
-modules:
-    billing:
-        class: App\Module\Billing\BillingModule
-        enabled: true

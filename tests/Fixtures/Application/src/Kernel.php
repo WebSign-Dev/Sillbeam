@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App;
 
-use Nexum\Kernel\NexumKernel;
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
-final class Kernel extends NexumKernel
+final class Kernel extends BaseKernel
 {
+    use MicroKernelTrait;
+
     public function getApplicationName(): string
     {
         return 'Nexum Test Application';

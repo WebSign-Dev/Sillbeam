@@ -1,0 +1,6 @@
+framework:
+    secret: project-test
+    trusted_hosts: ['^(shop|www|admin)\.example\.test$']
+    router:
+        utf8: true
+    test: true

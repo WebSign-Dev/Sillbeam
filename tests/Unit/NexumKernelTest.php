@@ -18,6 +18,6 @@ final class NexumKernelTest extends TestCase
             }
         };
 
-        self::assertSame('nexum/monorepo', $kernel->getApplicationName());
+        self::assertSame('benjaminoeffinger/nexum', $kernel->getApplicationName());
     }
 }

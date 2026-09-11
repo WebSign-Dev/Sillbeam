@@ -1,0 +1,10 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    ProjectApp\:
+        resource: ../src/
+        exclude:
+            - ../src/Kernel.php
+            - ../src/Module/
+            - ../src/Project/

@@ -6,6 +6,7 @@ namespace Nexum\Tests\Unit;
 
 use League\Flysystem\Filesystem;
 use League\Flysystem\Local\LocalFilesystemAdapter;
+use Nexum\Entity\AbstractSoftDeletableEntity;
 use Nexum\Filesystem\Adapter\FlysystemStorage;
 use Nexum\Filesystem\ValueObject\SafePath;
 use Nexum\Health\HealthCheckInterface;
@@ -88,6 +89,7 @@ final class InfrastructureModulesTest extends TestCase
         self::assertSame('EUR', (new Money(1999, 'EUR'))->currency);
         self::assertSame(20, (new SearchQuery('nexum'))->limit);
         self::assertSame('key-123456789012', (new PaymentRequest('key-123456789012', new Money(1, 'EUR'), 'invoice'))->idempotencyKey);
+        self::assertNotEmpty((new class extends AbstractSoftDeletableEntity {})->getId()->toRfc4122());
     }
 
     public function testNotificationRoutingFailsForUnknownChannels(): void
