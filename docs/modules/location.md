@@ -1,15 +1,16 @@
-# Modul: location
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Unveränderliche, validierte Orts-Value-Objects.
+# Location
 
-## Bereitstellung
+`Nexum\Location` enthält kleine immutable Value Objects ohne Framework-Abhängigkeit.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+```php
+$coordinates = new Coordinates(48.137154, 11.576124);
+$address = new PostalAddress('Marienplatz 1', '80331', 'München', 'DE');
+```
 
-## Öffentliche API
+`Coordinates` akzeptiert nur endliche WGS84-Werte: Latitude −90 bis 90, Longitude −180 bis 180. `PostalAddress` verlangt Straße, Postleitzahl und Ort sowie einen zweistelligen Uppercase-Country-Code.
 
-Coordinates, PostalAddress. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+Die Klassen führen kein Geocoding, keine Distanzberechnung und keine länderspezifische Postleitzahlvalidierung durch. Diese Aufgaben bleiben austauschbare Services der Anwendung.
 
-## Entwicklung
-
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+Weiter: [Optionale Bausteine](../guides/optional-modules.md) und [öffentliche API](../reference/public-api.md).

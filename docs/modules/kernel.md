@@ -1,15 +1,48 @@
-# Modul: kernel
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Modulregistrierung, Discovery, Routing und Runtime-Informationen.
+# Kernel
 
-## Bereitstellung
+`Nexum\Kernel` enthält einen optionalen Komfort-Kernel, Runtime-Informationen und `nexum:about`. Nexum setzt keinen eigenen Kernel voraus.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+## Empfohlener Stock-Kernel
 
-## Öffentliche API
+```php
+use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
-Der optionale `NexumKernel` sowie `KernelInformationInterface`. Module- und Project-Registries liegen in den gleichnamigen Architekturmodulen. Ein Stock-Symfony-Kernel ist vollständig unterstützt.
+final class Kernel extends BaseKernel
+{
+    use MicroKernelTrait;
+}
+```
 
-## Entwicklung
+Zusammen mit `Nexum\NexumBundle` besitzt er die vollständige Nexum-Funktionalität.
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+## Optionaler Komfort-Kernel
+
+```php
+use Nexum\Kernel\NexumKernel;
+
+final class Kernel extends NexumKernel
+{
+}
+```
+
+`NexumKernel` ergänzt im Wesentlichen `getApplicationName()` anhand des Composer-Root-Packages. Er besitzt kein eigenes Modulrouting und erzeugt keine zweite Integrationsvariante.
+
+## Runtime-Informationen
+
+`KernelInformationInterface::all()` liefert Anwendung, Environment, Debugstatus, PHP-, Symfony- und Nexum-Version sowie gefundene und aktive Modulzahlen. `AboutCommand` formatiert diese Informationen:
+
+```bash
+php bin/console nexum:about
+```
+
+## Grenzen
+
+- Kein Service Locator im Kernel.
+- Kein statisches `Nexum::service()`.
+- Kein eigener Router oder Container.
+- Kein Unterschied im Verhalten zwischen Stock-Kernel und NexumKernel.
+
+Weiter: [Erste Schritte](../guides/getting-started.md), [Architektur](../architecture/overview.md) und [Test-Apps](../development/test-apps.md).

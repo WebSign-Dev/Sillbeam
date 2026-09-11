@@ -1,15 +1,32 @@
-# Modul: validator
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Wiederverwendbare generische Symfony-Constraints.
+# Validator
 
-## Bereitstellung
+`Nexum\Validator` ergänzt Symfony Validator um wiederverwendbare Constraints. Aktuell gehört `#[StrongPassword]` zur öffentlichen API.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+## Verwendung
 
-## Öffentliche API
+```php
+use Nexum\Validator\Constraint\StrongPassword;
 
-StrongPassword. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+final readonly class RegistrationInput
+{
+    public function __construct(
+        #[StrongPassword(minLength: 14)]
+        public string $password,
+    ) {
+    }
+}
+```
 
-## Entwicklung
+Ein gültiger Wert enthält mindestens die konfigurierte Länge sowie Kleinbuchstaben, Großbuchstaben, Zahl und Sonderzeichen. `null` und leerer String werden nicht als Pflichtfeld behandelt; dafür wird zusätzlich `#[Assert\NotBlank]` verwendet.
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+Nicht-String-Werte erzeugen eine Violation. Die Message kann wie bei normalen Symfony-Constraints angepasst und gruppiert werden.
+
+## Grenzen
+
+- Komplexität ist kein Ersatz für kompromittierte Passwortlisten oder Rate Limiting.
+- Hashing übernimmt Symfony PasswordHasher, nicht der Validator.
+- Fachliche Passwortregeln können eigene Constraints ergänzen.
+
+Weiter: [User](user.md) und [Security](security.md).

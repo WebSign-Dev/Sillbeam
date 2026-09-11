@@ -1,15 +1,23 @@
-# Modul: exception
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Kleine gemeinsame Exception-Hierarchie für stabile Fehlersemantik.
+# Exception
 
-## Bereitstellung
+`Nexum\Exception` liefert eine kleine Hierarchie für Fehlergrenzen außerhalb des API-Problemformats.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+```text
+RuntimeException
+└── NexumException implements NexumExceptionInterface
+    ├── DomainException
+    │   └── NotFoundException
+    └── InfrastructureException
+```
 
-## Öffentliche API
+`DomainException` beschreibt fachlich ungültige Operationen. `InfrastructureException` kapselt technische Ausfälle. `NotFoundException` erzeugt eine konsistente Meldung aus Ressourcentyp und Identifier.
 
-NexumException, DomainException, InfrastructureException, NotFoundException. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+```php
+throw new NotFoundException('Invoice', $invoiceId);
+```
 
-## Entwicklung
+Die Klassen bestimmen nicht automatisch einen HTTP-Status. An API-Grenzen werden Fehler bewusst in `ApiProblemException` oder eine anwendungseigene Darstellung übersetzt.
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+Weiter: [API](api.md) und [Core](core.md).

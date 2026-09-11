@@ -1,15 +1,33 @@
-# Modul: mailer
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Einfacher transaktionaler E-Mail-Versand über Symfony Mailer.
+# Mailer
 
-## Bereitstellung
+`Nexum\Mailer` kapselt den Versand einfacher Text-/HTML-E-Mails hinter `MailerInterface` und verwendet standardmäßig Symfony Mailer.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+## Aktivierung
 
-## Öffentliche API
+```yaml
+nexum:
+    mailer:
+        enabled: true
+        default_from: no-reply@example.com
+```
 
-MailerInterface, EmailMessage. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+```php
+$mailer->send(new EmailMessage(
+    to: ['customer@example.com'],
+    subject: 'Invoice ready',
+    text: 'Your invoice is ready.',
+    html: '<p>Your invoice is ready.</p>',
+));
+```
 
-## Entwicklung
+`EmailMessage` verlangt mindestens einen validen Empfänger, einen nichtleeren Subject ohne Zeilenumbrüche sowie Text oder HTML. Ein Sender am Message überschreibt `default_from`.
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+## Grenzen
+
+- Keine Templates, Queueing-, Bounce- oder Newsletterlogik.
+- Attachments und erweiterte MIME-Funktionen verwenden direkt Symfony Mailer oder einen eigenen Adapter.
+- Mailpit ist Entwicklungsinfrastruktur, kein Teil dieser Komponente.
+
+Weiter: [Infrastruktur-Guide](../guides/infrastructure.md) und [Messenger](messenger.md).

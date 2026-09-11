@@ -1,3 +1,5 @@
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
+
 # Nexum Foundation 0.1
 
 ## Ziel

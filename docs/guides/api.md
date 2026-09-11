@@ -1,3 +1,5 @@
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum" width="520"></p>
+
 # REST-Resources verwenden
 
 Eine vollständige Standard-API benötigt nur eine Route, ein Resource-Attribut und die abstrakte Basisklasse:

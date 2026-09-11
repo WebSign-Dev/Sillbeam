@@ -1,15 +1,22 @@
-# Modul: qrcode
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Begrenzte QR-Code-Erzeugung über einen austauschbaren Contract.
+# QR Code
 
-## Bereitstellung
+`Nexum\QrCode` erzeugt QR-Codes als SVG hinter `QrCodeGeneratorInterface`.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+## Aktivierung und Verwendung
 
-## Öffentliche API
+```yaml
+nexum:
+    qrcode: { enabled: true }
+```
 
-QrCodeGeneratorInterface. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+```php
+$svg = $qrCodes->svg('otpauth://totp/Nexum:user@example.com?...', 320);
+```
 
-## Entwicklung
+`EndroidQrCodeGenerator` akzeptiert 1–4096 Datenbytes und Größen von 64–2048 Pixeln. Der Renderer verwendet zehn Pixel Margin und liefert den SVG-Inhalt als String.
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+Die Komponente entscheidet nicht, ob Daten sicher oder öffentlich sind. TOTP-Secrets und Login-Tokens dürfen nur im vorgesehenen, authentifizierten Flow gerendert werden.
+
+Weiter: [MFA](security-mfa.md) und [Infrastruktur-Guide](../guides/infrastructure.md).

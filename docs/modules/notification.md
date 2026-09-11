@@ -1,15 +1,23 @@
-# Modul: notification
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Explizite provider-neutrale Benachrichtigungskanäle.
+# Notification
 
-## Bereitstellung
+`Nexum\Notification` routet provider-neutrale Benachrichtigungen an benannte Channels.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+```php
+$notification = new Notification(
+    type: 'invoice.ready',
+    recipient: 'customer-42',
+    subject: 'Invoice ready',
+    body: 'Your invoice is available.',
+    data: ['invoice_id' => '42'],
+);
 
-## Öffentliche API
+$router->send('email', $notification);
+```
 
-Notification, NotificationChannelInterface, NotificationRouter. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+Ein `NotificationChannelInterface` liefert einen eindeutigen Namen und implementiert `send()`. Doppelte Channel-Namen erzeugen beim Aufbau des Routers einen Fehler; unbekannte Namen schlagen explizit fehl.
 
-## Entwicklung
+`Notification` verlangt Typ und Recipient, begrenzt den Body auf 1 MiB und erlaubt nur skalare Metadaten. E-Mail, Push, SMS oder In-App-Zustellung bleiben eigene Channel-Adapter. Retry und asynchrone Verarbeitung können über Messenger erfolgen.
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+Weiter: [Mailer](mailer.md), [Messenger](messenger.md) und [Optionale Bausteine](../guides/optional-modules.md).

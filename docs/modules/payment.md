@@ -1,15 +1,24 @@
-# Modul: payment
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Provider-neutrale Zahlungsverträge mit Minor Units und Idempotenz.
+# Payment
 
-## Bereitstellung
+`Nexum\Payment` definiert provider-neutrale Zahlungswerte und einen Charge-Vertrag. Die Klassen sind reine PHP-Bausteine ohne Kernel- oder Project-Abhängigkeit.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+```php
+$request = new PaymentRequest(
+    idempotencyKey: 'invoice:0194f6d5-1234',
+    amount: new Money(1299, 'EUR'),
+    reference: 'INV-2026-0042',
+    metadata: ['customer_id' => '42'],
+);
 
-## Öffentliche API
+$result = $provider->charge($request);
+```
 
-Money, PaymentRequest, PaymentResult, PaymentProviderInterface. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+`Money` verwendet nichtnegative Minor Units und einen dreistelligen Uppercase-Währungscode. 12,99 EUR werden als `1299` gespeichert; Rundungsfehler von Floats werden vermieden.
 
-## Entwicklung
+`PaymentRequest` verlangt einen 16–128 Zeichen langen Idempotency Key aus sicheren Zeichen und eine nichtleere Referenz. `PaymentResult` transportiert Provider-ID und Status.
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+`PaymentProviderInterface` sagt nicht, wie Refunds, Webhooks oder Capture funktionieren. Stripe, Adyen oder andere Anbieter bleiben eigene Adapter mit ihrem jeweiligen Zustandsmodell.
+
+Weiter: [Optionale Bausteine](../guides/optional-modules.md).

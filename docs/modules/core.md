@@ -1,15 +1,19 @@
-# Modul: core
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Fundamentale Marker und Contracts ohne Abhängigkeit auf optionale Module.
+# Core
 
-## Bereitstellung
+`Nexum\Core` ist die kleinste stabile Grundlage und darf nicht von Module, Project, Routing oder optionaler Infrastruktur abhängen.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+## Contracts
 
-## Öffentliche API
+| Contract | Zweck |
+| --- | --- |
+| `NexumComponentInterface` | Marker für Nexum-Komponenten |
+| `SubjectInterface` | stabile, nichtleere fachliche Subject-ID |
+| `NexumExceptionInterface` | gemeinsamer Throwable-Marker |
 
-NexumComponentInterface, SubjectInterface, NexumExceptionInterface. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+`SubjectInterface` trennt eine dauerhafte Identität von veränderbaren Login-Namen wie E-Mail-Adressen. Security, User und Scopes können darauf aufbauen, ohne eine konkrete Entity zu kennen.
 
-## Entwicklung
+Core enthält bewusst keinen Containerzugriff, keinen ProjectContext, keine statischen Helfer und keine Framework-Lifecycle-Annahme. Klassen aus diesem Bereich müssen ohne Kernel testbar bleiben.
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+Weiter: [Architektur](../architecture/overview.md) und [öffentliche API](../reference/public-api.md).

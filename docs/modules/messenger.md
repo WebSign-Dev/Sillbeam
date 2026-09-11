@@ -1,15 +1,38 @@
-# Modul: messenger
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Stabiler Dispatch-Contract auf Symfony Messenger.
+# Messenger
 
-## Bereitstellung
+`Nexum\Messenger` stellt einen kleinen anwendungsneutralen Dispatch-Vertrag über Symfony Messenger bereit.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+## Aktivierung
 
-## Öffentliche API
+```yaml
+nexum:
+    messenger: { enabled: true }
+```
 
-MessageBusInterface. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+```php
+final readonly class IssueInvoice
+{
+    public function __construct(private MessageBusInterface $messages) {}
 
-## Entwicklung
+    public function __invoke(string $invoiceId): void
+    {
+        $this->messages->dispatch(new GenerateInvoicePdf($invoiceId));
+    }
+}
+```
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+`SymfonyMessageBus` gibt das von Symfony erzeugte Envelope als `object` zurück. Transport, Routing, Retry-Strategien, Failure Transport und Workerbetrieb bleiben normale Symfony-Konfiguration.
+
+## Project-Verhalten
+
+Autokonfigurierte Handler verwendeter Module sind containerweit registriert. Project-Zuordnung filtert keine Messenger-Nachrichten oder Handler. Benötigt ein Handler Project-Kontext, muss die Nachricht eine ausdrückliche Project-ID tragen und der Handler sie über die Registry auflösen.
+
+## Grenzen
+
+- Kein zweiter Event- oder Message-Lifecycle.
+- Keine automatische Mandanten-/Project-Isolation.
+- Keine versteckten Transaktionen um Handler.
+
+Weiter: [Infrastruktur-Guide](../guides/infrastructure.md) und [Projects](../guides/projects.md).

@@ -1,15 +1,23 @@
-# Modul: health
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Aggregierbare Health Checks mit fail-closed Statusermittlung.
+# Health
 
-## Bereitstellung
+`Nexum\Health` aggregiert unabhängige Health Checks, ohne selbst eine öffentliche Route zu erzwingen.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+```php
+final class DatabaseHealth implements HealthCheckInterface
+{
+    public function check(): HealthResult
+    {
+        return new HealthResult('database', HealthStatus::Healthy);
+    }
+}
+```
 
-## Öffentliche API
+`HealthRegistry::check()` liefert Gesamtstatus und Einzelergebnisse. Priorität: `unhealthy` vor `degraded` vor `healthy`. Wirft ein Check eine Exception, wird er fail-closed als `unhealthy` aufgenommen; Metadaten enthalten nur die Exception-Klasse.
 
-HealthCheckInterface, HealthRegistry, HealthResult, HealthStatus. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+`HealthResult` erlaubt ausschließlich skalare oder `null`-Metadaten. Secrets und vollständige Verbindungsfehler gehören nicht in öffentliche Health-Antworten.
 
-## Entwicklung
+Eine Anwendung entscheidet selbst über Route, Authentifizierung, Statuscode und Trennung von Liveness und Readiness.
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+Weiter: [Security-Checkliste](../operations/security-checklist.md).

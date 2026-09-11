@@ -1,3 +1,5 @@
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
+
 # Infrastrukturmodule
 
 Das HTTP-Modul erzeugt oder übernimmt ausschließlich syntaktisch sichere Request-IDs und gibt sie als X-Request-Id zurück. IP-Adressen werden über Symfonys Trusted-Proxy-Modell ermittelt. Das Client-Modul stellt diese Informationen als unveränderliches Objekt bereit.

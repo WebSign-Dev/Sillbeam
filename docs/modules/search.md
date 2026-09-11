@@ -1,15 +1,20 @@
-# Modul: search
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Provider-neutrale Suchabfragen und Ergebnisse.
+# Search
 
-## Bereitstellung
+`Nexum\Search` beschreibt provider-neutrale Suchanfragen und Treffer. Elasticsearch, OpenSearch, Meilisearch oder SQL bleiben austauschbare Implementierungen von `SearchProviderInterface`.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+```php
+$result = $search->search('products', new SearchQuery(
+    text: 'modular framework',
+    filters: ['language' => 'de', 'status' => ['published']],
+    limit: 20,
+    offset: 0,
+));
+```
 
-## Öffentliche API
+`SearchQuery` begrenzt Text auf 1000 Zeichen, Limit auf 1–100 und Offset auf nichtnegative Werte. `SearchResult` enthält Treffer und Gesamtanzahl; `SearchHit` enthält ID, Score und skalare Felder.
 
-SearchProviderInterface, SearchQuery, SearchResult, SearchHit. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+Die Abstraktion definiert bewusst keine anbieterspezifische Query DSL, Facets, Highlighting oder Indexverwaltung. Solche Fähigkeiten gehören in spezialisierte Adapter oder zusätzliche Anwendungsschnittstellen.
 
-## Entwicklung
-
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+Weiter: [Optionale Bausteine](../guides/optional-modules.md).

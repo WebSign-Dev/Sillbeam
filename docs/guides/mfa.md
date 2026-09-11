@@ -1,3 +1,5 @@
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
+
 # MFA verwenden
 
 Das Modul `Nexum\\Security\\Mfa` ergänzt den Passwort-Login um TOTP nach RFC 6238 und einmalig verwendbare Recovery-Codes. Ist für einen Benutzer kein bestätigtes Enrollment vorhanden, verhält sich der normale Login unverändert.

@@ -1,3 +1,5 @@
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
+
 # Passkeys verwenden
 
 Das Modul `Nexum\\Security\\Passkey` stellt eine reine JSON-API für WebAuthn Level 3 bereit. Browser oder Apps rufen die Options-Routen auf, übergeben die Daten an `navigator.credentials` und senden das Ergebnis an die jeweilige Abschlussroute zurück.

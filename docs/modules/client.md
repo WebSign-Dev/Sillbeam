@@ -1,15 +1,21 @@
-# Modul: client
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Request-bezogene Clientinformationen auf Basis des HTTP-Kontexts.
+# Client
 
-## Bereitstellung
+`Nexum\Client` projiziert den HTTP-ClientContext auf das einfache readonly Model `Client`.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+```php
+public function __construct(private ClientProvider $clients) {}
 
-## Öffentliche API
+$client = $this->clients->current();
+$client->ip;
+$client->userAgent;
+$client->locale;
+$client->requestId;
+```
 
-Client, ClientProvider. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+`ClientProvider` delegiert vollständig an `ClientContextResolverInterface`. Dadurch bleiben Trusted-Proxy-Regeln, Headerbegrenzungen und Request-ID-Erzeugung zentral in `Nexum\Http`.
 
-## Entwicklung
+Die Daten sind technische Request-Metadaten, keine authentifizierte Identität. IP, User Agent und Locale dürfen nicht als alleinige Autorisierungsgrundlage verwendet werden.
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+Weiter: [HTTP](http.md) und [Security](security.md).

@@ -1,15 +1,43 @@
-# Modul: management
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Read-only Ansicht der kompilierten Nexum-Architektur.
+# Management
 
-## Bereitstellung
+`Nexum\Management` bietet eine ausschließlich lesende Sicht auf die kompilierte Architektur. Es ersetzt das frühere Runtime-Enable/Disable-Modell.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+## Aktivierung
 
-## Öffentliche API
+```yaml
+nexum:
+    management:
+        enabled: true
+        api:
+            enabled: false
+            projects: []
+```
 
-`nexum:architecture`, `ModuleRegistryInterface`, `ProjectRegistryInterface` und die optional freigeschaltete GET-API. Nexum verändert keine Konfiguration oder Quellen zur Laufzeit.
+Die CLI-Ansicht wird mit der Fähigkeit registriert. Die optionale GET-API benötigt zusätzlich aktivierte API- und Security-Integration sowie im Project Mode eine explizite Project-Allowlist.
 
-## Entwicklung
+## CLI
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+```bash
+php bin/console nexum:architecture
+```
+
+Die Ausgabe zeigt Projects, Modules, Shared/Private Scope, Dependencies und aktive Zuordnung.
+
+## HTTP
+
+`ModuleController` liest `ModuleRegistryInterface` und liefert Architekturmetadaten. Es existieren keine POST-, PATCH-, DELETE-, Enable-, Disable- oder Remove-Endpunkte.
+
+## Warum read-only?
+
+Container, Router, Doctrine-Mappings, Subscriber und Handler werden beim Build kompiliert. Eine YAML-Datei zur Laufzeit umzuschreiben würde diesen Zustand nicht sicher aktualisieren und wäre konzeptionell falsch.
+
+## Grenzen
+
+- Keine Source-Änderung.
+- Keine Runtime-Konfigurationsmutation.
+- Keine Deployment-Steuerung.
+- Keine automatische öffentliche Route.
+
+Weiter: [CLI-Referenz](../reference/cli.md) und [Architektur](../architecture/overview.md).

@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520">
+</p>
+
 # Nexum
 
 Nexum ist ein modularer, API-orientierter Backend-Baukasten auf Basis von PHP 8.4, Symfony 7.4 und Doctrine ORM 3. Das Framework wird als ein Composer-Package (`benjaminoeffinger/nexum`) veröffentlicht und als modularer Monolith betrieben. Die Module besitzen klare Namespace- und Abhängigkeitsgrenzen, sind aber keine getrennt installierbaren Pakete oder eigenständig laufenden Dienste.
@@ -106,3 +110,7 @@ Symfony bleibt vollständig nutzbar. Reine Klassen wie `Money`, `Coordinates`, R
 - `tests/Fixtures/Application`: interne Nexum-Testanwendung für Integrationstests
 
 Externe Provider – beispielsweise Stripe, S3, OpenSearch oder Push-Dienste – bleiben bewusst eigene Adapter. Das Framework erzwingt keine Anbieter-SDKs.
+
+## Dokumentation
+
+Das vollständige, navigierbare Handbuch beginnt unter [`docs/README.md`](docs/README.md). Dort finden sich Quickstart, Architektur, Konfigurationsreferenz, Module, Projects, Security, Integrationen, Test-Apps, CLI und Migration.

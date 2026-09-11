@@ -1,3 +1,5 @@
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum" width="520"></p>
+
 # Entities verwenden
 
 Für neue Entities ist UUIDv7 der Standard:

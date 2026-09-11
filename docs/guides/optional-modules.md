@@ -1,3 +1,5 @@
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
+
 # Optionale Fachmodule
 
 Die optional nutzbaren Module enthalten absichtlich kleine öffentliche Verträge:

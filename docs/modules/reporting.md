@@ -1,15 +1,24 @@
-# Modul: reporting
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum – Build · Connect · Extend" width="520"></p>
 
-Sichere JSON- und CSV-Ausgabe für tabellarische Berichte.
+# Reporting
 
-## Bereitstellung
+`Nexum\Reporting` stellt ein einfaches tabellarisches Reportmodell und Renderer für CSV und JSON bereit. Alle Klassen funktionieren ohne Symfony-Kernel.
 
-Das Modul ist Bestandteil des Composer-Pakets `benjaminoeffinger/nexum` und wird nicht separat installiert.
+```php
+$report = new Report(
+    columns: ['number', 'total'],
+    rows: [
+        ['number' => 'INV-42', 'total' => 1299],
+    ],
+);
 
-## Öffentliche API
+$csv = (new CsvReportRenderer())->render($report);
+```
 
-Report, ReportRendererInterface, JsonReportRenderer, CsvReportRenderer. Symfony-Dienste bleiben dekorier- und konfigurierbar; interne Implementierungen sind kein Stabilitätsvertrag.
+Spalten müssen nichtleer und eindeutig sein. Fehlende Row-Werte werden beim CSV-Rendering leer ausgegeben. `CsvReportRenderer` schützt Zellen, die mit `=`, `+`, `-` oder `@` beginnen, vor Spreadsheet-Formula-Injection. Der temporäre Stream verwendet bis zu 2 MiB RAM und weicht danach auf PHPs Temp-Mechanismus aus.
 
-## Entwicklung
+`JsonReportRenderer` liefert `columns` und `rows` als JSON und meldet Encoderfehler über `JSON_THROW_ON_ERROR`. Eigene Renderer implementieren `mediaType()` und `render()`.
 
-Tests, PHPStan, Architekturregeln und Coding Style werden zentral im Nexum-Package ausgeführt.
+Große Streamingexporte, PDF-Layouts und asynchrone Generierung gehören in spezialisierte Anwendungskomponenten.
+
+Weiter: [Optionale Bausteine](../guides/optional-modules.md).

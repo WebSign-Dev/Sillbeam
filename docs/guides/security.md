@@ -1,3 +1,5 @@
+<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum" width="520"></p>
+
 # Security verwenden
 
 Das Modul `Nexum\\Security` stellt Authentifizierung, Token-Lebenszyklus, Permission-Auflösung und den Security Context bereit. `Nexum\\User` ist der optional nutzbare Doctrine-Adapter mit einer erweiterbaren Benutzerbasis. Dadurch kann Security auch mit einem eigenen User Provider oder Token Store verwendet werden.
