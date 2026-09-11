@@ -35,22 +35,7 @@
             "migrations/.gitignore"
         ]
     },
-    "nexum/api": {
-        "version": "dev-main"
-    },
-    "nexum/doctrine": {
-        "version": "dev-main"
-    },
-    "nexum/http": {
-        "version": "dev-main"
-    },
-    "nexum/kernel": {
-        "version": "dev-main"
-    },
-    "nexum/serializer": {
-        "version": "dev-main"
-    },
-    "nexum/validator": {
+    "benjaminoeffinger/nexum": {
         "version": "dev-main"
     },
     "symfony/console": {

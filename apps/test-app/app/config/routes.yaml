@@ -9,3 +9,7 @@
 
 controllers:
     resource: routing.controllers
+
+nexum:
+    resource: .
+    type: nexum

@@ -1,6 +1,6 @@
 {
     "name": "nexum/test-app",
-    "description": "Isolated Symfony reference application for developing and testing Nexum packages.",
+    "description": "Isolated Symfony reference application for developing and testing the Nexum framework.",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "dev",
@@ -8,7 +8,7 @@
     "repositories": [
         {
             "type": "path",
-            "url": "../../../packages/*",
+            "url": "../../..",
             "options": {
                 "symlink": true
             }
@@ -18,7 +18,7 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "nexum/pack-core": "^0.1",
+        "benjaminoeffinger/nexum": "^0.1",
         "symfony/console": "7.4.*",
         "symfony/dotenv": "7.4.*",
         "symfony/flex": "^2",

@@ -4,6 +4,9 @@ FROM composer:2 AS composer_stage
 
 FROM php:${PHP_VERSION}-fpm
 
+ARG HOST_UID=1000
+ARG HOST_GID=1000
+
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
@@ -16,6 +19,10 @@ RUN set -eux; \
     rm -rf /var/lib/apt/lists/*
 
 COPY --from=composer_stage /usr/bin/composer /usr/bin/composer
+
+RUN set -eux; \
+    groupmod --gid "${HOST_GID}" www-data; \
+    usermod --uid "${HOST_UID}" --gid "${HOST_GID}" www-data
 
 RUN { \
       echo 'memory_limit=512M'; \
