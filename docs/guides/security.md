@@ -1,6 +1,6 @@
 # Security verwenden
 
-`nexum/security` stellt Authentifizierung, Token-Lebenszyklus, Permission-Auflösung und den Security Context bereit. `nexum/user` ist der optionale Doctrine-Adapter mit einer erweiterbaren Benutzerbasis. Dadurch kann Security auch mit einem eigenen User Provider oder Token Store verwendet werden.
+Das Modul `Nexum\\Security` stellt Authentifizierung, Token-Lebenszyklus, Permission-Auflösung und den Security Context bereit. `Nexum\\User` ist der optional nutzbare Doctrine-Adapter mit einer erweiterbaren Benutzerbasis. Dadurch kann Security auch mit einem eigenen User Provider oder Token Store verwendet werden.
 
 ## Benutzer-Entity
 
@@ -22,8 +22,10 @@ Die Klasse enthält UUIDv7, E-Mail, Passwort-Hash, Rollen, direkte Permissions, 
 Die konkrete Klasse wird einmal angegeben:
 
 ```yaml
-nexum_user:
-    entity_class: App\Module\Identity\User\Entity\User
+nexum:
+    user:
+        enabled: true
+        entity_class: App\Module\Identity\User\Entity\User
 ```
 
 ## Rollen und Permissions
@@ -31,14 +33,18 @@ nexum_user:
 Permissions werden positiv vergeben. Ohne Freigabe ist eine Operation nicht erlaubt. Sie können direkt am Benutzer gespeichert oder einer Rolle zugeordnet werden:
 
 ```yaml
-nexum_security:
-    access_token_ttl: 3600
-    role_permissions:
-        ROLE_BILLING_MANAGER:
-            - billing.invoice.read
-            - billing.invoice.create
-            - billing.invoice.update
-            - billing.invoice.delete
+nexum:
+    security:
+        enabled: true
+        access_token_ttl: 3600
+        api:
+            enabled: true
+        role_permissions:
+            ROLE_BILLING_MANAGER:
+                - billing.invoice.read
+                - billing.invoice.create
+                - billing.invoice.update
+                - billing.invoice.delete
 ```
 
 Die globale Permission `*` ist für bewusst eingerichtete technische Administratoren verfügbar. Namespace-Wildcards wie `billing.*` werden absichtlich nicht interpretiert, damit eine neue Permission nicht unbemerkt freigegeben wird.
@@ -125,4 +131,4 @@ Die Implementierung verwendet Symfonys offiziellen Access-Token-Authenticator un
 
 ## Optionale Erweiterungen
 
-MFA und Passkeys bleiben eigene Pakete und ergänzen denselben Benutzer- und Token-Lebenszyklus. Anwendungen ohne diese Verfahren installieren die Pakete einfach nicht. Die vollständigen Abläufe stehen in [MFA](mfa.md) und [Passkeys](passkeys.md).
+MFA und Passkeys bleiben intern abgegrenzte Module und ergänzen denselben Benutzer- und Token-Lebenszyklus. Anwendungen ohne diese Verfahren registrieren die zugehörigen Bundles und Routen nicht. Die vollständigen Abläufe stehen in [MFA](mfa.md) und [Passkeys](passkeys.md).

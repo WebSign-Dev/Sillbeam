@@ -39,7 +39,7 @@ use Nexum\Security\Contract\SubjectUserInterface;
 private ?SubjectUserInterface $owner = null;
 ```
 
-Nexum löst das Interface automatisch auf die in `nexum_user.entity_class` konfigurierte User-Entity auf.
+Nexum löst das Interface automatisch auf die in `nexum.user.entity_class` konfigurierte User-Entity auf.
 `nullable: true` ist nur für die Übernahme alter, bislang eigentümerloser Datensätze nötig: Der API-Scope blendet sie sicher aus und setzt bei jedem neuen Datensatz einen Owner. In einem neuen Projekt ohne Legacy-Daten sollte die Beziehung `nullable: false` sein.
 
 Damit entstehen automatisch:

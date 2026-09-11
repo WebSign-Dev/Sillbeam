@@ -1,6 +1,28 @@
 # Nexum
 
-Nexum ist ein modularer, API-orientierter Backend-Baukasten auf Basis von PHP 8.4, Symfony 7.4 und Doctrine ORM 3. Die Entwicklung findet in einem Monorepo statt; jedes Framework-Modul besitzt trotzdem bereits ein eigenes Composer-Paket und kann später ohne grundlegenden Umbau in ein separates Repository verschoben werden.
+Nexum ist ein modularer, API-orientierter Backend-Baukasten auf Basis von PHP 8.4, Symfony 7.4 und Doctrine ORM 3. Das Framework wird als ein Composer-Package (`benjaminoeffinger/nexum`) veröffentlicht und als modularer Monolith betrieben. Die Module besitzen klare Namespace- und Abhängigkeitsgrenzen, sind aber keine getrennt installierbaren Pakete oder eigenständig laufenden Dienste.
+
+## Projektstruktur
+
+```text
+nexum/
+├── src/
+│   ├── Api/
+│   ├── Core/
+│   ├── Doctrine/
+│   ├── Entity/
+│   ├── Http/
+│   ├── Security/
+│   │   ├── Mfa/
+│   │   └── Passkey/
+│   └── ...
+├── tests/
+├── docs/
+├── composer.json
+└── README.md
+```
+
+Der gemeinsame PSR-4-Einstieg `Nexum\\` zeigt auf `src/`. Daraus entstehen weiterhin die fachlich getrennten Namespaces `Nexum\\Core\\…`, `Nexum\\Entity\\…`, `Nexum\\Security\\…` und so weiter.
 
 ## Entwicklungsumgebung
 
@@ -25,7 +47,7 @@ Nach dem Start:
 - phpMyAdmin: `https://tools.nexum-test-app.localhost/pma/`
 - Shell: `cd apps/test-app && fabryq harbor ssh php`
 
-Harbor erzeugt `apps/test-app/app/.env.local` automatisch. Die Referenz-App beginnt bewusst als saubere Symfony-Anwendung; Nexum-Pakete werden anschließend wie bei einem echten Verbraucherprojekt installiert und konfiguriert.
+Harbor erzeugt `apps/test-app/app/.env.local` automatisch. Die Referenz-App beginnt bewusst als saubere Symfony-Anwendung; das Nexum-Package wird anschließend wie bei einem echten Verbraucherprojekt installiert und konfiguriert.
 
 Der Composer-Lifecycle bereitet die bind-gemounteten Cache- und Logverzeichnisse automatisch für den lokalen PHP-Container vor. Das betrifft ausschließlich Development-Laufzeitordner; Produktionsrechte werden später über das jeweilige Deployment festgelegt.
 
@@ -38,17 +60,39 @@ composer architecture
 composer cs:check
 ```
 
+## Installation und Architektur
+
+Nexum besitzt genau einen Symfony-Einstieg:
+
+```php
+Nexum\NexumBundle::class => ['all' => true],
+```
+
+Bis zur Veröffentlichung der Flex-Recipe kommen eine zentrale `config/packages/nexum.yaml` und dieser einmalige Routenimport hinzu:
+
+```yaml
+nexum:
+    resource: .
+    type: nexum
+```
+
+`src/Module/Billing/BillingModule.php` wird allein durch `#[NexumModule]` entdeckt. Eine `modules.yaml`, Bundle-Registrierungen pro Komponente oder ein spezieller Kernel sind nicht erforderlich. `NexumKernel` bleibt als optionaler Komfort-Kernel verfügbar.
+
+Ohne Project-Descriptoren laufen alle aktivierten Shared Modules im Application Mode. Sobald `src/Project/*/*Project.php` existiert, ordnen `#[NexumProject(modules: [...])]` und die Verzeichnisstruktur Shared beziehungsweise private Modules den hostbasierten Projects zu. Das steuert Routen und Oberfläche, nicht die Isolation des Containers, der Datenbank oder von Symfony Subscriber/Handlern.
+
+Symfony bleibt vollständig nutzbar. Reine Klassen wie `Money`, `Coordinates`, Reports und Entity-Basisklassen funktionieren ohne Kernel; Framework-Services verwenden normales Dependency Injection. Nexum führt keinen statischen Service-Locator ein.
+
 ## Aktueller Foundation-Umfang
 
-- `nexum/core`: gemeinsame Marker und Basiskontrakte
-- `nexum/kernel`: Kernel, YAML-Modulregister, Modulrouting und `nexum:about`
-- `nexum/entity`: UUIDv7-, Zeitstempel- und Soft-Delete-Basisklassen
-- `nexum/doctrine`: Doctrine-Filter, Lifecycle-Zeitstempel und expliziter Entity Store
-- `nexum/api`: deklarative REST-Resources, CRUD, JSON-Fehler, Filter, Sortierung und zwei Pagination-Modi
-- `nexum/security`: Bearer-Authentifizierung, widerrufbare Token und deklarative Permission-Prüfung
-- `nexum/security-mfa`: verschlüsseltes TOTP, Recovery-Codes und kurzlebige Second-Factor-Challenges
-- `nexum/security-passkey`: WebAuthn-Passkeys mit usernameless Login, User Verification und Counter-Prüfung
-- `nexum/user`: erweiterbare Doctrine-Benutzerbasis, Token Store und Passwortverwaltung
+- **Core**: gemeinsame Marker und Basiskontrakte
+- **Kernel/Module/Project**: optionaler Komfort-Kernel, automatische Descriptor-Discovery, unveränderliche Registries, Host-Auflösung und `nexum:about`
+- **Entity**: UUIDv7-, Zeitstempel- und Soft-Delete-Basisklassen
+- **Doctrine**: Doctrine-Filter, Lifecycle-Zeitstempel und expliziter Entity Store
+- **Api**: deklarative REST-Resources, CRUD, JSON-Fehler, Filter, Sortierung und zwei Pagination-Modi
+- **Security**: Bearer-Authentifizierung, widerrufbare Token und deklarative Permission-Prüfung
+- **Security/Mfa**: verschlüsseltes TOTP, Recovery-Codes und kurzlebige Second-Factor-Challenges
+- **Security/Passkey**: WebAuthn-Passkeys mit usernameless Login, User Verification und Counter-Prüfung
+- **User**: erweiterbare Doctrine-Benutzerbasis, Token Store und Passwortverwaltung
 - **http/client**: Request-ID und begrenzte, vertrauenswürdige Client-Metadaten
 - **serializer/validator/exception**: sichere JSON-Defaults, wiederverwendbare Constraints und Exception-Verträge
 - **filesystem**: lokale oder Flysystem-basierte Speicherung mit Traversal-Schutz und Leselimits
@@ -56,7 +100,7 @@ composer cs:check
 - **messenger**: schlanker Symfony-Messenger-Vertrag mit konfigurierbarer Retry-Strategie
 - **mailer/qrcode**: begrenzter E-Mail-Versand und SVG-QR-Code-Erzeugung
 - **health**: aggregierbare, fail-closed Health Checks
-- **management**: gemeinsame CLI-/API-Logik für Modulkonfigurationen
+- **management**: read-only Architekturansicht per CLI und optionaler GET-API
 - **search/notification/location/payment/reporting**: provider-neutrale optionale Fachverträge
 - `apps/test-app`: isoliertes Harbor-Verbraucherprojekt mit einer frischen Symfony-App
 - `tests/Fixtures/Application`: interne Nexum-Testanwendung für Integrationstests

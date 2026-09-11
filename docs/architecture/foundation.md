@@ -2,7 +2,7 @@
 
 ## Ziel
 
-Die Foundation soll den häufigen Backend-Code stark reduzieren, ohne versteckte Datenbankoperationen oder einen überladenen Kernel einzuführen. Die einfache Benutzung entsteht durch klar begrenzte Basisklassen, automatische Bundle-Konfiguration und wenige explizite Services.
+Die Foundation soll häufigen Backend-Code stark reduzieren, ohne versteckte Datenbankoperationen oder einen überladenen Kernel einzuführen. Symfony bleibt Grundlage; Nexum wird als ein Package und ein `NexumBundle` integriert.
 
 ## Projekt- und Modulstruktur
 
@@ -15,15 +15,18 @@ src/Entity/...
 src/Module/Billing/BillingModule.php
 src/Module/Billing/Invoice/Controller/...
 src/Module/Billing/Invoice/Entity/...
+
+src/Project/Storefront/StorefrontProject.php
+src/Project/Storefront/Module/Checkout/CheckoutModule.php
 ```
 
-Klassische Controller werden weiterhin automatisch geladen. Modulare Controller werden nur geladen, wenn das übergeordnete Modul in `config/nexum/modules.yaml` aktiviert ist. Modulklassen erben von `AbstractModule` und deklarieren Metadaten mit `#[NexumModule(...)]`.
+Klassische Controller bleiben beim Symfony-Standardimport. Nexum entdeckt parameterlose Descriptor-Klassen per Filesystem, PSR-4 und Reflection. Descriptoren sind keine Services und benötigen keine Basisklasse. Ohne Projects sind alle nicht deaktivierten Shared Modules aktiv; mit Projects werden Shared Modules explizit in `#[NexumProject(modules: [...])]` genannt und private Modules aus ihrem Verzeichnis zugeordnet.
 
-Abhängigkeiten zwischen Modulen werden beim Laden geprüft. Ein aktives Modul darf nicht von einem unbekannten oder deaktivierten Modul abhängen. Die YAML-Datei ist die einzige Quelle für den Aktivierungsstatus; dafür ist keine Datenbanktabelle nötig.
+Der Build folgt `DISCOVER → CONFIGURE → VALIDATE → COMPILE`. Class-Strings sind Identitäten, Abhängigkeiten werden transitiv ergänzt und Scope-Verstöße oder Zyklen stoppen den Build. `nexum.modules.<id>.enabled: false` ist ein Compile-time-Override; es gibt keine Runtime-Mutation.
 
 ## Entity und Doctrine
 
-`nexum/entity` enthält nur die fachlich sichtbaren Entity-Kontrakte und Doctrine-gemappten Basisklassen. `nexum/doctrine` enthält die Infrastruktur, die diese Fähigkeiten ausführt. Dadurch bleiben Entity-Modelle klein und Persistence-Verhalten austauschbar.
+`Nexum\\Entity` enthält nur die fachlich sichtbaren Entity-Kontrakte und Doctrine-gemappten Basisklassen. `Nexum\\Doctrine` enthält die Infrastruktur, die diese Fähigkeiten ausführt. Dadurch bleiben Entity-Modelle klein und Persistence-Verhalten austauschbar.
 
 Standard ist `AbstractEntity` mit UUIDv7. Für ausdrücklich gewünschte Legacy-Fälle existiert `AbstractIntegerEntity`. Zeitstempel und Soft Delete werden durch weitere Basisklassen ergänzt:
 
@@ -43,21 +46,23 @@ Der `EntityStoreInterface` bietet `persist`, `delete`, `restore`, `purge`, `flus
 
 ## Kernel
 
-Die App erbt nur von `NexumKernel`. Der Kernel übernimmt die Symfony-Standardkonfiguration, klassisches Routing und aktivierungsabhängiges Modulrouting. Laufzeitinformationen liegen im separaten `KernelInformationInterface`; der Kernel selbst wird nicht zum allgemeinen Servicecontainer.
+Ein normaler Symfony-Kernel plus `NexumBundle` unterstützt die vollständige Funktionalität. `NexumKernel` ist lediglich ein optionaler Shortcut und besitzt kein eigenes Nexum-Routing. Laufzeitinformationen liegen im separaten `KernelInformationInterface`; der Kernel wird nicht zum allgemeinen Servicecontainer.
 
 `php bin/console nexum:about` zeigt Anwendung, Environment, Debug-Status, PHP-, Symfony- und Nexum-Version sowie Modulzahlen.
 
 ## Security und User
 
-`nexum/security` kennt keine konkrete Benutzer-Entity. Es definiert Access-Token-, Permission- und Security-Context-Verträge und besitzt einen neutralen Null-Adapter. `nexum/user` hängt in der erlaubten Richtung von Security ab und ergänzt Doctrine-Entities, User Provider, Token Store und Passwortverwaltung.
+`Nexum\\Security` kennt keine konkrete Benutzer-Entity. Es definiert Access-Token-, Permission- und Security-Context-Verträge und besitzt einen neutralen Null-Adapter. `Nexum\\User` hängt in der erlaubten Richtung von Security ab und ergänzt Doctrine-Entities, User Provider, Token Store und Passwortverwaltung.
 
-API-Tokens sind opaque und widerrufbar. Ihr Klartext wird nur beim Ausstellen zurückgegeben; gespeichert wird ausschließlich der SHA-256-Hash. Rollen bündeln positive Permissions, direkte Benutzer-Permissions ergänzen sie. Das API-Paket kennt nur den Permission-Namen und hängt nicht vom Nexum-Security-Paket ab.
+API-Tokens sind opaque und widerrufbar. Ihr Klartext wird nur beim Ausstellen zurückgegeben; gespeichert wird ausschließlich der SHA-256-Hash. Rollen bündeln positive Permissions, direkte Benutzer-Permissions ergänzen sie. Das API-Modul kennt nur den Permission-Namen und hängt nicht vom Security-Modul ab.
 
 ## Bewusste Grenzen
 
 - Der generische REST-Controller akzeptiert ausschließlich ausdrücklich freigegebene Schreib-, Filter- und Sortierfelder. Komplexe fachliche Operationen bleiben eigene dünne Controller oder Services.
 - Kein `isDeleted`-Duplikat.
 - Keine gemappten Traits; die Doctrine-Vererbung bleibt nachvollziehbar.
-- Kein automatisches Entfernen von Modulen. Die spätere Management-Schicht muss Referenzen und Abhängigkeiten zuerst prüfen.
-- Webmail ist nicht Teil des Mailer-Pakets. Mailer bedeutet ausschließlich Versand; Mailpit dient nur der lokalen Entwicklung.
-- MFA und Passkeys bleiben optionale Erweiterungspakete und werden nicht in den Security-Kern gekoppelt.
+- Keine Änderung oder Entfernung von Modulen zur Laufzeit. Management zeigt die kompilierte Architektur nur lesend an.
+- Project-Aktivität filtert Routen und `ProjectContext::hasModule()`, aber nicht globale Services, Subscriber, Messenger Handler oder Commands.
+- Projects sind Hostbereiche, keine automatische Tenant-, Daten- oder Token-Isolation.
+- Webmail ist nicht Teil des Mailer-Moduls. Mailer bedeutet ausschließlich Versand; Mailpit dient nur der lokalen Entwicklung.
+- MFA und Passkeys bleiben optional aktivierte Erweiterungsmodule und werden nicht in den Security-Kern gekoppelt.

@@ -1,24 +1,22 @@
 # MFA verwenden
 
-`nexum/security-mfa` ergänzt den Passwort-Login um TOTP nach RFC 6238 und einmalig verwendbare Recovery-Codes. Ist für einen Benutzer kein bestätigtes Enrollment vorhanden, verhält sich der normale Login unverändert.
+Das Modul `Nexum\\Security\\Mfa` ergänzt den Passwort-Login um TOTP nach RFC 6238 und einmalig verwendbare Recovery-Codes. Ist für einen Benutzer kein bestätigtes Enrollment vorhanden, verhält sich der normale Login unverändert.
 
 ## Konfiguration
 
 ```yaml
-nexum_security_mfa:
-    issuer: Nexum
-    challenge_ttl: 300
-    max_attempts: 5
+nexum:
+    security:
+        mfa:
+            enabled: true
+            issuer: Nexum
+            challenge_ttl: 300
+            max_attempts: 5
+            api:
+                enabled: true
 ```
 
-Die Routen werden einmal importiert:
-
-```yaml
-nexum_security_mfa:
-    resource: '@NexumSecurityMfaBundle/config/routes.php'
-    type: php
-    prefix: /api/auth/mfa
-```
+Fähigkeit und öffentliche API werden getrennt aktiviert. Die zentrale `type: nexum`-Route übernimmt den Import; in Project Mode verlangt die API zusätzlich eine explizite `projects`-Liste oder `['*']`.
 
 ## Einrichtung
 

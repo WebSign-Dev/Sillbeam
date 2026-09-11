@@ -1,27 +1,26 @@
 # Passkeys verwenden
 
-`nexum/security-passkey` stellt eine reine JSON-API für WebAuthn Level 3 bereit. Browser oder Apps rufen die Options-Routen auf, übergeben die Daten an `navigator.credentials` und senden das Ergebnis an die jeweilige Abschlussroute zurück.
+Das Modul `Nexum\\Security\\Passkey` stellt eine reine JSON-API für WebAuthn Level 3 bereit. Browser oder Apps rufen die Options-Routen auf, übergeben die Daten an `navigator.credentials` und senden das Ergebnis an die jeweilige Abschlussroute zurück.
 
 ## Konfiguration
 
 ```yaml
-nexum_security_passkey:
-    rp_id: example.test
-    allowed_origins:
-        - 'https://example.test'
-    challenge_ttl: 300
-    max_attempts: 5
+nexum:
+    security:
+        passkeys:
+            enabled: true
+            relying_party:
+                rp_id: example.test
+                allowed_origins: ['https://example.test']
+            challenge_ttl: 300
+            max_attempts: 5
+            api:
+                enabled: true
 ```
 
-`rp_id` muss zur produktiven Domain passen. Origins werden exakt zugelassen und müssen HTTPS verwenden. Wird das Paket in der Harbor-Test-App installiert, sind dafür `nexum-test-app.localhost` als RP-ID und `https://nexum-test-app.localhost` als Origin zu verwenden.
+`rp_id` muss zur produktiven Domain passen. Origins werden exakt zugelassen und müssen HTTPS verwenden. Wird das Modul in der Harbor-Test-App aktiviert, sind dafür `nexum-test-app.localhost` als RP-ID und `https://nexum-test-app.localhost` als Origin zu verwenden.
 
-```yaml
-nexum_security_passkey:
-    resource: '@NexumSecurityPasskeyBundle/config/routes.php'
-    type: php
-    prefix: /api/auth/passkeys
-    trailing_slash_on_root: false
-```
+In Project Mode wird stattdessen unter `relying_parties.<project-id>` je Project eine RP-ID mit Origins konfiguriert. Die zentrale `type: nexum`-Route importiert ausschließlich bewusst freigeschaltete Passkey-Endpunkte.
 
 ## Registrierung
 
