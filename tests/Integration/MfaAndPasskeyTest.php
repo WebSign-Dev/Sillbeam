@@ -12,6 +12,8 @@ use Nexum\Security\Mfa\Entity\TotpEnrollment;
 use Nexum\User\Security\PasswordManagerInterface;
 use OTPHP\TOTP;
 use PHPUnit\Framework\TestCase;
+use Psr\Cache\CacheItemPoolInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Clock\NativeClock;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -27,6 +29,11 @@ final class MfaAndPasskeyTest extends TestCase
         $this->kernel = new Kernel('test', false);
         $this->clientIp = '192.0.2.'.random_int(1, 254);
         $this->kernel->boot();
+        $testContainer = $this->kernel->getContainer()->get('test.service_container');
+        self::assertInstanceOf(ContainerInterface::class, $testContainer);
+        $rateLimiterCache = $testContainer->get('cache.rate_limiter');
+        self::assertInstanceOf(CacheItemPoolInterface::class, $rateLimiterCache);
+        $rateLimiterCache->clear();
         $manager = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
         self::assertInstanceOf(EntityManagerInterface::class, $manager);
         $this->manager = $manager;
@@ -43,8 +50,9 @@ final class MfaAndPasskeyTest extends TestCase
 
     public function testTotpRecoveryCodeAndSecondFactorLifecycle(): void
     {
-        $user = $this->createUser('mfa@example.test', 'mfa-password-123');
-        $initialToken = $this->loginToken('mfa@example.test', 'mfa-password-123');
+        $email = 'mfa-'.bin2hex(random_bytes(8)).'@example.test';
+        $user = $this->createUser($email, 'mfa-password-123');
+        $initialToken = $this->loginToken($email, 'mfa-password-123');
 
         $status = $this->request('GET', '/api/auth/mfa/status', accessToken: $initialToken);
         self::assertSame(200, $status->getStatusCode());
@@ -77,7 +85,7 @@ final class MfaAndPasskeyTest extends TestCase
         $oldToken = $this->request('GET', '/api/auth/me', accessToken: $initialToken);
         self::assertSame(401, $oldToken->getStatusCode());
 
-        $login = $this->login('mfa@example.test', 'mfa-password-123');
+        $login = $this->login($email, 'mfa-password-123');
         self::assertSame(202, $login->getStatusCode());
         $loginData = $this->json($login)['data'];
         self::assertTrue($loginData['mfa_required']);
@@ -104,14 +112,14 @@ final class MfaAndPasskeyTest extends TestCase
         ]);
         self::assertSame(401, $replay->getStatusCode());
 
-        $recoveryLogin = $this->json($this->login('mfa@example.test', 'mfa-password-123'))['data'];
+        $recoveryLogin = $this->json($this->login($email, 'mfa-password-123'))['data'];
         $recovery = $this->request('POST', '/api/auth/mfa/verify', [
             'challenge' => $recoveryLogin['challenge'],
             'code' => $recoveryCodes[0],
         ]);
         self::assertSame(201, $recovery->getStatusCode());
 
-        $reuseLogin = $this->json($this->login('mfa@example.test', 'mfa-password-123'))['data'];
+        $reuseLogin = $this->json($this->login($email, 'mfa-password-123'))['data'];
         $reuse = $this->request('POST', '/api/auth/mfa/verify', [
             'challenge' => $reuseLogin['challenge'],
             'code' => $recoveryCodes[0],
@@ -120,13 +128,14 @@ final class MfaAndPasskeyTest extends TestCase
 
         $disable = $this->request('DELETE', '/api/auth/mfa/totp', ['code' => $recoveryCodes[1]], $mfaToken);
         self::assertSame(204, $disable->getStatusCode());
-        self::assertSame(201, $this->login('mfa@example.test', 'mfa-password-123')->getStatusCode());
+        self::assertSame(201, $this->login($email, 'mfa-password-123')->getStatusCode());
     }
 
     public function testPasskeyOptionsAreSecureAndInvalidAssertionsStayGeneric(): void
     {
-        $this->createUser('passkey@example.test', 'passkey-password-123');
-        $token = $this->loginToken('passkey@example.test', 'passkey-password-123');
+        $email = 'passkey-'.bin2hex(random_bytes(8)).'@example.test';
+        $this->createUser($email, 'passkey-password-123');
+        $token = $this->loginToken($email, 'passkey-password-123');
 
         $registration = $this->request('POST', '/api/auth/passkeys/register/options', accessToken: $token);
         self::assertSame(201, $registration->getStatusCode());
