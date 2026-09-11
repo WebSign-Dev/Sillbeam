@@ -18,11 +18,11 @@ final class Kernel extends BaseKernel
 
     public function getCacheDir(): string
     {
-        return \dirname(__DIR__, 4).'/.phpunit.cache/project-application/'.$this->getEnvironment();
+        return \dirname(__DIR__, 3).'/.phpunit.cache/project-application/'.$this->getEnvironment();
     }
 
     public function getLogDir(): string
     {
-        return \dirname(__DIR__, 4).'/.phpunit.cache/project-application/log';
+        return \dirname(__DIR__, 3).'/.phpunit.cache/project-application/log';
     }
 }

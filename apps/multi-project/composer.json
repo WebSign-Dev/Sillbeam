@@ -1,0 +1,24 @@
+{
+    "name": "nexum/multi-project-test-app",
+    "description": "Nexum multi-project integration test application.",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "benjaminoeffinger/nexum": "dev-main"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../..",
+            "options": { "symlink": true }
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ProjectApp\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}

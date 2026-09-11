@@ -3,9 +3,14 @@ parameters:
     paths:
         - src
         - tests
+        - apps/hybrid/src
+        - apps/modules-only/src
+        - apps/multi-project/src
+        - apps/single-project/src
     tmpDir: .phpstan-cache
     treatPhpDocTypesAsCertain: false
     excludePaths:
         analyse:
             - tests/Fixtures/Application/var (?)
-            - tests/Fixtures/Application/config/reference.php (?)
+            - tests/Fixtures/*/config/reference.php (?)
+            - apps/*/config/reference.php (?)

@@ -65,7 +65,10 @@
     "autoload-dev": {
         "psr-4": {
             "App\\": "tests/Fixtures/Application/src/",
-            "ProjectApp\\": "tests/Fixtures/ProjectApplication/src/",
+            "HybridApp\\": "apps/hybrid/src/",
+            "ModulesOnlyApp\\": "apps/modules-only/src/",
+            "ProjectApp\\": "apps/multi-project/src/",
+            "SingleProjectApp\\": "apps/single-project/src/",
             "Nexum\\Tests\\": "tests/"
         }
     },

@@ -1,0 +1,5 @@
+framework:
+    secret: hybrid-test
+    trusted_hosts: ['^(public|admin)\.hybrid\.test$']
+    router: { utf8: true }
+    test: true

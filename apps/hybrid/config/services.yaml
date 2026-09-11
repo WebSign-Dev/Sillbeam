@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    HybridApp\Controller\:
+        resource: ../src/Controller/
+    HybridApp\Service\:
+        resource: ../src/Service/
