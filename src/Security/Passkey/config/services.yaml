@@ -1,0 +1,23 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Nexum\Security\Passkey\Configuration\RelyingPartyProvider:
+        arguments:
+            $application: '%nexum.security_passkey.relying_party%'
+            $projects: '%nexum.security_passkey.relying_parties%'
+
+    Nexum\Security\Passkey\Authentication\WebauthnServer:
+        arguments: ['@Nexum\Security\Passkey\Configuration\RelyingPartyProvider']
+
+    Nexum\Security\Passkey\Authentication\PasskeyManager:
+        arguments:
+            $challengeTtl: '%nexum.security_passkey.challenge_ttl%'
+            $maxAttempts: '%nexum.security_passkey.max_attempts%'
+
+    Nexum\Security\Passkey\Controller\PasskeyController:
+        arguments:
+            $limiter: '@limiter.nexum_security_passkey_auth'
+        public: true
+        tags: ['controller.service_arguments']

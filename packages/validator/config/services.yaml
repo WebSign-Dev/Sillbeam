@@ -1,8 +1,0 @@
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-
-    Nexum\Validator\:
-        resource: '../src/'
-        exclude: '../src/{DependencyInjection,NexumValidatorBundle.php,Constraint/StrongPassword.php}'

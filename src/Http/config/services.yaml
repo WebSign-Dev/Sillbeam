@@ -1,0 +1,11 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    Nexum\Http\:
+        resource: '../'
+        exclude: '../{DependencyInjection,ValueObject,config}'
+
+    Nexum\Http\Request\ClientContextResolverInterface:
+        alias: Nexum\Http\Request\ClientContextResolver

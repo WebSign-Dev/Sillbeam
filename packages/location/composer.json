@@ -1,9 +1,0 @@
-{
-    "name": "nexum/location",
-    "description": "Small immutable location value objects for Nexum domains.",
-    "type": "library",
-    "license": "proprietary",
-    "require": {"php": "^8.4"},
-    "autoload": {"psr-4": {"Nexum\\Location\\": "src/"}},
-    "extra": {"branch-alias": {"dev-main": "0.1.x-dev"}}
-}

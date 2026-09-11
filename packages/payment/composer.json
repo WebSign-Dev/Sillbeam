@@ -1,9 +1,0 @@
-{
-    "name": "nexum/payment",
-    "description": "Provider-neutral payment contracts using integer minor units.",
-    "type": "library",
-    "license": "proprietary",
-    "require": {"php": "^8.4"},
-    "autoload": {"psr-4": {"Nexum\\Payment\\": "src/"}},
-    "extra": {"branch-alias": {"dev-main": "0.1.x-dev"}}
-}

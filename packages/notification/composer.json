@@ -1,9 +1,0 @@
-{
-    "name": "nexum/notification",
-    "description": "Transport-neutral notifications with explicit channel routing.",
-    "type": "library",
-    "license": "proprietary",
-    "require": {"php": "^8.4"},
-    "autoload": {"psr-4": {"Nexum\\Notification\\": "src/"}},
-    "extra": {"branch-alias": {"dev-main": "0.1.x-dev"}}
-}

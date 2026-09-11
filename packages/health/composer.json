@@ -1,9 +1,0 @@
-{
-    "name": "nexum/health",
-    "description": "Composable health checks with deterministic aggregate status.",
-    "type": "library",
-    "license": "proprietary",
-    "require": {"php": "^8.4"},
-    "autoload": {"psr-4": {"Nexum\\Health\\": "src/"}},
-    "extra": {"branch-alias": {"dev-main": "0.1.x-dev"}}
-}

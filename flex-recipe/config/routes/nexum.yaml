@@ -1,0 +1,3 @@
+nexum:
+    resource: .
+    type: nexum

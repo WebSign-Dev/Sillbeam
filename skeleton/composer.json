@@ -5,7 +5,7 @@
     "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "nexum/pack-core": "^0.1",
+        "benjaminoeffinger/nexum": "^0.1",
         "symfony/console": "^7.4",
         "symfony/dotenv": "^7.4",
         "symfony/flex": "^2.6",

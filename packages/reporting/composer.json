@@ -1,9 +1,0 @@
-{
-    "name": "nexum/reporting",
-    "description": "Format-neutral reporting contracts with safe JSON and CSV renderers.",
-    "type": "library",
-    "license": "proprietary",
-    "require": {"php": "^8.4"},
-    "autoload": {"psr-4": {"Nexum\\Reporting\\": "src/"}},
-    "extra": {"branch-alias": {"dev-main": "0.1.x-dev"}}
-}
