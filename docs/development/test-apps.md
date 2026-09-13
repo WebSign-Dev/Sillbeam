@@ -7,7 +7,9 @@ Unter [`apps/`](../../apps) liegen reale Symfony-Anwendungen, die unterschiedlic
 | App | Szenario | Wichtiger Nachweis |
 | --- | --- | --- |
 | [`test-app/app`](../../apps/test-app/app) | vollständige Verbraucher-App | Doctrine, API, Security, MFA, Passkeys, Harbor |
+| [`symfony-only`](../../apps/symfony-only) | nur normales Symfony | Nexum ohne Module und Projects, normale Services und Routen |
 | [`modules-only`](../../apps/modules-only) | nur Shared Modules | Application Mode, Dependencies, deaktivierte Module |
+| [`project-only`](../../apps/project-only) | Project ohne Modules | direkte Project-Controller, Services und Doctrine-Entities |
 | [`single-project`](../../apps/single-project) | ein Project | hostloses Defaultverhalten, Shared + Private Module |
 | [`multi-project`](../../apps/multi-project) | mehrere Projects | Hosts, Aliase, canonical URLs, gleiche private IDs |
 | [`hybrid`](../../apps/hybrid) | Symfony + Nexum gemischt | normale Controller neben Project-Routen, unzugeordnetes Modul |
@@ -22,6 +24,20 @@ Die App besitzt `FoundationModule`, `InventoryModule` und ein deaktiviertes `Arc
 - deaktivierte Controller-Routen existieren nicht;
 - `ProjectContext::current()` bleibt `null`.
 
+## Symfony-only
+
+Die App besitzt weder `src/Module` noch `src/Project`. Controller und Services werden ausschließlich über die normale Symfony-Konfiguration geladen. Der Test beweist, dass Nexum die Standardstruktur nicht ersetzt und seine leeren Registries sowie der `ProjectContext` trotzdem sicher benutzbar bleiben.
+
+## Project-only
+
+`PortalProject` besitzt unmittelbar `Controller/`, `Service/` und `Entity/`, aber keinen Modulordner. Doctrine wird bewusst aktiviert. Der Integrationstest beweist:
+
+- ein Project benötigt kein Shared oder privates Module;
+- Project-eigene Services werden automatisch verdrahtet;
+- Project-eigene Controller erhalten das Project-Routenpräfix;
+- Project-eigene Entities werden automatisch als Doctrine-Mapping registriert;
+- die Modulregistry bleibt leer.
+
 ## Single-project
 
 `PortalProject` verwendet ein Shared `ProfileModule`; `DashboardModule` liegt privat im Project-Baum. Es existiert keine `nexum.projects.portal.hosts`-Konfiguration. Dadurch wird geprüft:
@@ -29,6 +45,7 @@ Die App besitzt `FoundationModule`, `InventoryModule` und ein deaktiviertes `Arc
 - ein einzelnes Project benötigt keinen Nexum-Host;
 - Project- und Modulrouten erhalten `portal.` als Namenspräfix;
 - Shared und private Modules sind im Context aktiv;
+- Project-eigene Controller und Entities werden nicht nochmals aus dem privaten Modulbaum eingesammelt;
 - Symfonys `trusted_hosts` bleibt unabhängig konfigurierbar.
 
 ## Multi-project

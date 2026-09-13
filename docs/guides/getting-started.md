@@ -6,7 +6,7 @@
 
 - PHP 8.4 oder neuer
 - Composer 2
-- Symfony 7.4
+- Symfony 7.4 oder 8.x
 - je nach aktivierter Integration DoctrineBundle, SecurityBundle und die entsprechenden Symfony-Komponenten
 
 Das Framework wird als einzelnes Package installiert:
@@ -15,9 +15,30 @@ Das Framework wird als einzelnes Package installiert:
 composer require benjaminoeffinger/nexum
 ```
 
-## Ein Bundle registrieren
+## Installation mit Symfony Flex
 
-Bis die externe Flex-Recipe veröffentlicht ist, wird genau ein Bundle eingetragen:
+Die Nexum-Recipe ist für Symfony Recipes Contrib vorbereitet. Sobald sie dort veröffentlicht ist, fragt Flex beim Installieren nach der Zustimmung zu dieser Contrib-Recipe. Nach der Zustimmung werden automatisch:
+
+- `Nexum\NexumBundle` für alle Umgebungen registriert,
+- `config/packages/nexum.yaml` mit sicheren, deaktivierten Integrationen erzeugt,
+- `config/routes/nexum.yaml` mit dem einmaligen Nexum-Routenimport erzeugt,
+- die angewendete Recipe-Version in `symfony.lock` festgehalten.
+
+In automatisierten Nexum-Projekten kann die bewusste Zustimmung in der Root-`composer.json` hinterlegt werden:
+
+```json
+{
+    "extra": {
+        "symfony": {
+            "allow-contrib": true
+        }
+    }
+}
+```
+
+`allow-contrib: true` erlaubt alle Symfony-Contrib-Recipes. In allgemeinen Anwendungen ist die interaktive Einzelentscheidung deshalb oft die engere Wahl. Das Nexum-Skeleton setzt den Schalter bewusst, weil es für Nexum vorgesehen ist.
+
+Solange die Recipe noch nicht in Recipes Contrib zusammengeführt ist, werden dieselben Dateien manuell angelegt. Genau ein Bundle wird eingetragen:
 
 ```php
 // config/bundles.php
@@ -27,17 +48,17 @@ return [
 ];
 ```
 
-Eine minimale Konfiguration ohne optionale Integrationen:
+Die Recipe verwendet diese minimale Konfiguration ohne optionale Integrationen:
 
 ```yaml
 # config/packages/nexum.yaml
 nexum:
     doctrine: { enabled: false }
     api: { enabled: false }
-    user: { enabled: false }
     security: { enabled: false }
-    management: { enabled: false }
 ```
+
+Alle übrigen optionalen Fähigkeiten sind bereits standardmäßig deaktiviert. Doctrine, API und Security werden explizit ausgeschaltet, weil ihre Framework-Defaults ohne Recipe aktiviert sind. Dadurch erzeugt `composer require` keine öffentliche Security-Fläche und setzt keine Integration stillschweigend voraus.
 
 Der Nexum-Routenloader wird einmalig importiert:
 
@@ -49,6 +70,14 @@ nexum:
 ```
 
 Normale Controller unter `src/Controller` bleiben beim üblichen Symfony-Import. Nexum importiert ausschließlich Modul-, Project- und bewusst freigeschaltete Framework-Routen.
+
+Den Recipe-Status zeigt Flex selbst:
+
+```bash
+composer recipes benjaminoeffinger/nexum
+```
+
+Details zu Veröffentlichung, Aktualisierung, Neuinstallation und dem End-to-End-Test stehen unter [Symfony Flex Recipe](flex-recipe.md).
 
 ## Das erste Modul
 

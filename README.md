@@ -4,7 +4,7 @@
 
 # Nexum
 
-Nexum ist ein modularer, API-orientierter Backend-Baukasten auf Basis von PHP 8.4, Symfony 7.4 und Doctrine ORM 3. Das Framework wird als ein Composer-Package (`benjaminoeffinger/nexum`) veröffentlicht und als modularer Monolith betrieben. Die Module besitzen klare Namespace- und Abhängigkeitsgrenzen, sind aber keine getrennt installierbaren Pakete oder eigenständig laufenden Dienste.
+Nexum ist ein modularer, API-orientierter Backend-Baukasten auf Basis von PHP 8.4+, Symfony 7.4 oder 8.x und Doctrine ORM 3. Das Framework wird als ein Composer-Package (`benjaminoeffinger/nexum`) veröffentlicht und als modularer Monolith betrieben. Die Module besitzen klare Namespace- und Abhängigkeitsgrenzen, sind aber keine getrennt installierbaren Pakete oder eigenständig laufenden Dienste.
 
 ## Projektstruktur
 
@@ -66,19 +66,25 @@ composer cs:check
 
 ## Installation und Architektur
 
-Nexum besitzt genau einen Symfony-Einstieg:
+```bash
+composer require benjaminoeffinger/nexum
+```
+
+Die vorbereitete Symfony-Flex-Recipe besitzt genau einen Symfony-Einstieg:
 
 ```php
 Nexum\NexumBundle::class => ['all' => true],
 ```
 
-Bis zur Veröffentlichung der Flex-Recipe kommen eine zentrale `config/packages/nexum.yaml` und dieser einmalige Routenimport hinzu:
+Zusätzlich erzeugt sie `config/packages/nexum.yaml` mit deaktivierten optionalen Integrationen und diesen einmaligen Routenimport:
 
 ```yaml
 nexum:
     resource: .
     type: nexum
 ```
+
+Die veröffentlichbare Recipe liegt bereits in Symfony-Recipes-Contrib-Struktur unter [`flex-recipe/`](flex-recipe/README.md) und wird durch einen echten Composer-/Flex-Installationslauf getestet. Bis sie in Recipes Contrib zusammengeführt ist, werden die drei Einträge manuell angelegt. Danach genügt die Zustimmung zur Contrib-Recipe während `composer require`; das PHP-Package kann eine externe Flex-Recipe technisch nicht selbst ausliefern.
 
 `src/Module/Billing/BillingModule.php` wird allein durch `#[NexumModule]` entdeckt. Eine `modules.yaml`, Bundle-Registrierungen pro Komponente oder ein spezieller Kernel sind nicht erforderlich. `NexumKernel` bleibt als optionaler Komfort-Kernel verfügbar.
 
@@ -113,4 +119,4 @@ Externe Provider – beispielsweise Stripe, S3, OpenSearch oder Push-Dienste –
 
 ## Dokumentation
 
-Das vollständige, navigierbare Handbuch beginnt unter [`docs/README.md`](docs/README.md). Dort finden sich Quickstart, Architektur, Konfigurationsreferenz, Module, Projects, Security, Integrationen, Test-Apps, CLI und Migration.
+Das vollständige, navigierbare Handbuch beginnt unter [`docs/README.md`](docs/README.md). Dort finden sich Quickstart, Flex-Installation, Architektur, Konfigurationsreferenz, Module, Projects, Security, Integrationen, Test-Apps, CLI und Migration.

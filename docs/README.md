@@ -6,13 +6,14 @@
 
 > Ein Package. Ein Bundle. Klare Module. Optionale Projects.
 
-Nexum ist ein modularer, API-orientierter Backend-Baukasten für PHP 8.4 und Symfony 7.4. Er reduziert wiederkehrende Infrastruktur, ohne Symfony zu ersetzen oder wichtige fachliche Entscheidungen zu verstecken.
+Nexum ist ein modularer, API-orientierter Backend-Baukasten für PHP 8.4+ und Symfony 7.4 oder 8.x. Er reduziert wiederkehrende Infrastruktur, ohne Symfony zu ersetzen oder wichtige fachliche Entscheidungen zu verstecken.
 
 ## Schnellnavigation
 
 | Bereich | Inhalt |
 | --- | --- |
 | [Erste Schritte](guides/getting-started.md) | Installation, Bundle, Konfiguration und erstes Modul |
+| [Symfony Flex Recipe](guides/flex-recipe.md) | Automatische Installation, sichere Defaults, Veröffentlichung und Updates |
 | [Architektur](architecture/overview.md) | Zielbild, Build-Pipeline, Grenzen und Laufzeitmodell |
 | [Module](guides/modules.md) | Discovery, Abhängigkeiten, Services, Entities und Controller |
 | [Projects](guides/projects.md) | Hostbereiche, Shared/Private Modules und ProjectContext |
@@ -73,7 +74,7 @@ nexum/
 ├── apps/                # ausführbare Referenz- und Testanwendungen
 ├── tests/               # Unit- und Integrationstests
 ├── docs/                # dieses Handbuch
-├── flex-recipe/         # vorbereitete externe Symfony-Flex-Recipe
+├── flex-recipe/         # veröffentlichbare Symfony-Recipes-Contrib-Struktur
 ├── composer.json
 └── deptrac.yaml
 ```

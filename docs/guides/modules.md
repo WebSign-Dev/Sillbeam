@@ -100,4 +100,6 @@ Descriptor-Dateien, Modulverzeichnisse und Controllerverzeichnisse werden als Co
 
 Projects sind optional. Ein Descriptor unter `src/Project/Storefront/StorefrontProject.php` weist Shared Modules explizit zu; Module unter `src/Project/Storefront/Module/` sind automatisch privat. Project-Zuordnung filtert Routen und `ProjectContext::hasModule()`, nicht globale Services, Subscriber, Handler oder Commands.
 
+Module dürfen nicht ineinander verschachtelt werden. Zulässige Descriptoren liegen ausschließlich unter `src/Module/<Module>/*Module.php` oder `src/Project/<Project>/Module/<Module>/*Module.php`. Attributierte Descriptoren außerhalb dieser Konvention führen beim Container-Build zu einem Fehler.
+
 Weiter: [Projects](projects.md), [Architektur](../architecture/overview.md), [Konfiguration](../reference/configuration.md) und [Modules-only-Beispiel](../../apps/modules-only).

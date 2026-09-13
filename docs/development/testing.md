@@ -6,6 +6,7 @@
 
 ```bash
 composer test
+composer test:flex-recipe
 composer analyse
 composer architecture
 composer cs:check
@@ -19,6 +20,16 @@ composer validate --strict
 | Deptrac | Abhängigkeitsgrenzen zwischen Core, Entity, Module, Project, Routing und Integrationen |
 | PHP-CS-Fixer | einheitlicher Symfony-orientierter Stil |
 | Composer Validate | Package- und App-Metadaten |
+
+## Versionsmatrix
+
+Nexum unterstützt PHP 8.4 und neuer sowie Symfony 7.4 und 8.x. Die Composer-Constraints aller direkt verwendeten Symfony-Komponenten lauten deshalb `^7.4 || ^8.0`.
+
+Die vollständige Root-Test-Suite wird mit Symfony 8 ausgeführt. Die separate Referenzanwendung unter [`apps/test-app/app`](../../apps/test-app/app) ist bewusst auf `7.4.*` festgesetzt und bildet die unterstützte Mindestversion ab. Änderungen an Framework-Integration, DI, Routing oder Security müssen mit beiden Linien auflösbar und ausführbar bleiben.
+
+`composer test:flex-recipe` ist ein echter Installations-Smoke-Test. Er erzeugt außerhalb des Repositorys eine temporäre Verbraucher-App, stellt die versionierte Recipe über einen lokalen Flex-Endpunkt bereit und führt `composer install` aus. Anschließend werden Bundle-Registrierung, Nexum-Konfiguration, Route-Import und `symfony.lock` geprüft; die temporären Dateien werden in jedem Fall entfernt.
+
+Die normalen PHPUnit-Tests prüfen zusätzlich die Contrib-Verzeichnisstruktur, das Manifest, die sicheren Integrationsdefaults und den exakten Route-Import. Damit fallen sowohl inhaltliche Recipe-Regressionen als auch Fehler im realen Flex-Installationsweg auf.
 
 ## Testschichten
 

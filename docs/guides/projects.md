@@ -28,18 +28,43 @@ Die ID wird aus `StorefrontProject` als `storefront` abgeleitet. Nur direkte Mod
 
 ```text
 src/
+├── Controller/                    # normales Symfony
+├── Entity/
+├── Service/
 ├── Module/
 │   └── Catalog/                 # shared
 └── Project/
     └── Storefront/
         ├── StorefrontProject.php
         ├── Controller/
+        ├── Entity/
+        ├── Service/
         └── Module/
             └── Checkout/        # nur Storefront
-                └── CheckoutModule.php
+                ├── CheckoutModule.php
+                ├── Controller/
+                ├── Entity/
+                └── Service/
 ```
 
 `src/Module/*` enthält Shared Modules. Sie gehören nur zu Projects, die sie im Descriptor nennen. `src/Project/<Project>/Module/*` ist automatisch privat und benötigt keine zusätzliche Zuordnung.
+
+Ein Project muss kein Module besitzen. Kleine, unmittelbar zur Oberfläche gehörende Controller und Services liegen direkt im Project. Erst ein fachlich abgegrenzter, nur dort verwendeter Bereich erhält ein privates Module. Soll dieser Bereich später von mehreren Projects verwendet werden, wird er nach `src/Module` verschoben und in den Project-Descriptoren ausdrücklich zugeordnet.
+
+Nexum behandelt Project-eigene Verzeichnisse und private Modulbäume getrennt. `Project/Storefront/Controller` und `Project/Storefront/Entity` gehören zum Project; gleichnamige Verzeichnisse unter `Project/Storefront/Module/Checkout` gehören ausschließlich zum Checkout-Module. Dadurch werden Controller-Routen und Doctrine-Mappings nicht doppelt importiert.
+
+## Erlaubte Hierarchie
+
+Es gibt genau eine Project-Ebene:
+
+```text
+src/Project/<Project>/<Project>Project.php
+src/Project/<Project>/Module/<Module>/<Module>Module.php
+```
+
+Ein weiteres `Project/` innerhalb eines Projects ist nicht erlaubt. Ebenso werden Modules nicht erneut ineinander verschachtelt. Ein mit `#[NexumProject]` oder `#[NexumModule]` markierter Descriptor außerhalb der erlaubten Struktur beendet den Container-Build mit einer konkreten Fehlermeldung, statt still ignoriert zu werden.
+
+Die normale Symfony-Struktur bleibt parallel vollständig gültig. Sie sollte nicht als Legacy-Struktur verstanden werden: Nexum ergänzt sie optional und übernimmt ihren normalen Service- und Routenimport nicht.
 
 Private Module-IDs dürfen sich zwischen Projects wiederholen. Intern bleibt die Class-String-Identität eindeutig; logische Schlüssel sehen beispielsweise so aus:
 
@@ -118,4 +143,4 @@ In CLI-Prozessen liefert `current()` beziehungsweise `id()` `null`. Commands, di
 
 Projects sind keine Mandantenisolierung. Datenzugriff, Tokens, Cache Keys und fachliche Autorisierung müssen weiterhin passende Scopes oder Tenant-Regeln verwenden. Siehe [REST-Daten-Scope](api.md#daten-scope) und [Security](security.md).
 
-Ausführbare Beispiele: [Single Project](../../apps/single-project) und [Multi Project](../../apps/multi-project).
+Ausführbare Beispiele: [Project ohne Modules](../../apps/project-only), [Single Project](../../apps/single-project) und [Multi Project](../../apps/multi-project).

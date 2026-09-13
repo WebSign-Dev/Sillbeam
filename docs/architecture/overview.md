@@ -54,7 +54,7 @@ Die zentrale `nexum:`-Konfiguration ergänzt Discovery-Ergebnisse um deaktiviert
 
 ### Validate
 
-Der Architekturgraph stoppt den Build unter anderem bei fehlenden Abhängigkeiten, Zyklen, doppelten IDs, Shared→Private-Abhängigkeiten, projectübergreifenden privaten Abhängigkeiten und widersprüchlichen Hosts.
+Der Architekturgraph stoppt den Build unter anderem bei fehlenden Abhängigkeiten, Zyklen, doppelten IDs, Shared→Private-Abhängigkeiten, projectübergreifenden privaten Abhängigkeiten, verschachtelten oder falsch platzierten Descriptoren und widersprüchlichen Hosts.
 
 ### Compile
 
@@ -68,7 +68,8 @@ Descriptoren beschreiben Architektur und bleiben normale PHP-Metadatenklassen. E
 - `autoconfigure: true`
 - `Entity/` und `Dto/` werden nicht als Services geladen
 - Descriptor-Dateien werden nicht als Services geladen
-- verschachtelte `Project/*/Module/`-Bäume werden separat behandelt
+- Project-eigene Bereiche und `Project/*/Module/`-Bäume werden separat behandelt
+- verschachtelte Projects und Modules sind nicht zulässig
 
 Doctrine-Mappings, Container-Ressourcen und Router-Ressourcen werden getrennt registriert. Änderungen an Descriptoren oder Controllern invalidieren damit die jeweils zuständigen Caches.
 

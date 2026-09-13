@@ -25,11 +25,13 @@ composer remove nexum/core nexum/entity nexum/security
 composer require benjaminoeffinger/nexum
 ```
 
-Anschließend alle alten Nexum-Teilbundles aus `config/bundles.php` entfernen und ausschließlich Folgendes registrieren:
+Anschließend alle alten Nexum-Teilbundles aus `config/bundles.php` entfernen. Die Flex-Recipe registriert ausschließlich:
 
 ```php
 Nexum\NexumBundle::class => ['all' => true],
 ```
+
+Bis zur Veröffentlichung der Recipe in Symfony Recipes Contrib wird dieser Eintrag manuell ergänzt. Die vorbereitete Recipe erzeugt außerdem die zentrale Nexum-Konfiguration mit deaktivierten optionalen Integrationen und den einmaligen Routenimport. Bestehende, bewusst gesetzte Konfiguration wird von Flex nicht ungefragt überschrieben.
 
 ## Entity-Imports
 
@@ -79,7 +81,7 @@ Private Module werden nach `src/Project/Admin/Module/<Name>` verschoben. Shared 
 
 ## Routing migrieren
 
-Alle alten Nexum-spezifischen Routenimports durch einen Import ersetzen:
+Alle alten Nexum-spezifischen Routenimports durch einen Import ersetzen. Bei einer frischen Installation erzeugt die Recipe `config/routes/nexum.yaml` automatisch:
 
 ```yaml
 nexum:
