@@ -1,5 +1,0 @@
-nexum:
-    doctrine:
-        enabled: true
-    api:
-        enabled: true

@@ -1,0 +1,14 @@
+{
+    "bundles": {
+        "Nexum\\NexumBundle": [
+            "all"
+        ]
+    },
+    "copy-from-recipe": {
+        "config/": "%CONFIG_DIR%/"
+    },
+    "post-install-output": [
+        "  * Nexum is installed with optional integrations disabled.",
+        "  * Enable Doctrine, API or Security explicitly in <fg=green>config/packages/nexum.yaml</>."
+    ]
+}
