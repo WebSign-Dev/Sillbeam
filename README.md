@@ -4,7 +4,11 @@
 
 # Nexum
 
-Nexum ist ein modularer, API-orientierter Backend-Baukasten auf Basis von PHP 8.4+, Symfony 7.4 oder 8.x und Doctrine ORM 3. Das Framework wird als ein Composer-Package (`benjaminoeffinger/nexum`) veröffentlicht und als modularer Monolith betrieben. Die Module besitzen klare Namespace- und Abhängigkeitsgrenzen, sind aber keine getrennt installierbaren Pakete oder eigenständig laufenden Dienste.
+Nexum ist eine modulare Architektur-Erweiterung für Anwendungen auf Basis von PHP 8.4+ und Symfony 7.4 oder 8.x. Modules bilden die fachliche und technische Organisationsgrundlage; optionale Projects fassen Oberflächen innerhalb derselben Anwendung zusammen und ordnen ihnen Modules ausdrücklich zu. Infrastrukturbausteine und APIs sind optionale Fähigkeiten, keine Voraussetzung für die Nutzung von Nexum.
+
+Symfony bleibt das technische Fundament und vollständig nutzbar. Nexum ergänzt eine bestehende Symfony-Anwendung um Konventionen, Discovery und klar definierte Architekturgrenzen, ohne Symfony zu ersetzen oder einen speziellen Kernel zu erzwingen.
+
+Nexum wird als ein Composer-Package (`benjaminoeffinger/nexum`) veröffentlicht und als modularer Monolith betrieben. Shared Modules können innerhalb einer Anwendung mehreren Nexum-Projects zugeordnet werden. Sie sind jedoch keine getrennt installierbaren oder automatisch zwischen eigenständigen Anwendungen wiederverwendbaren Composer-Packages. Auch private Modules und Projects sind keine eigenständig laufenden Dienste.
 
 ## Projektstruktur
 
@@ -64,11 +68,19 @@ composer architecture
 composer cs:check
 ```
 
-## Installation und Architektur
+## Veröffentlichung und Installation
+
+Vor der öffentlichen Installation wird ein erstes stabiles Release, beispielsweise `v0.1.0`, getaggt und auf Packagist veröffentlicht. Bis dahin sollte Nexum nicht ohne explizite Development-Version als öffentlich installierbares stabiles Package beworben werden.
+
+Nach dieser Veröffentlichung installiert Composer ohne Versionsangabe automatisch die neueste mit der Anwendung kompatible stabile Version:
 
 ```bash
 composer require benjaminoeffinger/nexum
 ```
+
+Der Link `https://github.com/BenjaminOeffinger/nexum/releases/latest` wird nach dem ersten stabilen Release ergänzt.
+
+## Symfony-Integration und Architektur
 
 Die vorbereitete Symfony-Flex-Recipe besitzt genau einen Symfony-Einstieg:
 

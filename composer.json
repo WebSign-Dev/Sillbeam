@@ -1,6 +1,6 @@
 {
     "name": "benjaminoeffinger/nexum",
-    "description": "Modular, API-first Nexum framework for PHP applications.",
+    "description": "Modular architecture extension for Symfony applications, organized around Modules and optional Projects.",
     "type": "library",
     "keywords": [
         "api",
