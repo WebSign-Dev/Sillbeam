@@ -1,0 +1,4 @@
+nexum:
+    doctrine: { enabled: true }
+    api: { enabled: false }
+    security: { enabled: false }

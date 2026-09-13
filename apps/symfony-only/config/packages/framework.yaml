@@ -1,0 +1,4 @@
+framework:
+    secret: symfony-only-test
+    router: { utf8: true }
+    test: true

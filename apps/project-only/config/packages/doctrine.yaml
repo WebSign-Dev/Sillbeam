@@ -1,0 +1,5 @@
+doctrine:
+    dbal:
+        url: 'sqlite:///:memory:'
+    orm:
+        auto_mapping: false

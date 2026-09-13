@@ -6,11 +6,11 @@
     "require": {
         "php": "^8.4",
         "benjaminoeffinger/nexum": "^0.1",
-        "symfony/console": "^7.4",
-        "symfony/dotenv": "^7.4",
+        "symfony/console": "^7.4 || ^8.0",
+        "symfony/dotenv": "^7.4 || ^8.0",
         "symfony/flex": "^2.6",
-        "symfony/framework-bundle": "^7.4",
-        "symfony/runtime": "^7.4"
+        "symfony/framework-bundle": "^7.4 || ^8.0",
+        "symfony/runtime": "^7.4 || ^8.0"
     },
     "autoload": {
         "psr-4": {
@@ -34,8 +34,8 @@
             "dev-main": "0.1.x-dev"
         },
         "symfony": {
-            "allow-contrib": false,
-            "require": "7.4.*"
+            "allow-contrib": true,
+            "require": ">=7.4 <9.0"
         }
     }
 }

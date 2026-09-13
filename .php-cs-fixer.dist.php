@@ -6,7 +6,9 @@ $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__.'/apps/hybrid')
     ->in(__DIR__.'/apps/modules-only')
     ->in(__DIR__.'/apps/multi-project')
+    ->in(__DIR__.'/apps/project-only')
     ->in(__DIR__.'/apps/single-project')
+    ->in(__DIR__.'/apps/symfony-only')
     ->exclude('Fixtures/Application/var')
     ->notPath([
         'config/reference.php',

@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+    SymfonyOnlyApp\Controller\:
+        resource: ../src/Controller/
+    SymfonyOnlyApp\Service\:
+        resource: ../src/Service/

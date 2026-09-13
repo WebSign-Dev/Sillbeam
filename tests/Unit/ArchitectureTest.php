@@ -27,6 +27,22 @@ final class ArchitectureTest extends TestCase
         self::assertSame([], $result->projects);
     }
 
+    public function testRejectsProjectDescriptorNestedInsideProject(): void
+    {
+        $root = \dirname(__DIR__).'/Fixtures/Invalid/NestedProject/src';
+
+        $this->expectExceptionMessage('outside the allowed src/Project/<Project>/*Project.php structure');
+        (new ArchitectureDiscovery())->discover(new DiscoveryOptions($root, 'InvalidNestedProject\\'));
+    }
+
+    public function testRejectsNestedModuleDescriptor(): void
+    {
+        $root = \dirname(__DIR__).'/Fixtures/Invalid/NestedModule/src';
+
+        $this->expectExceptionMessage('outside the allowed Module or Project/<Project>/Module structure');
+        (new ArchitectureDiscovery())->discover(new DiscoveryOptions($root, 'InvalidNestedModule\\'));
+    }
+
     public function testApplicationModeActivatesEveryEnabledSharedModule(): void
     {
         $result = $this->discoveryResult([

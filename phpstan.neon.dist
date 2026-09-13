@@ -6,7 +6,9 @@ parameters:
         - apps/hybrid/src
         - apps/modules-only/src
         - apps/multi-project/src
+        - apps/project-only/src
         - apps/single-project/src
+        - apps/symfony-only/src
     tmpDir: .phpstan-cache
     treatPhpDocTypesAsCertain: false
     excludePaths:

@@ -23,19 +23,22 @@ final readonly class ModuleDiscovery
      */
     public function discover(DiscoveryOptions $options, array $projects): array
     {
-        $files = glob($options->root.'/Module/*/*Module.php') ?: [];
-        foreach (glob($options->root.'/Project/*/Module/*/*Module.php') ?: [] as $file) {
-            $files[] = $file;
-        }
-        sort($files);
-
         $modules = [];
-        foreach ($files as $file) {
+        foreach ($this->inspector->filesEndingWith($options->root, 'Module.php') as $file) {
+            $relative = str_replace('\\', '/', substr($file, \strlen($options->root) + 1));
+            $allowed = 1 === preg_match('#^(?:Module/[^/]+/[^/]+Module|Project/[^/]+/Module/[^/]+/[^/]+Module)\.php$#', $relative);
             $class = $this->inspector->classForFile($options, $file);
             $reflection = new \ReflectionClass($class);
             $attribute = $reflection->getAttributes(NexumModule::class)[0] ?? null;
             if (null === $attribute) {
-                throw new \LogicException(\sprintf('Module descriptor "%s" must declare #[NexumModule].', $class));
+                if ($allowed) {
+                    throw new \LogicException(\sprintf('Module descriptor "%s" must declare #[NexumModule].', $class));
+                }
+
+                continue;
+            }
+            if (!$allowed) {
+                throw new \LogicException(\sprintf('Module descriptor "%s" is outside the allowed Module or Project/<Project>/Module structure.', $class));
             }
             $metadata = $attribute->newInstance();
             $directory = \dirname($file);

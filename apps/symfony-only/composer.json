@@ -1,0 +1,24 @@
+{
+    "name": "nexum/symfony-only-test-app",
+    "description": "Standard Symfony application using Nexum without Modules or Projects.",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.4",
+        "benjaminoeffinger/nexum": "dev-main"
+    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../..",
+            "options": { "symlink": true }
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "SymfonyOnlyApp\\": "src/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
