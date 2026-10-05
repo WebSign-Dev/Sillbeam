@@ -26,18 +26,11 @@ final class FlexRecipeTest extends TestCase
         self::assertFileExists(self::RECIPE_DIRECTORY.'/config/routes/nexum.yaml');
     }
 
-    public function testRecipeKeepsOptionalIntegrationsDisabled(): void
+    public function testRecipeUsesTheSameAutomaticDefaultsAsAnEmptyConfig(): void
     {
         $recipe = Yaml::parse($this->read('config/packages/nexum.yaml'));
         $config = (new Processor())->processConfiguration(new Configuration(), [$recipe['nexum']]);
-
-        self::assertFalse($config['doctrine']['enabled']);
-        self::assertFalse($config['api']['enabled']);
-        self::assertFalse($config['security']['enabled']);
-        self::assertFalse($config['security']['api']['enabled']);
-        self::assertFalse($config['security']['mfa']['enabled']);
-        self::assertFalse($config['security']['passkeys']['enabled']);
-        self::assertFalse($config['management']['enabled']);
+        self::assertNull($config['doctrine']['enabled']);
     }
 
     public function testRecipeInstallsSingleNexumRouteImport(): void

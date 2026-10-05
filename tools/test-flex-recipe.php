@@ -84,6 +84,7 @@ try {
             'benjaminoeffinger/nexum' => 'dev-main',
             'symfony/flex' => '^2.11',
         ],
+        'autoload' => ['psr-4' => ['App\\' => 'src/']],
         'config' => [
             'allow-plugins' => ['symfony/flex' => true],
             'secure-http' => false,
@@ -110,9 +111,7 @@ try {
     assertSame(['Nexum\\NexumBundle'], $nexumBundles, 'The recipe must register only the central NexumBundle.');
 
     $nexumConfig = Yaml::parseFile($applicationDirectory.'/config/packages/nexum.yaml');
-    assertSame(false, $nexumConfig['nexum']['doctrine']['enabled'] ?? null, 'Doctrine must be disabled by the recipe.');
-    assertSame(false, $nexumConfig['nexum']['api']['enabled'] ?? null, 'API must be disabled by the recipe.');
-    assertSame(false, $nexumConfig['nexum']['security']['enabled'] ?? null, 'Security must be disabled by the recipe.');
+    assertSame([], $nexumConfig['nexum'] ?? null, 'The recipe must use zero configuration.');
 
     $routes = Yaml::parseFile($applicationDirectory.'/config/routes/nexum.yaml');
     assertSame('nexum', $routes['nexum']['type'] ?? null, 'The Nexum route loader was not installed.');
@@ -126,7 +125,8 @@ try {
         'config/routes/nexum.yaml',
     ], $installedFiles, 'symfony.lock does not track exactly the two Nexum recipe files.');
 
-    fwrite(\STDOUT, "Nexum Flex recipe installation passed.\n");
+    bootConsumer($applicationDirectory);
+    fwrite(\STDOUT, "Nexum Flex recipe installation and minimal consumer boot passed.\n");
 } finally {
     if (is_resource($endpointServer)) {
         proc_terminate($endpointServer);
@@ -211,6 +211,43 @@ function runComposer(string $workingDirectory): void
     if (0 !== $exitCode) {
         throw new RuntimeException(sprintf('Composer exited with status %d.', $exitCode));
     }
+}
+
+/** Boots the installed consumer in another process without the repository development autoloader. */
+function bootConsumer(string $directory): void
+{
+    $bundles = require $directory.'/config/bundles.php';
+    $bundles[Symfony\Bundle\FrameworkBundle\FrameworkBundle::class] = ['all' => true];
+    file_put_contents($directory.'/config/bundles.php', '<?php return '.var_export($bundles, true).';');
+    file_put_contents($directory.'/config/packages/framework.yaml', "framework:\n    secret: smoke\n    router: { utf8: true }\n");
+    file_put_contents($directory.'/config/services.yaml', 'services: {}');
+    mkdir($directory.'/src/Module/Hello/Controller', 0777, true);
+    file_put_contents($directory.'/src/Module/Hello/HelloModule.php', '<?php namespace App\Module\Hello; #[\Nexum\Module\Attribute\NexumModule] final class HelloModule {}');
+    file_put_contents($directory.'/src/Module/Hello/Controller/HelloController.php', '<?php namespace App\Module\Hello\Controller; final class HelloController { #[\Symfony\Component\Routing\Attribute\Route("/hello", name: "hello")] public function hello(): \Symfony\Component\HttpFoundation\Response { return new \Symfony\Component\HttpFoundation\Response("hello"); } }');
+    file_put_contents($directory.'/src/Kernel.php', <<<'PHP'
+<?php
+namespace App;
+final class Kernel extends \Symfony\Component\HttpKernel\Kernel
+{
+    use \Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+    public function getProjectDir(): string { return \dirname(__DIR__); }
+}
+PHP);
+    file_put_contents($directory.'/smoke.php', <<<'PHP'
+<?php
+require __DIR__.'/vendor/autoload.php';
+if (class_exists('Doctrine\Bundle\DoctrineBundle\DoctrineBundle')) { throw new \RuntimeException('Minimal consumer unexpectedly installed Doctrine.'); }
+$kernel = new App\Kernel('test', true);
+$kernel->boot();
+try {
+    $registry = $kernel->getContainer()->get(\Nexum\Module\ModuleRegistryInterface::class);
+    if (1 !== \count($registry->active())) { throw new \RuntimeException('Missing active module.'); }
+    $response = $kernel->handle(\Symfony\Component\HttpFoundation\Request::create('/hello'));
+    if (200 !== $response->getStatusCode() || 'hello' !== $response->getContent()) { throw new \RuntimeException('Module route failed.'); }
+} finally { $kernel->shutdown(); }
+PHP);
+    $process = proc_open([PHP_BINARY, 'smoke.php'], [\STDIN, \STDOUT, \STDERR], $pipes, $directory);
+    if (!is_resource($process) || 0 !== proc_close($process)) { throw new RuntimeException('Minimal consumer boot failed.'); }
 }
 
 function availablePort(): int

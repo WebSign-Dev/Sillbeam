@@ -8,7 +8,8 @@
         "config/": "%CONFIG_DIR%/"
     },
     "post-install-output": [
-        "  * Nexum is installed with optional integrations disabled.",
-        "  * Enable Doctrine, API or Security explicitly in <fg=green>config/packages/nexum.yaml</>."
+        "  * Nexum module architecture is installed.",
+        "  * Add module descriptors and inspect them with <fg=green>nexum:architecture</>.",
+        "  * Doctrine mappings activate automatically when DoctrineBundle is registered."
     ]
 }
