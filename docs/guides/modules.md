@@ -1,105 +1,27 @@
-<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum" width="520"></p>
-
 # Modules
 
-Modules schneiden fachliche Bereiche innerhalb einer Symfony-Anwendung. Sie sind keine Composer-Packages und keine Microservices.
-
-Ein Modul erhält einen eigenen Bereich unter `src/Module`:
+Ein `#[NexumModule]`-Descriptor besitzt sein Verzeichnis samt Unterverzeichnissen. Dateiname und Descriptor-Klassenname müssen PSR-4-konform sein. IDs werden aus dem Klassennamen ohne `Module` abgeleitet oder als `id:` angegeben. Zwei Module dürfen weder dasselbe Verzeichnis noch verschachtelte Verzeichnisse besitzen.
 
 ```php
-namespace App\Module\Billing;
-
-use Nexum\Module\Attribute\NexumModule;
-
-#[NexumModule(description: 'Billing domain')]
-final class BillingModule
-{
-}
+#[\Nexum\Module\Attribute\NexumModule(
+    id: 'billing',
+    description: 'Invoices',
+    dependencies: [\App\Module\Payment\PaymentModule::class],
+)]
+final class BillingModule {}
 ```
 
-Die ID `billing` wird aus dem Klassennamen abgeleitet. Abhängigkeiten verwenden Class-Strings und werden transitiv ergänzt:
+Jeder direkte statische Zugriff auf eine Klasse eines anderen Moduls braucht dessen Descriptor in `dependencies`. Geprüft werden Typen (inklusive Union/Intersection), Vererbung, Interfaces, Traits, Attribute, `new`, statische Zugriffe, `::class`, `instanceof` und Catch-Typen. Dynamische Klassennamen, PHPDoc, String-Service-IDs sowie nicht modulgebundener Code sind außerhalb der Prüfung. Unbenutzte Imports zählen nicht; Descriptor-Metadaten werden nicht als Geschäftsreferenzen geprüft.
 
-```php
-#[NexumModule(dependencies: [UserModule::class])]
-final class BillingModule
-{
-}
-```
+Shared Modules können nur Shared Modules verwenden. Private Modules dürfen Shared Modules und private Module desselben Projects verwenden. Fehlende Ziele, verbotene Grenzen und Zyklen sind Buildfehler. Aktiver Code darf kein inaktives Modul verwenden. Die Prüfung von Geschäftsreferenzen betrifft aktive Quellmodule; die deklarierte Architektur wird für den gesamten Katalog geprüft.
 
-Nur Abweichungen werden konfiguriert:
+Ohne Projects sind alle aktivierten Shared Modules aktiv. Mit Projects bleiben nicht zugeordnete Module inaktiv. Deaktivieren:
 
 ```yaml
 nexum:
     modules:
-        billing:
-            enabled: false
+        billing: { enabled: false }
+        'project:shop:reports': { enabled: false }
 ```
 
-Controller, Entities und Services können beliebig tief innerhalb des Modulordners liegen und werden beim Container-Build entdeckt. Mit `enabled: false` wird ein aktiver Graph, der dieses Modul benötigt, bewusst zum Build-Fehler. Klassische Controller unter `src/Controller` bleiben beim normalen Symfony-Routenimport.
-
-## Konventionelle Struktur
-
-```text
-src/Module/Billing/
-├── BillingModule.php
-├── Command/
-├── Controller/
-├── Dto/
-├── Entity/
-├── EventSubscriber/
-├── MessageHandler/
-├── Repository/
-└── Service/
-```
-
-`Entity/`, `Dto/` und der Descriptor werden nicht als Services registriert. Die übrigen konkreten Klassen erhalten normales Symfony-Autowiring und Autoconfiguration.
-
-## Identität und Schlüssel
-
-Class-Strings sind die technische Identität und werden für Dependencies sowie Registry-Zugriffe verwendet. IDs sind menschenlesbare Namen für Konfiguration, Routennamen, CLI und Debugging.
-
-```php
-$definition = $registry->get(BillingModule::class);
-```
-
-Die automatisch abgeleitete ID kann überschrieben werden:
-
-```php
-#[NexumModule(id: 'invoicing')]
-final class BillingModule
-{
-}
-```
-
-IDs müssen lowercase kebab-case entsprechen.
-
-## Abhängigkeitsgraph
-
-```php
-#[NexumModule(dependencies: [UserModule::class])]
-final class PaymentModule
-{
-}
-```
-
-Wenn ein Project `PaymentModule` verwendet, ergänzt Nexum `UserModule` transitiv. Fehlende Klassen, Zyklen und ungültige Scope-Richtungen stoppen den Container-Build.
-
-```text
-Payment → User → Security
-```
-
-Shared Modules dürfen nicht von project-privaten Modules abhängen. Private Modules dürfen private Dependencies desselben Projects verwenden, aber keine eines anderen Projects.
-
-## Laufzeitwirkung
-
-Im Application Mode enthält `forApplication()` alle aktiven Shared Modules. Im Project Mode liefert `forProject(ProjectClass::class)` die direkte und transitive Zuordnung. Verwendete Modulservices bleiben containerweit verfügbar; Subscriber, Handler und Commands laufen global.
-
-## Cacheverhalten
-
-Descriptor-Dateien, Modulverzeichnisse und Controllerverzeichnisse werden als Container- beziehungsweise Router-Ressourcen registriert. In Development invalidieren neue, geänderte oder gelöschte Dateien die zuständigen Symfony-Caches.
-
-Projects sind optional. Ein Descriptor unter `src/Project/Storefront/StorefrontProject.php` weist Shared Modules explizit zu; Module unter `src/Project/Storefront/Module/` sind automatisch privat. Project-Zuordnung filtert Routen und `ProjectContext::hasModule()`, nicht globale Services, Subscriber, Handler oder Commands.
-
-Module dürfen nicht ineinander verschachtelt werden. Zulässige Descriptoren liegen ausschließlich unter `src/Module/<Module>/*Module.php` oder `src/Project/<Project>/Module/<Module>/*Module.php`. Attributierte Descriptoren außerhalb dieser Konvention führen beim Container-Build zu einem Fehler.
-
-Weiter: [Projects](projects.md), [Architektur](../architecture/overview.md), [Konfiguration](../reference/configuration.md) und [Modules-only-Beispiel](../../apps/modules-only).
+Ein aktiviertes Modul, das ein deaktiviertes Modul benötigt, verhindert den Build. Ein deaktiviertes privates Modul ist kein automatischer Project-Root. Native explizite Imports können Nexums automatische Auswahl umgehen; solche Imports liegen in der Verantwortung der Anwendung.

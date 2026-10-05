@@ -1,118 +1,36 @@
-<p align="center"><img src="../assets/nexum-logo.png" alt="Nexum" width="520"></p>
+# Migration zum Nexum-Modullayer
 
-# Migration zum modularen Monolithen
+Diese Evolution ist eine Breaking Change. Vor einem Update die Nutzung der entfernten Bereiche erfassen, Ersatz implementieren und Anwendungen mit dem neuen Package prüfen. Vorhandene Datenbanken werden durch das Package nicht automatisch geändert; Schema-Migrationen verantwortet die Anwendung.
 
-Diese Migration ist ein direkter Breaking Cut für die Foundation-Phase. Es gibt keine Übergangsbundles oder Alias-Packages.
+## Entfernte Foundation
 
-## Vorher und nachher
+Entfernt wurden die Namespaces `Nexum\Api`, `Core`, `Doctrine`, `Entity`, `Exception`, `Filesystem`, `Health`, `Http`, `Location`, `Logger`, `Mailer`, `Management`, `Messenger`, `Notification`, `Payment`, `QrCode`, `Reporting`, `Search`, `Security`, `Serializer`, `User` und `Validator` samt zugehöriger Konfiguration. Alte Versionen bleiben im Git-Verlauf verfügbar.
 
-| Vorher | Nachher |
-| --- | --- |
-| viele `nexum/*` Composer-Packages | `benjaminoeffinger/nexum` |
-| viele `Nexum*Bundle` | `Nexum\NexumBundle` |
-| `packages/<component>/src` | `src/<Component>` |
-| `Nexum\Entity\Entity\*` | `Nexum\Entity\*` |
-| `config/nexum/modules.yaml` | Descriptor-Discovery |
-| YAML-Klassenregistrierung | `#[NexumModule]` und `#[NexumProject]` |
-| Runtime Enable/Disable | Compile-time-Konfiguration |
-| Kernel-eigenes Modulrouting | zentraler `type: nexum` Route Loader |
-| mutierendes Management | read-only Architekturansicht |
+- API-Resource-/CRUD-Basen durch Symfony-Controller oder ein explizit gewähltes API-Package ersetzen.
+- Entity-Vererbung, UUID-/Timestamp-/Soft-Delete-Mapping und EntityStores durch eigene Entities, Repositories, Listener/Filter ersetzen. Spalten und bestehende IDs zunächst erhalten; ORM-Schemadiff vor Ausführung prüfen.
+- User, AccessToken, MFA und Passkey-Funktionen mit eigenem Security-/Persistenzkonzept migrieren. Bestehende Credentials/verschlüsselte Geheimnisse und deren Schlüssel nicht verlieren. Nexum installiert keine Authentifizierung mehr.
+- Infrastrukturverträge und Adapter in der Anwendung oder einem separaten Package unter eigenem Namespace betreiben; direkte Symfony-/Provider-Konfiguration verwenden.
+- Foundation-Keys aus `nexum.yaml` entfernen: `api`, `user`, `security`, `management`, `filesystem`, `mailer`, `messenger`, `qrcode`, `http`, `serializer`, `validator` und weitere frühere Integrationen. Der neue Konfigurationsbaum akzeptiert nur Discovery, Module-Aktivierung, Projects, Integrationspatterns und Doctrine-Mapping.
 
-## Composer
+Strata ist keine verfügbare Ersatzimplementierung und kein Pflichtpackage.
 
-```bash
-composer remove nexum/core nexum/entity nexum/security
-composer require benjaminoeffinger/nexum
-```
+## Architektur und Imports
 
-Anschließend alle alten Nexum-Teilbundles aus `config/bundles.php` entfernen. Die Flex-Recipe registriert ausschließlich:
+Module-/Project-Attribute bleiben erhalten. PSR-4-Dateinamen sind frei; Discovery erkennt die Attribute statt einer Dateinamenskonvention. Klassennamen ohne `Module`-/`Project`-Suffix brauchen bei gewünschter alter ID ein explizites `id:`.
 
-```php
-Nexum\NexumBundle::class => ['all' => true],
-```
+Standardpfade bleiben `src/Module`/`src/Project`. [Konfiguration](../reference/configuration.md) erlaubt weitere Roots und Interiors. Überlappende Modulbereiche und private Descriptoren ohne Project werden jetzt abgelehnt. Fachliche Unterordner bleiben frei.
 
-Bis zur Veröffentlichung der Recipe in Symfony Recipes Contrib wird dieser Eintrag manuell ergänzt. Die vorbereitete Recipe erzeugt außerdem die zentrale Nexum-Konfiguration mit deaktivierten optionalen Integrationen und den einmaligen Routenimport. Bestehende, bewusst gesetzte Konfiguration wird von Flex nicht ungefragt überschrieben.
+Direkte statische Modulzugriffe brauchen direkte `dependencies`; transitive Abhängigkeiten genügen nicht. Fehlermeldungen nennen die Quelle. Nicht verwendete Imports bleiben folgenlos. Shared→Private und private Zugriffe über Project-Grenzen sind verboten.
 
-## Entity-Imports
+Deaktivierte private Module werden nicht mehr automatisch aktiviert. Aktive Module mit deaktivierten Dependencies bleiben ein Buildfehler. Doctrine mappt automatisch nur aktive Module und direkte Project-Entities. Bei installiertem DoctrineBundle ist Nexum-Mapping nun standardmäßig aktiv; für bisherige rein native Konfiguration `doctrine: false` setzen.
 
-```diff
-- use Nexum\Entity\Entity\AbstractSoftDeletableEntity;
-+ use Nexum\Entity\AbstractSoftDeletableEntity;
-```
+`#[Exclude]`, `#[When]`, `#[WhenNot]`, `#[AsAlias]` und automatische Interface-Aliase folgen dem nativen Symfony-Loader. Prüfe `debug:container` nach dem Update. Manuelle Symfony-/Doctrine-Imports können automatische Ausschlüsse bewusst umgehen.
 
-Doctrine-Prefixe und eigene Mapping-Konfigurationen entsprechend aktualisieren. Bei aktivierter Nexum-Doctrine-Integration erkennt Nexum Module- und Project-Entity-Verzeichnisse automatisch.
+## Validierung
 
-## Module migrieren
+1. Composer-Abhängigkeiten aktualisieren; Doctrine bei Bedarf ausdrücklich in der Anwendung installieren.
+2. Cache neu bauen und statisch gemeldete Abhängigkeiten korrigieren.
+3. `nexum:architecture --format=json`, `debug:container`, `debug:router` und bei Doctrine `doctrine:mapping:info` vergleichen.
+4. Anwendungs-, Authentifizierungs- und Persistenztests ausführen; Datenbankänderungen separat prüfen.
 
-Aus einer YAML-Registrierung:
-
-```yaml
-modules:
-    billing:
-        class: App\Module\Billing\BillingModule
-        enabled: true
-```
-
-wird ein Descriptor:
-
-```php
-#[NexumModule]
-final class BillingModule
-{
-}
-```
-
-Der Descriptor liegt unter `src/Module/Billing/BillingModule.php`. Services, Commands, Subscriber, Handler, Controller und Entities verbleiben im Modulverzeichnis.
-
-## Projects einführen
-
-Projects sind optional. Besteht die Anwendung ausschließlich aus Shared Modules, ist keine künstliche Project-Klasse erforderlich.
-
-Für mehrere Hostoberflächen:
-
-```php
-#[NexumProject(modules: [BillingModule::class, UserModule::class])]
-final class AdminProject
-{
-}
-```
-
-Private Module werden nach `src/Project/Admin/Module/<Name>` verschoben. Shared Modules dürfen nicht von privaten Modules abhängen; private Modules dürfen keine privaten Modules eines anderen Projects verwenden.
-
-## Routing migrieren
-
-Alle alten Nexum-spezifischen Routenimports durch einen Import ersetzen. Bei einer frischen Installation erzeugt die Recipe `config/routes/nexum.yaml` automatisch:
-
-```yaml
-nexum:
-    resource: .
-    type: nexum
-```
-
-Den normalen Symfony-Controllerimport beibehalten. Im Project Mode ändern sich Modulroutennamen durch das `<project-id>.`-Präfix; diese Namen in Links, Redirects und Tests aktualisieren.
-
-## Security bewusst aktivieren
-
-Installation allein veröffentlicht keine Security-Endpunkte. Fähigkeiten und APIs separat konfigurieren. Im Project Mode muss jede exponierende API eine Project-Allowlist oder ausdrücklich `['*']` besitzen.
-
-## Entfernen
-
-Folgende Altbestandteile dürfen nach erfolgreicher Migration gelöscht werden:
-
-- `config/nexum/modules.yaml`
-- `YamlModuleRegistry`
-- `ModuleConfigurationManager`
-- Runtime-Enable/Disable-Kommandos
-- HTTP-Mutationsendpunkte des alten Managements
-- alle alten Bundle-spezifischen Konfigurationsdateien
-
-## Abnahme
-
-1. Stock-Symfony-Kernel bootet mit genau einem `NexumBundle`.
-2. `nexum:architecture` zeigt alle erwarteten Module und Projects.
-3. `debug:router` enthält nur bewusst exponierte Routen.
-4. Unbekannte Multi-Project-Hosts schlagen fehl.
-5. Doctrine-Mappings enthalten alle erwarteten Entity-Verzeichnisse.
-6. PHPUnit, PHPStan, Deptrac und Coding Style sind grün.
-
-Konkrete Zielzustände stehen in den [Test-Apps](../development/test-apps.md).
+Die Testanwendung verwendet jetzt gewöhnliche Symfony-Controller und native Doctrine-Entities; [Test-Apps](../development/test-apps.md) zeigen die unterstützten Betriebsformen.
