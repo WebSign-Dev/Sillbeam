@@ -1,0 +1,30 @@
+name: CI
+on: [push, pull_request]
+jobs:
+    compatibility:
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php: ['8.4', '8.5']
+                symfony: ['7.4.*', '8.0.*', '8.1.*']
+        steps:
+            - uses: actions/checkout@v4
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '${{ matrix.php }}'
+                  extensions: pdo_sqlite
+                  tools: composer:v2
+                  coverage: none
+            - run: composer validate --strict
+            - name: Resolve selected Symfony version
+              env:
+                  NEXUM_SYMFONY_VERSION: '${{ matrix.symfony }}'
+              run: |
+                  php -r '$file = "composer.json"; $config = json_decode(file_get_contents($file), true, flags: JSON_THROW_ON_ERROR); foreach ($config["require"] as $package => &$constraint) { if (str_starts_with($package, "symfony/")) { $constraint = getenv("NEXUM_SYMFONY_VERSION"); } } unset($constraint); $config["require-dev"]["symfony/doctrine-bridge"] = getenv("NEXUM_SYMFONY_VERSION"); file_put_contents($file, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));'
+                  composer update --with-all-dependencies --no-scripts --no-plugins --no-interaction --prefer-dist
+            - run: composer test
+            - run: composer analyse
+            - run: composer architecture
+            - run: composer cs:check
+            - run: composer test:flex-recipe
