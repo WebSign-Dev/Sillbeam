@@ -1,7 +1,12 @@
 {
-  "schemaVersion": 4,
+  "schemaVersion": 5,
   "project": "Nexum Test App",
   "slug": "nexum-test-app",
+  "hostBase": "nexum-test-app",
+  "identity": {
+    "id": "harbor-d310670073d7df8857a938df",
+    "dataNamespace": "nexum-test-app"
+  },
   "createdWith": "1.0.0-beta.1",
   "runtime": {
     "php": {
@@ -33,5 +38,10 @@
         "path": "/"
       }
     ]
+  },
+  "network": {
+    "lan": false,
+    "lanTools": false,
+    "interface": null
   }
 }
