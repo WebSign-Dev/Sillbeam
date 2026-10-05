@@ -37,12 +37,7 @@ final class KernelBootTest extends TestCase
         self::assertNotNull($routes->get('app_home'));
         self::assertNotNull($routes->get('legacy_health'));
         self::assertNotNull($routes->get('billing_invoice_list'));
-        self::assertNotNull($routes->get('billing_invoice_read'));
-        self::assertNotNull($routes->get('billing_invoice_create'));
-        self::assertNotNull($routes->get('billing_invoice_replace'));
-        self::assertNotNull($routes->get('billing_invoice_update'));
-        self::assertNotNull($routes->get('billing_invoice_delete'));
-        self::assertNotNull($routes->get('nexum_management_modules'));
+        self::assertNull($routes->get('nexum_management_modules'));
         self::assertNull($routes->get('nexum_management_module_update'));
     }
 

@@ -16,33 +16,45 @@ final readonly class ModuleDiscovery
     {
     }
 
-    /**
-     * @param array<class-string, ProjectDefinition> $projects
-     *
+    /** @param array<class-string, ProjectDefinition> $projects
      * @return array<class-string, ModuleDefinition>
      */
     public function discover(DiscoveryOptions $options, array $projects): array
     {
         $modules = [];
-        foreach ($this->inspector->filesEndingWith($options->root, 'Module.php') as $file) {
-            $relative = str_replace('\\', '/', substr($file, \strlen($options->root) + 1));
-            $allowed = 1 === preg_match('#^(?:Module/[^/]+/[^/]+Module|Project/[^/]+/Module/[^/]+/[^/]+Module)\.php$#', $relative);
-            $class = $this->inspector->classForFile($options, $file);
-            $reflection = new \ReflectionClass($class);
-            $attribute = $reflection->getAttributes(NexumModule::class)[0] ?? null;
-            if (null === $attribute) {
-                if ($allowed) {
-                    throw new \LogicException(\sprintf('Module descriptor "%s" must declare #[NexumModule].', $class));
+        foreach ($this->inspector->descriptors($options, NexumModule::class) as $file => $class) {
+            $directory = \dirname($file);
+            foreach ($projects as $project) {
+                if (str_starts_with($project->directory.'/', $directory.'/')) {
+                    throw new \LogicException('Project cannot be inside module area: '.$project->class.' and '.$class);
                 }
-
-                continue;
+            }
+            $owner = null;
+            $inProjectRoot = false;
+            foreach ($options->projectRoots as $root) {
+                $inProjectRoot = $inProjectRoot || $root->contains($file);
+            }
+            foreach ($projects as $project) {
+                if (str_starts_with($directory.'/', $project->directory.'/') && $directory !== $project->directory) {
+                    $owner = $project->class;
+                }
+            }
+            if ($inProjectRoot && null === $owner) {
+                throw new \LogicException('Module "'.$class.'" has no owning project.');
+            }
+            $allowed = null !== $owner;
+            foreach ($options->moduleRoots as $root) {
+                $allowed = $allowed || $root->contains($file);
             }
             if (!$allowed) {
-                throw new \LogicException(\sprintf('Module descriptor "%s" is outside the allowed Module or Project/<Project>/Module structure.', $class));
+                throw new \LogicException('Module descriptor "'.$class.'" is outside the allowed module discovery boundaries.');
             }
-            $metadata = $attribute->newInstance();
-            $directory = \dirname($file);
-            $projectClass = $this->owningProject($directory, $projects);
+            foreach ($modules as $known) {
+                if ($directory === $known->directory || str_starts_with($directory.'/', $known->directory.'/') || str_starts_with($known->directory.'/', $directory.'/')) {
+                    throw new \LogicException('Nexum descriptors have overlapping module areas: '.$class.' and '.$known->class);
+                }
+            }
+            $metadata = $this->inspector->reflection($class, $file)->getAttributes(NexumModule::class)[0]->newInstance();
             $modules[$class] = new ModuleDefinition(
                 id: $metadata->id ?? IdDeriver::fromClass($class, 'Module'),
                 class: $class,
@@ -51,25 +63,13 @@ final readonly class ModuleDiscovery
                 enabled: true,
                 directory: $directory,
                 descriptorFile: $file,
-                namespace: $this->inspector->namespaceForDirectory($options, $directory),
-                entityDirectories: $this->inspector->namedDirectories($directory, 'Entity'),
-                controllerDirectories: $this->inspector->namedDirectories($directory, 'Controller'),
-                projectClass: $projectClass,
+                namespace: $options->namespaceForDirectory($directory),
+                entityDirectories: $this->inspector->directories($directory, $options->entityPatterns, options: $options),
+                controllerDirectories: $this->inspector->directories($directory, $options->controllerPatterns, options: $options),
+                projectClass: $owner,
             );
         }
 
         return $modules;
-    }
-
-    /** @param array<class-string, ProjectDefinition> $projects */
-    private function owningProject(string $directory, array $projects): ?string
-    {
-        foreach ($projects as $project) {
-            if (str_starts_with($directory.'/', $project->directory.'/Module/')) {
-                return $project->class;
-            }
-        }
-
-        return null;
     }
 }

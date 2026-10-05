@@ -2,11 +2,3 @@ nexum:
     modules:
         archived: { enabled: false }
     doctrine: { enabled: false }
-    api: { enabled: false }
-    user: { enabled: false }
-    filesystem: { enabled: false }
-    mailer: { enabled: false }
-    messenger: { enabled: false }
-    qrcode: { enabled: false }
-    security: { enabled: false }
-    management: { enabled: false }

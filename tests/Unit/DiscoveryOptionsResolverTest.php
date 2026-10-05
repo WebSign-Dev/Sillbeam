@@ -11,6 +11,20 @@ use Symfony\Component\Filesystem\Filesystem;
 
 final class DiscoveryOptionsResolverTest extends TestCase
 {
+    public function testRelativeRootIsResolvedAgainstApplicationDirectory(): void
+    {
+        $source = new \Nexum\Tests\Support\SourceWorkspace();
+        try {
+            $container = new ContainerBuilder();
+            $container->setParameter('kernel.project_dir', $source->directory);
+            $options = (new DiscoveryOptionsResolver())->resolve($container, [['discovery' => ['root' => 'src']]]);
+            self::assertSame($source->directory.'/src', $options->root);
+            self::assertSame($source->namespace.'\\', $options->namespace);
+        } finally {
+            $source->remove();
+        }
+    }
+
     public function testSelectsTheMostSpecificMappingThatCoversTheRoot(): void
     {
         $directory = sys_get_temp_dir().'/nexum-discovery-'.bin2hex(random_bytes(6));
@@ -46,6 +60,30 @@ final class DiscoveryOptionsResolverTest extends TestCase
             self::assertSame('Domain\\', $options->namespace);
         } finally {
             $filesystem->remove($directory);
+        }
+    }
+
+    public function testLayeredListsUseSymfonyConfigurationMergeSemantics(): void
+    {
+        $source = new \Nexum\Tests\Support\SourceWorkspace();
+        try {
+            $source->php('src/One/First/First.php', '#[\Nexum\Module\Attribute\NexumModule] final class First {}');
+            $source->php('src/Two/Second/Second.php', '#[\Nexum\Module\Attribute\NexumModule] final class Second {}');
+            $container = new ContainerBuilder();
+            $container->setParameter('kernel.project_dir', $source->directory);
+            $configs = [
+                ['discovery' => ['modules' => [['path' => 'src/One']], 'excludes' => ['Ignored/**']], 'integrations' => ['controllers' => ['Http'], 'entities' => ['Model'], 'services' => ['exclude' => ['Data/**']]]],
+                ['discovery' => ['modules' => [['path' => 'src/Two']], 'excludes' => ['Generated/**']], 'integrations' => ['controllers' => ['Endpoints'], 'entities' => ['Records'], 'services' => ['exclude' => ['Dto/**']]]],
+            ];
+            $options = (new DiscoveryOptionsResolver())->resolve($container, $configs);
+            self::assertCount(2, $options->moduleRoots);
+            self::assertSame(['Ignored/**', 'Generated/**'], $options->excludes);
+            self::assertSame(['Http', 'Endpoints'], $options->controllerPatterns);
+            self::assertSame(['Model', 'Records'], $options->entityPatterns);
+            self::assertSame(['Data/**', 'Dto/**'], $options->serviceExcludes);
+            self::assertCount(2, (new \Nexum\Architecture\ArchitectureDiscovery())->discover($options)->modules);
+        } finally {
+            $source->remove();
         }
     }
 }

@@ -13,8 +13,6 @@
         <env name="DEFAULT_URI" value="http://localhost" force="true"/>
         <env name="TRUSTED_PROXIES" value="127.0.0.1" force="true"/>
         <env name="APP_TRUSTED_HOSTS" value="^localhost$" force="true"/>
-        <env name="LOCK_DSN" value="flock" force="true"/>
-        <env name="MAILER_DSN" value="null://null" force="true"/>
     </php>
     <testsuites>
         <testsuite name="Nexum">

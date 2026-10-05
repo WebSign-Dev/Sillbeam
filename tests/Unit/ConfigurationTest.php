@@ -10,30 +10,16 @@ use Symfony\Component\Config\Definition\Processor;
 
 final class ConfigurationTest extends TestCase
 {
-    public function testPublicSecuritySurfacesAreDisabledByDefault(): void
+    public function testDoctrineIsAutomaticOrExplicitlyDisabled(): void
     {
-        $config = (new Processor())->processConfiguration(new Configuration(), []);
-
-        self::assertTrue($config['doctrine']['enabled']);
-        self::assertTrue($config['api']['enabled']);
-        self::assertTrue($config['security']['enabled']);
-        self::assertFalse($config['security']['api']['enabled']);
-        self::assertFalse($config['security']['mfa']['enabled']);
-        self::assertFalse($config['security']['passkeys']['enabled']);
-        self::assertFalse($config['management']['enabled']);
-        self::assertFalse($config['user']['enabled']);
+        $processor = new Processor();
+        self::assertNull($processor->processConfiguration(new Configuration(), [])['doctrine']['enabled']);
+        self::assertFalse($processor->processConfiguration(new Configuration(), [['doctrine' => false]])['doctrine']['enabled']);
     }
 
-    public function testAbilityAndApiExposureAreIndependent(): void
+    public function testFoundationSettingsAreRejectedWithMigrationFeedback(): void
     {
-        $config = (new Processor())->processConfiguration(new Configuration(), [[
-            'security' => [
-                'mfa' => ['enabled' => true, 'api' => ['enabled' => false]],
-                'passkeys' => ['enabled' => false, 'api' => ['enabled' => false]],
-            ],
-        ]]);
-
-        self::assertTrue($config['security']['mfa']['enabled']);
-        self::assertFalse($config['security']['mfa']['api']['enabled']);
+        $this->expectException(\Symfony\Component\Config\Definition\Exception\InvalidConfigurationException::class);
+        (new Processor())->processConfiguration(new Configuration(), [['security' => ['enabled' => true]]]);
     }
 }

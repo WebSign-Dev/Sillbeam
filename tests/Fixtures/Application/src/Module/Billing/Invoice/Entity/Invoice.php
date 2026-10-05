@@ -5,47 +5,30 @@ declare(strict_types=1);
 namespace App\Module\Billing\Invoice\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nexum\Entity\AbstractSoftDeletableEntity;
-use Nexum\Security\Contract\SubjectUserInterface;
-use Symfony\Component\Serializer\Attribute\Ignore;
-use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity]
-final class Invoice extends AbstractSoftDeletableEntity
+final class Invoice
 {
-    #[ORM\ManyToOne(targetEntity: SubjectUserInterface::class)]
-    #[ORM\JoinColumn(name: 'owner_id', nullable: true, onDelete: 'CASCADE')]
-    private ?SubjectUserInterface $owner = null;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    public ?int $id = null;
 
-    #[ORM\Column(length: 64, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Length(max: 64)]
-    private string $number;
+    #[ORM\Column(length: 120)]
+    private string $name;
 
-    public function __construct(string $number)
+    public function __construct(string $name = 'example')
     {
-        parent::__construct();
-        $this->number = $number;
+        $this->name = $name;
     }
 
-    public function getNumber(): string
+    public function getId(): ?int
     {
-        return $this->number;
+        return $this->id;
     }
 
-    public function setNumber(string $number): void
+    public function getName(): string
     {
-        $this->number = $number;
-    }
-
-    public function assignOwner(SubjectUserInterface $owner): void
-    {
-        $this->owner = $owner;
-    }
-
-    #[Ignore]
-    public function getOwner(): ?SubjectUserInterface
-    {
-        return $this->owner;
+        return $this->name;
     }
 }

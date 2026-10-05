@@ -19,9 +19,10 @@ final class ArchitectureCompiler
 
         if ([] === $discovery->projects) {
             $active = [];
+            $visited = [];
             foreach ($modules as $module) {
                 if (!$module->isPrivate() && $module->enabled) {
-                    $active = [...$active, ...$this->expand($module->class, $modules, true)];
+                    $active = [...$active, ...$this->expand($module->class, $modules, true, null, $visited)];
                 }
             }
 
@@ -32,12 +33,13 @@ final class ArchitectureCompiler
         $projectModules = [];
         foreach ($projects as $class => $project) {
             $active = [];
+            $visited = [];
             foreach ($project->declaredModules as $moduleClass) {
-                $active = [...$active, ...$this->expand($moduleClass, $modules, true, $class)];
+                $active = [...$active, ...$this->expand($moduleClass, $modules, true, $class, $visited)];
             }
             foreach ($modules as $module) {
-                if ($class === $module->projectClass) {
-                    $active = [...$active, ...$this->expand($module->class, $modules, true, $class)];
+                if ($class === $module->projectClass && $module->enabled) {
+                    $active = [...$active, ...$this->expand($module->class, $modules, true, $class, $visited)];
                 }
             }
             $active = array_values(array_unique($active));
@@ -179,10 +181,11 @@ final class ArchitectureCompiler
     /**
      * @param class-string                          $class
      * @param array<class-string, ModuleDefinition> $modules
+     * @param array<class-string, true>             $visited
      *
      * @return list<class-string>
      */
-    private function expand(string $class, array $modules, bool $requireEnabled, ?string $projectClass = null): array
+    private function expand(string $class, array $modules, bool $requireEnabled, ?string $projectClass = null, array &$visited = []): array
     {
         $module = $modules[$class] ?? throw new \LogicException(\sprintf('Project references unknown module class "%s".', $class));
         if ($requireEnabled && !$module->enabled) {
@@ -191,9 +194,13 @@ final class ArchitectureCompiler
         if ($module->isPrivate() && $module->projectClass !== $projectClass) {
             throw new \LogicException(\sprintf('Project cannot use private module "%s" from another project.', $module->class));
         }
+        if (isset($visited[$class])) {
+            return [];
+        }
+        $visited[$class] = true;
         $expanded = [];
         foreach ($module->dependencies as $dependency) {
-            $expanded = [...$expanded, ...$this->expand($dependency, $modules, $requireEnabled, $projectClass)];
+            $expanded = [...$expanded, ...$this->expand($dependency, $modules, $requireEnabled, $projectClass, $visited)];
         }
         $expanded[] = $class;
 

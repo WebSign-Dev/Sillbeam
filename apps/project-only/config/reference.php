@@ -333,7 +333,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         }>,
  *     },
  *     validation?: bool|array{ // Validation configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         enable_attributes?: bool|Param, // Default: true
  *         static_method?: Param|string|list<scalar|Param|null>,
  *         translation_domain?: scalar|Param|null, // Default: "validators"
@@ -352,7 +352,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         }>,
  *     },
  *     serializer?: bool|array{ // Serializer configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         enable_attributes?: bool|Param, // Default: true
  *         name_converter?: scalar|Param|null,
  *         circular_reference_handler?: scalar|Param|null,
@@ -369,7 +369,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         }>,
  *     },
  *     property_access?: bool|array{ // Property access configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         magic_call?: bool|Param, // Default: false
  *         magic_get?: bool|Param, // Default: true
  *         magic_set?: bool|Param, // Default: true
@@ -377,11 +377,11 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         throw_exception_on_invalid_property_path?: bool|Param, // Default: true
  *     },
  *     type_info?: bool|array{ // Type info configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         aliases?: array<string, scalar|Param|null>,
  *     },
  *     property_info?: bool|array{ // Property info configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         with_constructor_extractor?: bool|Param, // Registers the constructor extractor. // Default: true
  *     },
  *     cache?: array{ // Cache configuration
@@ -419,7 +419,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         enabled?: bool|Param, // Default: false
  *     },
  *     lock?: Param|bool|string|array{ // Lock configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         resources?: Param|string|array<string, Param|string|list<scalar|Param|null>>,
  *     },
  *     semaphore?: Param|bool|string|array{ // Semaphore configuration
@@ -427,7 +427,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         resources?: Param|string|array<string, scalar|Param|null>,
  *     },
  *     messenger?: bool|array{ // Messenger configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         routing?: array<string, Param|string|list<scalar|Param|null>>,
  *         serializer?: array{
  *             default_serializer?: scalar|Param|null, // Service id to use as the default serializer for the transports. // Default: "messenger.transport.native_php_serializer"
@@ -576,7 +576,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         }>,
  *     },
  *     mailer?: bool|array{ // Mailer configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         message_bus?: scalar|Param|null, // The message bus to use. Defaults to the default bus if the Messenger component is installed. // Default: null
  *         dsn?: scalar|Param|null, // Default: null
  *         transports?: array<string, scalar|Param|null>,
@@ -629,7 +629,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         }>,
  *     },
  *     rate_limiter?: bool|array{ // Rate limiter configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         limiters?: array<string, array{ // Default: []
  *             lock_factory?: scalar|Param|null, // The service ID of the lock factory used by this limiter (or null to disable locking). // Default: "auto"
  *             cache_pool?: scalar|Param|null, // The cache pool to use for storing the current limiter state. // Default: "cache.rate_limiter"
@@ -646,7 +646,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         }>,
  *     },
  *     uid?: bool|array{ // Uid configuration
- *         enabled?: bool|Param, // Default: true
+ *         enabled?: bool|Param, // Default: false
  *         default_uuid_version?: 7|6|4|1|Param, // Default: 7
  *         name_based_uuid_version?: 5|3|Param, // Default: 5
  *         name_based_uuid_namespace?: scalar|Param|null,
@@ -895,6 +895,17 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     discovery?: array{
  *         root?: scalar|Param|null, // Default: "%kernel.project_dir%/src"
  *         namespace?: scalar|Param|null, // Default: null
+ *         excludes?: list<scalar|Param|null>,
+ *         modules?: list<array{ // Default: []
+ *             path?: scalar|Param|null,
+ *             namespace?: scalar|Param|null, // Default: null
+ *             excludes?: list<scalar|Param|null>,
+ *         }>,
+ *         projects?: list<array{ // Default: []
+ *             path?: scalar|Param|null,
+ *             namespace?: scalar|Param|null, // Default: null
+ *             excludes?: list<scalar|Param|null>,
+ *         }>,
  *     },
  *     modules?: array<string, array{ // Default: []
  *         enabled?: bool|Param, // Default: true
@@ -902,73 +913,16 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     projects?: array<string, array{ // Default: []
  *         hosts?: list<scalar|Param|null>,
  *     }>,
- *     doctrine?: bool|array{
- *         enabled?: bool|Param, // Default: true
- *     },
- *     api?: bool|array{
- *         enabled?: bool|Param, // Default: true
- *     },
- *     user?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *         entity_class?: scalar|Param|null, // Default: "App\\Entity\\User"
- *     },
- *     filesystem?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *         root?: scalar|Param|null, // Default: "%kernel.project_dir%/storage/files"
- *         max_read_bytes?: int|Param, // Default: 10485760
- *     },
- *     mailer?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *         default_from?: scalar|Param|null, // Default: null
- *     },
- *     messenger?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *     },
- *     qrcode?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *     },
- *     security?: bool|array{
- *         enabled?: bool|Param, // Default: true
- *         access_token_ttl?: int|Param, // Default: 3600
- *         role_permissions?: array<string, list<scalar|Param|null>>,
- *         api?: bool|array{
- *             enabled?: bool|Param, // Default: false
- *             projects?: list<scalar|Param|null>,
- *         },
- *         mfa?: bool|array{
- *             enabled?: bool|Param, // Default: false
- *             issuer?: scalar|Param|null, // Default: "Nexum"
- *             challenge_ttl?: int|Param, // Default: 300
- *             max_attempts?: int|Param, // Default: 5
- *             api?: bool|array{
- *                 enabled?: bool|Param, // Default: false
- *                 projects?: list<scalar|Param|null>,
- *             },
- *         },
- *         passkeys?: bool|array{
- *             enabled?: bool|Param, // Default: false
- *             relying_party?: array{
- *                 rp_id?: scalar|Param|null, // Default: null
- *                 allowed_origins?: list<scalar|Param|null>,
- *             },
- *             relying_parties?: array<string, array{ // Default: []
- *                 rp_id?: scalar|Param|null,
- *                 allowed_origins?: list<scalar|Param|null>,
- *             }>,
- *             challenge_ttl?: int|Param, // Default: 300
- *             max_attempts?: int|Param, // Default: 5
- *             api?: bool|array{
- *                 enabled?: bool|Param, // Default: false
- *                 projects?: list<scalar|Param|null>,
- *             },
+ *     integrations?: array{
+ *         controllers?: list<scalar|Param|null>,
+ *         entities?: list<scalar|Param|null>,
+ *         services?: array{
+ *             exclude?: list<scalar|Param|null>,
  *         },
  *     },
- *     management?: bool|array{
- *         enabled?: bool|Param, // Default: false
- *         api?: bool|array{
- *             enabled?: bool|Param, // Default: false
- *             projects?: list<scalar|Param|null>,
- *         },
+ *     doctrine?: array{
+ *         enabled?: mixed, // Default: null
+ *         ...<string, mixed>
  *     },
  * }
  * @psalm-type ConfigType = array{

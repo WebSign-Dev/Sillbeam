@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Nexum;
 
 use Nexum\DependencyInjection\Compiler\ArchitectureValidationPass;
+use Nexum\DependencyInjection\Compiler\DoctrineMappingPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -14,5 +15,6 @@ final class NexumBundle extends Bundle
     {
         parent::build($container);
         $container->addCompilerPass(new ArchitectureValidationPass());
+        $container->addCompilerPass(new DoctrineMappingPass());
     }
 }

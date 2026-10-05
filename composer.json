@@ -3,56 +3,29 @@
     "description": "Modular architecture extension for Symfony applications, organized around Modules and optional Projects.",
     "type": "library",
     "keywords": [
-        "api",
-        "framework",
         "modular-monolith",
+        "modules",
         "nexum",
         "symfony"
     ],
     "license": "proprietary",
     "require": {
-        "php": "^8.4",
         "composer-runtime-api": "^2.2",
-        "doctrine/doctrine-bundle": "^3.3",
-        "doctrine/doctrine-migrations-bundle": "^4.0",
-        "doctrine/orm": "^3.6",
-        "endroid/qr-code": "^6.1",
-        "ext-sodium": "*",
-        "league/flysystem": "^3.36",
-        "phpdocumentor/reflection-docblock": "^6.0",
-        "psr/clock": "^1.0",
-        "psr/log": "^3.0",
-        "spomky-labs/otphp": "^11.5",
-        "symfony/cache-contracts": "^3.6",
-        "symfony/clock": "^7.4 || ^8.0",
+        "nikic/php-parser": "^5.7",
+        "php": "^8.4",
         "symfony/config": "^7.4 || ^8.0",
         "symfony/console": "^7.4 || ^8.0",
         "symfony/dependency-injection": "^7.4 || ^8.0",
-        "symfony/event-dispatcher": "^7.4 || ^8.0",
-        "symfony/filesystem": "^7.4 || ^8.0",
         "symfony/framework-bundle": "^7.4 || ^8.0",
         "symfony/http-foundation": "^7.4 || ^8.0",
         "symfony/http-kernel": "^7.4 || ^8.0",
-        "symfony/lock": "^7.4 || ^8.0",
-        "symfony/mailer": "^7.4 || ^8.0",
-        "symfony/messenger": "^7.4 || ^8.0",
-        "symfony/mime": "^7.4 || ^8.0",
-        "symfony/property-access": "^7.4 || ^8.0",
-        "symfony/property-info": "^7.4 || ^8.0",
-        "symfony/rate-limiter": "^7.4 || ^8.0",
         "symfony/routing": "^7.4 || ^8.0",
-        "symfony/security-bundle": "^7.4 || ^8.0",
-        "symfony/security-core": "^7.4 || ^8.0",
-        "symfony/security-csrf": "^7.4 || ^8.0",
-        "symfony/security-http": "^7.4 || ^8.0",
-        "symfony/serializer": "^7.4 || ^8.0",
-        "symfony/uid": "^7.4 || ^8.0",
-        "symfony/validator": "^7.4 || ^8.0",
-        "symfony/yaml": "^7.4 || ^8.0",
-        "web-auth/webauthn-lib": "^5.3.5"
+        "symfony/yaml": "^7.4 || ^8.0"
     },
     "require-dev": {
         "deptrac/deptrac": "^2.0",
+        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/orm": "^3.6",
         "friendsofphp/php-cs-fixer": "^3.0",
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^12.0"
@@ -75,8 +48,7 @@
         }
     },
     "suggest": {
-        "ext-gd": "Enables PNG output in the default QR-code renderer.",
-        "league/flysystem-aws-s3-v3": "Adds an AWS S3 storage adapter."
+        "doctrine/doctrine-bundle": "Enables automatic attribute mappings for active Nexum modules and projects."
     },
     "config": {
         "sort-packages": true

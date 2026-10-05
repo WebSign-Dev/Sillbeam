@@ -19,25 +19,21 @@ final readonly class ProjectDiscovery
     public function discover(DiscoveryOptions $options): array
     {
         $projects = [];
-        foreach ($this->inspector->filesEndingWith($options->root, 'Project.php') as $file) {
-            $relative = str_replace('\\', '/', substr($file, \strlen($options->root) + 1));
-            $allowed = 1 === preg_match('#^Project/[^/]+/[^/]+Project\.php$#', $relative);
-            $class = $this->inspector->classForFile($options, $file);
-            $reflection = new \ReflectionClass($class);
-            $attribute = $reflection->getAttributes(NexumProject::class)[0] ?? null;
-            if (null === $attribute) {
-                if ($allowed) {
-                    throw new \LogicException(\sprintf('Project descriptor "%s" must declare #[NexumProject].', $class));
-                }
-
-                continue;
+        foreach ($this->inspector->descriptors($options, NexumProject::class) as $file => $class) {
+            $allowed = false;
+            foreach ($options->projectRoots as $root) {
+                $allowed = $allowed || $root->contains($file);
             }
             if (!$allowed) {
-                throw new \LogicException(\sprintf('Project descriptor "%s" is outside the allowed src/Project/<Project>/*Project.php structure.', $class));
+                throw new \LogicException('Project descriptor "'.$class.'" is outside the allowed project discovery boundaries.');
             }
-            $metadata = $attribute->newInstance();
+            $metadata = $this->inspector->reflection($class, $file)->getAttributes(NexumProject::class)[0]->newInstance();
             $directory = \dirname($file);
-            $excludedRoots = [$directory.'/Module', $directory.'/Project'];
+            foreach ($projects as $known) {
+                if ($directory === $known->directory || str_starts_with($directory.'/', $known->directory.'/') || str_starts_with($known->directory.'/', $directory.'/')) {
+                    throw new \LogicException('Nexum descriptors have overlapping project areas: '.$class.' and '.$known->class);
+                }
+            }
             $projects[$class] = new ProjectDefinition(
                 id: $metadata->id ?? IdDeriver::fromClass($class, 'Project'),
                 class: $class,
@@ -46,10 +42,10 @@ final readonly class ProjectDiscovery
                 modules: [],
                 directory: $directory,
                 descriptorFile: $file,
-                namespace: $this->inspector->namespaceForDirectory($options, $directory),
+                namespace: $options->namespaceForDirectory($directory),
                 hosts: [],
-                controllerDirectories: $this->inspector->namedDirectories($directory, 'Controller', $excludedRoots),
-                entityDirectories: $this->inspector->namedDirectories($directory, 'Entity', $excludedRoots),
+                controllerDirectories: [],
+                entityDirectories: [],
             );
         }
 

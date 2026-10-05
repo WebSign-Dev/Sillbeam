@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Nexum\Tests\Integration;
 
-use Nexum\Doctrine\Store\EntityStoreInterface;
 use Nexum\Module\ModuleRegistryInterface;
 use Nexum\Project\ProjectContextInterface;
 use Nexum\Project\ProjectRegistryInterface;
@@ -47,7 +46,7 @@ final class ProjectModeTest extends TestCase
         $services = $this->kernel->getContainer()->get('test.service_container');
         self::assertInstanceOf(ContainerInterface::class, $services);
         self::assertTrue($services->has(CatalogSubscriber::class));
-        self::assertFalse($services->has(EntityStoreInterface::class));
+        self::assertFalse($services->has('Nexum\\Doctrine\\Store\\EntityStoreInterface'));
         self::assertFalse($services->has('limiter.nexum_security_mfa_verify'));
     }
 

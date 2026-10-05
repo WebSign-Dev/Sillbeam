@@ -31,7 +31,7 @@ final class ArchitectureTest extends TestCase
     {
         $root = \dirname(__DIR__).'/Fixtures/Invalid/NestedProject/src';
 
-        $this->expectExceptionMessage('outside the allowed src/Project/<Project>/*Project.php structure');
+        $this->expectExceptionMessage('overlapping project');
         (new ArchitectureDiscovery())->discover(new DiscoveryOptions($root, 'InvalidNestedProject\\'));
     }
 
@@ -39,7 +39,7 @@ final class ArchitectureTest extends TestCase
     {
         $root = \dirname(__DIR__).'/Fixtures/Invalid/NestedModule/src';
 
-        $this->expectExceptionMessage('outside the allowed Module or Project/<Project>/Module structure');
+        $this->expectExceptionMessage('overlapping module');
         (new ArchitectureDiscovery())->discover(new DiscoveryOptions($root, 'InvalidNestedModule\\'));
     }
 
@@ -107,6 +107,17 @@ final class ArchitectureTest extends TestCase
 
         $this->expectExceptionMessage('Circular Nexum module dependency');
         (new ArchitectureCompiler())->compile($result, ['modules' => [], 'projects' => []]);
+    }
+
+    public function testDisabledPrivateModuleIsNotAnAutomaticActivationRoot(): void
+    {
+        $project = new ProjectDefinition('shop', TestShopProject::class, '', [], [], '/tmp/Shop', '/tmp/Shop.php', 'Test\\Shop', [], []);
+        $result = $this->discoveryResult([
+            TestPrivateModule::class => $this->module('private', TestPrivateModule::class, project: TestShopProject::class),
+        ], [TestShopProject::class => $project]);
+        $compiled = (new ArchitectureCompiler())->compile($result, ['modules' => ['project:shop:private' => ['enabled' => false]]]);
+        self::assertSame([], $compiled->usedModules());
+        self::assertFalse($compiled->modules[TestPrivateModule::class]->enabled);
     }
 
     /**

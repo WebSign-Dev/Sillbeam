@@ -1,8 +1,0 @@
-services:
-    _defaults:
-        autowire: true
-        autoconfigure: true
-
-    Nexum\Validator\:
-        resource: '../'
-        exclude: '../{DependencyInjection,Constraint/StrongPassword.php,config}'

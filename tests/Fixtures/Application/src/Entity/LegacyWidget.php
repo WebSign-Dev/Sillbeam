@@ -5,18 +5,26 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Nexum\Entity\AbstractTimestampedEntity;
 
 #[ORM\Entity]
-final class LegacyWidget extends AbstractTimestampedEntity
+final class LegacyWidget
 {
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
+    public ?int $id = null;
+
     #[ORM\Column(length: 120)]
     private string $name;
 
-    public function __construct(string $name)
+    public function __construct(string $name = 'example')
     {
-        parent::__construct();
         $this->name = $name;
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
     }
 
     public function getName(): string
