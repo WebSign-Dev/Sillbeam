@@ -8,7 +8,7 @@
         "sillbeam",
         "symfony"
     ],
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "composer-runtime-api": "^2.2",
         "nikic/php-parser": "^5.7",

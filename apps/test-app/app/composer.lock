@@ -4489,7 +4489,7 @@
                 ]
             },
             "license": [
-                "proprietary"
+                "MIT"
             ],
             "description": "Modular architecture extension for Symfony applications, organized around Modules and optional Projects.",
             "keywords": [

@@ -2,7 +2,7 @@
     "name": "sillbeam/test-app",
     "description": "Isolated Symfony reference application for developing and testing the Sillbeam framework.",
     "type": "project",
-    "license": "proprietary",
+    "license": "MIT",
     "minimum-stability": "dev",
     "prefer-stable": true,
     "repositories": [

@@ -2,7 +2,7 @@
     "name": "sillbeam/skeleton",
     "description": "Minimal project skeleton for creating modular Sillbeam applications.",
     "type": "project",
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": "^8.4",
         "websign-dev/sillbeam": "^0.1",

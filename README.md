@@ -10,7 +10,7 @@
 [![PHP][php-shield]](#requirements)
 [![Symfony][symfony-shield]](#requirements)
 [![Status][status-shield]](#install-from-a-checkout)
-[![License][license-shield]](#license)
+[![License][license-shield]](LICENSE)
 
 **A modular architecture layer for scalable, maintainable Symfony applications.**
 
@@ -209,7 +209,7 @@ When [reporting an issue][issues-url], include your PHP and Symfony versions, re
 
 ## License
 
-The package currently declares **`proprietary`** in [composer.json](composer.json). No standalone license file is included in this repository.
+Sillbeam is licensed under the [MIT License](LICENSE).
 
 ---
 
@@ -229,4 +229,4 @@ The package currently declares **`proprietary`** in [composer.json](composer.jso
 [php-shield]: https://img.shields.io/badge/PHP-%E2%89%A5%208.4-777bb4?logo=php&logoColor=white
 [symfony-shield]: https://img.shields.io/badge/Symfony-7.4%20%7C%208.x-000000?logo=symfony&logoColor=white
 [status-shield]: https://img.shields.io/badge/status-0.1.x%20development-f05a00
-[license-shield]: https://img.shields.io/badge/license-proprietary-57606a
+[license-shield]: https://img.shields.io/badge/license-MIT-57606a

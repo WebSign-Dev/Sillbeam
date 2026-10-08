@@ -2,7 +2,7 @@
     "name": "sillbeam/single-project-test-app",
     "description": "Sillbeam single-project integration test application.",
     "type": "project",
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": "^8.4",
         "websign-dev/sillbeam": "dev-main"

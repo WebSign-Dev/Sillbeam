@@ -2,7 +2,7 @@
     "name": "sillbeam/symfony-only-test-app",
     "description": "Standard Symfony application using Sillbeam without Modules or Projects.",
     "type": "project",
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": "^8.4",
         "websign-dev/sillbeam": "dev-main"

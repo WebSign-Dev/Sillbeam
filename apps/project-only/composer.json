@@ -2,7 +2,7 @@
     "name": "sillbeam/project-only-test-app",
     "description": "Sillbeam Project with direct Controller, Service and Entity directories and no Modules.",
     "type": "project",
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": "^8.4",
         "websign-dev/sillbeam": "dev-main"

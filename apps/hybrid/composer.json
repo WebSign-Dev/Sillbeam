@@ -2,7 +2,7 @@
     "name": "sillbeam/hybrid-test-app",
     "description": "Sillbeam hybrid Symfony and Projects integration test application.",
     "type": "project",
-    "license": "proprietary",
+    "license": "MIT",
     "require": {
         "php": "^8.4",
         "websign-dev/sillbeam": "dev-main"
