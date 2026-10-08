@@ -19,9 +19,9 @@ jobs:
             - run: composer validate --strict
             - name: Resolve selected Symfony version
               env:
-                  NEXUM_SYMFONY_VERSION: '${{ matrix.symfony }}'
+                  SILLBEAM_SYMFONY_VERSION: '${{ matrix.symfony }}'
               run: |
-                  php -r '$file = "composer.json"; $config = json_decode(file_get_contents($file), true, flags: JSON_THROW_ON_ERROR); foreach ($config["require"] as $package => &$constraint) { if (str_starts_with($package, "symfony/")) { $constraint = getenv("NEXUM_SYMFONY_VERSION"); } } unset($constraint); $config["require-dev"]["symfony/doctrine-bridge"] = getenv("NEXUM_SYMFONY_VERSION"); file_put_contents($file, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));'
+                  php -r '$file = "composer.json"; $config = json_decode(file_get_contents($file), true, flags: JSON_THROW_ON_ERROR); foreach ($config["require"] as $package => &$constraint) { if (str_starts_with($package, "symfony/")) { $constraint = getenv("SILLBEAM_SYMFONY_VERSION"); } } unset($constraint); $config["require-dev"]["symfony/doctrine-bridge"] = getenv("SILLBEAM_SYMFONY_VERSION"); file_put_contents($file, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));'
                   composer update --with-all-dependencies --no-scripts --no-plugins --no-interaction --prefer-dist
             - run: composer test
             - run: composer analyse

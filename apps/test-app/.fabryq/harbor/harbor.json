@@ -1,11 +1,11 @@
 {
   "schemaVersion": 5,
-  "project": "Nexum Test App",
-  "slug": "nexum-test-app",
-  "hostBase": "nexum-test-app",
+  "project": "Sillbeam Test App",
+  "slug": "sillbeam-test-app",
+  "hostBase": "sillbeam-test-app",
   "identity": {
     "id": "harbor-d310670073d7df8857a938df",
-    "dataNamespace": "nexum-test-app"
+    "dataNamespace": "sillbeam-test-app"
   },
   "createdWith": "1.0.0-beta.1",
   "runtime": {
@@ -34,7 +34,7 @@
       {
         "id": "backend",
         "target": "backend",
-        "host": "nexum-test-app.localhost",
+        "host": "sillbeam-test-app.localhost",
         "path": "/"
       }
     ]

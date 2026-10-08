@@ -4,7 +4,7 @@ Die Fixtures verwenden den Root-Autoloader und temporäre Kernel-Caches.
 
 | App | Abdeckung |
 |---|---|
-| apps/symfony-only | gewöhnliche Symfony-App mit Nexum ohne Descriptoren |
+| apps/symfony-only | gewöhnliche Symfony-App mit Sillbeam ohne Descriptoren |
 | apps/modules-only | Shared-Module-Graph, deaktiviertes Modul |
 | apps/project-only | direkte Project-Services/-Routen/-Entities |
 | apps/single-project | einzelnes Project mit Shared Module ohne Hostpflicht |

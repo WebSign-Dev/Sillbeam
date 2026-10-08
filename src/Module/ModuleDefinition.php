@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Module;
+namespace Sillbeam\Module;
 
 final readonly class ModuleDefinition
 {

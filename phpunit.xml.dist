@@ -8,14 +8,14 @@
     <php>
         <env name="APP_ENV" value="test" force="true"/>
         <env name="APP_DEBUG" value="1" force="true"/>
-        <env name="APP_SECRET" value="nexum-test-secret" force="true"/>
+        <env name="APP_SECRET" value="sillbeam-test-secret" force="true"/>
         <env name="DATABASE_URL" value="sqlite:///:memory:" force="true"/>
         <env name="DEFAULT_URI" value="http://localhost" force="true"/>
         <env name="TRUSTED_PROXIES" value="127.0.0.1" force="true"/>
         <env name="APP_TRUSTED_HOSTS" value="^localhost$" force="true"/>
     </php>
     <testsuites>
-        <testsuite name="Nexum">
+        <testsuite name="Sillbeam">
             <directory>tests</directory>
         </testsuite>
     </testsuites>

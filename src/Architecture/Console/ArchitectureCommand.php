@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Architecture\Console;
+namespace Sillbeam\Architecture\Console;
 
-use Nexum\Module\ModuleRegistryInterface;
-use Nexum\Project\ProjectRegistryInterface;
+use Sillbeam\Module\ModuleRegistryInterface;
+use Sillbeam\Project\ProjectRegistryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'nexum:architecture', description: 'Inspect the discovered module catalog and compiled architecture.')]
+#[AsCommand(name: 'sillbeam:architecture', description: 'Inspect the discovered module catalog and compiled architecture.')]
 final class ArchitectureCommand extends Command
 {
     public function __construct(private readonly ModuleRegistryInterface $modules, private readonly ProjectRegistryInterface $projects)

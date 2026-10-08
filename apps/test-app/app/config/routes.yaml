@@ -10,6 +10,6 @@
 controllers:
     resource: routing.controllers
 
-nexum:
+sillbeam:
     resource: .
-    type: nexum
+    type: sillbeam

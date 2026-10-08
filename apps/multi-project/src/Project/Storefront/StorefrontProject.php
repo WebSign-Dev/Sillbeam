@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace ProjectApp\Project\Storefront;
 
-use Nexum\Project\Attribute\NexumProject;
 use ProjectApp\Module\Catalog\CatalogModule;
+use Sillbeam\Project\Attribute\SillbeamProject;
 
-#[NexumProject(modules: [CatalogModule::class])]
+#[SillbeamProject(modules: [CatalogModule::class])]
 final class StorefrontProject
 {
 }

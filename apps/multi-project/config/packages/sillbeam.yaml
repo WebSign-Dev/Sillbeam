@@ -1,4 +1,4 @@
-nexum:
+sillbeam:
     projects:
         storefront:
             hosts: [shop.example.test, www.example.test]

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Architecture;
+namespace Sillbeam\Architecture;
 
 final class PathMatcher
 {

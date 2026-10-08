@@ -1,11 +1,11 @@
 {
-    "name": "nexum/project-only-test-app",
-    "description": "Nexum Project with direct Controller, Service and Entity directories and no Modules.",
+    "name": "sillbeam/project-only-test-app",
+    "description": "Sillbeam Project with direct Controller, Service and Entity directories and no Modules.",
     "type": "project",
     "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "benjaminoeffinger/nexum": "dev-main"
+        "websign-dev/sillbeam": "dev-main"
     },
     "repositories": [
         {

@@ -891,7 +891,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         ...<string, mixed>
  *     },
  * }
- * @psalm-type NexumConfig = array{
+ * @psalm-type SillbeamConfig = array{
  *     discovery?: array{
  *         root?: scalar|Param|null, // Default: "%kernel.project_dir%/src"
  *         namespace?: scalar|Param|null, // Default: null
@@ -931,14 +931,14 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     services?: ServicesConfig,
  *     framework?: FrameworkConfig,
  *     doctrine?: DoctrineConfig,
- *     nexum?: NexumConfig,
+ *     sillbeam?: SillbeamConfig,
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
  *         services?: ServicesConfig,
  *         framework?: FrameworkConfig,
  *         doctrine?: DoctrineConfig,
- *         nexum?: NexumConfig,
+ *         sillbeam?: SillbeamConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,

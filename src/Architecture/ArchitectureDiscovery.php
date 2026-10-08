@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Architecture;
+namespace Sillbeam\Architecture;
 
-use Nexum\Module\ModuleDiscovery;
-use Nexum\Project\ProjectDefinition;
-use Nexum\Project\ProjectDiscovery;
+use Sillbeam\Module\ModuleDiscovery;
+use Sillbeam\Project\ProjectDefinition;
+use Sillbeam\Project\ProjectDiscovery;
 
 final readonly class ArchitectureDiscovery
 {

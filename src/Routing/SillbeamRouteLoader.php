@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Routing;
+namespace Sillbeam\Routing;
 
-use Nexum\Module\ModuleDefinition;
-use Nexum\Module\ModuleRegistryInterface;
-use Nexum\Project\ProjectRegistryInterface;
+use Sillbeam\Module\ModuleDefinition;
+use Sillbeam\Module\ModuleRegistryInterface;
+use Sillbeam\Project\ProjectRegistryInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileExistenceResource;
@@ -14,7 +14,7 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\Loader\AttributeFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 
-final class NexumRouteLoader extends Loader
+final class SillbeamRouteLoader extends Loader
 {
     private bool $loaded = false;
 
@@ -37,7 +37,7 @@ final class NexumRouteLoader extends Loader
     public function load(mixed $resource, ?string $type = null): RouteCollection
     {
         if ($this->loaded) {
-            throw new \LogicException('The Nexum route loader can only be loaded once.');
+            throw new \LogicException('The Sillbeam route loader can only be loaded once.');
         }
         $this->loaded = true;
         $routes = new RouteCollection();
@@ -54,7 +54,7 @@ final class NexumRouteLoader extends Loader
                 }
                 $collection->addNamePrefix($project->id.'.');
                 if ([] !== $project->hosts) {
-                    $collection->setHost('{_nexum_host}', ['_nexum_host' => $project->canonicalHost()], ['_nexum_host' => implode('|', array_map(static fn (string $host): string => preg_quote($host, '#'), $project->hosts))]);
+                    $collection->setHost('{_sillbeam_host}', ['_sillbeam_host' => $project->canonicalHost()], ['_sillbeam_host' => implode('|', array_map(static fn (string $host): string => preg_quote($host, '#'), $project->hosts))]);
                 }
                 $routes->addCollection($collection);
             }
@@ -72,7 +72,7 @@ final class NexumRouteLoader extends Loader
 
     public function supports(mixed $resource, ?string $type = null): bool
     {
-        return 'nexum' === $type;
+        return 'sillbeam' === $type;
     }
 
     private function addModule(RouteCollection $routes, ModuleDefinition $module): void

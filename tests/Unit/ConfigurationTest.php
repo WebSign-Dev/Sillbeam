@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Unit;
+namespace Sillbeam\Tests\Unit;
 
-use Nexum\DependencyInjection\Configuration;
 use PHPUnit\Framework\TestCase;
+use Sillbeam\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
 
 final class ConfigurationTest extends TestCase

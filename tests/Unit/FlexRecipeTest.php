@@ -2,45 +2,45 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Unit;
+namespace Sillbeam\Tests\Unit;
 
-use Nexum\DependencyInjection\Configuration;
 use PHPUnit\Framework\TestCase;
+use Sillbeam\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
 
 final class FlexRecipeTest extends TestCase
 {
-    private const RECIPE_DIRECTORY = __DIR__.'/../../flex-recipe/benjaminoeffinger/nexum/0.1';
+    private const RECIPE_DIRECTORY = __DIR__.'/../../flex-recipe/websign-dev/sillbeam/0.1';
 
-    public function testRecipeHasRecipesContribLayoutAndRegistersOnlyNexumBundle(): void
+    public function testRecipeHasRecipesContribLayoutAndRegistersOnlySillbeamBundle(): void
     {
         $manifest = json_decode($this->read('manifest.json'), true, flags: \JSON_THROW_ON_ERROR);
 
         self::assertSame(
-            ['Nexum\\NexumBundle' => ['all']],
+            ['Sillbeam\\SillbeamBundle' => ['all']],
             $manifest['bundles'],
         );
         self::assertSame(['config/' => '%CONFIG_DIR%/'], $manifest['copy-from-recipe']);
-        self::assertFileExists(self::RECIPE_DIRECTORY.'/config/packages/nexum.yaml');
-        self::assertFileExists(self::RECIPE_DIRECTORY.'/config/routes/nexum.yaml');
+        self::assertFileExists(self::RECIPE_DIRECTORY.'/config/packages/sillbeam.yaml');
+        self::assertFileExists(self::RECIPE_DIRECTORY.'/config/routes/sillbeam.yaml');
     }
 
     public function testRecipeUsesTheSameAutomaticDefaultsAsAnEmptyConfig(): void
     {
-        $recipe = Yaml::parse($this->read('config/packages/nexum.yaml'));
-        $config = (new Processor())->processConfiguration(new Configuration(), [$recipe['nexum']]);
+        $recipe = Yaml::parse($this->read('config/packages/sillbeam.yaml'));
+        $config = (new Processor())->processConfiguration(new Configuration(), [$recipe['sillbeam']]);
         self::assertNull($config['doctrine']['enabled']);
     }
 
-    public function testRecipeInstallsSingleNexumRouteImport(): void
+    public function testRecipeInstallsSingleSillbeamRouteImport(): void
     {
         self::assertSame([
-            'nexum' => [
+            'sillbeam' => [
                 'resource' => '.',
-                'type' => 'nexum',
+                'type' => 'sillbeam',
             ],
-        ], Yaml::parse($this->read('config/routes/nexum.yaml')));
+        ], Yaml::parse($this->read('config/routes/sillbeam.yaml')));
     }
 
     private function read(string $path): string

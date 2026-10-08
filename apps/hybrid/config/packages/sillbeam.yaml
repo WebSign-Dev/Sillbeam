@@ -1,4 +1,4 @@
-nexum:
+sillbeam:
     projects:
         public: { hosts: [public.hybrid.test] }
         admin: { hosts: [admin.hybrid.test] }

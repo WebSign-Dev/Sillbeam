@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Architecture;
+namespace Sillbeam\Architecture;
 
 final class IdDeriver
 {
@@ -15,7 +15,7 @@ final class IdDeriver
 
         $id = strtolower((string) preg_replace('/(?<!^)[A-Z]/', '-$0', $shortName));
         if ('' === $id || !preg_match('/^[a-z][a-z0-9-]*$/', $id)) {
-            throw new \LogicException(\sprintf('Cannot derive a valid Nexum id from "%s".', $class));
+            throw new \LogicException(\sprintf('Cannot derive a valid Sillbeam id from "%s".', $class));
         }
 
         return $id;

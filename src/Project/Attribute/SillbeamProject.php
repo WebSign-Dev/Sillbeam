@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Project\Attribute;
+namespace Sillbeam\Project\Attribute;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
-final readonly class NexumProject
+final readonly class SillbeamProject
 {
     /** @param list<class-string> $modules */
     public function __construct(
@@ -14,7 +14,7 @@ final readonly class NexumProject
         public array $modules = [],
     ) {
         if (null !== $id && !preg_match('/^[a-z][a-z0-9-]*$/', $id)) {
-            throw new \InvalidArgumentException(\sprintf('Invalid Nexum project id "%s".', $id));
+            throw new \InvalidArgumentException(\sprintf('Invalid Sillbeam project id "%s".', $id));
         }
     }
 }

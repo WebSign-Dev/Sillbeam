@@ -1,15 +1,15 @@
-# Nexum Evolution Implementation Plan
+# Sillbeam Evolution Implementation Plan
 
 > **For agentic workers:** Use superpowers:executing-plans to implement this plan task-by-task. The user explicitly requested the entire approved review's implementation in this session.
 
-**Goal:** Deliver Nexum's configurable, validated Symfony module layer.
+**Goal:** Deliver Sillbeam's configurable, validated Symfony module layer.
 **Architecture:** A shared build result supplies native DI, routing and optional Doctrine. A static source index supplies discovery and actual dependency validation.
 **Tech Stack:** PHP 8.4+, Symfony 7.4/8.x, PHP-Parser 5, optional Doctrine ORM 3.
-**Spec:** docs/superpowers/specs/2026-10-01-nexum-evolution-design.md
+**Spec:** docs/superpowers/specs/2026-10-01-sillbeam-evolution-design.md
 
 ## Global Constraints
 
-- Preserve existing local Harbor changes and nexum.zip.
+- Preserve existing local Harbor changes and sillbeam.zip.
 - PHP ^8.4; Symfony ^7.4 || ^8.0.
 - No required Foundation or Strata components; one Symfony container.
 - Native application overrides remain available.
@@ -49,7 +49,7 @@ Interfaces: analyzer analyze(DiscoveryResult,CompiledArchitecture,DiscoveryOptio
 
 ### Task 4: Shared build and Foundation removal
 
-Files: src/DependencyInjection/{Configuration,NexumExtension}.php; src/Routing/NexumRouteLoader.php; composer.json; fixtures/apps/skeleton/Flex recipe; core integration tests; remove Foundation src/tests.
+Files: src/DependencyInjection/{Configuration,SillbeamExtension}.php; src/Routing/SillbeamRouteLoader.php; composer.json; fixtures/apps/skeleton/Flex recipe; core integration tests; remove Foundation src/tests.
 Interfaces: one cached CompiledArchitecture across prepend/load; Doctrine activates on installed bundle unless disabled; routing consumes active registries and discovery resources.
 - [x] Write failing minimal-kernel/Doctrine activation/exclusion/override tests.
 - [x] Remove Foundation integration and runtime requirements; migrate fixture to plain Symfony/Doctrine.
@@ -58,7 +58,7 @@ Interfaces: one cached CompiledArchitecture across prepend/load; Doctrine activa
 ### Task 5: Core diagnostics, docs and supported versions
 
 Files: src/Architecture/Console/ArchitectureCommand.php; registries/definition evidence fields; docs, README, migration, .github/workflows/ci.yml, deptrac.yaml and tools/test-flex-recipe.php.
-Interfaces: nexum:architecture --format=json returns module catalog, project assignments, reasons, paths and observed references.
+Interfaces: sillbeam:architecture --format=json returns module catalog, project assignments, reasons, paths and observed references.
 - [x] Write and run failing command and custom-root cache tests.
 - [x] Implement command, resource tracking and package/docs/migration/CI alignment.
 - [x] Run PHPUnit, PHPStan, Deptrac, style and Composer checks.

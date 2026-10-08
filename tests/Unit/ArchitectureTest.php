@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Unit;
+namespace Sillbeam\Tests\Unit;
 
 use App\Module\Billing\BillingModule;
 use App\Module\Identity\IdentityModule;
-use Nexum\Architecture\ArchitectureCompiler;
-use Nexum\Architecture\ArchitectureDiscovery;
-use Nexum\Architecture\DiscoveryOptions;
-use Nexum\Architecture\DiscoveryResult;
-use Nexum\Module\ModuleDefinition;
-use Nexum\Project\ProjectDefinition;
 use PHPUnit\Framework\TestCase;
+use Sillbeam\Architecture\ArchitectureCompiler;
+use Sillbeam\Architecture\ArchitectureDiscovery;
+use Sillbeam\Architecture\DiscoveryOptions;
+use Sillbeam\Architecture\DiscoveryResult;
+use Sillbeam\Module\ModuleDefinition;
+use Sillbeam\Project\ProjectDefinition;
 
 final class ArchitectureTest extends TestCase
 {
@@ -105,7 +105,7 @@ final class ArchitectureTest extends TestCase
             TestBModule::class => $this->module('b', TestBModule::class, [TestAModule::class]),
         ]);
 
-        $this->expectExceptionMessage('Circular Nexum module dependency');
+        $this->expectExceptionMessage('Circular Sillbeam module dependency');
         (new ArchitectureCompiler())->compile($result, ['modules' => [], 'projects' => []]);
     }
 

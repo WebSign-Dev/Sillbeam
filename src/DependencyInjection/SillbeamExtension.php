@@ -2,29 +2,29 @@
 
 declare(strict_types=1);
 
-namespace Nexum\DependencyInjection;
+namespace Sillbeam\DependencyInjection;
 
-use Nexum\Architecture\ArchitectureCompiler;
-use Nexum\Architecture\ArchitectureDiscovery;
-use Nexum\Architecture\CodeDependencyAnalyzer;
-use Nexum\Architecture\CompiledArchitecture;
-use Nexum\Architecture\Console\ArchitectureCommand;
-use Nexum\Architecture\DiscoveryOptions;
-use Nexum\Architecture\DiscoveryOptionsResolver;
-use Nexum\Architecture\DiscoveryResult;
-use Nexum\Architecture\PathMatcher;
-use Nexum\Architecture\SourceInspector;
-use Nexum\Kernel\Command\AboutCommand;
-use Nexum\Kernel\Runtime\KernelInformation;
-use Nexum\Kernel\Runtime\KernelInformationInterface;
-use Nexum\Module\ModuleDefinition;
-use Nexum\Module\ModuleRegistry;
-use Nexum\Module\ModuleRegistryInterface;
-use Nexum\Project\ProjectContext;
-use Nexum\Project\ProjectContextInterface;
-use Nexum\Project\ProjectRegistry;
-use Nexum\Project\ProjectRegistryInterface;
-use Nexum\Routing\NexumRouteLoader;
+use Sillbeam\Architecture\ArchitectureCompiler;
+use Sillbeam\Architecture\ArchitectureDiscovery;
+use Sillbeam\Architecture\CodeDependencyAnalyzer;
+use Sillbeam\Architecture\CompiledArchitecture;
+use Sillbeam\Architecture\Console\ArchitectureCommand;
+use Sillbeam\Architecture\DiscoveryOptions;
+use Sillbeam\Architecture\DiscoveryOptionsResolver;
+use Sillbeam\Architecture\DiscoveryResult;
+use Sillbeam\Architecture\PathMatcher;
+use Sillbeam\Architecture\SourceInspector;
+use Sillbeam\Kernel\Command\AboutCommand;
+use Sillbeam\Kernel\Runtime\KernelInformation;
+use Sillbeam\Kernel\Runtime\KernelInformationInterface;
+use Sillbeam\Module\ModuleDefinition;
+use Sillbeam\Module\ModuleRegistry;
+use Sillbeam\Module\ModuleRegistryInterface;
+use Sillbeam\Project\ProjectContext;
+use Sillbeam\Project\ProjectContextInterface;
+use Sillbeam\Project\ProjectRegistry;
+use Sillbeam\Project\ProjectRegistryInterface;
+use Sillbeam\Routing\SillbeamRouteLoader;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileExistenceResource;
 use Symfony\Component\Config\Resource\FileResource;
@@ -33,7 +33,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
-final class NexumExtension extends Extension implements PrependExtensionInterface
+final class SillbeamExtension extends Extension implements PrependExtensionInterface
 {
     private ?CompiledArchitecture $architecture = null;
     private ?DiscoveryResult $discovery = null;
@@ -66,8 +66,8 @@ final class NexumExtension extends Extension implements PrependExtensionInterfac
         if (null === $this->architecture) {
             $this->build($configs, $container);
         }
-        $architecture = $this->architecture ?? throw new \LogicException('Nexum architecture was not compiled.');
-        $discovery = $this->discovery ?? throw new \LogicException('Nexum discovery was not run.');
+        $architecture = $this->architecture ?? throw new \LogicException('Sillbeam architecture was not compiled.');
+        $discovery = $this->discovery ?? throw new \LogicException('Sillbeam discovery was not run.');
         foreach ($discovery->resources as $resource) {
             $container->addResource(is_dir($resource) ? new DirectoryResource($resource, '/\\.php$/') : (is_file($resource) ? new FileResource($resource) : new FileExistenceResource($resource)));
         }
@@ -79,13 +79,13 @@ final class NexumExtension extends Extension implements PrependExtensionInterfac
         $container->addResource(is_file($composer) ? new FileResource($composer) : new FileExistenceResource($composer));
         $modules = array_map(static fn ($module): array => get_object_vars($module), $architecture->modules);
         $projects = array_map(static fn ($project): array => get_object_vars($project), $architecture->projects);
-        $container->register('nexum.module_registry', ModuleRegistry::class)->setArguments([$modules, $architecture->applicationModules, $architecture->projectModules]);
-        $container->setAlias(ModuleRegistryInterface::class, 'nexum.module_registry')->setPublic(true);
-        $container->register('nexum.project_registry', ProjectRegistry::class)->setArguments([$projects]);
-        $container->setAlias(ProjectRegistryInterface::class, 'nexum.project_registry')->setPublic(true);
+        $container->register('sillbeam.module_registry', ModuleRegistry::class)->setArguments([$modules, $architecture->applicationModules, $architecture->projectModules]);
+        $container->setAlias(ModuleRegistryInterface::class, 'sillbeam.module_registry')->setPublic(true);
+        $container->register('sillbeam.project_registry', ProjectRegistry::class)->setArguments([$projects]);
+        $container->setAlias(ProjectRegistryInterface::class, 'sillbeam.project_registry')->setPublic(true);
         $container->autowire(ProjectContext::class)->setArguments([new Reference('request_stack'), new Reference(ProjectRegistryInterface::class), new Reference(ModuleRegistryInterface::class)]);
         $container->setAlias(ProjectContextInterface::class, ProjectContext::class)->setPublic(true);
-        $container->register(NexumRouteLoader::class)->setArguments([
+        $container->register(SillbeamRouteLoader::class)->setArguments([
             new Reference('routing.loader.attribute.file'), new Reference(ModuleRegistryInterface::class),
             new Reference(ProjectRegistryInterface::class), $discovery->resources, $this->controllerFiles($architecture),
             array_values(array_unique([...$this->configurationResources, $projectDir.'/config', $composer])),
@@ -95,7 +95,7 @@ final class NexumExtension extends Extension implements PrependExtensionInterfac
         $container->setAlias(KernelInformationInterface::class, KernelInformation::class);
         $container->autowire(AboutCommand::class)->setAutoconfigured(true);
         $container->autowire(ArchitectureCommand::class)->setAutoconfigured(true);
-        $container->setParameter('nexum.doctrine.mappings', $this->doctrineMappings);
+        $container->setParameter('sillbeam.doctrine.mappings', $this->doctrineMappings);
     }
 
     /** @param array<array-key, array<string, mixed>> $configs */
@@ -107,7 +107,7 @@ final class NexumExtension extends Extension implements PrependExtensionInterfac
         $hasDoctrine = $container->hasExtension('doctrine');
         $config['doctrine']['enabled'] ??= $hasDoctrine;
         if ($config['doctrine']['enabled'] && !$hasDoctrine) {
-            throw new \LogicException('nexum.doctrine is enabled, but DoctrineBundle is not registered.');
+            throw new \LogicException('sillbeam.doctrine is enabled, but DoctrineBundle is not registered.');
         }
         $this->config = $config;
         $this->options = (new DiscoveryOptionsResolver())->resolve($container, $configs, $config);
@@ -152,7 +152,7 @@ final class NexumExtension extends Extension implements PrependExtensionInterfac
 
     private function prependDoctrine(ContainerBuilder $container): void
     {
-        $architecture = $this->architecture ?? throw new \LogicException('Nexum architecture was not compiled.');
+        $architecture = $this->architecture ?? throw new \LogicException('Sillbeam architecture was not compiled.');
         $mappings = [];
         $definitions = array_values($architecture->projects);
         foreach ($architecture->usedModules() as $class) {
@@ -162,7 +162,7 @@ final class NexumExtension extends Extension implements PrependExtensionInterfac
             foreach ($definition->entityDirectories as $directory) {
                 $relative = trim(substr($directory, \strlen($definition->directory)), '/');
                 $prefix = $definition->namespace.('' === $relative ? '' : '\\'.str_replace('/', '\\', $relative));
-                $key = 'Nexum'.hash('xxh128', $directory);
+                $key = 'Sillbeam'.hash('xxh128', $directory);
                 $this->doctrineMappings[] = ['prefix' => $prefix, 'directory' => $directory, 'excludes' => $this->excludedMappingFiles($directory, $definition->class, $architecture)];
                 $mappings[$key] = ['type' => 'attribute', 'is_bundle' => false, 'dir' => $directory, 'prefix' => $prefix, 'alias' => $key];
             }
@@ -233,8 +233,8 @@ final class NexumExtension extends Extension implements PrependExtensionInterfac
 
     private function loadServices(ContainerBuilder $container, CompiledArchitecture $architecture): void
     {
-        $options = $this->options ?? throw new \LogicException('Nexum discovery options are missing.');
-        $files = ($this->inspector ?? throw new \LogicException('Nexum source index is missing.'))->files($options);
+        $options = $this->options ?? throw new \LogicException('Sillbeam discovery options are missing.');
+        $files = ($this->inspector ?? throw new \LogicException('Sillbeam source index is missing.'))->files($options);
         $loader = new ArchitectureServiceLoader();
         $definitions = array_values($architecture->projects);
         foreach ($architecture->usedModules() as $class) {

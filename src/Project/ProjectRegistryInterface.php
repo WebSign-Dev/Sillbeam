@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Project;
+namespace Sillbeam\Project;
 
 interface ProjectRegistryInterface
 {

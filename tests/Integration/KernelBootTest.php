@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Integration;
+namespace Sillbeam\Tests\Integration;
 
 use App\Kernel;
 use App\Module\Billing\BillingModule;
-use App\NexumTestKernel;
-use Nexum\Module\ModuleRegistryInterface;
+use App\SillbeamTestKernel;
 use PHPUnit\Framework\TestCase;
+use Sillbeam\Module\ModuleRegistryInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Routing\RouterInterface;
@@ -37,8 +37,8 @@ final class KernelBootTest extends TestCase
         self::assertNotNull($routes->get('app_home'));
         self::assertNotNull($routes->get('legacy_health'));
         self::assertNotNull($routes->get('billing_invoice_list'));
-        self::assertNull($routes->get('nexum_management_modules'));
-        self::assertNull($routes->get('nexum_management_module_update'));
+        self::assertNull($routes->get('sillbeam_management_modules'));
+        self::assertNull($routes->get('sillbeam_management_module_update'));
     }
 
     public function testModuleRegistryAndAboutCommandAreAvailable(): void
@@ -49,16 +49,16 @@ final class KernelBootTest extends TestCase
 
         $application = new Application($this->kernel);
         $application->setAutoExit(false);
-        $tester = new CommandTester($application->find('nexum:about'));
+        $tester = new CommandTester($application->find('sillbeam:about'));
         $tester->execute([]);
 
-        self::assertStringContainsString('Nexum', $tester->getDisplay());
+        self::assertStringContainsString('Sillbeam', $tester->getDisplay());
         self::assertStringContainsString('Symfony', $tester->getDisplay());
     }
 
-    public function testOptionalNexumKernelHasTheSameRoutesWithoutDuplicates(): void
+    public function testOptionalSillbeamKernelHasTheSameRoutesWithoutDuplicates(): void
     {
-        $kernel = new NexumTestKernel('test', true);
+        $kernel = new SillbeamTestKernel('test', true);
         try {
             $kernel->boot();
             $router = $kernel->getContainer()->get('router');

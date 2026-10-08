@@ -1,4 +1,4 @@
-# Nexum: Codeanalyse zur nächsten Evolution
+# Sillbeam: Codeanalyse zur nächsten Evolution
 
 Stand: 1. Oktober 2026. Referenz: die bereitgestellte Zielbeschreibung einer optionalen, konfigurierbaren Modulschicht für Symfony. Analysierter Commit: `9103b57`; vorhandene lokale Änderungen sind nicht Bestandteil dieses Reviews.
 
@@ -27,7 +27,7 @@ Die Mindestversionen PHP 8.4 und Symfony 7.4 wurden in dieser Analyse nicht sepa
 
 Schwerpunkt ist der Architekturkern einschließlich DI, Routing, Doctrine-Anbindung, Composer-Abhängigkeiten, Dokumentation und relevanter Tests. Dies ist keine vollständige Sicherheitsprüfung der später auszulagernden Security-/API-Komponenten. Produktionscode wurde nicht geändert.
 
-Die 576 von Deptrac nicht erfassten Abhängigkeiten sind nicht automatisch Fehler: Die konfigurierte Layer-Matrix erfasst insbesondere externe Bibliotheken nicht vollständig. Außerdem validiert diese Root-Konfiguration Nexums interne Komponenten, nicht die deklarierte Modularchitektur einer Verbraucheranwendung.
+Die 576 von Deptrac nicht erfassten Abhängigkeiten sind nicht automatisch Fehler: Die konfigurierte Layer-Matrix erfasst insbesondere externe Bibliotheken nicht vollständig. Außerdem validiert diese Root-Konfiguration Sillbeams interne Komponenten, nicht die deklarierte Modularchitektur einer Verbraucheranwendung.
 
 ## Bestätigte Probleme im vorhandenen Code
 
@@ -35,19 +35,19 @@ P1 bedeutet: vor der nächsten Evolution beheben. P2 bedeutet: mit dem betreffen
 
 ### 1. P1: Deaktivierte und unbenutzte Module erhalten Doctrine-Mappings
 
-Quelle: [NexumExtension.php](/home/oeffe/PhpstormProjects/nexum/src/DependencyInjection/NexumExtension.php:103).
+Quelle: [SillbeamExtension.php](/home/oeffe/PhpstormProjects/sillbeam/src/DependencyInjection/SillbeamExtension.php:103).
 
 `prependDoctrine()` iteriert über `$this->discovery->modules`. Aktivierung und Project-Zuordnung werden erst später in `load()` durch `ArchitectureCompiler` ausgewertet. Die Doctrine-Integration verwendet damit den gesamten Discovery-Katalog, während Service-Registrierung und Routing den aktiven Graphen verwenden.
 
 Reproduktion: Ein Modul `off` mit `enabled: false` und einem `Entity`-Verzeichnis liefert weiterhin den Mapping-Prefix `AuditDoctrine\Module\Off\Entity`. Dasselbe Problem betrifft im Project Mode gefundene Shared Modules, die keinem aktiven Project-Graphen angehören.
 
-Folge: Nexum kann diese Entities weiterhin in Doctrine-Metadaten und damit in Schema-/Migrationsberechnungen einbringen. `enabled: false` erfüllt die gewünschte Bedeutung nicht.
+Folge: Sillbeam kann diese Entities weiterhin in Doctrine-Metadaten und damit in Schema-/Migrationsberechnungen einbringen. `enabled: false` erfüllt die gewünschte Bedeutung nicht.
 
 Empfehlung: Konfiguration normalisieren und die Architektur bereits vor dem Prepend der Doctrine-Konfiguration kompilieren. Diese Architektur anschließend auch für Service-Registrierung, Routing und Registries verwenden. Doctrine-Mappings ausschließlich aus aktiven Modulen und den vorgesehenen Project-Bereichen ableiten. Raw-Konfiguration und verarbeitete Konfiguration dürfen keine getrennten Aktivierungsentscheidungen treffen.
 
 ### 2. P1: Der Service-Loader ignoriert native Symfony-Regeln
 
-Quelle: [ArchitectureServiceLoader.php](/home/oeffe/PhpstormProjects/nexum/src/DependencyInjection/ArchitectureServiceLoader.php:16).
+Quelle: [ArchitectureServiceLoader.php](/home/oeffe/PhpstormProjects/sillbeam/src/DependencyInjection/ArchitectureServiceLoader.php:16).
 
 Der Loader traversiert Dateien selbst, lädt sie mit `require_once` und registriert konkrete Klassen mit `autowire()->setAutoconfigured(true)`. Das bildet die Discovery-Semantik von Symfony nicht vollständig ab.
 
@@ -59,13 +59,13 @@ Reproduziert:
 
 Ein Vergleichslauf mit Symfonys `YamlFileLoader` im Environment `prod` berücksichtigt beide Ausschlussattribute und kompiliert denselben Interface-Consumer erfolgreich. Auch `#[AsAlias]` wird im Symfony-Dateiloader behandelt und gehört in die Kompatibilitätsprüfung.
 
-Empfehlung: Nexum bestimmt Modulgrenzen und Service-Ressourcen; die eigentliche Klassenregistrierung delegiert es an den nativen Symfony-Dateiloader. Damit bleiben Environment-Regeln, Aliasbildung, Ressourcenverfolgung und normale Symfony-Konfiguration konsistent. Eigene Ausschlüsse für Descriptoren und die empfohlenen Entity-/DTO-Bereiche können als Defaults mitgegeben werden.
+Empfehlung: Sillbeam bestimmt Modulgrenzen und Service-Ressourcen; die eigentliche Klassenregistrierung delegiert es an den nativen Symfony-Dateiloader. Damit bleiben Environment-Regeln, Aliasbildung, Ressourcenverfolgung und normale Symfony-Konfiguration konsistent. Eigene Ausschlüsse für Descriptoren und die empfohlenen Entity-/DTO-Bereiche können als Defaults mitgegeben werden.
 
 Die Symfony-Dokumentation beschreibt die Ausschluss- und Environment-Regeln: [Service Container](https://symfony.com/doc/current/service_container.html#excluding-services).
 
 ### 3. P1: Private Module lassen sich nicht unabhängig deaktivieren
 
-Quelle: [ArchitectureCompiler.php](/home/oeffe/PhpstormProjects/nexum/src/Architecture/ArchitectureCompiler.php:38).
+Quelle: [ArchitectureCompiler.php](/home/oeffe/PhpstormProjects/sillbeam/src/Architecture/ArchitectureCompiler.php:38).
 
 Im Project Mode werden alle Module mit passendem `projectClass` bedingungslos expandiert. `expand()` verlangt anschließend, dass das Modul aktiviert ist.
 
@@ -75,7 +75,7 @@ Empfehlung: Automatisch zugeordnete private Module nur dann als Aktivierungswurz
 
 ### 4. P1: Ein verwaistes privates Modul wird zum Shared Module
 
-Quelle: [ModuleDiscovery.php](/home/oeffe/PhpstormProjects/nexum/src/Module/ModuleDiscovery.php:45) und [owningProject()](/home/oeffe/PhpstormProjects/nexum/src/Module/ModuleDiscovery.php:65).
+Quelle: [ModuleDiscovery.php](/home/oeffe/PhpstormProjects/sillbeam/src/Module/ModuleDiscovery.php:45) und [owningProject()](/home/oeffe/PhpstormProjects/sillbeam/src/Module/ModuleDiscovery.php:65).
 
 Die erlaubte Pfadstruktur akzeptiert `Project/Orphan/Module/Secret/SecretModule.php`. Gibt es keinen passenden Project-Descriptor, liefert `owningProject()` jedoch `null`. Das Modul gilt dadurch als Shared Module.
 
@@ -85,7 +85,7 @@ Empfehlung: Ein Pfad, der einen privaten Scope ausdrückt, muss einen gültigen 
 
 ### 5. P2: Mehrere Descriptoren dürfen denselben Modulbereich besitzen
 
-Quelle: [ModuleDiscovery.php](/home/oeffe/PhpstormProjects/nexum/src/Module/ModuleDiscovery.php:46), [validateIdentities()](/home/oeffe/PhpstormProjects/nexum/src/Architecture/ArchitectureCompiler.php:115).
+Quelle: [ModuleDiscovery.php](/home/oeffe/PhpstormProjects/sillbeam/src/Module/ModuleDiscovery.php:46), [validateIdentities()](/home/oeffe/PhpstormProjects/sillbeam/src/Architecture/ArchitectureCompiler.php:115).
 
 Zwei unterschiedlich benannte `*Module.php`-Descriptoren im selben Verzeichnis werden als zwei Module akzeptiert, solange IDs und Klassen unterschiedlich sind. Identitätsvalidierung prüft keine doppelte Directory-/Namespace-Zuständigkeit.
 
@@ -97,23 +97,23 @@ Empfehlung: Eindeutige Zuständigkeit für jeden Modulbereich validieren. Überl
 
 ### 6. P2: Relative Discovery-Pfade hängen vom aktuellen Arbeitsverzeichnis ab
 
-Quelle: [DiscoveryOptionsResolver.php](/home/oeffe/PhpstormProjects/nexum/src/Architecture/DiscoveryOptionsResolver.php:39).
+Quelle: [DiscoveryOptionsResolver.php](/home/oeffe/PhpstormProjects/sillbeam/src/Architecture/DiscoveryOptionsResolver.php:39).
 
 `resolvePath()` ersetzt `%kernel.project_dir%`, reicht andere relative Pfade aber unverändert an `realpath()` weiter. Dieses arbeitet relativ zum Prozess-Arbeitsverzeichnis.
 
-Reproduktion: Mit `kernel.project_dir=/tmp/nexum-audit-...` und `root: src` wird `/home/oeffe/PhpstormProjects/nexum/src` ausgewählt.
+Reproduktion: Mit `kernel.project_dir=/tmp/sillbeam-audit-...` und `root: src` wird `/home/oeffe/PhpstormProjects/sillbeam/src` ausgewählt.
 
 Empfehlung: Relative Pfade immer an `kernel.project_dir` binden. Danach Pfade kanonisieren, Existenz prüfen und ungültige Roots oder Namespace-Prefixe mit einer konkreten Konfigurationsmeldung zurückweisen. Identische PSR-4-Mappings aus `autoload` und `autoload-dev` vor der Ambiguitätsprüfung deduplizieren.
 
 ### 7. P2: Die Descriptor-Suche greift auf normalen Symfony-Code über
 
-Quelle: [SourceInspector.php](/home/oeffe/PhpstormProjects/nexum/src/Architecture/SourceInspector.php:10), [ModuleDiscovery.php](/home/oeffe/PhpstormProjects/nexum/src/Module/ModuleDiscovery.php:27).
+Quelle: [SourceInspector.php](/home/oeffe/PhpstormProjects/sillbeam/src/Architecture/SourceInspector.php:10), [ModuleDiscovery.php](/home/oeffe/PhpstormProjects/sillbeam/src/Module/ModuleDiscovery.php:27).
 
 Die Discovery sucht im gesamten Root nach Dateinamen mit `Module.php` oder `Project.php`. Noch vor der Attributprüfung wird für jeden Treffer eine konkrete Klasse erwartet und die Datei gegebenenfalls ausgeführt.
 
-Reproduktion: Eine normale, korrekt namespacete Datei `Contract/Module.php` mit `interface Module {}` und ohne Nexum-Attribut bricht die Discovery mit `must declare autoloadable class` ab.
+Reproduktion: Eine normale, korrekt namespacete Datei `Contract/Module.php` mit `interface Module {}` und ohne Sillbeam-Attribut bricht die Discovery mit `must declare autoloadable class` ab.
 
-Empfehlung: Zwischen möglichen Dateikandidaten und echten attributierten Descriptoren unterscheiden. Gewöhnlicher Code außerhalb von Nexum-Bereichen darf nicht allein wegen seines Namens zum Architekturfehler werden. Eine statische Kandidatenprüfung vermeidet außerdem, beliebige Treffer unnötig per `require_once` auszuführen.
+Empfehlung: Zwischen möglichen Dateikandidaten und echten attributierten Descriptoren unterscheiden. Gewöhnlicher Code außerhalb von Sillbeam-Bereichen darf nicht allein wegen seines Namens zum Architekturfehler werden. Eine statische Kandidatenprüfung vermeidet außerdem, beliebige Treffer unnötig per `require_once` auszuführen.
 
 ## Lücken gegenüber der neuen Zielbeschreibung
 
@@ -133,7 +133,7 @@ Mit konfigurierten Regeln muss die Ownership von Dateien und Klassen eindeutig s
 
 Deshalb kann der aktuelle deklarierte Graph korrekt sein, während der Code undeclared Dependencies, direkte Zugriffe auf nur transitiv erreichbare Module oder unerlaubte Shared→Private-Zugriffe enthält.
 
-Empfehlung: Einen statischen Analyzer auf Basis eines PHP-AST mit Namensauflösung ergänzen. PHP-Parser bietet dafür einen `NameResolver`: [Dokumentation des Projekts](https://github.com/nikic/PHP-Parser/blob/master/doc/component/Name_resolution.markdown). Das ist eine Umsetzungsempfehlung, keine bereits vorhandene Nexum-Funktion.
+Empfehlung: Einen statischen Analyzer auf Basis eines PHP-AST mit Namensauflösung ergänzen. PHP-Parser bietet dafür einen `NameResolver`: [Dokumentation des Projekts](https://github.com/nikic/PHP-Parser/blob/master/doc/component/Name_resolution.markdown). Das ist eine Umsetzungsempfehlung, keine bereits vorhandene Sillbeam-Funktion.
 
 Der Analyzer benötigt zunächst einen Index `Klasse/Datei → Modul`. Danach kann er unter anderem Typdeklarationen, Vererbung, implementierte Interfaces, Traits, `new`, statische Aufrufe, Klassenkonstanten, Attribute, `instanceof` und Catch-Typen untersuchen. Ein ungenutztes `use`-Importstatement allein sollte keine tatsächliche Abhängigkeit erzeugen. Descriptor-Metadaten müssen von fachlichen Verwendungen unterschieden werden.
 
@@ -141,19 +141,19 @@ Jede erkannte modulübergreifende Verwendung wird gegen die direkten deklarierte
 
 Diagnosen sollten Quellmodul, Zielmodul, referenzierte Klasse, Datei und Zeile enthalten. Dynamische Klassennamen, beliebige Strings und indirekte Container-Zugriffe gehören nur dann zum Versprechen, wenn sie tatsächlich zuverlässig auflösbar sind. PHPDoc- und Konfigurationsreferenzen können später als ausdrücklich dokumentierte Erweiterungen folgen.
 
-`nikic/php-parser` ist aktuell im Lockfile vorhanden, aber nicht als direkte Nexum-Runtime-Abhängigkeit. Wenn der Build darauf angewiesen wird, muss Nexum diese Abhängigkeit selbst deklarieren.
+`nikic/php-parser` ist aktuell im Lockfile vorhanden, aber nicht als direkte Sillbeam-Runtime-Abhängigkeit. Wenn der Build darauf angewiesen wird, muss Sillbeam diese Abhängigkeit selbst deklarieren.
 
 ### Zero Config benötigt konsistente Defaults
 
-`Configuration` aktiviert Doctrine, API und Security standardmäßig. Eine Anwendung ohne DoctrineBundle scheitert dadurch ohne zusätzliche Nexum-Konfiguration. Die Flex-Recipe deaktiviert diese Integrationen zwar, die Defaults des Bundles verhalten sich dennoch anders.
+`Configuration` aktiviert Doctrine, API und Security standardmäßig. Eine Anwendung ohne DoctrineBundle scheitert dadurch ohne zusätzliche Sillbeam-Konfiguration. Die Flex-Recipe deaktiviert diese Integrationen zwar, die Defaults des Bundles verhalten sich dennoch anders.
 
-Zusätzlich aktiviert `prepend()` immer Symfony Serializer und Validation. `loadNexumServices()` lädt immer HTTP-, Serializer- und Validator-Services; darunter befindet sich ein Response-Subscriber für `X-Request-Id`.
+Zusätzlich aktiviert `prepend()` immer Symfony Serializer und Validation. `loadSillbeamServices()` lädt immer HTTP-, Serializer- und Validator-Services; darunter befindet sich ein Response-Subscriber für `X-Request-Id`.
 
-Für die neue reine Modulschicht sollten diese Foundation-Eingriffe entfallen. Eine leere Nexum-Konfiguration muss mit FrameworkBundle und NexumBundle funktionieren. Doctrine-Unterstützung sollte vom vorhandenen DoctrineBundle abhängen und ausdrücklich abschaltbar bleiben. Eigene Entities, Filter, API- oder Security-Regeln sind dafür nicht erforderlich.
+Für die neue reine Modulschicht sollten diese Foundation-Eingriffe entfallen. Eine leere Sillbeam-Konfiguration muss mit FrameworkBundle und SillbeamBundle funktionieren. Doctrine-Unterstützung sollte vom vorhandenen DoctrineBundle abhängen und ausdrücklich abschaltbar bleiben. Eigene Entities, Filter, API- oder Security-Regeln sind dafür nicht erforderlich.
 
 ### Architekturdiagnostik ist noch optional und unvollständig
 
-`nexum:architecture` liegt im optionalen Management-Bereich und wird nur bei `management.enabled` registriert. Der Command zeigt aktive Zuordnungen, aber nicht den vollständigen Katalog einschließlich deaktivierter und unbenutzter Module. Pfade, Aktivierungsgründe, Integrationsbereiche und erkannte Code-Abhängigkeiten fehlen.
+`sillbeam:architecture` liegt im optionalen Management-Bereich und wird nur bei `management.enabled` registriert. Der Command zeigt aktive Zuordnungen, aber nicht den vollständigen Katalog einschließlich deaktivierter und unbenutzter Module. Pfade, Aktivierungsgründe, Integrationsbereiche und erkannte Code-Abhängigkeiten fehlen.
 
 Empfehlung: Den CLI-Command in den Architekturkern übernehmen. Neben der menschenlesbaren Ausgabe ein JSON-Format für CI und Werkzeuge anbieten. `enabled` und `active` unterscheiden: Ein aktivierbares Shared Module kann im Project Mode unbenutzt bleiben. Den Grund für Aktivierung oder Nichtaktivierung als Teil des Build-Ergebnisses festhalten.
 
@@ -163,22 +163,22 @@ Die Kernbereiche sind bereits klein: Von 165 PHP-Dateien in `src` liegen 29 in A
 
 | Bereich | Empfehlung |
 | --- | --- |
-| Architecture, Module, Project, Routing, NexumBundle | Nexum-Kern behalten und korrigieren |
-| NexumKernel, AboutCommand, KernelInformation | Als schlanke, optionale beziehungsweise diagnostische Komfortfunktionen behalten |
+| Architecture, Module, Project, Routing, SillbeamBundle | Sillbeam-Kern behalten und korrigieren |
+| SillbeamKernel, AboutCommand, KernelInformation | Als schlanke, optionale beziehungsweise diagnostische Komfortfunktionen behalten |
 | Management/Console/ArchitectureCommand | In den Kern verschieben |
 | Doctrine-Modulmapping | Als Integrationslogik behalten |
-| Entity-Basen, EntityStore, TimestampListener, SoftDeleteFilter | Aus Nexum entfernen/auslagern |
-| API, Security, User, MFA, Passkeys | Aus Nexum entfernen/auslagern |
-| Filesystem, Mailer, QR, Messenger-Abstraktionen | Aus Nexum entfernen/auslagern |
-| HTTP-/Client-Utilities, Serializer-/Validator-Abstraktionen, Logger, Health und allgemeine Fachverträge | Nach ihrem eigenen Nutzen außerhalb des Nexum-Kerns beurteilen |
+| Entity-Basen, EntityStore, TimestampListener, SoftDeleteFilter | Aus Sillbeam entfernen/auslagern |
+| API, Security, User, MFA, Passkeys | Aus Sillbeam entfernen/auslagern |
+| Filesystem, Mailer, QR, Messenger-Abstraktionen | Aus Sillbeam entfernen/auslagern |
+| HTTP-/Client-Utilities, Serializer-/Validator-Abstraktionen, Logger, Health und allgemeine Fachverträge | Nach ihrem eigenen Nutzen außerhalb des Sillbeam-Kerns beurteilen |
 
-Das betrifft nicht nur Verzeichnisse. `NexumExtension`, `Configuration`, `NexumRouteLoader`, Composer-Anforderungen, Flex-Recipe, Skeleton, Beispiel-Apps, Testfixtures, Deptrac und Dokumentation müssen dieselbe Trennung abbilden.
+Das betrifft nicht nur Verzeichnisse. `SillbeamExtension`, `Configuration`, `SillbeamRouteLoader`, Composer-Anforderungen, Flex-Recipe, Skeleton, Beispiel-Apps, Testfixtures, Deptrac und Dokumentation müssen dieselbe Trennung abbilden.
 
-Aktuell sind QR-Code, Flysystem, OTP, WebAuthn, Sodium, Security, Mailer, Messenger und Doctrine inklusive MigrationsBundle Composer-Pflichtabhängigkeiten, auch wenn ihre Nexum-Funktionen abgeschaltet sind. Abschalten verringert daher nicht den Installationsumfang. Nach der Trennung müssen nur die tatsächlich benötigten Kernkomponenten Pflicht sein; Doctrine kann als optionale Integration getestet und vorgeschlagen werden. Das MigrationsBundle ist für das Ableiten von ORM-Mappings selbst nicht erforderlich.
+Aktuell sind QR-Code, Flysystem, OTP, WebAuthn, Sodium, Security, Mailer, Messenger und Doctrine inklusive MigrationsBundle Composer-Pflichtabhängigkeiten, auch wenn ihre Sillbeam-Funktionen abgeschaltet sind. Abschalten verringert daher nicht den Installationsumfang. Nach der Trennung müssen nur die tatsächlich benötigten Kernkomponenten Pflicht sein; Doctrine kann als optionale Integration getestet und vorgeschlagen werden. Das MigrationsBundle ist für das Ableiten von ORM-Mappings selbst nicht erforderlich.
 
-Eine konkrete Gegenabhängigkeit muss ebenfalls aufgelöst werden: `Security/Passkey/Configuration/RelyingPartyProvider` verlangt `Nexum\Project\ProjectContextInterface`. Bloßes Verschieben nach Strata würde Strata weiter von Nexum abhängig machen. Die Passkey-Komponente benötigt stattdessen einen eigenen fachlichen Context-/Relying-Party-Vertrag. Eine optionale Integration kann diesen mit Nexum verbinden; keines der beiden Kernpakete muss das andere voraussetzen.
+Eine konkrete Gegenabhängigkeit muss ebenfalls aufgelöst werden: `Security/Passkey/Configuration/RelyingPartyProvider` verlangt `Sillbeam\Project\ProjectContextInterface`. Bloßes Verschieben nach Strata würde Strata weiter von Sillbeam abhängig machen. Die Passkey-Komponente benötigt stattdessen einen eigenen fachlichen Context-/Relying-Party-Vertrag. Eine optionale Integration kann diesen mit Sillbeam verbinden; keines der beiden Kernpakete muss das andere voraussetzen.
 
-Nicht jeder vorhandene Foundation-Baustein muss automatisch zum neuen Strata-Produkt werden. Zuerst Nexums Grenze ziehen; den Strata-Umfang anschließend eigenständig bestimmen. Für Verbraucher braucht die Entfernung der bisherigen öffentlichen Klassen eine dokumentierte Migration und eine klare Versionierungsentscheidung.
+Nicht jeder vorhandene Foundation-Baustein muss automatisch zum neuen Strata-Produkt werden. Zuerst Sillbeams Grenze ziehen; den Strata-Umfang anschließend eigenständig bestimmen. Für Verbraucher braucht die Entfernung der bisherigen öffentlichen Klassen eine dokumentierte Migration und eine klare Versionierungsentscheidung.
 
 ## Gezielte Optimierungen
 
@@ -202,19 +202,19 @@ Empfehlung: Pro Application-/Project-Graph eine visited-Menge verwenden und Modu
 
 Project- und Module-Suche laufen separat über den kompletten Root, danach werden Controller und Entities erneut rekursiv gesucht. Für mehrere Roots und einen AST-Analyzer lohnt ein gemeinsamer Datei-/Symbolindex pro Build. Ressourcen und Ergebnisse dürfen jedoch nicht zu einem zweiten, eigenen Cache-System neben Symfony führen.
 
-Der RouteLoader besitzt noch fest codierte Ressourcen für `src/Module`, `src/Project` und `config/packages/nexum*`. Bei der Erweiterung sollte er die tatsächlichen Discovery-Ressourcen erhalten. Symfony verfolgt zusätzlich die generierte Containerdatei; deshalb ist aus den festen Pfaden allein noch kein nachgewiesener Fehler des gesamten Router-Caches abzuleiten. Neue/gelöschte Module und Konfigurationsänderungen sollten ausdrücklich über Custom Roots getestet werden.
+Der RouteLoader besitzt noch fest codierte Ressourcen für `src/Module`, `src/Project` und `config/packages/sillbeam*`. Bei der Erweiterung sollte er die tatsächlichen Discovery-Ressourcen erhalten. Symfony verfolgt zusätzlich die generierte Containerdatei; deshalb ist aus den festen Pfaden allein noch kein nachgewiesener Fehler des gesamten Router-Caches abzuleiten. Neue/gelöschte Module und Konfigurationsänderungen sollten ausdrücklich über Custom Roots getestet werden.
 
 ### Zuständigkeiten und Fehlermeldungen
 
-Nach dem Entfernen der Foundation-Features sollte `NexumExtension` hauptsächlich orchestrieren. Discovery, Architekturvalidierung und Symfony-/Doctrine-Übersetzung sind getrennte Aufgaben. Der aktuelle `ArchitectureValidationPass` verspricht durch seinen Namen mehr, als die Prüfung auf Registry-Existenz tatsächlich leistet; entsprechend umbenennen oder mit klar umrissener Validierung versehen.
+Nach dem Entfernen der Foundation-Features sollte `SillbeamExtension` hauptsächlich orchestrieren. Discovery, Architekturvalidierung und Symfony-/Doctrine-Übersetzung sind getrennte Aufgaben. Der aktuelle `ArchitectureValidationPass` verspricht durch seinen Namen mehr, als die Prüfung auf Registry-Existenz tatsächlich leistet; entsprechend umbenennen oder mit klar umrissener Validierung versehen.
 
 Fehler sollten Module mit ihren logischen Schlüsseln benennen und die Ursache zeigen. Bei Zyklen ist `billing → payment → billing` hilfreicher als nur die Klasse, an der der Zyklus erkannt wurde. Vollständige Class-Strings und Dateipfade bleiben ergänzende Details.
 
 ## Empfohlene Reihenfolge und Abnahmekriterien
 
 1. **Bestehende Kernfehler absichern und korrigieren.** Deaktivierte private Module, verwaiste Ownership, doppelte Descriptor-Bereiche, relative Roots und gewöhnliche `Module.php`-/`Project.php`-Dateien bekommen gezielte Regressionstests. Service-Discovery wird mit nativem Symfony-Verhalten verglichen.
-2. **Ein gemeinsames Architektur-Build-Ergebnis verwenden.** Discovery-Katalog und aktive Graphen unterscheiden; DI, Routing und Doctrine daraus ableiten. Deaktivierte und unbenutzte Module erzeugen keine Nexum-Registrierungen. Ein aktives Modul mit deaktivierter Dependency scheitert.
-3. **Foundation aus dem Paket lösen.** Composer, Extension, RouteLoader und Konfiguration bereinigen. `nexum:architecture` im Kern erhalten. Minimal-App ohne Doctrine/Security/API sowie normalen Symfony-Code parallel testen.
+2. **Ein gemeinsames Architektur-Build-Ergebnis verwenden.** Discovery-Katalog und aktive Graphen unterscheiden; DI, Routing und Doctrine daraus ableiten. Deaktivierte und unbenutzte Module erzeugen keine Sillbeam-Registrierungen. Ein aktives Modul mit deaktivierter Dependency scheitert.
+3. **Foundation aus dem Paket lösen.** Composer, Extension, RouteLoader und Konfiguration bereinigen. `sillbeam:architecture` im Kern erhalten. Minimal-App ohne Doctrine/Security/API sowie normalen Symfony-Code parallel testen.
 4. **Flexible Discovery einführen.** Default-Struktur unverändert nutzbar lassen; mehrere Roots, Namespaces, Excludes und alternative Integrationsbereiche testen. Ownership muss eindeutig und unabhängig von Scan-Reihenfolge sein. Native Overrides dürfen weiterhin funktionieren.
 5. **Tatsächliche Dependencies prüfen.** Direkte undeclared Dependency, direkter Zugriff trotz nur transitiver Deklaration, Shared→Private, Private→fremdes Project und legitime Referenzen als kleine Analyzer-Fixtures prüfen. Keine Modulzuordnung für externe Symfony-/Vendor-Klassen erfinden.
 6. **Diagnostik und Kompatibilitätsmatrix vervollständigen.** Katalog, Aktivierung, Pfade, deklarierte/erkannte Dependencies und Integrationsbereiche ausgeben. Unterstützte PHP-/Symfony-Linien in einer reproduzierbaren CI-Matrix prüfen; ein reines Composer-Constraint ist noch kein Laufzeittest.

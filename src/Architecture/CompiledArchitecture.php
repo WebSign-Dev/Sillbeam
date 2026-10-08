@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Architecture;
+namespace Sillbeam\Architecture;
 
-use Nexum\Module\ModuleDefinition;
-use Nexum\Project\ProjectDefinition;
+use Sillbeam\Module\ModuleDefinition;
+use Sillbeam\Project\ProjectDefinition;
 
 final readonly class CompiledArchitecture
 {

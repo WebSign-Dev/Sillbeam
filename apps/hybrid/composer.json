@@ -1,11 +1,11 @@
 {
-    "name": "nexum/hybrid-test-app",
-    "description": "Nexum hybrid Symfony and Projects integration test application.",
+    "name": "sillbeam/hybrid-test-app",
+    "description": "Sillbeam hybrid Symfony and Projects integration test application.",
     "type": "project",
     "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "benjaminoeffinger/nexum": "dev-main"
+        "websign-dev/sillbeam": "dev-main"
     },
     "repositories": [
         {

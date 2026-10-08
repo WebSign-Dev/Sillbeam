@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Project;
+namespace Sillbeam\Project;
 
 final readonly class ProjectRegistry implements ProjectRegistryInterface
 {
@@ -35,7 +35,7 @@ final readonly class ProjectRegistry implements ProjectRegistryInterface
             }
         }
 
-        throw new \OutOfBoundsException(\sprintf('Unknown Nexum project "%s".', $idOrClass));
+        throw new \OutOfBoundsException(\sprintf('Unknown Sillbeam project "%s".', $idOrClass));
     }
 
     public function forHost(string $host): ProjectDefinition
@@ -55,6 +55,6 @@ final readonly class ProjectRegistry implements ProjectRegistryInterface
             }
         }
 
-        throw new \OutOfBoundsException(\sprintf('No Nexum project is assigned to host "%s".', $host));
+        throw new \OutOfBoundsException(\sprintf('No Sillbeam project is assigned to host "%s".', $host));
     }
 }

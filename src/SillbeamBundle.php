@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Nexum;
+namespace Sillbeam;
 
-use Nexum\DependencyInjection\Compiler\ArchitectureValidationPass;
-use Nexum\DependencyInjection\Compiler\DoctrineMappingPass;
+use Sillbeam\DependencyInjection\Compiler\ArchitectureValidationPass;
+use Sillbeam\DependencyInjection\Compiler\DoctrineMappingPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-final class NexumBundle extends Bundle
+final class SillbeamBundle extends Bundle
 {
     public function build(ContainerBuilder $container): void
     {

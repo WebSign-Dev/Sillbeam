@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Architecture;
+namespace Sillbeam\Architecture;
 
-use Nexum\Module\ModuleDefinition;
-use Nexum\Project\ProjectDefinition;
+use Sillbeam\Module\ModuleDefinition;
+use Sillbeam\Project\ProjectDefinition;
 
 final class ArchitectureCompiler
 {
@@ -119,7 +119,7 @@ final class ArchitectureCompiler
         $projectIds = [];
         foreach ($projects as $project) {
             if (isset($projectIds[$project->id])) {
-                throw new \LogicException(\sprintf('Duplicate Nexum project id "%s".', $project->id));
+                throw new \LogicException(\sprintf('Duplicate Sillbeam project id "%s".', $project->id));
             }
             $projectIds[$project->id] = true;
         }
@@ -132,7 +132,7 @@ final class ArchitectureCompiler
             }
             $key = $module->key($projectId);
             if (isset($keys[$key])) {
-                throw new \LogicException(\sprintf('Duplicate Nexum module key "%s".', $key));
+                throw new \LogicException(\sprintf('Duplicate Sillbeam module key "%s".', $key));
             }
             $keys[$key] = true;
         }
@@ -161,7 +161,7 @@ final class ArchitectureCompiler
         $visited = [];
         $visit = static function (string $class) use (&$visit, &$visiting, &$visited, $modules): void {
             if (isset($visiting[$class])) {
-                throw new \LogicException(\sprintf('Circular Nexum module dependency detected at "%s".', $class));
+                throw new \LogicException(\sprintf('Circular Sillbeam module dependency detected at "%s".', $class));
             }
             if (isset($visited[$class])) {
                 return;
@@ -256,7 +256,7 @@ final class ArchitectureCompiler
             }
             foreach ($project->hosts as $host) {
                 if (isset($hosts[$host])) {
-                    throw new \LogicException(\sprintf('Host "%s" is assigned to multiple Nexum projects.', $host));
+                    throw new \LogicException(\sprintf('Host "%s" is assigned to multiple Sillbeam projects.', $host));
                 }
                 $hosts[$host] = $project->id;
             }

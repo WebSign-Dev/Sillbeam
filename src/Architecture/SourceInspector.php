@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Architecture;
+namespace Sillbeam\Architecture;
 
 final class SourceInspector
 {
@@ -45,7 +45,7 @@ final class SourceInspector
                 try {
                     $files[$path] = $parser->parse($path);
                 } catch (\PhpParser\Error $error) {
-                    throw new \LogicException(\sprintf('Cannot parse Nexum source "%s": %s', $path, $error->getMessage()), 0, $error);
+                    throw new \LogicException(\sprintf('Cannot parse Sillbeam source "%s": %s', $path, $error->getMessage()), 0, $error);
                 }
             }
         }
@@ -75,7 +75,7 @@ final class SourceInspector
                         throw new \LogicException(\sprintf('Descriptor "%s" must declare PSR-4 class "%s".', $file->path, $expected));
                     }
                     if (isset($descriptors[$file->path])) {
-                        throw new \LogicException('Multiple Nexum descriptors in '.$file->path);
+                        throw new \LogicException('Multiple Sillbeam descriptors in '.$file->path);
                     }
                     $descriptors[$file->path] = $class;
                 }

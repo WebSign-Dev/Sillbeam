@@ -1,11 +1,11 @@
 {
-    "name": "nexum/skeleton",
-    "description": "Minimal project skeleton for creating modular Nexum applications.",
+    "name": "sillbeam/skeleton",
+    "description": "Minimal project skeleton for creating modular Sillbeam applications.",
     "type": "project",
     "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "benjaminoeffinger/nexum": "^0.1",
+        "websign-dev/sillbeam": "^0.1",
         "symfony/console": "^7.4 || ^8.0",
         "symfony/dotenv": "^7.4 || ^8.0",
         "symfony/flex": "^2.6",

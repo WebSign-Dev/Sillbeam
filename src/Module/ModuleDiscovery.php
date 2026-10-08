@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Module;
+namespace Sillbeam\Module;
 
-use Nexum\Architecture\DiscoveryOptions;
-use Nexum\Architecture\IdDeriver;
-use Nexum\Architecture\SourceInspector;
-use Nexum\Module\Attribute\NexumModule;
-use Nexum\Project\ProjectDefinition;
+use Sillbeam\Architecture\DiscoveryOptions;
+use Sillbeam\Architecture\IdDeriver;
+use Sillbeam\Architecture\SourceInspector;
+use Sillbeam\Module\Attribute\SillbeamModule;
+use Sillbeam\Project\ProjectDefinition;
 
 final readonly class ModuleDiscovery
 {
@@ -22,7 +22,7 @@ final readonly class ModuleDiscovery
     public function discover(DiscoveryOptions $options, array $projects): array
     {
         $modules = [];
-        foreach ($this->inspector->descriptors($options, NexumModule::class) as $file => $class) {
+        foreach ($this->inspector->descriptors($options, SillbeamModule::class) as $file => $class) {
             $directory = \dirname($file);
             foreach ($projects as $project) {
                 if (str_starts_with($project->directory.'/', $directory.'/')) {
@@ -51,10 +51,10 @@ final readonly class ModuleDiscovery
             }
             foreach ($modules as $known) {
                 if ($directory === $known->directory || str_starts_with($directory.'/', $known->directory.'/') || str_starts_with($known->directory.'/', $directory.'/')) {
-                    throw new \LogicException('Nexum descriptors have overlapping module areas: '.$class.' and '.$known->class);
+                    throw new \LogicException('Sillbeam descriptors have overlapping module areas: '.$class.' and '.$known->class);
                 }
             }
-            $metadata = $this->inspector->reflection($class, $file)->getAttributes(NexumModule::class)[0]->newInstance();
+            $metadata = $this->inspector->reflection($class, $file)->getAttributes(SillbeamModule::class)[0]->newInstance();
             $modules[$class] = new ModuleDefinition(
                 id: $metadata->id ?? IdDeriver::fromClass($class, 'Module'),
                 class: $class,

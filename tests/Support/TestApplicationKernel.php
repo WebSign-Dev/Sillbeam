@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Support;
+namespace Sillbeam\Tests\Support;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Nexum\NexumBundle;
+use Sillbeam\SillbeamBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel;
@@ -45,6 +45,6 @@ final class TestApplicationKernel extends Kernel
         if ($this->doctrine) {
             yield new DoctrineBundle();
         }
-        yield new NexumBundle();
+        yield new SillbeamBundle();
     }
 }

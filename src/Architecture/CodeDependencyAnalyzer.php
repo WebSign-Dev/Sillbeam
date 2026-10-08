@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Architecture;
+namespace Sillbeam\Architecture;
 
-use Nexum\Module\ModuleDefinition;
+use Sillbeam\Module\ModuleDefinition;
 
 final readonly class CodeDependencyAnalyzer
 {
@@ -29,7 +29,7 @@ final readonly class CodeDependencyAnalyzer
             foreach ($file->classes as $class) {
                 $key = strtolower($class);
                 if (isset($symbols[$key])) {
-                    throw new \LogicException('Duplicate class in Nexum source index: '.$class);
+                    throw new \LogicException('Duplicate class in Sillbeam source index: '.$class);
                 }
                 $symbols[$key] = $owner;
             }

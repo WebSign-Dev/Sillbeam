@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Unit;
+namespace Sillbeam\Tests\Unit;
 
-use Nexum\Architecture\DiscoveryOptionsResolver;
 use PHPUnit\Framework\TestCase;
+use Sillbeam\Architecture\DiscoveryOptionsResolver;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -13,7 +13,7 @@ final class DiscoveryOptionsResolverTest extends TestCase
 {
     public function testRelativeRootIsResolvedAgainstApplicationDirectory(): void
     {
-        $source = new \Nexum\Tests\Support\SourceWorkspace();
+        $source = new \Sillbeam\Tests\Support\SourceWorkspace();
         try {
             $container = new ContainerBuilder();
             $container->setParameter('kernel.project_dir', $source->directory);
@@ -27,7 +27,7 @@ final class DiscoveryOptionsResolverTest extends TestCase
 
     public function testSelectsTheMostSpecificMappingThatCoversTheRoot(): void
     {
-        $directory = sys_get_temp_dir().'/nexum-discovery-'.bin2hex(random_bytes(6));
+        $directory = sys_get_temp_dir().'/sillbeam-discovery-'.bin2hex(random_bytes(6));
         $filesystem = new Filesystem();
         try {
             $filesystem->mkdir([$directory.'/src', $directory.'/legacy']);
@@ -47,7 +47,7 @@ final class DiscoveryOptionsResolverTest extends TestCase
 
     public function testExplicitNamespaceResolvesAnOtherwiseAmbiguousRoot(): void
     {
-        $directory = sys_get_temp_dir().'/nexum-discovery-'.bin2hex(random_bytes(6));
+        $directory = sys_get_temp_dir().'/sillbeam-discovery-'.bin2hex(random_bytes(6));
         $filesystem = new Filesystem();
         try {
             $filesystem->mkdir($directory.'/src');
@@ -65,10 +65,10 @@ final class DiscoveryOptionsResolverTest extends TestCase
 
     public function testLayeredListsUseSymfonyConfigurationMergeSemantics(): void
     {
-        $source = new \Nexum\Tests\Support\SourceWorkspace();
+        $source = new \Sillbeam\Tests\Support\SourceWorkspace();
         try {
-            $source->php('src/One/First/First.php', '#[\Nexum\Module\Attribute\NexumModule] final class First {}');
-            $source->php('src/Two/Second/Second.php', '#[\Nexum\Module\Attribute\NexumModule] final class Second {}');
+            $source->php('src/One/First/First.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class First {}');
+            $source->php('src/Two/Second/Second.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class Second {}');
             $container = new ContainerBuilder();
             $container->setParameter('kernel.project_dir', $source->directory);
             $configs = [
@@ -81,7 +81,7 @@ final class DiscoveryOptionsResolverTest extends TestCase
             self::assertSame(['Http', 'Endpoints'], $options->controllerPatterns);
             self::assertSame(['Model', 'Records'], $options->entityPatterns);
             self::assertSame(['Data/**', 'Dto/**'], $options->serviceExcludes);
-            self::assertCount(2, (new \Nexum\Architecture\ArchitectureDiscovery())->discover($options)->modules);
+            self::assertCount(2, (new \Sillbeam\Architecture\ArchitectureDiscovery())->discover($options)->modules);
         } finally {
             $source->remove();
         }

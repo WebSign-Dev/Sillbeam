@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Kernel\Runtime;
+namespace Sillbeam\Kernel\Runtime;
 
 interface KernelInformationInterface
 {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace InvalidNestedProject\Project\Storefront;
 
-#[\Nexum\Project\Attribute\NexumProject]
+#[\Sillbeam\Project\Attribute\SillbeamProject]
 final class StorefrontProject
 {
 }

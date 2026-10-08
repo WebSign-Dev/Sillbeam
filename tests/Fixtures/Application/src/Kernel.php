@@ -13,7 +13,7 @@ final class Kernel extends BaseKernel
 
     public function getApplicationName(): string
     {
-        return 'Nexum Test Application';
+        return 'Sillbeam Test Application';
     }
 
     public function getProjectDir(): string

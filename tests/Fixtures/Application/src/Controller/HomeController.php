@@ -13,7 +13,7 @@ final class HomeController
     public function __invoke(): JsonResponse
     {
         return new JsonResponse([
-            'name' => 'Nexum Test Application',
+            'name' => 'Sillbeam Test Application',
             'status' => 'ok',
         ]);
     }

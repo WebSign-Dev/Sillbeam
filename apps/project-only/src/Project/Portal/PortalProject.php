@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace ProjectOnlyApp\Project\Portal;
 
-use Nexum\Project\Attribute\NexumProject;
+use Sillbeam\Project\Attribute\SillbeamProject;
 
-#[NexumProject]
+#[SillbeamProject]
 final class PortalProject
 {
 }

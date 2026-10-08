@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace SingleProjectApp\Project\Portal\Module\Dashboard;
 
-use Nexum\Module\Attribute\NexumModule;
+use Sillbeam\Module\Attribute\SillbeamModule;
 
-#[NexumModule]
+#[SillbeamModule]
 final class DashboardModule
 {
 }

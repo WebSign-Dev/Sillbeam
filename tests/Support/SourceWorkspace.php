@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Support;
+namespace Sillbeam\Tests\Support;
 
 use Composer\Autoload\ClassLoader;
 use Symfony\Component\Filesystem\Filesystem;
@@ -16,8 +16,8 @@ final class SourceWorkspace
 
     public function __construct()
     {
-        $this->directory = sys_get_temp_dir().'/nexum-source-'.bin2hex(random_bytes(6));
-        $this->namespace = 'NexumFixture'.bin2hex(random_bytes(6));
+        $this->directory = sys_get_temp_dir().'/sillbeam-source-'.bin2hex(random_bytes(6));
+        $this->namespace = 'SillbeamFixture'.bin2hex(random_bytes(6));
         $this->filesystem = new Filesystem();
         $this->filesystem->mkdir($this->directory.'/src');
         $this->loader = new ClassLoader();

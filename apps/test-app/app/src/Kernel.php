@@ -2,8 +2,8 @@
 
 namespace App;
 
-use Nexum\Kernel\NexumKernel;
+use Sillbeam\Kernel\SillbeamKernel;
 
-final class Kernel extends NexumKernel
+final class Kernel extends SillbeamKernel
 {
 }

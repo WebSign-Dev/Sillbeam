@@ -1,6 +1,6 @@
 {
-    "name": "nexum/test-app",
-    "description": "Isolated Symfony reference application for developing and testing the Nexum framework.",
+    "name": "sillbeam/test-app",
+    "description": "Isolated Symfony reference application for developing and testing the Sillbeam framework.",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "dev",
@@ -15,16 +15,21 @@
         }
     ],
     "require": {
-        "php": ">=8.4",
+        "doctrine/doctrine-bundle": "^3.3",
+        "doctrine/doctrine-migrations-bundle": "^4.0",
+        "doctrine/orm": "^3.6",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "benjaminoeffinger/nexum": "^0.1",
+        "php": ">=8.4",
         "symfony/console": "7.4.*",
         "symfony/dotenv": "7.4.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.4.*",
+        "symfony/property-info": "7.4.*",
         "symfony/runtime": "7.4.*",
-        "symfony/yaml": "7.4.*"
+        "symfony/validator": "7.4.*",
+        "symfony/yaml": "7.4.*",
+        "websign-dev/sillbeam": "^0.1"
     },
     "config": {
         "allow-plugins": {

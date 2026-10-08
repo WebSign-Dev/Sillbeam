@@ -5,7 +5,7 @@ Projects bündeln Oberflächen in einer gemeinsamen Symfony-Anwendung. Der Descr
 ```php
 namespace App\Project\Shop;
 
-#[\Nexum\Project\Attribute\NexumProject(
+#[\Sillbeam\Project\Attribute\SillbeamProject(
     modules: [\App\Module\Billing\BillingModule::class],
 )]
 final class ShopProject {}
@@ -14,7 +14,7 @@ final class ShopProject {}
 Private Module werden über physische Zugehörigkeit zum Project erkannt und bei Aktivierung automatisch Teil seines Graphen. Ein Modul unter einer konfigurierten Project-Grenze ohne owning Project ist ein Fehler. IDs privater Module sind innerhalb eines Projects eindeutig; die Konfigurationsadresse ist `project:<project-id>:<module-id>`.
 
 ```yaml
-nexum:
+sillbeam:
     projects:
         shop: { hosts: [shop.example.com] }
         admin: { hosts: [admin.example.com] }

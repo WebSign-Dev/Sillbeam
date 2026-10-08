@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Architecture;
+namespace Sillbeam\Architecture;
 
-use Nexum\Module\Attribute\NexumModule;
-use Nexum\Project\Attribute\NexumProject;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
+use Sillbeam\Module\Attribute\SillbeamModule;
+use Sillbeam\Project\Attribute\SillbeamProject;
 
 final class SourceFileParser
 {
@@ -36,7 +36,7 @@ final class SourceFileParser
                     $this->classes[] = $class;
                     foreach ($node->attrGroups as $group) {
                         foreach ($group->attrs as $attribute) {
-                            if (\in_array((string) $attribute->name, [NexumModule::class, NexumProject::class], true)) {
+                            if (\in_array((string) $attribute->name, [SillbeamModule::class, SillbeamProject::class], true)) {
                                 $this->descriptors[$class] = (string) $attribute->name;
                             }
                         }
@@ -65,7 +65,7 @@ final class SourceFileParser
                     $this->type($node->class);
                 }
                 if ($node instanceof Node\Attribute) {
-                    if (\in_array((string) $node->name, [NexumModule::class, NexumProject::class], true)) {
+                    if (\in_array((string) $node->name, [SillbeamModule::class, SillbeamProject::class], true)) {
                         return NodeTraverser::DONT_TRAVERSE_CHILDREN;
                     }
                     $this->type($node->name);

@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Kernel;
+namespace Sillbeam\Kernel;
 
 use Composer\InstalledVersions;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 
-abstract class NexumKernel extends BaseKernel
+abstract class SillbeamKernel extends BaseKernel
 {
     use MicroKernelTrait;
 

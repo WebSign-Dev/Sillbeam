@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\DependencyInjection;
+namespace Sillbeam\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -11,7 +11,7 @@ final class Configuration implements ConfigurationInterface
 {
     public function getConfigTreeBuilder(): TreeBuilder
     {
-        $tree = new TreeBuilder('nexum');
+        $tree = new TreeBuilder('sillbeam');
         $children = $tree->getRootNode()->children();
         $discovery = $children->arrayNode('discovery')->addDefaultsIfNotSet()->children();
         $discovery->scalarNode('root')->defaultValue('%kernel.project_dir%/src')->cannotBeEmpty()->end();

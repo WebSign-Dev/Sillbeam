@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace HybridApp\Module\Backoffice;
 
 use HybridApp\Module\Common\CommonModule;
-use Nexum\Module\Attribute\NexumModule;
+use Sillbeam\Module\Attribute\SillbeamModule;
 
-#[NexumModule(dependencies: [CommonModule::class])]
+#[SillbeamModule(dependencies: [CommonModule::class])]
 final class BackofficeModule
 {
 }

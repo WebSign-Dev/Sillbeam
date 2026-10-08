@@ -1,9 +1,9 @@
 # Modules
 
-Ein `#[NexumModule]`-Descriptor besitzt sein Verzeichnis samt Unterverzeichnissen. Dateiname und Descriptor-Klassenname müssen PSR-4-konform sein. IDs werden aus dem Klassennamen ohne `Module` abgeleitet oder als `id:` angegeben. Zwei Module dürfen weder dasselbe Verzeichnis noch verschachtelte Verzeichnisse besitzen.
+Ein `#[SillbeamModule]`-Descriptor besitzt sein Verzeichnis samt Unterverzeichnissen. Dateiname und Descriptor-Klassenname müssen PSR-4-konform sein. IDs werden aus dem Klassennamen ohne `Module` abgeleitet oder als `id:` angegeben. Zwei Module dürfen weder dasselbe Verzeichnis noch verschachtelte Verzeichnisse besitzen.
 
 ```php
-#[\Nexum\Module\Attribute\NexumModule(
+#[\Sillbeam\Module\Attribute\SillbeamModule(
     id: 'billing',
     description: 'Invoices',
     dependencies: [\App\Module\Payment\PaymentModule::class],
@@ -18,10 +18,10 @@ Shared Modules können nur Shared Modules verwenden. Private Modules dürfen Sha
 Ohne Projects sind alle aktivierten Shared Modules aktiv. Mit Projects bleiben nicht zugeordnete Module inaktiv. Deaktivieren:
 
 ```yaml
-nexum:
+sillbeam:
     modules:
         billing: { enabled: false }
         'project:shop:reports': { enabled: false }
 ```
 
-Ein aktiviertes Modul, das ein deaktiviertes Modul benötigt, verhindert den Build. Ein deaktiviertes privates Modul ist kein automatischer Project-Root. Native explizite Imports können Nexums automatische Auswahl umgehen; solche Imports liegen in der Verantwortung der Anwendung.
+Ein aktiviertes Modul, das ein deaktiviertes Modul benötigt, verhindert den Build. Ein deaktiviertes privates Modul ist kein automatischer Project-Root. Native explizite Imports können Sillbeams automatische Auswahl umgehen; solche Imports liegen in der Verantwortung der Anwendung.

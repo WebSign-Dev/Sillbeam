@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Integration;
+namespace Sillbeam\Tests\Integration;
 
 use Doctrine\ORM\EntityManagerInterface;
 use HybridApp\Kernel as HybridKernel;
@@ -17,15 +17,15 @@ use ModulesOnlyApp\Module\Archived\ArchivedModule;
 use ModulesOnlyApp\Module\Foundation\FoundationModule;
 use ModulesOnlyApp\Module\Foundation\Service\ModuleClock;
 use ModulesOnlyApp\Module\Inventory\InventoryModule;
-use Nexum\Module\ModuleRegistryInterface;
-use Nexum\Project\ProjectContextInterface;
-use Nexum\Project\ProjectRegistryInterface;
 use PHPUnit\Framework\TestCase;
 use ProjectOnlyApp\Kernel as ProjectOnlyKernel;
 use ProjectOnlyApp\Project\Portal\Entity\ProjectRecord;
 use ProjectOnlyApp\Project\Portal\PortalProject as ProjectOnlyPortal;
 use ProjectOnlyApp\Project\Portal\Service\ProjectGreeting;
 use Psr\Container\ContainerInterface;
+use Sillbeam\Module\ModuleRegistryInterface;
+use Sillbeam\Project\ProjectContextInterface;
+use Sillbeam\Project\ProjectRegistryInterface;
 use SingleProjectApp\Kernel as SingleProjectKernel;
 use SingleProjectApp\Module\Profile\ProfileModule;
 use SingleProjectApp\Project\Portal\Module\Dashboard\DashboardModule;
@@ -179,7 +179,7 @@ final class ApplicationVariantsTest extends TestCase
         }
     }
 
-    public function testHybridApplicationKeepsSymfonyCodeAndScopesNexumModules(): void
+    public function testHybridApplicationKeepsSymfonyCodeAndScopesSillbeamModules(): void
     {
         $kernel = $this->boot(new HybridKernel('test', true));
         $container = $kernel->getContainer();
@@ -203,8 +203,8 @@ final class ApplicationVariantsTest extends TestCase
         self::assertNotNull($routes->get('admin.common'));
         self::assertNotNull($routes->get('admin.backoffice'));
         self::assertNull($routes->get('public.backoffice'));
-        self::assertSame('public.hybrid.test', $routes->get('public.common')->getDefault('_nexum_host'));
-        self::assertSame('admin.hybrid.test', $routes->get('admin.backoffice')->getDefault('_nexum_host'));
+        self::assertSame('public.hybrid.test', $routes->get('public.common')->getDefault('_sillbeam_host'));
+        self::assertSame('admin.hybrid.test', $routes->get('admin.backoffice')->getDefault('_sillbeam_host'));
         self::assertSame('ok', $kernel->handle(Request::create('https://public.hybrid.test/health'))->getContent());
         self::assertSame('common', $kernel->handle(Request::create('https://public.hybrid.test/common'))->getContent());
         self::assertSame(404, $kernel->handle(Request::create('https://public.hybrid.test/backoffice'))->getStatusCode());

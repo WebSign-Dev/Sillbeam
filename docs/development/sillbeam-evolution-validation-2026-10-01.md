@@ -1,4 +1,4 @@
-# Verifikation der Nexum-Evolution
+# Verifikation der Sillbeam-Evolution
 
 Stand: 1. Oktober 2026, PHP 8.5.4.
 
@@ -18,4 +18,4 @@ Ein unabhängiger Reviewer fand drei relevante Fehler bei Konfigurationsmerge, A
 
 PHP 8.4 ist in der CI-Matrix konfiguriert, wurde lokal mangels Interpreter nicht ausgeführt. Die Remote-CI wurde in dieser Sitzung nicht gestartet. Die Composer-Verbraucherinstallation verwendet die aktuell kompatiblen Pakete, unabhängig von den Entwicklungspaketen des Repositorys.
 
-Reproduzierbare Befehle: siehe [Testing](testing.md). Änderungen liegen lokal auf `codex/nexum-evolution`; es erfolgten kein Push, Merge oder Deployment. Die entfernte Foundation erfordert die [Migration](../migration/modular-monolith.md).
+Reproduzierbare Befehle: siehe [Testing](testing.md). Änderungen liegen lokal auf `codex/sillbeam-evolution`; es erfolgten kein Push, Merge oder Deployment. Die entfernte Foundation erfordert die [Migration](../migration/modular-monolith.md).

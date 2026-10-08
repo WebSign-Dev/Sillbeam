@@ -1,6 +1,6 @@
-# Execution ledger — plan: docs/superpowers/plans/2026-10-01-nexum-evolution.md
+# Execution ledger — plan: docs/superpowers/plans/2026-10-01-sillbeam-evolution.md
 
-Ruling: The user's explicit request to implement the whole reviewed plan supplies execution authorization; no repeated design approval round. Execute inline on codex/nexum-evolution in the existing checkout, preserving unrelated local files. Branch creation needed sandbox escalation and succeeded. No publishing, merging or Strata product creation.
+Ruling: The user's explicit request to implement the whole reviewed plan supplies execution authorization; no repeated design approval round. Execute inline on codex/sillbeam-evolution in the existing checkout, preserving unrelated local files. Branch creation needed sandbox escalation and succeeded. No publishing, merging or Strata product creation.
 
 Pre-flight: Tasks 2/3 share SourceFile/SourceInspector; tasks 3/4/5 share CompiledArchitecture metadata. Retain old constructor positions and add defaulted evidence fields to keep registries and test builders compatible during migration.
 
@@ -14,7 +14,7 @@ Task 3: core implementation complete — six static-reference tests RED→GREEN.
 
 Task 4: shared build and Foundation removal implemented — three new kernel tests RED→GREEN (10 assertions). Original Foundation tests removed with their product scope; retained fixture converted to native Doctrine entities/controllers. Full suite and Composer lock checks in progress.
 
-Ruling: Foundation implementation is removed from Nexum and remains recoverable in Git; no premature Strata package. This is a breaking public API/configuration change and receives an explicit migration guide.
+Ruling: Foundation implementation is removed from Sillbeam and remains recoverable in Git; no premature Strata package. This is a breaking public API/configuration change and receives an explicit migration guide.
 
 Task 4: complete — full suite after actual lean vendor synchronization: 57 tests/214 assertions green. Composer lock regenerated and installed with scripts/plugins disabled; unused fixture Serializer/Messenger configuration removed after synchronized dependencies exposed it.
 
@@ -32,4 +32,4 @@ Task 6: complete — all three Important review findings fixed with failing regr
 
 Final evidence (2026-10-01): PHP8.5.4; Symfony framework-bundle8.1.6 (local),7.4.20 and8.0.15 (isolated temp dependencies), each 65 tests/240 assertions green. PHPStan no errors; Deptrac0 violations/warnings/errors; CS0/118; Composer validate --strict valid; git diff --check clean; final actual Flex consumer installed/booted without Doctrine successfully. PHP8.4 is in the compatibility CI matrix but unavailable locally. CI jobs not remotely executed in this session.
 
-Integration state: changes remain uncommitted/reviewable on codex/nexum-evolution. No push/merge/deployment. Existing user Harbor change and nexum.zip preserved. Plan/spec/progress retained because no commits were requested.
+Integration state: changes remain uncommitted/reviewable on codex/sillbeam-evolution. No push/merge/deployment. Existing user Harbor change and sillbeam.zip preserved. Plan/spec/progress retained because no commits were requested.

@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Kernel\Runtime;
+namespace Sillbeam\Kernel\Runtime;
 
 use Composer\InstalledVersions;
-use Nexum\Kernel\NexumKernel;
-use Nexum\Module\ModuleRegistryInterface;
+use Sillbeam\Kernel\SillbeamKernel;
+use Sillbeam\Module\ModuleRegistryInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 final readonly class KernelInformation implements KernelInformationInterface
@@ -20,15 +20,15 @@ final readonly class KernelInformation implements KernelInformationInterface
     public function all(): array
     {
         return [
-            'application' => $this->kernel instanceof NexumKernel
+            'application' => $this->kernel instanceof SillbeamKernel
                 ? $this->kernel->getApplicationName()
                 : basename($this->kernel->getProjectDir()),
             'environment' => $this->kernel->getEnvironment(),
             'debug' => $this->kernel->isDebug() ? 'yes' : 'no',
             'php' => \PHP_VERSION,
             'symfony' => Kernel::VERSION,
-            'nexum' => InstalledVersions::isInstalled('benjaminoeffinger/nexum')
-                ? (InstalledVersions::getPrettyVersion('benjaminoeffinger/nexum') ?? 'unknown')
+            'sillbeam' => InstalledVersions::isInstalled('websign-dev/sillbeam')
+                ? (InstalledVersions::getPrettyVersion('websign-dev/sillbeam') ?? 'unknown')
                 : 'source',
             'modules' => \count($this->modules->all()),
             'modules_enabled' => \count($this->modules->active()),

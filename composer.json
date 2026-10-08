@@ -1,11 +1,11 @@
 {
-    "name": "benjaminoeffinger/nexum",
+    "name": "websign-dev/sillbeam",
     "description": "Modular architecture extension for Symfony applications, organized around Modules and optional Projects.",
     "type": "library",
     "keywords": [
         "modular-monolith",
         "modules",
-        "nexum",
+        "sillbeam",
         "symfony"
     ],
     "license": "proprietary",
@@ -32,7 +32,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Nexum\\": "src/"
+            "Sillbeam\\": "src/"
         }
     },
     "autoload-dev": {
@@ -44,11 +44,11 @@
             "ProjectApp\\": "apps/multi-project/src/",
             "SingleProjectApp\\": "apps/single-project/src/",
             "SymfonyOnlyApp\\": "apps/symfony-only/src/",
-            "Nexum\\Tests\\": "tests/"
+            "Sillbeam\\Tests\\": "tests/"
         }
     },
     "suggest": {
-        "doctrine/doctrine-bundle": "Enables automatic attribute mappings for active Nexum modules and projects."
+        "doctrine/doctrine-bundle": "Enables automatic attribute mappings for active Sillbeam modules and projects."
     },
     "config": {
         "sort-packages": true

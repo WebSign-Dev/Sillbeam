@@ -2,22 +2,22 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Unit;
+namespace Sillbeam\Tests\Unit;
 
-use Nexum\Kernel\NexumKernel;
 use PHPUnit\Framework\TestCase;
+use Sillbeam\Kernel\SillbeamKernel;
 
-final class NexumKernelTest extends TestCase
+final class SillbeamKernelTest extends TestCase
 {
     public function testApplicationNameUsesComposerMetadataInsteadOfContainerDirectory(): void
     {
-        $kernel = new class('test', false) extends NexumKernel {
+        $kernel = new class('test', false) extends SillbeamKernel {
             public function getProjectDir(): string
             {
                 return '/var/www/html';
             }
         };
 
-        self::assertSame('benjaminoeffinger/nexum', $kernel->getApplicationName());
+        self::assertSame('websign-dev/sillbeam', $kernel->getApplicationName());
     }
 }

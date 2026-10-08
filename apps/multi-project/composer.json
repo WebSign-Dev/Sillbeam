@@ -1,11 +1,11 @@
 {
-    "name": "nexum/multi-project-test-app",
-    "description": "Nexum multi-project integration test application.",
+    "name": "sillbeam/multi-project-test-app",
+    "description": "Sillbeam multi-project integration test application.",
     "type": "project",
     "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "benjaminoeffinger/nexum": "dev-main"
+        "websign-dev/sillbeam": "dev-main"
     },
     "repositories": [
         {

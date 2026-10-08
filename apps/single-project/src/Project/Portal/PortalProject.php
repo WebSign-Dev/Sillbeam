@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace SingleProjectApp\Project\Portal;
 
-use Nexum\Project\Attribute\NexumProject;
+use Sillbeam\Project\Attribute\SillbeamProject;
 use SingleProjectApp\Module\Profile\ProfileModule;
 
-#[NexumProject(modules: [ProfileModule::class])]
+#[SillbeamProject(modules: [ProfileModule::class])]
 final class PortalProject
 {
 }

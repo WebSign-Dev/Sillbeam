@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Integration;
+namespace Sillbeam\Tests\Integration;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Nexum\Module\ModuleRegistryInterface;
-use Nexum\Tests\Support\SourceWorkspace;
-use Nexum\Tests\Support\TestApplicationKernel;
 use PHPUnit\Framework\TestCase;
+use Sillbeam\Module\ModuleRegistryInterface;
+use Sillbeam\Tests\Support\SourceWorkspace;
+use Sillbeam\Tests\Support\TestApplicationKernel;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ModuleLayerTest extends TestCase
@@ -21,7 +21,7 @@ final class ModuleLayerTest extends TestCase
         $this->source = new SourceWorkspace();
         $this->source->write('config/packages/framework.yaml', "framework:\n    secret: test\n    test: true\n    trusted_hosts: ['.*']\n    router: { utf8: true }\n");
         $this->source->write('config/services.yaml', 'services: {}');
-        $this->source->write('config/routes.yaml', "nexum:\n    resource: .\n    type: nexum\n");
+        $this->source->write('config/routes.yaml', "sillbeam:\n    resource: .\n    type: sillbeam\n");
     }
 
     protected function tearDown(): void
@@ -30,9 +30,9 @@ final class ModuleLayerTest extends TestCase
         $this->source->remove();
     }
 
-    public function testEmptyNexumConfigWorksWithoutDoctrineOrFoundation(): void
+    public function testEmptySillbeamConfigWorksWithoutDoctrineOrFoundation(): void
     {
-        $module = $this->source->php('src/Module/Hello/HelloModule.php', '#[\\Nexum\\Module\\Attribute\\NexumModule] final class HelloModule {}');
+        $module = $this->source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
         $this->source->php('src/Module/Hello/Controller/HelloController.php', 'final class HelloController { #[\\Symfony\\Component\\Routing\\Attribute\\Route("/hello", name: "hello")] public function hello(): \\Symfony\\Component\\HttpFoundation\\Response { return new \\Symfony\\Component\\HttpFoundation\\Response("hello"); } }');
         $this->kernel = new TestApplicationKernel($this->source);
         $this->kernel->boot();
@@ -46,16 +46,16 @@ final class ModuleLayerTest extends TestCase
 
     public function testDoctrineOnlyMapsActiveModulesAndKeepsNativeMapping(): void
     {
-        $live = $this->source->php('src/Module/Live/LiveModule.php', '#[\\Nexum\\Module\\Attribute\\NexumModule] final class LiveModule {}');
-        $this->source->php('src/Module/Off/OffModule.php', '#[\\Nexum\\Module\\Attribute\\NexumModule] final class OffModule {}');
+        $live = $this->source->php('src/Module/Live/LiveModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class LiveModule {}');
+        $this->source->php('src/Module/Off/OffModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class OffModule {}');
         $body = '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column(type: "integer")] public int $id = 1; }';
         $active = $this->source->php('src/Module/Live/Entity/Record.php', $body);
         $disabled = $this->source->php('src/Module/Off/Entity/Record.php', $body);
         $unused = $this->source->php('src/Module/Unused/Entity/Record.php', $body);
-        $this->source->php('src/Module/Unused/UnusedModule.php', '#[\\Nexum\\Module\\Attribute\\NexumModule] final class UnusedModule {}');
+        $this->source->php('src/Module/Unused/UnusedModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class UnusedModule {}');
         $legacy = $this->source->php('src/Entity/Record.php', $body);
-        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Nexum\\Project\\Attribute\\NexumProject(modules: [\\'.$live.'::class])] final class ShopProject {}');
-        $this->source->write('config/packages/nexum.yaml', "nexum:\n    modules:\n        off: { enabled: false }\n");
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject(modules: [\\'.$live.'::class])] final class ShopProject {}');
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    modules:\n        off: { enabled: false }\n");
         $this->source->write('config/packages/doctrine.yaml', "doctrine:\n    dbal: { url: 'sqlite:///:memory:' }\n    orm:\n        auto_mapping: false\n        mappings:\n            Legacy:\n                type: attribute\n                is_bundle: false\n                dir: '%kernel.project_dir%/src/Entity'\n                prefix: '".$this->source->namespace."\\Entity'\n");
         $this->kernel = new TestApplicationKernel($this->source, true);
         $this->kernel->boot();
@@ -71,10 +71,10 @@ final class ModuleLayerTest extends TestCase
 
     public function testNativeServiceOverrideWinsOverModuleDefaults(): void
     {
-        $this->source->php('src/Module/Hello/HelloModule.php', '#[\\Nexum\\Module\\Attribute\\NexumModule] final class HelloModule {}');
+        $this->source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
         $service = $this->source->php('src/Module/Hello/Greeting.php', 'final class Greeting { public function __construct(public string $text = "default") {} }');
         $this->source->write('config/services.yaml', "services:\n    '".$service."':\n        public: true\n        arguments: ['native']\n");
-        $this->source->write('config/packages/nexum.yaml', "nexum: {}\n");
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam: {}\n");
         $this->kernel = new TestApplicationKernel($this->source);
         $this->kernel->boot();
         /** @var object{text: string} $greeting */
@@ -84,11 +84,11 @@ final class ModuleLayerTest extends TestCase
 
     public function testArchitectureCommandIncludesInactiveCatalogAndJsonEvidence(): void
     {
-        $this->source->php('src/Module/Off/OffModule.php', '#[\\Nexum\\Module\\Attribute\\NexumModule] final class OffModule {}');
-        $this->source->write('config/packages/nexum.yaml', "nexum:\n    modules:\n        off: { enabled: false }\n");
+        $this->source->php('src/Module/Off/OffModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class OffModule {}');
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    modules:\n        off: { enabled: false }\n");
         $this->kernel = new TestApplicationKernel($this->source);
         $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($this->kernel);
-        $tester = new \Symfony\Component\Console\Tester\CommandTester($application->find('nexum:architecture'));
+        $tester = new \Symfony\Component\Console\Tester\CommandTester($application->find('sillbeam:architecture'));
         self::assertSame(0, $tester->execute(['--format' => 'json']));
         $data = json_decode($tester->getDisplay(), true, flags: \JSON_THROW_ON_ERROR);
         self::assertSame('off', $data['modules'][0]['id']);
@@ -100,10 +100,10 @@ final class ModuleLayerTest extends TestCase
 
     public function testExcludedCustomRootControllerDoesNotLeakIntoRoutes(): void
     {
-        $this->source->php('src/Domain/Hello/Hello.php', '#[\\Nexum\\Module\\Attribute\\NexumModule(id: "hello")] final class Hello {}');
+        $this->source->php('src/Domain/Hello/Hello.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule(id: "hello")] final class Hello {}');
         $controller = '#[\\Symfony\\Component\\DependencyInjection\\Attribute\\Autoconfigure(public: true)] final class Endpoint { #[\\Symfony\\Component\\Routing\\Attribute\\Route("/hidden", name: "hidden")] public function run(): \\Symfony\\Component\\HttpFoundation\\Response { return new \\Symfony\\Component\\HttpFoundation\\Response("hidden"); } }';
         $endpoint = $this->source->php('src/Domain/Hello/Http/Hidden/Endpoint.php', $controller);
-        $this->source->write('config/packages/nexum.yaml', "nexum:\n    discovery:\n        modules:\n            - path: src/Domain\n              excludes: ['Hello/Http/Hidden/**']\n    integrations:\n        controllers: [Http]\n");
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    discovery:\n        modules:\n            - path: src/Domain\n              excludes: ['Hello/Http/Hidden/**']\n    integrations:\n        controllers: [Http]\n");
         $this->kernel = new TestApplicationKernel($this->source);
         $this->kernel->boot();
         $router = $this->kernel->getContainer()->get('router');
@@ -114,13 +114,13 @@ final class ModuleLayerTest extends TestCase
 
     public function testExcludedEntitiesAndDisabledPrivateAreasDoNotLeakThroughParentMappings(): void
     {
-        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Nexum\\Project\\Attribute\\NexumProject] final class ShopProject {}');
-        $this->source->php('src/Project/Shop/Entity/Private/OffModule.php', '#[\\Nexum\\Module\\Attribute\\NexumModule(id: "off")] final class OffModule {}');
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class ShopProject {}');
+        $this->source->php('src/Project/Shop/Entity/Private/OffModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule(id: "off")] final class OffModule {}');
         $body = '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column(type: "integer")] public int $id = 1; }';
         $live = $this->source->php('src/Project/Shop/Entity/Record.php', $body);
         $off = $this->source->php('src/Project/Shop/Entity/Private/Entity/Record.php', $body);
         $hidden = $this->source->php('src/Project/Shop/Entity/Hidden/Record.php', $body);
-        $this->source->write('config/packages/nexum.yaml', "nexum:\n    discovery:\n        excludes: ['Project/Shop/Entity/Hidden/**']\n    modules:\n        'project:shop:off': { enabled: false }\n");
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    discovery:\n        excludes: ['Project/Shop/Entity/Hidden/**']\n    modules:\n        'project:shop:off': { enabled: false }\n");
         $this->source->write('config/packages/doctrine.yaml', "doctrine:\n    dbal: { url: 'sqlite:///:memory:' }\n    orm: { auto_mapping: false }\n");
         $this->kernel = new TestApplicationKernel($this->source, true);
         $this->kernel->boot();
@@ -135,9 +135,9 @@ final class ModuleLayerTest extends TestCase
 
     public function testBuildTimeEnvironmentActivationIsResolvedBeforeCompilation(): void
     {
-        $module = $this->source->php('src/Module/Off/OffModule.php', '#[\\Nexum\\Module\\Attribute\\NexumModule] final class OffModule {}');
-        $this->source->write('config/packages/nexum.yaml', "nexum:\n    modules:\n        off: { enabled: '%env(bool:NEXUM_TEST_ENABLED)%' }\n");
-        $_ENV['NEXUM_TEST_ENABLED'] = '0';
+        $module = $this->source->php('src/Module/Off/OffModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class OffModule {}');
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    modules:\n        off: { enabled: '%env(bool:SILLBEAM_TEST_ENABLED)%' }\n");
+        $_ENV['SILLBEAM_TEST_ENABLED'] = '0';
         try {
             $this->kernel = new TestApplicationKernel($this->source);
             $this->kernel->boot();
@@ -146,7 +146,7 @@ final class ModuleLayerTest extends TestCase
             self::assertFalse($registry->get($module)->enabled);
             self::assertSame([], $registry->active());
         } finally {
-            unset($_ENV['NEXUM_TEST_ENABLED']);
+            unset($_ENV['SILLBEAM_TEST_ENABLED']);
         }
     }
 
@@ -161,7 +161,7 @@ final class ModuleLayerTest extends TestCase
         $resource = array_values($resources)[0];
         self::assertInstanceOf(\Symfony\Component\Config\Resource\FileExistenceResource::class, $resource);
         self::assertTrue($resource->isFresh(time()));
-        $this->source->php('src/Module/NewModule/NewModule.php', '#[\\Nexum\\Module\\Attribute\\NexumModule] final class NewModule {}');
+        $this->source->php('src/Module/NewModule/NewModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class NewModule {}');
         self::assertFalse($resource->isFresh(time()));
     }
 
@@ -169,7 +169,7 @@ final class ModuleLayerTest extends TestCase
     {
         $path = $this->source->directory.'/packages/Modules';
         mkdir($path, 0777, true);
-        $this->source->write('config/packages/nexum.yaml', "nexum:\n    discovery:\n        modules:\n            - { path: packages/Modules, namespace: External }\n");
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    discovery:\n        modules:\n            - { path: packages/Modules, namespace: External }\n");
         $this->kernel = new TestApplicationKernel($this->source);
         $this->kernel->boot();
         $router = $this->kernel->getContainer()->get('router');
@@ -192,9 +192,9 @@ final class ModuleLayerTest extends TestCase
 
     public function testRootLocalExclusionsAlsoApplyToEnclosingProjectServiceImport(): void
     {
-        $this->source->php('src/Project/Shop/ShopProject.php', '#[\Nexum\Project\Attribute\NexumProject] final class ShopProject {}');
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\Sillbeam\Project\Attribute\SillbeamProject] final class ShopProject {}');
         $this->source->php('src/Project/Shop/Extension/Hidden/Leak.php', '#[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "leak", public: true)] final class Leak {}');
-        $this->source->write('config/packages/nexum.yaml', "nexum:\n    discovery:\n        modules:\n            - path: src/Project/Shop/Extension\n              excludes: ['Hidden/**']\n");
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    discovery:\n        modules:\n            - path: src/Project/Shop/Extension\n              excludes: ['Hidden/**']\n");
         $this->kernel = new TestApplicationKernel($this->source);
         $this->kernel->boot();
         self::assertFalse($this->kernel->getContainer()->has('leak'));
@@ -202,15 +202,15 @@ final class ModuleLayerTest extends TestCase
 
     public function testRoutingResourcesInvalidateWhenArchitectureConfigOrComposerChanges(): void
     {
-        $this->source->php('src/Module/Hello/HelloModule.php', '#[\Nexum\Module\Attribute\NexumModule] final class HelloModule {}');
-        $this->source->write('config/packages/nexum.yaml', "nexum: {}\n");
+        $this->source->php('src/Module/Hello/HelloModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class HelloModule {}');
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam: {}\n");
         $this->kernel = new TestApplicationKernel($this->source);
         $this->kernel->boot();
         $router = $this->kernel->getContainer()->get('router');
         self::assertInstanceOf(\Symfony\Component\Routing\RouterInterface::class, $router);
         $resources = array_filter($router->getRouteCollection()->getResources(), static fn ($resource): bool => $resource instanceof \Symfony\Component\Config\Resource\DirectoryResource || $resource instanceof \Symfony\Component\Config\Resource\FileResource || $resource instanceof \Symfony\Component\Config\Resource\FileExistenceResource);
         $timestamp = time() + 10;
-        foreach (['config/packages/nexum.yaml', 'composer.json'] as $file) {
+        foreach (['config/packages/sillbeam.yaml', 'composer.json'] as $file) {
             $path = $this->source->directory.'/'.$file;
             touch($path, $timestamp + 1);
             clearstatcache();

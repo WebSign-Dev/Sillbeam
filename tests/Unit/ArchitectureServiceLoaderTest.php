@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Unit;
+namespace Sillbeam\Tests\Unit;
 
-use Nexum\DependencyInjection\ArchitectureServiceLoader;
-use Nexum\Tests\Support\SourceWorkspace;
 use PHPUnit\Framework\TestCase;
+use Sillbeam\DependencyInjection\ArchitectureServiceLoader;
+use Sillbeam\Tests\Support\SourceWorkspace;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 final class ArchitectureServiceLoaderTest extends TestCase

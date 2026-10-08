@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Architecture;
+namespace Sillbeam\Architecture;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
@@ -33,12 +33,12 @@ final class DiscoveryOptionsResolver
         }
         $configuredRoot = $raw['root'] ?? $projectDir.'/src';
         if (!\is_string($configuredRoot)) {
-            throw new \LogicException('nexum.discovery.root must be a string.');
+            throw new \LogicException('sillbeam.discovery.root must be a string.');
         }
         $root = $this->resolvePath($configuredRoot, $projectDir);
         $configuredNamespace = $raw['namespace'] ?? null;
         if (null !== $configuredNamespace && !\is_string($configuredNamespace)) {
-            throw new \LogicException('nexum.discovery.namespace must be a string.');
+            throw new \LogicException('sillbeam.discovery.namespace must be a string.');
         }
         $namespace = null !== $configuredNamespace ? trim($configuredNamespace, '\\').'\\' : null;
 
@@ -85,7 +85,7 @@ final class DiscoveryOptionsResolver
     {
         $composerFile = $projectDir.'/composer.json';
         if (!is_file($composerFile)) {
-            throw new \LogicException('Nexum discovery needs an application composer.json or an explicit discovery.namespace.');
+            throw new \LogicException('Sillbeam discovery needs an application composer.json or an explicit discovery.namespace.');
         }
 
         $composer = json_decode((string) file_get_contents($composerFile), true, flags: \JSON_THROW_ON_ERROR);
@@ -106,7 +106,7 @@ final class DiscoveryOptionsResolver
         $mappings = array_values($mappings);
         usort($mappings, static fn (array $left, array $right): int => \strlen($right['path']) <=> \strlen($left['path']));
         if ([] === $mappings || (isset($mappings[1]) && \strlen($mappings[0]['path']) === \strlen($mappings[1]['path']))) {
-            throw new \LogicException(\sprintf('Cannot determine an unambiguous PSR-4 namespace for Nexum discovery root "%s". Configure nexum.discovery.namespace.', $root));
+            throw new \LogicException(\sprintf('Cannot determine an unambiguous PSR-4 namespace for Sillbeam discovery root "%s". Configure sillbeam.discovery.namespace.', $root));
         }
 
         $suffix = trim(substr($root, \strlen($mappings[0]['path'])), '/');

@@ -1,4 +1,4 @@
-nexum:
+sillbeam:
     modules:
         archived: { enabled: false }
     doctrine: { enabled: false }

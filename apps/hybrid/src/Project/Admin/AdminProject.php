@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace HybridApp\Project\Admin;
 
 use HybridApp\Module\Backoffice\BackofficeModule;
-use Nexum\Project\Attribute\NexumProject;
+use Sillbeam\Project\Attribute\SillbeamProject;
 
-#[NexumProject(modules: [BackofficeModule::class])]
+#[SillbeamProject(modules: [BackofficeModule::class])]
 final class AdminProject
 {
 }

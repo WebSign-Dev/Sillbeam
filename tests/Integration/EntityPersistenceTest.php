@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Integration;
+namespace Sillbeam\Tests\Integration;
 
 use App\Entity\LegacyWidget;
 use App\Kernel;

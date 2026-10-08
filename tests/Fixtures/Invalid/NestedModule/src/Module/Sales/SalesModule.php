@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace InvalidNestedModule\Module\Sales;
 
-#[\Nexum\Module\Attribute\NexumModule]
+#[\Sillbeam\Module\Attribute\SillbeamModule]
 final class SalesModule
 {
 }

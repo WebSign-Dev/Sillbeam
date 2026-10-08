@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Module;
+namespace Sillbeam\Module;
 
 final readonly class ModuleRegistry implements ModuleRegistryInterface
 {
@@ -33,14 +33,14 @@ final readonly class ModuleRegistry implements ModuleRegistryInterface
 
     public function get(string $class): ModuleDefinition
     {
-        return $this->modules[$class] ?? throw new \OutOfBoundsException(\sprintf('Unknown Nexum module class "%s".', $class));
+        return $this->modules[$class] ?? throw new \OutOfBoundsException(\sprintf('Unknown Sillbeam module class "%s".', $class));
     }
 
     /** @return array<class-string, ModuleDefinition> */
     public function forProject(string $project): array
     {
         if (!isset($this->projectModules[$project])) {
-            throw new \OutOfBoundsException(\sprintf('Unknown Nexum project class "%s".', $project));
+            throw new \OutOfBoundsException(\sprintf('Unknown Sillbeam project class "%s".', $project));
         }
 
         return $this->select($this->projectModules[$project]);

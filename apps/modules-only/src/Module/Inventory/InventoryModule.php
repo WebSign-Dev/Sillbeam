@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace ModulesOnlyApp\Module\Inventory;
 
 use ModulesOnlyApp\Module\Foundation\FoundationModule;
-use Nexum\Module\Attribute\NexumModule;
+use Sillbeam\Module\Attribute\SillbeamModule;
 
-#[NexumModule(dependencies: [FoundationModule::class])]
+#[SillbeamModule(dependencies: [FoundationModule::class])]
 final class InventoryModule
 {
 }

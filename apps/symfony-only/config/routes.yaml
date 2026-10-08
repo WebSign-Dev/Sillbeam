@@ -2,6 +2,6 @@ controllers:
     resource: ../src/Controller/
     type: attribute
 
-nexum:
+sillbeam:
     resource: .
-    type: nexum
+    type: sillbeam

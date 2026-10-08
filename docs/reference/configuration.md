@@ -1,9 +1,9 @@
 # Konfiguration
 
-Standard: `nexum: {}`. Die Source-Grenze ist `%kernel.project_dir%/src`, ihr Namespace wird aus Composer-PSR-4 bestimmt. Relative Pfade beziehen sich auf das Anwendungsverzeichnis. Mehrdeutige PSR-4-Zuordnungen brauchen einen expliziten Namespace.
+Standard: `sillbeam: {}`. Die Source-Grenze ist `%kernel.project_dir%/src`, ihr Namespace wird aus Composer-PSR-4 bestimmt. Relative Pfade beziehen sich auf das Anwendungsverzeichnis. Mehrdeutige PSR-4-Zuordnungen brauchen einen expliziten Namespace.
 
 ```yaml
-nexum:
+sillbeam:
     discovery:
         root: '%kernel.project_dir%/src'
         namespace: 'App\'
@@ -41,7 +41,7 @@ Patterns verwenden `/`, `*` (ein Segment), `**` (rekursiv) und `?`. Globale Auss
 
 Service-Ausschlüsse: `Entity/**`, `**/Entity/**`, `Dto/**`, `**/Dto/**`, relativ zum Descriptor. Wer Entities unter `Model` ablegt, ergänzt dessen Service-Ausschluss. Symfony-native Attribute und explizite `services.yaml` bleiben verfügbar.
 
-Doctrine: `null` aktiviert automatisch bei registriertem DoctrineBundle; `true` fordert es an und scheitert ohne Bundle; `false` deaktiviert Nexum-Mappings. Kurzform `doctrine: false` ist erlaubt. Nur aktive Module werden automatisch gemappt; direkte Project-Entities werden zusätzlich gemappt. Native manuelle Mappings bleiben erhalten, auch wenn sie bewusst ausgeschlossene Bereiche wieder aufnehmen.
+Doctrine: `null` aktiviert automatisch bei registriertem DoctrineBundle; `true` fordert es an und scheitert ohne Bundle; `false` deaktiviert Sillbeam-Mappings. Kurzform `doctrine: false` ist erlaubt. Nur aktive Module werden automatisch gemappt; direkte Project-Entities werden zusätzlich gemappt. Native manuelle Mappings bleiben erhalten, auch wenn sie bewusst ausgeschlossene Bereiche wieder aufnehmen.
 
 Aktivierungsoptionen können `%env(bool:...)%` verwenden. Sie werden beim Build aufgelöst. Nach Änderungen von Build-Umgebungsvariablen den Containercache neu bauen.
 

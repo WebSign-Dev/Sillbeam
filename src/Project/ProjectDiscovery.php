@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Project;
+namespace Sillbeam\Project;
 
-use Nexum\Architecture\DiscoveryOptions;
-use Nexum\Architecture\IdDeriver;
-use Nexum\Architecture\SourceInspector;
-use Nexum\Project\Attribute\NexumProject;
+use Sillbeam\Architecture\DiscoveryOptions;
+use Sillbeam\Architecture\IdDeriver;
+use Sillbeam\Architecture\SourceInspector;
+use Sillbeam\Project\Attribute\SillbeamProject;
 
 final readonly class ProjectDiscovery
 {
@@ -19,7 +19,7 @@ final readonly class ProjectDiscovery
     public function discover(DiscoveryOptions $options): array
     {
         $projects = [];
-        foreach ($this->inspector->descriptors($options, NexumProject::class) as $file => $class) {
+        foreach ($this->inspector->descriptors($options, SillbeamProject::class) as $file => $class) {
             $allowed = false;
             foreach ($options->projectRoots as $root) {
                 $allowed = $allowed || $root->contains($file);
@@ -27,11 +27,11 @@ final readonly class ProjectDiscovery
             if (!$allowed) {
                 throw new \LogicException('Project descriptor "'.$class.'" is outside the allowed project discovery boundaries.');
             }
-            $metadata = $this->inspector->reflection($class, $file)->getAttributes(NexumProject::class)[0]->newInstance();
+            $metadata = $this->inspector->reflection($class, $file)->getAttributes(SillbeamProject::class)[0]->newInstance();
             $directory = \dirname($file);
             foreach ($projects as $known) {
                 if ($directory === $known->directory || str_starts_with($directory.'/', $known->directory.'/') || str_starts_with($known->directory.'/', $directory.'/')) {
-                    throw new \LogicException('Nexum descriptors have overlapping project areas: '.$class.' and '.$known->class);
+                    throw new \LogicException('Sillbeam descriptors have overlapping project areas: '.$class.' and '.$known->class);
                 }
             }
             $projects[$class] = new ProjectDefinition(

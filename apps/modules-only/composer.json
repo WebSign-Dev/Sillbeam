@@ -1,11 +1,11 @@
 {
-    "name": "nexum/modules-only-test-app",
-    "description": "Nexum modules-only integration test application.",
+    "name": "sillbeam/modules-only-test-app",
+    "description": "Sillbeam modules-only integration test application.",
     "type": "project",
     "license": "proprietary",
     "require": {
         "php": "^8.4",
-        "benjaminoeffinger/nexum": "dev-main"
+        "websign-dev/sillbeam": "dev-main"
     },
     "repositories": [
         {

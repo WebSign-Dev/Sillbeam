@@ -5,17 +5,17 @@ declare(strict_types=1);
 use Symfony\Component\Yaml\Yaml;
 
 $repositoryDirectory = dirname(__DIR__);
-$recipeDirectory = $repositoryDirectory.'/flex-recipe/benjaminoeffinger/nexum/0.1';
+$recipeDirectory = $repositoryDirectory.'/flex-recipe/websign-dev/sillbeam/0.1';
 $autoload = $repositoryDirectory.'/vendor/autoload.php';
 
 if (!is_file($autoload)) {
-    fwrite(\STDERR, "Install the Nexum development dependencies before testing the recipe.\n");
+    fwrite(\STDERR, "Install the Sillbeam development dependencies before testing the recipe.\n");
     exit(1);
 }
 
 require $autoload;
 
-$temporaryDirectory = sys_get_temp_dir().'/nexum-flex-recipe-'.bin2hex(random_bytes(8));
+$temporaryDirectory = sys_get_temp_dir().'/sillbeam-flex-recipe-'.bin2hex(random_bytes(8));
 $endpointDirectory = $temporaryDirectory.'/endpoint';
 $applicationDirectory = $temporaryDirectory.'/application';
 $endpointServer = null;
@@ -44,26 +44,26 @@ try {
 
     $recipeResponse = [
         'manifests' => [
-            'benjaminoeffinger/nexum' => [
+            'websign-dev/sillbeam' => [
                 'manifest' => $manifest,
                 'files' => $files,
                 'ref' => hashDirectory($recipeDirectory),
             ],
         ],
     ];
-    writeJson($endpointDirectory.'/benjaminoeffinger.nexum.0.1.json', $recipeResponse);
+    writeJson($endpointDirectory.'/websign-dev.sillbeam.0.1.json', $recipeResponse);
 
     $endpointPort = availablePort();
     $endpointBaseUrl = sprintf('http://127.0.0.1:%d', $endpointPort);
     $endpoint = [
         'recipes' => [
-            'benjaminoeffinger/nexum' => ['0.1'],
+            'websign-dev/sillbeam' => ['0.1'],
         ],
         'branch' => 'main',
         'is_contrib' => true,
         '_links' => [
-            'repository' => 'local/nexum-flex-recipe',
-            'origin_template' => '{package}:{version}@local/nexum-flex-recipe:main',
+            'repository' => 'local/sillbeam-flex-recipe',
+            'origin_template' => '{package}:{version}@local/sillbeam-flex-recipe:main',
             'recipe_template' => $endpointBaseUrl.'/{package_dotted}.{version}.json',
         ],
     ];
@@ -73,7 +73,7 @@ try {
     waitForEndpoint($endpointBaseUrl.'/index.json');
 
     writeJson($applicationDirectory.'/composer.json', [
-        'name' => 'nexum/flex-recipe-test',
+        'name' => 'sillbeam/flex-recipe-test',
         'type' => 'project',
         'repositories' => [[
             'type' => 'path',
@@ -81,7 +81,7 @@ try {
             'options' => ['symlink' => false],
         ]],
         'require' => [
-            'benjaminoeffinger/nexum' => 'dev-main',
+            'websign-dev/sillbeam' => 'dev-main',
             'symfony/flex' => '^2.11',
         ],
         'autoload' => ['psr-4' => ['App\\' => 'src/']],
@@ -103,30 +103,30 @@ try {
     runComposer($applicationDirectory);
 
     $bundles = require $applicationDirectory.'/config/bundles.php';
-    assertSame(['all' => true], $bundles['Nexum\\NexumBundle'] ?? null, 'NexumBundle was not registered.');
-    $nexumBundles = array_values(array_filter(
+    assertSame(['all' => true], $bundles['Sillbeam\\SillbeamBundle'] ?? null, 'SillbeamBundle was not registered.');
+    $sillbeamBundles = array_values(array_filter(
         array_keys($bundles),
-        static fn (string $bundle): bool => str_starts_with($bundle, 'Nexum\\'),
+        static fn (string $bundle): bool => str_starts_with($bundle, 'Sillbeam\\'),
     ));
-    assertSame(['Nexum\\NexumBundle'], $nexumBundles, 'The recipe must register only the central NexumBundle.');
+    assertSame(['Sillbeam\\SillbeamBundle'], $sillbeamBundles, 'The recipe must register only the central SillbeamBundle.');
 
-    $nexumConfig = Yaml::parseFile($applicationDirectory.'/config/packages/nexum.yaml');
-    assertSame([], $nexumConfig['nexum'] ?? null, 'The recipe must use zero configuration.');
+    $sillbeamConfig = Yaml::parseFile($applicationDirectory.'/config/packages/sillbeam.yaml');
+    assertSame([], $sillbeamConfig['sillbeam'] ?? null, 'The recipe must use zero configuration.');
 
-    $routes = Yaml::parseFile($applicationDirectory.'/config/routes/nexum.yaml');
-    assertSame('nexum', $routes['nexum']['type'] ?? null, 'The Nexum route loader was not installed.');
+    $routes = Yaml::parseFile($applicationDirectory.'/config/routes/sillbeam.yaml');
+    assertSame('sillbeam', $routes['sillbeam']['type'] ?? null, 'The Sillbeam route loader was not installed.');
 
     $lock = decodeJson($applicationDirectory.'/symfony.lock');
-    assertSame('0.1', $lock['benjaminoeffinger/nexum']['recipe']['version'] ?? null, 'The recipe is missing from symfony.lock.');
-    $installedFiles = $lock['benjaminoeffinger/nexum']['files'] ?? [];
+    assertSame('0.1', $lock['websign-dev/sillbeam']['recipe']['version'] ?? null, 'The recipe is missing from symfony.lock.');
+    $installedFiles = $lock['websign-dev/sillbeam']['files'] ?? [];
     sort($installedFiles);
     assertSame([
-        'config/packages/nexum.yaml',
-        'config/routes/nexum.yaml',
-    ], $installedFiles, 'symfony.lock does not track exactly the two Nexum recipe files.');
+        'config/packages/sillbeam.yaml',
+        'config/routes/sillbeam.yaml',
+    ], $installedFiles, 'symfony.lock does not track exactly the two Sillbeam recipe files.');
 
     bootConsumer($applicationDirectory);
-    fwrite(\STDOUT, "Nexum Flex recipe installation and minimal consumer boot passed.\n");
+    fwrite(\STDOUT, "Sillbeam Flex recipe installation and minimal consumer boot passed.\n");
 } finally {
     if (is_resource($endpointServer)) {
         proc_terminate($endpointServer);
@@ -222,7 +222,7 @@ function bootConsumer(string $directory): void
     file_put_contents($directory.'/config/packages/framework.yaml', "framework:\n    secret: smoke\n    router: { utf8: true }\n");
     file_put_contents($directory.'/config/services.yaml', 'services: {}');
     mkdir($directory.'/src/Module/Hello/Controller', 0777, true);
-    file_put_contents($directory.'/src/Module/Hello/HelloModule.php', '<?php namespace App\Module\Hello; #[\Nexum\Module\Attribute\NexumModule] final class HelloModule {}');
+    file_put_contents($directory.'/src/Module/Hello/HelloModule.php', '<?php namespace App\Module\Hello; #[\Sillbeam\Module\Attribute\SillbeamModule] final class HelloModule {}');
     file_put_contents($directory.'/src/Module/Hello/Controller/HelloController.php', '<?php namespace App\Module\Hello\Controller; final class HelloController { #[\Symfony\Component\Routing\Attribute\Route("/hello", name: "hello")] public function hello(): \Symfony\Component\HttpFoundation\Response { return new \Symfony\Component\HttpFoundation\Response("hello"); } }');
     file_put_contents($directory.'/src/Kernel.php', <<<'PHP'
 <?php
@@ -240,7 +240,7 @@ if (class_exists('Doctrine\Bundle\DoctrineBundle\DoctrineBundle')) { throw new \
 $kernel = new App\Kernel('test', true);
 $kernel->boot();
 try {
-    $registry = $kernel->getContainer()->get(\Nexum\Module\ModuleRegistryInterface::class);
+    $registry = $kernel->getContainer()->get(\Sillbeam\Module\ModuleRegistryInterface::class);
     if (1 !== \count($registry->active())) { throw new \RuntimeException('Missing active module.'); }
     $response = $kernel->handle(\Symfony\Component\HttpFoundation\Request::create('/hello'));
     if (200 !== $response->getStatusCode() || 'hello' !== $response->getContent()) { throw new \RuntimeException('Module route failed.'); }

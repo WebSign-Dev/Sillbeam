@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Project;
+namespace Sillbeam\Project;
 
-use Nexum\Module\ModuleRegistryInterface;
+use Sillbeam\Module\ModuleRegistryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 final readonly class ProjectContext implements ProjectContextInterface

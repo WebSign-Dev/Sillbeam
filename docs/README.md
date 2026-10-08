@@ -1,4 +1,4 @@
-# Nexum-Handbuch
+# Sillbeam-Handbuch
 
 - [Einstieg](guides/getting-started.md) und [Flex](guides/flex-recipe.md)
 - [Architektur](architecture/overview.md), [Umfang](architecture/foundation.md)

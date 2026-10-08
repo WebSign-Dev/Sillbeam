@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace ProjectApp\Module\Catalog;
 
-use Nexum\Module\Attribute\NexumModule;
+use Sillbeam\Module\Attribute\SillbeamModule;
 
-#[NexumModule]
+#[SillbeamModule]
 final class CatalogModule
 {
 }

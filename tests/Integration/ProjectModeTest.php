@@ -2,11 +2,8 @@
 
 declare(strict_types=1);
 
-namespace Nexum\Tests\Integration;
+namespace Sillbeam\Tests\Integration;
 
-use Nexum\Module\ModuleRegistryInterface;
-use Nexum\Project\ProjectContextInterface;
-use Nexum\Project\ProjectRegistryInterface;
 use PHPUnit\Framework\TestCase;
 use ProjectApp\Kernel;
 use ProjectApp\Module\Catalog\CatalogModule;
@@ -15,6 +12,9 @@ use ProjectApp\Project\Admin\AdminProject;
 use ProjectApp\Project\Storefront\Module\Checkout\CheckoutModule as StorefrontCheckout;
 use ProjectApp\Project\Storefront\StorefrontProject;
 use Psr\Container\ContainerInterface;
+use Sillbeam\Module\ModuleRegistryInterface;
+use Sillbeam\Project\ProjectContextInterface;
+use Sillbeam\Project\ProjectRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -46,8 +46,8 @@ final class ProjectModeTest extends TestCase
         $services = $this->kernel->getContainer()->get('test.service_container');
         self::assertInstanceOf(ContainerInterface::class, $services);
         self::assertTrue($services->has(CatalogSubscriber::class));
-        self::assertFalse($services->has('Nexum\\Doctrine\\Store\\EntityStoreInterface'));
-        self::assertFalse($services->has('limiter.nexum_security_mfa_verify'));
+        self::assertFalse($services->has('Sillbeam\\Doctrine\\Store\\EntityStoreInterface'));
+        self::assertFalse($services->has('limiter.sillbeam_security_mfa_verify'));
     }
 
     public function testRoutesAreProjectScopedAndUseCanonicalHosts(): void
@@ -59,10 +59,10 @@ final class ProjectModeTest extends TestCase
         self::assertNotNull($routes->get('storefront.checkout'));
         self::assertNotNull($routes->get('admin.checkout'));
         self::assertNull($routes->get('admin.catalog'));
-        self::assertNull($routes->get('nexum_security_token_issue'));
-        self::assertNull($routes->get('nexum_security_mfa_status'));
-        self::assertNull($routes->get('nexum_security_passkey_list'));
-        self::assertNull($routes->get('nexum_management_modules'));
+        self::assertNull($routes->get('sillbeam_security_token_issue'));
+        self::assertNull($routes->get('sillbeam_security_mfa_status'));
+        self::assertNull($routes->get('sillbeam_security_passkey_list'));
+        self::assertNull($routes->get('sillbeam_management_modules'));
 
         $router->getContext()->setHost('admin.example.test');
         self::assertSame(

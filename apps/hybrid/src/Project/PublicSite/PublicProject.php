@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace HybridApp\Project\PublicSite;
 
 use HybridApp\Module\Common\CommonModule;
-use Nexum\Project\Attribute\NexumProject;
+use Sillbeam\Project\Attribute\SillbeamProject;
 
-#[NexumProject(id: 'public', modules: [CommonModule::class])]
+#[SillbeamProject(id: 'public', modules: [CommonModule::class])]
 final class PublicProject
 {
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Module\Identity;
 
-use Nexum\Module\Attribute\NexumModule;
+use Sillbeam\Module\Attribute\SillbeamModule;
 
-#[NexumModule(description: 'Identity and user persistence for the reference application.')]
+#[SillbeamModule(description: 'Identity and user persistence for the reference application.')]
 final class IdentityModule
 {
 }
