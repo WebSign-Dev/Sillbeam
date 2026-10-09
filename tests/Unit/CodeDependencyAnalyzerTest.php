@@ -111,7 +111,7 @@ final class CodeDependencyAnalyzerTest extends TestCase
         [, , $target] = $this->modules();
         $this->source->php('src/Module/Billing/Factory.php', 'final class Factory { public function make(): object { return new class implements \\'.$target.' {}; } }');
         $this->expectExceptionMessage('does not declare');
-        $this->analyze(['projects' => ['one' => ['hosts' => ['one.test']], 'two' => ['hosts' => ['two.test']]]]);
+        $this->analyze();
     }
 
     public function testPrivateCodeCannotUseAnotherProjectsPrivateModule(): void

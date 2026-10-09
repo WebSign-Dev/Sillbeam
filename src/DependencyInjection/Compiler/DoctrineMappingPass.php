@@ -23,6 +23,7 @@ final class DoctrineMappingPass implements CompilerPassInterface
                 continue;
             }
             $calls = $definition->getMethodCalls();
+            $generated = [];
             foreach ($calls as $index => [$method, $arguments]) {
                 if ('addDriver' !== $method || !($arguments[0] ?? null) instanceof Reference) {
                     continue;
@@ -40,10 +41,16 @@ final class DoctrineMappingPass implements CompilerPassInterface
                     $container->register($driverId, 'Doctrine\\ORM\\Mapping\\Driver\\AttributeDriver')
                         ->setArguments([[$mapping['directory']]])->addMethodCall('addExcludePaths', [$mapping['excludes']]);
                     $calls[$index][1][0] = new Reference($driverId);
+                    $generated[$index] = $calls[$index];
                 }
             }
             // Specific private module prefixes must precede their enclosing Project prefix.
-            usort($calls, static fn (array $left, array $right): int => ('addDriver' === $left[0] && 'addDriver' === $right[0]) ? \strlen($right[1][1]) <=> \strlen($left[1][1]) : 0);
+            // Preserve the ordering of native mappings and unrelated driver method calls.
+            $indexes = array_keys($generated);
+            usort($generated, static fn (array $left, array $right): int => \strlen($right[1][1]) <=> \strlen($left[1][1]));
+            foreach ($indexes as $offset => $index) {
+                $calls[$index] = $generated[$offset];
+            }
             $definition->setMethodCalls($calls);
         }
     }

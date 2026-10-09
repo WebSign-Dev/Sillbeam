@@ -13,7 +13,7 @@ final readonly class SillbeamModule
         public string $description = '',
         public array $dependencies = [],
     ) {
-        if (null !== $id && !preg_match('/^[a-z][a-z0-9-]*$/', $id)) {
+        if (null !== $id && !preg_match('/^[a-z][a-z0-9-]*$/D', $id)) {
             throw new \InvalidArgumentException(\sprintf('Invalid Sillbeam module id "%s".', $id));
         }
     }

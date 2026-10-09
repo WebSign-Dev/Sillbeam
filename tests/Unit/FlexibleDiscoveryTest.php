@@ -45,6 +45,26 @@ final class FlexibleDiscoveryTest extends TestCase
         self::assertSame([], $this->discover()->modules);
     }
 
+    public function testDescriptorCannotDeclareBothModuleAndProjectOwnership(): void
+    {
+        $this->source->php('src/Project/Shop/Shop.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] #[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class Shop {}');
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessage('Multiple Sillbeam descriptor attributes');
+        $this->discover();
+    }
+
+    public function testDescriptorAttributesFollowPhpCaseInsensitiveClassNames(): void
+    {
+        // Composer's filesystem lookup is case sensitive; PHP resolves loaded classes case insensitively.
+        class_exists(\Sillbeam\Module\Attribute\SillbeamModule::class);
+        class_exists(\Sillbeam\Project\Attribute\SillbeamProject::class);
+        $module = $this->source->php('src/Module/Hello/Hello.php', '#[\\sillbeam\\module\\attribute\\sillbeammodule(id: "hello")] final class Hello {}');
+        $project = $this->source->php('src/Project/Shop/Shop.php', '#[\\sillbeam\\project\\attribute\\sillbeamproject(id: "shop")] final class Shop {}');
+        $discovery = $this->discover();
+        self::assertArrayHasKey($module, $discovery->modules);
+        self::assertArrayHasKey($project, $discovery->projects);
+    }
+
     public function testOrphanPrivateModuleFailsInsteadOfBecomingShared(): void
     {
         $this->source->php('src/Project/Orphan/Module/Secret/SecretModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class SecretModule {}');

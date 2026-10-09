@@ -36,8 +36,11 @@ final class SourceFileParser
                     $this->classes[] = $class;
                     foreach ($node->attrGroups as $group) {
                         foreach ($group->attrs as $attribute) {
-                            if (\in_array((string) $attribute->name, [SillbeamModule::class, SillbeamProject::class], true)) {
-                                $this->descriptors[$class] = (string) $attribute->name;
+                            if (null !== ($descriptor = $this->descriptorType($attribute->name))) {
+                                if (isset($this->descriptors[$class])) {
+                                    throw new \LogicException('Multiple Sillbeam descriptor attributes on '.$class);
+                                }
+                                $this->descriptors[$class] = $descriptor;
                             }
                         }
                     }
@@ -65,7 +68,7 @@ final class SourceFileParser
                     $this->type($node->class);
                 }
                 if ($node instanceof Node\Attribute) {
-                    if (\in_array((string) $node->name, [SillbeamModule::class, SillbeamProject::class], true)) {
+                    if (null !== $this->descriptorType($node->name)) {
                         return NodeTraverser::DONT_TRAVERSE_CHILDREN;
                     }
                     $this->type($node->name);
@@ -78,6 +81,17 @@ final class SourceFileParser
                 if ($node instanceof Node\Stmt\TraitUse) {
                     foreach ($node->traits as $type) {
                         $this->type($type);
+                    }
+                }
+
+                return null;
+            }
+
+            private function descriptorType(Node\Name $name): ?string
+            {
+                foreach ([SillbeamModule::class, SillbeamProject::class] as $attribute) {
+                    if (0 === strcasecmp((string) $name, $attribute)) {
+                        return $attribute;
                     }
                 }
 

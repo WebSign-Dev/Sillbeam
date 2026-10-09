@@ -96,4 +96,31 @@ final class ProjectModeTest extends TestCase
         $this->expectException(\OutOfBoundsException::class);
         $projects->forHost('unknown.example.test');
     }
+
+    public function testContextTracksCurrentRequestIncludingSubrequests(): void
+    {
+        $container = $this->kernel->getContainer();
+        $context = $container->get(ProjectContextInterface::class);
+        $stack = $container->get('request_stack');
+        self::assertInstanceOf(ProjectContextInterface::class, $context);
+        self::assertInstanceOf(RequestStack::class, $stack);
+        self::assertNull($context->current());
+        self::assertFalse($context->hasModule(CatalogModule::class));
+        $stack->push(Request::create('https://shop.example.test/'));
+        try {
+            self::assertTrue($context->is('storefront'));
+            $stack->push(Request::create('https://admin.example.test/'));
+            try {
+                self::assertSame('admin', $context->id());
+                self::assertFalse($context->hasModule(CatalogModule::class));
+            } finally {
+                $stack->pop();
+            }
+            self::assertTrue($context->hasModule(CatalogModule::class));
+            self::assertSame('storefront', $context->id());
+        } finally {
+            $stack->pop();
+        }
+        self::assertNull($context->id());
+    }
 }

@@ -16,8 +16,9 @@ final class ArchitectureCompiler
         $this->validateIdentities($modules, $discovery->projects);
         $this->validateDependencies($modules);
         $this->validateCycles($modules);
+        $projects = $this->configureProjects($discovery->projects, $config['projects'] ?? []);
 
-        if ([] === $discovery->projects) {
+        if ([] === $projects) {
             $active = [];
             $visited = [];
             foreach ($modules as $module) {
@@ -29,7 +30,6 @@ final class ArchitectureCompiler
             return new CompiledArchitecture($modules, [], array_values(array_unique($active)), []);
         }
 
-        $projects = $this->configureProjects($discovery->projects, $config['projects'] ?? []);
         $projectModules = [];
         foreach ($projects as $class => $project) {
             $active = [];

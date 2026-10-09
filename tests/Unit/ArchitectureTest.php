@@ -109,6 +109,12 @@ final class ArchitectureTest extends TestCase
         (new ArchitectureCompiler())->compile($result, ['modules' => [], 'projects' => []]);
     }
 
+    public function testProjectConfigurationWithoutDiscoveredProjectsFails(): void
+    {
+        $this->expectExceptionMessage('does not match a discovered project');
+        (new ArchitectureCompiler())->compile($this->discoveryResult([]), ['projects' => ['missing' => ['hosts' => ['missing.test']]]]);
+    }
+
     public function testDisabledPrivateModuleIsNotAnAutomaticActivationRoot(): void
     {
         $project = new ProjectDefinition('shop', TestShopProject::class, '', [], [], '/tmp/Shop', '/tmp/Shop.php', 'Test\\Shop', [], []);

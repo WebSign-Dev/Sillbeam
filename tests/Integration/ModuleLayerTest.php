@@ -44,6 +44,18 @@ final class ModuleLayerTest extends TestCase
         self::assertTrue($registry->get($module)->enabled);
     }
 
+    public function testContextPropagatesUnknownHostLookupWithoutBlockingNativeRoutes(): void
+    {
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class ShopProject {}');
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    projects:\n        shop: { hosts: [shop.test] }\n");
+        $controller = $this->source->php('src/Controller/Health.php', 'final class Health { #[\\Symfony\\Component\\Routing\\Attribute\\Route("/health", name: "health")] public function run(\\Sillbeam\\Project\\ProjectContextInterface $context): \\Symfony\\Component\\HttpFoundation\\Response { try { $id = $context->id(); } catch (\\OutOfBoundsException) { $id = "outside"; } return new \\Symfony\\Component\\HttpFoundation\\Response($id); } }');
+        $this->source->write('config/services.yaml', "services:\n    '".$controller."':\n        autowire: true\n        tags: [controller.service_arguments]\n");
+        $this->source->write('config/routes.yaml', "native:\n    resource: ../src/Controller/Health.php\n    type: attribute\nsillbeam:\n    resource: .\n    type: sillbeam\n");
+        $this->kernel = new TestApplicationKernel($this->source);
+        self::assertSame('outside', $this->kernel->handle(Request::create('https://unknown.test/health'))->getContent());
+        self::assertSame('shop', $this->kernel->handle(Request::create('https://shop.test/health'))->getContent());
+    }
+
     public function testDoctrineOnlyMapsActiveModulesAndKeepsNativeMapping(): void
     {
         $live = $this->source->php('src/Module/Live/LiveModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class LiveModule {}');
