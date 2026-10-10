@@ -1,6 +1,6 @@
 # Projects
 
-Projects bündeln Oberflächen in einer gemeinsamen Symfony-Anwendung. Der Descriptor besitzt sein Verzeichnis; dessen Services, Controller und Entities werden direkt integriert. Ein Project darf nicht innerhalb eines Moduls liegen. Private Module dürfen innerhalb des Projects beliebig liegen, solange ihre Verzeichnisse nicht mit anderen Modulen überlappen.
+Projects bündeln Oberflächen in einer gemeinsamen Symfony-Anwendung. Der Descriptor besitzt sein Verzeichnis; dessen Services, Controller und Entities werden direkt integriert. Ein Project darf weder innerhalb eines Moduls noch innerhalb eines anderen Projects liegen; Project-Descriptoren dürfen kein gemeinsames Verzeichnis besitzen. Private Module dürfen innerhalb des Projects beliebig liegen, solange ihre Verzeichnisse nicht mit anderen Modulen überlappen.
 
 ```php
 namespace App\Project\Shop;
@@ -27,3 +27,5 @@ Bei mehreren Projects braucht jedes mindestens einen eindeutigen Host. Das erste
 `ProjectRegistryInterface::get()` und `forHost()` werfen bei unbekannten Projects beziehungsweise nicht zugeordneten Hosts eine `OutOfBoundsException`. `forHost()` vergleicht Hosts ohne Beachtung der Groß-/Kleinschreibung; ein einzelnes Project ohne Hosts gilt für jeden Host.
 
 Der Context gibt ohne Projects oder ohne aktuellen Request `null` für `current()` und `id()` sowie `false` für `is()` zurück. Sind Projects vorhanden und passt der Request-Host zu keinem davon, reichen alle Context-Methoden die `OutOfBoundsException` weiter. Es gibt keinen Fallback auf ein beliebiges Project. `hasModule()` prüft ohne aktuellen Project-Kontext ausschließlich den Anwendungsgraphen; im Project-Modus ist dieser leer. In Hybrid-Anwendungen können native Symfony-Routen auch auf anderen Hosts laufen; Code, der dort den ProjectContext abfragt, muss den unbekannten Host explizit behandeln. Der Context folgt dem jeweils aktuellen Request, auch bei Subrequests.
+
+Project-IDs folgen `[a-z][a-z0-9-]*`; `ShopProject` ergibt `shop`. Hosts sind exakte Hostnamen und werden getrimmt sowie kleingeschrieben. Keine URLs, Wildcards, Pfade oder Ports konfigurieren: `shop.example.com` statt `https://shop.example.com`, `*.example.com` oder `localhost:8000`.

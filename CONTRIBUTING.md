@@ -11,7 +11,7 @@ Search [existing issues](https://github.com/WebSign-Dev/Sillbeam/issues) before 
 - Expected behavior, actual behavior and the complete relevant error message.
 - Architecture diagnostic output when the container can boot.
 
-Remove credentials and private application data from shared configuration and logs. For larger features or changes to the public API, open an issue to discuss the intended behavior before implementation. The [roadmap](README.md#roadmap) describes possible directions, rather than guaranteed release commitments.
+Remove credentials and private application data from shared configuration and logs. For larger features or changes to the public API, open an issue to discuss the intended behavior before implementation. The [release notes](docs/releases/0.1.0.md) describe the current scope and limitations. Report security vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
 
 ## Set up a development checkout
 
@@ -21,10 +21,10 @@ Use PHP 8.4 or newer, Composer and the PHP extensions required by the locked dep
 git clone https://github.com/WebSign-Dev/Sillbeam.git
 cd Sillbeam
 composer install
-git switch -c codex/describe-your-change
+git switch -c describe-your-change
 ```
 
-If contributing through a fork, clone your fork instead. Use a descriptive branch name; the prefix above follows this repository's current workflow.
+If contributing through a fork, clone your fork instead. Use a descriptive branch name.
 
 The six example application variants and the main fixtures use the root Composer autoloader. You do not need to start Docker or Harbor to run the root test suite. The separate consumer under `apps/test-app` has its own dependencies and runtime; see the [test-app guide](docs/development/test-apps.md).
 
@@ -49,7 +49,9 @@ composer test
 composer analyse
 composer architecture
 composer cs:check
+composer test:consumer
 composer test:flex-recipe
+SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 ```
 
 | Check | What it verifies |
@@ -59,7 +61,8 @@ composer test:flex-recipe
 | `analyse` | PHPStan static analysis. |
 | `architecture` | Deptrac rules for the library's own dependency layers. |
 | `cs:check` | The repository's PHP CS Fixer rules. |
-| `test:flex-recipe` | Recipe installation and a minimal Symfony consumer boot. |
+| `test:consumer` | Independent installations of all six layouts, both kernels, with/without Doctrine. |
+| `test:flex-recipe` | Recipe installation and both consumer kernels; the environment flag also checks Doctrine. |
 
 The Flex check needs Composer network access and permission to open a local HTTP port. Report an environment limitation explicitly if it prevents a check from running.
 
@@ -69,7 +72,7 @@ To apply the configured formatting rules:
 php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --allow-unsupported-php-version=yes --sequential
 ```
 
-Review the resulting diff and rerun the affected checks. See [testing documentation](docs/development/testing.md) and the [CI workflow](.github/workflows/ci.yml) for coverage and the PHP/Symfony compatibility matrix. Local success on one combination does not establish that every matrix job passes.
+Review the resulting diff and rerun the affected checks. See [testing documentation](docs/development/testing.md) and the [CI workflow](https://github.com/WebSign-Dev/Sillbeam/blob/main/.github/workflows/ci.yml) for coverage and the PHP/Symfony compatibility matrix. Local success on one combination does not establish that every matrix job passes.
 
 ## Submit a pull request
 

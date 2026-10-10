@@ -46,3 +46,5 @@ Doctrine: `null` aktiviert automatisch bei registriertem DoctrineBundle; `true` 
 Aktivierungsoptionen können `%env(bool:...)%` verwenden. Sie werden beim Build aufgelöst. Nach Änderungen von Build-Umgebungsvariablen den Containercache neu bauen.
 
 Frühere Foundation-Keys wie `api`, `security`, `user` oder `management` sind ungültig; siehe [Migration](../migration/modular-monolith.md).
+
+Project-Hosts sind exakte, getrimmte Hostnamen ohne Schema, Port, Pfad oder Wildcard; Groß-/Kleinschreibung wird normalisiert. IDs folgen `[a-z][a-z0-9-]*`. Unbekannte Modul-/Project-Konfigurationsadressen sind Buildfehler.

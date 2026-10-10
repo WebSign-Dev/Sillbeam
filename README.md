@@ -14,7 +14,7 @@
 
 **A modular architecture layer for scalable, maintainable Symfony applications.**
 
-[Quick start](#quick-start) · [Documentation](docs/README.md) · [Roadmap](#roadmap) · [Report an issue][issues-url]
+[Quick start](#quick-start) · [Documentation](docs/README.md) · [Release notes](docs/releases/0.1.0.md) · [Report an issue][issues-url]
 
 </div>
 
@@ -59,6 +59,18 @@ composer config repositories.sillbeam path /absolute/path/to/sillbeam
 composer require websign-dev/sillbeam:dev-main
 ```
 
+### Install a versioned release (after publication)
+
+Once `0.1.0` is available on Packagist, run in an existing Symfony application:
+
+```bash
+composer require websign-dev/sillbeam:^0.1
+```
+
+This command is for the future published release. For the current checkout use `dev-main` as above. A local path repository takes precedence over Packagist; remove it with `composer config --unset repositories.sillbeam` before switching to the public package.
+
+### Register Sillbeam
+
 Register the bundle in your existing bundle array:
 
 ```php
@@ -86,7 +98,7 @@ sillbeam:
 <details>
 <summary><strong>Install through Symfony Flex</strong></summary>
 
-The prepared [Flex recipe](flex-recipe/README.md) registers the bundle and creates the two configuration files above. Its publication is separate from the PHP package. Until it is available through Symfony Recipes Contrib, use the manual setup or a custom Flex endpoint containing the recipe.
+The prepared [Flex recipe](https://github.com/WebSign-Dev/Sillbeam/blob/main/flex-recipe/README.md) registers the bundle and creates the two configuration files above. Its publication is separate from the PHP package. Until it is available through Symfony Recipes Contrib, use the manual setup or a custom Flex endpoint containing the recipe.
 
 </details>
 
@@ -129,6 +141,7 @@ Without Projects, all enabled shared modules are active. With Projects, each Pro
 | :--- | :--- |
 | **Symfony only** | Keep a conventional Symfony application with no module or Project descriptors. |
 | **Modules only** | Structure one application around enabled shared feature modules. |
+| **Project only** | Use direct Project services, controllers and entities without modules. |
 | **Single Project** | Group a surface and its private modules without requiring host configuration. |
 | **Multiple Projects** | Compose surfaces with distinct hosts and shared or private modules. |
 | **Hybrid** | Combine conventional Symfony code with module and Project directories. |
@@ -168,22 +181,9 @@ Architecture errors prevent the container from building, so resolve their report
 | [Testing](docs/development/testing.md) | Repository checks and integration coverage. |
 | [Test applications](docs/development/test-apps.md) | Example layouts and the isolated consumer application. |
 
-## Roadmap
+## Release status
 
-The direction is a stable modular core, clearer developer workflows and stronger integration with real Symfony applications. The graphic below presents proposed milestones; version labels and checkmarks are planning markers, not a record of shipped releases or completed work. The current repository remains on the `0.1.x` development line.
-
-![Sillbeam roadmap: Foundation and Stability, Developer Experience, Diagnostics and Tooling, Module Lifecycle, Integration and Ecosystem, and Focused Extensions.](docs/assets/sillbeam-roadmap.png)
-
-| Milestone | Planned focus |
-| :--- | :--- |
-| **Foundation & Stability** | Stabilize core abstractions and module conventions, improve setup, error handling, documentation and examples. |
-| **Developer Experience** | Improve CLI workflows, generators, structure guidance and defaults. |
-| **Diagnostics & Tooling** | Extend architecture checks, validation and actionable project diagnostics. |
-| **Module Lifecycle** | Support scaffolding, upgrades, shared contracts and safer refactoring. |
-| **Integration & Ecosystem** | Refine Symfony integration, testing support, event patterns and persistence examples. |
-| **Focused Extensions** | Explore presets, architecture helpers and reusable examples without expanding the core unnecessarily. |
-
-Some foundations, including architecture validation and diagnostics, already exist. Future additions and release targets may change; follow [GitHub issues][issues-url] and [releases][releases-url] for published updates.
+The first public release is being prepared as **0.1.0**. No stable version is published yet. The [changelog](CHANGELOG.md) and [draft release notes](docs/releases/0.1.0.md) describe the existing scope and limitations. The development alias remains `0.1.x-dev`; a release version will come from its Git tag.
 
 ## Scope and migration
 
@@ -202,12 +202,14 @@ composer test
 composer analyse
 composer architecture
 composer cs:check
+composer test:consumer
 composer test:flex-recipe
+SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 ```
 
 The example applications cover six operating variants. The isolated consumer lives under `apps/test-app`; its local Harbor workflow is described in the [test-app guide](docs/development/test-apps.md).
 
-Read [Contributing](CONTRIBUTING.md) for development setup, required checks and pull request guidance.
+Read [Contributing](CONTRIBUTING.md) for development setup, required checks and pull request guidance, [Support](SUPPORT.md) for assistance and [Security](SECURITY.md) for private vulnerability reporting.
 
 When [reporting an issue][issues-url], include your PHP and Symfony versions, relevant Sillbeam configuration, the application layout and diagnostic output. Remove credentials from shared output.
 

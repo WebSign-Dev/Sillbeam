@@ -31,13 +31,16 @@ From the Sillbeam repository root:
 
 ```bash
 composer test:flex-recipe
+SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 ```
 
 The check builds a local Flex endpoint from this source, installs Sillbeam into a
 temporary Symfony consumer through Composer and verifies the generated bundle,
-configuration, route and `symfony.lock` entries, then boots a minimal kernel without Doctrine. The normal PHPUnit suite also
+configuration, route and `symfony.lock` entries, then boots both kernel variants with the selected Doctrine profile. The normal PHPUnit suite also
 guards the recipe structure and its safe defaults.
 
 The PHP package cannot load its own recipe. Until the recipe is merged into
 Symfony Recipes Contrib, consumers either add the three files manually or use
 their own Flex endpoint containing this recipe.
+
+The `0.1/` recipe applies to the proposed `0.1.0` package release and later compatible 0.1 versions. Recipe availability is independent of Packagist publication. Manual setup remains supported.

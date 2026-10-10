@@ -1,2 +1,42 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Composer/Git distribution: runtime, license and public documentation only.
+/.github export-ignore
+/.gitignore export-ignore
+/.gitattributes export-ignore
+/.php-cs-fixer.dist.php export-ignore
+/apps export-ignore
+/tests export-ignore
+/tools export-ignore
+/skeleton export-ignore
+/flex-recipe export-ignore
+/composer.lock export-ignore
+/phpunit.xml.dist export-ignore
+/phpstan.neon.dist export-ignore
+/deptrac.yaml export-ignore
+/docs/superpowers export-ignore
+
+/vendor export-ignore
+/vendor/** export-ignore
+/.idea export-ignore
+/.idea/** export-ignore
+/.agents export-ignore
+/.agents/** export-ignore
+/.codex export-ignore
+/.codex/** export-ignore
+/.aws export-ignore
+/.aws/** export-ignore
+/.phpunit.cache export-ignore
+/.phpunit.cache/** export-ignore
+/.phpstan-cache export-ignore
+/.phpstan-cache/** export-ignore
+/.php-cs-fixer.cache export-ignore
+/.deptrac.cache export-ignore
+/.github/** export-ignore
+/apps/** export-ignore
+/tests/** export-ignore
+/tools/** export-ignore
+/skeleton/** export-ignore
+/flex-recipe/** export-ignore
+/docs/superpowers/** export-ignore

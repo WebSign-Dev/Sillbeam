@@ -66,6 +66,27 @@
             "dev-main": "0.1.x-dev"
         }
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true
+    "homepage": "https://github.com/WebSign-Dev/Sillbeam",
+    "support": {
+        "issues": "https://github.com/WebSign-Dev/Sillbeam/issues",
+        "source": "https://github.com/WebSign-Dev/Sillbeam",
+        "docs": "https://github.com/WebSign-Dev/Sillbeam/blob/main/docs/README.md"
+    },
+    "archive": {
+        "exclude": [
+            "/*",
+            "/.*",
+            "!/src",
+            "!/src/**",
+            "!/docs",
+            "!/docs/**",
+            "!/composer.json",
+            "!/README.md",
+            "!/LICENSE",
+            "!/CHANGELOG.md",
+            "!/CONTRIBUTING.md",
+            "!/SUPPORT.md",
+            "!/SECURITY.md"
+        ]
+    }
 }

@@ -20,3 +20,68 @@ php bin/console debug:router
 ```
 
 DoctrineBundle aktiviert die Mapping-Integration automatisch. `sillbeam: { doctrine: false }` schaltet nur Sillbeams automatische Mappings aus. Native Mappings bleiben verfügbar.
+
+## Installation und Autoloading
+
+Für die Entwicklungsversion das lokale Path-Repository und `dev-main` aus der [README](../../README.md#install-from-a-checkout) verwenden. Nach Veröffentlichung gilt `composer require websign-dev/sillbeam:^0.1`; diese Version ist derzeit noch nicht öffentlich verfügbar. Flex-Recipe und Package werden unabhängig veröffentlicht; manuelle Bundle-/Konfigurations-/Routing-Registrierung funktioniert bereits jetzt.
+
+Die Anwendung braucht eine Composer-PSR-4-Zuordnung wie `"App\\": "src/"`. Alle folgenden PHP-Dateien beginnen mit `<?php`. Den bestehenden Symfony-Kernel beibehalten. Optional kann `src/Kernel.php` so aussehen:
+
+```php
+namespace App;
+
+final class Kernel extends \Sillbeam\Kernel\SillbeamKernel {}
+```
+
+## Service und Route ausprobieren
+
+Ergänze `src/Module/Hello/Greeting.php`:
+
+```php
+namespace App\Module\Hello;
+
+final class Greeting
+{
+    public function message(): string
+    {
+        return 'Hello from Sillbeam';
+    }
+}
+```
+
+Und `src/Module/Hello/Controller/HelloController.php`:
+
+```php
+namespace App\Module\Hello\Controller;
+
+use App\Module\Hello\Greeting;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+
+final readonly class HelloController
+{
+    public function __construct(private Greeting $greeting) {}
+
+    #[Route('/hello', name: 'hello', methods: ['GET'])]
+    public function __invoke(): Response
+    {
+        return new Response($this->greeting->message());
+    }
+}
+```
+
+Nach `php bin/console cache:clear` zeigt `php bin/console debug:router hello` die Route. Eine Anfrage an `/hello` liefert `Hello from Sillbeam`. Mit Projects wird das Modul im jeweiligen Project-Descriptor zugeordnet; dort erhält die Route dessen Namenspräfix und gegebenenfalls Hostfilter.
+
+## Symfony-Integration erhalten
+
+Globale `App\`-Service-Imports in `config/services.yaml` sollten `src/Module/` und `src/Project/` ausschließen, wenn allein Sillbeam deren Aktivierung steuern soll. Beispiel für die Standardverzeichnisse:
+
+```yaml
+services:
+    _defaults: { autowire: true, autoconfigure: true }
+    App\:
+        resource: '../src/'
+        exclude: '../src/{DependencyInjection,Entity,Kernel.php,Module,Project}'
+```
+
+Bestehende Ausschlüsse/Services beibehalten und bei eigenen Roots entsprechend anpassen. Native breite Route- und Doctrine-Imports ebenso prüfen: explizite Symfony-Imports können bewusst inaktive Bereiche wieder aufnehmen. Sillbeam entfernt solche Anwendungskonfiguration nicht. Für die Modulrouten genügt der einmalige `type: sillbeam`-Import.

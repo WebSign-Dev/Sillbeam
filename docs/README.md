@@ -8,4 +8,4 @@
 - [Tests](development/testing.md), [Test-Apps](development/test-apps.md), [Fehlerdiagnose](operations/troubleshooting.md)
 - [Core-Komponenten](modules/README.md)
 
-Das historische Review und die Implementierungsunterlagen unter development/superpowers beschreiben den Umbau. Die Referenzseiten beschreiben den aktuellen Stand.
+Die Referenzseiten beschreiben den aktuellen Stand. [Changelog](../CHANGELOG.md), [Release Notes](releases/0.1.0.md), [Support](../SUPPORT.md) und [Security](../SECURITY.md) ergänzen die Veröffentlichungshinweise.

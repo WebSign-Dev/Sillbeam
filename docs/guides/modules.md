@@ -24,4 +24,6 @@ sillbeam:
         'project:shop:reports': { enabled: false }
 ```
 
-Ein aktiviertes Modul, das ein deaktiviertes Modul benötigt, verhindert den Build. Ein deaktiviertes privates Modul ist kein automatischer Project-Root. Native explizite Imports können Sillbeams automatische Auswahl umgehen; solche Imports liegen in der Verantwortung der Anwendung.
+Ein aktives Modul, das ein deaktiviertes Modul benötigt, verhindert den Build. Ein deaktiviertes privates Modul ist kein automatischer Project-Root. Native explizite Imports können Sillbeams automatische Auswahl umgehen; solche Imports liegen in der Verantwortung der Anwendung.
+
+IDs müssen `[a-z][a-z0-9-]*` entsprechen. Die automatische Ableitung entfernt `Module` und trennt CamelCase: `OrderHistoryModule` ergibt `order-history`. Ein aktiviertes, aber keinem Project zugeordnetes Shared Module bildet keinen aktiven Graphen; dessen deaktivierte Dependency allein verhindert keinen Build.
