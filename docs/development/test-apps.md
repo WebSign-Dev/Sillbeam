@@ -2,6 +2,8 @@
 
 Die Fixtures verwenden den Root-Autoloader und temporäre Kernel-Caches.
 
+`composer test:consumer` verwendet dieselben Szenarioquellen als Vorlagen für frische, unabhängige Composer-Anwendungen. Jedes Szenario wird ohne/mit Doctrine und mit beiden Kernels geprüft. Deren Vendor-Autoloader verwendet keine Root-Dev-Autoloads. Versionen und Ergebnisse stehen im [Paketkompatibilitätsnachweis](package-compatibility-2026-10-10.md).
+
 | App | Abdeckung |
 |---|---|
 | apps/symfony-only | gewöhnliche Symfony-App mit Sillbeam ohne Descriptoren |

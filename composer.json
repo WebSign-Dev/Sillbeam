@@ -58,6 +58,7 @@
         "architecture": "deptrac analyse --config-file=deptrac.yaml",
         "cs:check": "php-cs-fixer check --diff --config=.php-cs-fixer.dist.php --allow-unsupported-php-version=yes --sequential",
         "test": "phpunit --configuration=phpunit.xml.dist",
+        "test:consumer": "php tools/test-consumer.php",
         "test:flex-recipe": "php tools/test-flex-recipe.php"
     },
     "extra": {

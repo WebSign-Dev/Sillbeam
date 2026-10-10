@@ -45,6 +45,8 @@ Modules normally live in `src/Module`; Projects live in `src/Project`. These def
 - **Symfony 7.4 or 8.x** in the consuming application.
 - **DoctrineBundle**, only if you want automatic Doctrine entity mappings.
 
+PHP 8.4/8.5 with Symfony 7.4/8.0/8.1 has been checked through independent consumer installations. See the [tested versions and reproduction steps](docs/development/package-compatibility-2026-10-10.md).
+
 ### Install from a checkout
 
 Sillbeam is currently on the **`0.1.x` development line**. The example below uses a local Composer path repository and does not depend on a published stable package or Flex recipe.

@@ -15,6 +15,25 @@ if (!is_file($autoload)) {
 
 require $autoload;
 
+$withDoctrine = '1' === getenv('SILLBEAM_TEST_DOCTRINE');
+$symfony = getenv('SILLBEAM_SYMFONY_VERSION') ?: null;
+$requirements = ['websign-dev/sillbeam' => 'dev-main', 'symfony/flex' => '^2.11'];
+$conflicts = [];
+if ($withDoctrine) {
+    $requirements['doctrine/doctrine-bundle'] = '^3.3';
+    $requirements['doctrine/orm'] = '^3.6';
+    $requirements['symfony/doctrine-bridge'] = $symfony ?? '^7.4 || ^8.0';
+}
+if (null !== $symfony) {
+    [$major, $minor] = array_map('intval', explode('.', $symfony));
+    $lock = decodeJson($repositoryDirectory.'/composer.lock');
+    foreach ([...$lock['packages'], ...$lock['packages-dev']] as $dependency) {
+        if (str_starts_with($dependency['name'], 'symfony/') && preg_match('/^v?[78]\./', $dependency['version'])) {
+            $conflicts[$dependency['name']] = '<'.$major.'.'.$minor.' || >='.$major.'.'.($minor + 1);
+        }
+    }
+}
+
 $temporaryDirectory = sys_get_temp_dir().'/sillbeam-flex-recipe-'.bin2hex(random_bytes(8));
 $endpointDirectory = $temporaryDirectory.'/endpoint';
 $applicationDirectory = $temporaryDirectory.'/application';
@@ -72,18 +91,25 @@ try {
     [$endpointServer, $endpointPipes] = startEndpointServer($endpointDirectory, $endpointPort);
     waitForEndpoint($endpointBaseUrl.'/index.json');
 
+    $packageDirectory = $temporaryDirectory.'/package';
+    foreach ([$repositoryDirectory.'/composer.json', $repositoryDirectory.'/LICENSE', $repositoryDirectory.'/README.md', ...recipeFiles($repositoryDirectory.'/src')] as $file) {
+        $target = $packageDirectory.substr($file, strlen($repositoryDirectory));
+        if (!is_dir(dirname($target))) {
+            mkdir(dirname($target), 0777, true);
+        }
+        copy($file, $target);
+    }
+
     writeJson($applicationDirectory.'/composer.json', [
         'name' => 'sillbeam/flex-recipe-test',
         'type' => 'project',
         'repositories' => [[
             'type' => 'path',
-            'url' => $repositoryDirectory,
-            'options' => ['symlink' => false],
+            'url' => $packageDirectory,
+            'options' => ['symlink' => false, 'versions' => ['websign-dev/sillbeam' => 'dev-main']],
         ]],
-        'require' => [
-            'websign-dev/sillbeam' => 'dev-main',
-            'symfony/flex' => '^2.11',
-        ],
+        'require' => $requirements,
+        'conflict' => (object) $conflicts,
         'autoload' => ['psr-4' => ['App\\' => 'src/']],
         'config' => [
             'allow-plugins' => ['symfony/flex' => true],
@@ -125,8 +151,8 @@ try {
         'config/routes/sillbeam.yaml',
     ], $installedFiles, 'symfony.lock does not track exactly the two Sillbeam recipe files.');
 
-    bootConsumer($applicationDirectory);
-    fwrite(\STDOUT, "Sillbeam Flex recipe installation and minimal consumer boot passed.\n");
+    bootConsumer($applicationDirectory, $withDoctrine);
+    fwrite(\STDOUT, 'Sillbeam Flex recipe installation and both consumer kernels passed ('.($withDoctrine ? 'with Doctrine' : 'without Doctrine').").\n");
 } finally {
     if (is_resource($endpointServer)) {
         proc_terminate($endpointServer);
@@ -214,16 +240,24 @@ function runComposer(string $workingDirectory): void
 }
 
 /** Boots the installed consumer in another process without the repository development autoloader. */
-function bootConsumer(string $directory): void
+function bootConsumer(string $directory, bool $withDoctrine): void
 {
     $bundles = require $directory.'/config/bundles.php';
     $bundles[Symfony\Bundle\FrameworkBundle\FrameworkBundle::class] = ['all' => true];
+    if ($withDoctrine) {
+        $bundles[Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class] = ['all' => true];
+        file_put_contents($directory.'/config/packages/doctrine.yaml', "doctrine:\n    dbal: { url: 'sqlite:///:memory:' }\n    orm: { auto_mapping: false }\n");
+    }
     file_put_contents($directory.'/config/bundles.php', '<?php return '.var_export($bundles, true).';');
     file_put_contents($directory.'/config/packages/framework.yaml', "framework:\n    secret: smoke\n    router: { utf8: true }\n");
     file_put_contents($directory.'/config/services.yaml', 'services: {}');
     mkdir($directory.'/src/Module/Hello/Controller', 0777, true);
     file_put_contents($directory.'/src/Module/Hello/HelloModule.php', '<?php namespace App\Module\Hello; #[\Sillbeam\Module\Attribute\SillbeamModule] final class HelloModule {}');
     file_put_contents($directory.'/src/Module/Hello/Controller/HelloController.php', '<?php namespace App\Module\Hello\Controller; final class HelloController { #[\Symfony\Component\Routing\Attribute\Route("/hello", name: "hello")] public function hello(): \Symfony\Component\HttpFoundation\Response { return new \Symfony\Component\HttpFoundation\Response("hello"); } }');
+    if ($withDoctrine) {
+        mkdir($directory.'/src/Module/Hello/Entity', 0777, true);
+        file_put_contents($directory.'/src/Module/Hello/Entity/Record.php', '<?php namespace App\Module\Hello\Entity; #[\Doctrine\ORM\Mapping\Entity] final class Record { #[\Doctrine\ORM\Mapping\Id] #[\Doctrine\ORM\Mapping\Column(type: "integer")] public int $id = 1; }');
+    }
     file_put_contents($directory.'/src/Kernel.php', <<<'PHP'
 <?php
 namespace App;
@@ -236,18 +270,27 @@ PHP);
     file_put_contents($directory.'/smoke.php', <<<'PHP'
 <?php
 require __DIR__.'/vendor/autoload.php';
-if (class_exists('Doctrine\Bundle\DoctrineBundle\DoctrineBundle')) { throw new \RuntimeException('Minimal consumer unexpectedly installed Doctrine.'); }
-$kernel = new App\Kernel('test', true);
+if (class_exists('Doctrine\Bundle\DoctrineBundle\DoctrineBundle') !== ('1' === $argv[1])) { throw new \RuntimeException('Unexpected Doctrine installation.'); }
+$kernel = new App\Kernel($argv[2], true);
 $kernel->boot();
 try {
     $registry = $kernel->getContainer()->get(\Sillbeam\Module\ModuleRegistryInterface::class);
     if (1 !== \count($registry->active())) { throw new \RuntimeException('Missing active module.'); }
     $response = $kernel->handle(\Symfony\Component\HttpFoundation\Request::create('/hello'));
     if (200 !== $response->getStatusCode() || 'hello' !== $response->getContent()) { throw new \RuntimeException('Module route failed.'); }
+    if ('1' === $argv[1]) {
+        $manager = $kernel->getContainer()->get('doctrine.orm.entity_manager');
+        if (1 !== count($manager->getMetadataFactory()->getAllMetadata())) { throw new \RuntimeException('Recipe consumer mapping failed.'); }
+    }
 } finally { $kernel->shutdown(); }
 PHP);
-    $process = proc_open([PHP_BINARY, 'smoke.php'], [\STDIN, \STDOUT, \STDERR], $pipes, $directory);
-    if (!is_resource($process) || 0 !== proc_close($process)) { throw new RuntimeException('Minimal consumer boot failed.'); }
+    foreach (['test', 'test_sillbeam'] as $environment) {
+        if ('test_sillbeam' === $environment) {
+            file_put_contents($directory.'/src/Kernel.php', '<?php namespace App; final class Kernel extends \\Sillbeam\\Kernel\\SillbeamKernel { public function getProjectDir(): string { return \\dirname(__DIR__); } }');
+        }
+        $process = proc_open([PHP_BINARY, 'smoke.php', $withDoctrine ? '1' : '0', $environment], [\STDIN, \STDOUT, \STDERR], $pipes, $directory);
+        if (!is_resource($process) || 0 !== proc_close($process)) { throw new RuntimeException('Consumer boot failed: '.$environment); }
+    }
 }
 
 function availablePort(): int
