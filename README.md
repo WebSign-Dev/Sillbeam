@@ -102,6 +102,8 @@ The prepared [Flex recipe](https://github.com/WebSign-Dev/Sillbeam/blob/main/fle
 
 </details>
 
+With the usual `App\:` import of `src/`, exclude `Module` and `Project` from that native service import when Sillbeam should control their automatic activation. Keep existing exclusions and explicit services. The Flex recipe preserves your service configuration; it does not add these exclusions. See the [Symfony integration rules](docs/guides/getting-started.md#symfony-integration-erhalten), including custom discovery roots and native routing/Doctrine imports.
+
 ### Create your first module
 
 Create `src/Module/Billing/BillingModule.php`:

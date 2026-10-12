@@ -81,6 +81,25 @@ final class ModuleLayerTest extends TestCase
         self::assertCount(2, $classes);
     }
 
+    public function testNativeDoctrineOverrideOfGeneratedMappingRemainsAuthoritative(): void
+    {
+        $this->source->php('src/Module/Live/LiveModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class LiveModule {}');
+        $body = '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column(type: "integer")] public int $id = 1; }';
+        $selected = $this->source->php('src/Module/Live/Entity/Selected/Record.php', $body);
+        $ignored = $this->source->php('src/Module/Live/Entity/Record.php', $body);
+        $directory = $this->source->directory.'/src/Module/Live/Entity';
+        $key = 'Sillbeam'.hash('xxh128', $directory);
+        $this->source->write('config/packages/doctrine.yaml', "doctrine:\n    dbal: { url: 'sqlite:///:memory:' }\n    orm:\n        auto_mapping: false\n        mappings:\n            ".$key.":\n                type: attribute\n                is_bundle: false\n                dir: '".$directory."/Selected'\n                prefix: '".$this->source->namespace."\\Module\\Live\\Entity'\n");
+        $this->kernel = new TestApplicationKernel($this->source, true);
+        $this->kernel->boot();
+        $manager = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        self::assertInstanceOf(EntityManagerInterface::class, $manager);
+        $classes = array_map(static fn ($metadata): string => $metadata->getName(), $manager->getMetadataFactory()->getAllMetadata());
+        self::assertContains($selected, $classes);
+        self::assertNotContains($ignored, $classes);
+        self::assertCount(1, $classes);
+    }
+
     public function testNativeServiceOverrideWinsOverModuleDefaults(): void
     {
         $this->source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
@@ -215,6 +234,7 @@ final class ModuleLayerTest extends TestCase
     public function testRoutingResourcesInvalidateWhenArchitectureConfigOrComposerChanges(): void
     {
         $this->source->php('src/Module/Hello/HelloModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class HelloModule {}');
+        $this->source->php('src/Module/Hello/Controller/Endpoint.php', 'final class Endpoint { #[\\Symfony\\Component\\Routing\\Attribute\\Route("/hello", name: "hello")] public function run(): void {} }');
         $this->source->write('config/packages/sillbeam.yaml', "sillbeam: {}\n");
         $this->kernel = new TestApplicationKernel($this->source);
         $this->kernel->boot();
@@ -222,7 +242,7 @@ final class ModuleLayerTest extends TestCase
         self::assertInstanceOf(\Symfony\Component\Routing\RouterInterface::class, $router);
         $resources = array_filter($router->getRouteCollection()->getResources(), static fn ($resource): bool => $resource instanceof \Symfony\Component\Config\Resource\DirectoryResource || $resource instanceof \Symfony\Component\Config\Resource\FileResource || $resource instanceof \Symfony\Component\Config\Resource\FileExistenceResource);
         $timestamp = time() + 10;
-        foreach (['config/packages/sillbeam.yaml', 'composer.json'] as $file) {
+        foreach (['config/packages/sillbeam.yaml', 'config/routes.yaml', 'composer.json', 'src/Module/Hello/HelloModule.php', 'src/Module/Hello/Controller/Endpoint.php'] as $file) {
             $path = $this->source->directory.'/'.$file;
             touch($path, $timestamp + 1);
             clearstatcache();

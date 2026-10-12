@@ -14,9 +14,9 @@ final class TestApplicationKernel extends Kernel
 {
     use MicroKernelTrait;
 
-    public function __construct(private readonly SourceWorkspace $source, private readonly bool $doctrine = false)
+    public function __construct(private readonly SourceWorkspace $source, private readonly bool $doctrine = false, string $environment = 'test', bool $debug = true)
     {
-        parent::__construct('test', true);
+        parent::__construct($environment, $debug);
     }
 
     public function getProjectDir(): string
@@ -26,7 +26,7 @@ final class TestApplicationKernel extends Kernel
 
     public function getCacheDir(): string
     {
-        return $this->source->directory.'/var/cache';
+        return $this->source->directory.'/var/cache/'.$this->environment;
     }
 
     public function getLogDir(): string
@@ -36,7 +36,7 @@ final class TestApplicationKernel extends Kernel
 
     protected function getContainerClass(): string
     {
-        return $this->source->namespace.'Container';
+        return $this->source->namespace.ucfirst($this->environment).($this->debug ? 'Debug' : '').'Container';
     }
 
     public function registerBundles(): iterable

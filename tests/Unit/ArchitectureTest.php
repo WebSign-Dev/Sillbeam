@@ -126,6 +126,26 @@ final class ArchitectureTest extends TestCase
         self::assertFalse($compiled->modules[TestPrivateModule::class]->enabled);
     }
 
+    public function testUnknownDeclaredDependencyFailsEvenForAnInactiveModule(): void
+    {
+        $result = $this->discoveryResult([
+            TestAModule::class => $this->module('a', TestAModule::class, [TestBModule::class]),
+        ]);
+        $this->expectExceptionMessage('depends on unknown module class');
+        (new ArchitectureCompiler())->compile($result, ['modules' => ['a' => ['enabled' => false]]]);
+    }
+
+    public function testProjectCannotActivateAnotherProjectsPrivateModule(): void
+    {
+        $shop = new ProjectDefinition('shop', TestShopProject::class, '', [TestPrivateModule::class], [], '/tmp/Shop', '/tmp/Shop.php', 'Test\\Shop', [], []);
+        $other = new ProjectDefinition('other', TestOtherProject::class, '', [], [], '/tmp/Other', '/tmp/Other.php', 'Test\\Other', [], []);
+        $result = $this->discoveryResult([
+            TestPrivateModule::class => $this->module('private', TestPrivateModule::class, project: TestOtherProject::class),
+        ], [TestShopProject::class => $shop, TestOtherProject::class => $other]);
+        $this->expectExceptionMessage('Project cannot use private module');
+        (new ArchitectureCompiler())->compile($result, ['projects' => ['shop' => ['hosts' => ['shop.test']], 'other' => ['hosts' => ['other.test']]]]);
+    }
+
     /**
      * @param array<class-string, ModuleDefinition>  $modules
      * @param array<class-string, ProjectDefinition> $projects
@@ -165,5 +185,9 @@ final class TestPrivateModule
 {
 }
 final class TestShopProject
+{
+}
+
+final class TestOtherProject
 {
 }

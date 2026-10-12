@@ -74,7 +74,7 @@ Nach `php bin/console cache:clear` zeigt `php bin/console debug:router hello` di
 
 ## Symfony-Integration erhalten
 
-Globale `App\`-Service-Imports in `config/services.yaml` sollten `src/Module/` und `src/Project/` ausschließen, wenn allein Sillbeam deren Aktivierung steuern soll. Beispiel für die Standardverzeichnisse:
+Globale `App\`-Service-Imports in `config/services.yaml` müssen `src/Module/` und `src/Project/` ausschließen, wenn allein Sillbeam deren Aktivierung steuern soll. Beispiel für die Standardverzeichnisse:
 
 ```yaml
 services:
@@ -85,3 +85,11 @@ services:
 ```
 
 Bestehende Ausschlüsse/Services beibehalten und bei eigenen Roots entsprechend anpassen. Native breite Route- und Doctrine-Imports ebenso prüfen: explizite Symfony-Imports können bewusst inaktive Bereiche wieder aufnehmen. Sillbeam entfernt solche Anwendungskonfiguration nicht. Für die Modulrouten genügt der einmalige `type: sillbeam`-Import.
+
+Ein unveränderter Skeleton-Import von ganz `src/` bleibt eine unabhängige Symfony-Registrierung: Ein dort gefundenes `#[AsAlias]` kann beispielsweise auch bei `enabled: false` als Service erreichbar bleiben. Überlappende Imports erzeugen nicht zwei Instanzen pro Service-ID; die native Definition ist maßgeblich, kann aber Sillbeams Aktivierung und Standardausschlüsse umgehen. Die Bereichsausschlüsse sind deshalb erforderlich, wenn Sillbeam die automatische Registrierung kontrollieren soll, auch im Project-Modus für nicht zugeordnete Shared-Module und deaktivierte private Module.
+
+Innerhalb aktiver Bereiche verwendet Sillbeam den Symfony-Service-Loader. `#[Exclude]`, `#[When]`, `#[WhenNot]` und `#[AsAlias]` gelten weiterhin. Explizite Service-Definitionen, Constructor-Argumente und Interface-Aliase in der Anwendung haben Vorrang; ein bewusst manuell registrierter Service ist ein Escape-Hatch auch für einen deaktivierten Bereich. Die Flex-Recipe ändert bestehende Serviceimports nicht: Die Ausschlüsse bei der Integration selbst ergänzen, vorhandene Ausschlüsse beibehalten. Ein normaler Symfony-Kernel mit `MicroKernelTrait` genügt.
+
+Für native Doctrine-Mappings möglichst die tatsächlich nativen Entity-Verzeichnisse und Namespace-Präfixe verwenden; ein breites Mapping von `src/` kann auch inaktive Modul-Entities einbeziehen. Explizite Overrides generierter Mappings bleiben maßgeblich. Ohne registriertes DoctrineBundle entstehen keine automatischen Mappings; `sillbeam.doctrine: true` ohne Bundle ist ein Konfigurationsfehler.
+
+Development-Caches überwachen Quell-, Konfigurations- und Routing-Ressourcen. Production-Caches werden bei Deployments mit geändertem Code, Routing, Composer-Mapping oder Aktivierung neu gebaut; sie sind kein Live-Discovery-Mechanismus. Auch Änderungen an Build-Environment-Werten erfordern einen Neubau.

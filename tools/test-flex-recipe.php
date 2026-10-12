@@ -250,7 +250,18 @@ function bootConsumer(string $directory, bool $withDoctrine): void
     }
     file_put_contents($directory.'/config/bundles.php', '<?php return '.var_export($bundles, true).';');
     file_put_contents($directory.'/config/packages/framework.yaml', "framework:\n    secret: smoke\n    router: { utf8: true }\n");
-    file_put_contents($directory.'/config/services.yaml', 'services: {}');
+    file_put_contents($directory.'/config/services.yaml', <<<'YAML'
+services:
+    _defaults: { autowire: true, autoconfigure: true }
+    App\:
+        resource: '../src/'
+        exclude: '../src/{DependencyInjection,Entity,Kernel.php,Module,Project}'
+YAML);
+    file_put_contents($directory.'/config/packages/sillbeam.yaml', "sillbeam: { modules: { off: { enabled: false } } }\n");
+    mkdir($directory.'/src/Module/Off', 0777, true);
+    file_put_contents($directory.'/src/Module/Off/OffModule.php', '<?php namespace App\Module\Off; #[\Sillbeam\Module\Attribute\SillbeamModule] final class OffModule {}');
+    file_put_contents($directory.'/src/Module/Off/Leak.php', '<?php namespace App\Module\Off; #[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "off.leak", public: true)] final class Leak {}');
+    file_put_contents($directory.'/src/Legacy.php', '<?php namespace App; #[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "legacy", public: true)] final class Legacy {}');
     mkdir($directory.'/src/Module/Hello/Controller', 0777, true);
     file_put_contents($directory.'/src/Module/Hello/HelloModule.php', '<?php namespace App\Module\Hello; #[\Sillbeam\Module\Attribute\SillbeamModule] final class HelloModule {}');
     file_put_contents($directory.'/src/Module/Hello/Controller/HelloController.php', '<?php namespace App\Module\Hello\Controller; final class HelloController { #[\Symfony\Component\Routing\Attribute\Route("/hello", name: "hello")] public function hello(): \Symfony\Component\HttpFoundation\Response { return new \Symfony\Component\HttpFoundation\Response("hello"); } }');
@@ -271,9 +282,10 @@ PHP);
 <?php
 require __DIR__.'/vendor/autoload.php';
 if (class_exists('Doctrine\Bundle\DoctrineBundle\DoctrineBundle') !== ('1' === $argv[1])) { throw new \RuntimeException('Unexpected Doctrine installation.'); }
-$kernel = new App\Kernel($argv[2], true);
+$kernel = new App\Kernel($argv[2], 'dev' === $argv[2]);
 $kernel->boot();
 try {
+    if (!$kernel->getContainer()->has('legacy') || $kernel->getContainer()->has('off.leak')) { throw new \RuntimeException('Skeleton service import boundaries failed.'); }
     $registry = $kernel->getContainer()->get(\Sillbeam\Module\ModuleRegistryInterface::class);
     if (1 !== \count($registry->active())) { throw new \RuntimeException('Missing active module.'); }
     $response = $kernel->handle(\Symfony\Component\HttpFoundation\Request::create('/hello'));
@@ -284,12 +296,20 @@ try {
     }
 } finally { $kernel->shutdown(); }
 PHP);
-    foreach (['test', 'test_sillbeam'] as $environment) {
-        if ('test_sillbeam' === $environment) {
+    foreach (['symfony', 'sillbeam'] as $kernel) {
+        if ('sillbeam' === $kernel) {
             file_put_contents($directory.'/src/Kernel.php', '<?php namespace App; final class Kernel extends \\Sillbeam\\Kernel\\SillbeamKernel { public function getProjectDir(): string { return \\dirname(__DIR__); } }');
         }
-        $process = proc_open([PHP_BINARY, 'smoke.php', $withDoctrine ? '1' : '0', $environment], [\STDIN, \STDOUT, \STDERR], $pipes, $directory);
-        if (!is_resource($process) || 0 !== proc_close($process)) { throw new RuntimeException('Consumer boot failed: '.$environment); }
+        foreach (['dev', 'prod'] as $environment) {
+            for ($boot = 0; $boot < 2; ++$boot) {
+                $process = proc_open([\PHP_BINARY, 'smoke.php', $withDoctrine ? '1' : '0', $environment], [\STDIN, \STDOUT, \STDERR], $pipes, $directory);
+                if (!is_resource($process) || 0 !== proc_close($process)) {
+                    throw new RuntimeException('Consumer boot failed: '.$kernel.'/'.$environment);
+                }
+            }
+        }
+        // A different Kernel needs its own freshly built caches.
+        removeDirectory($directory.'/var/cache');
     }
 }
 
