@@ -50,6 +50,7 @@ composer analyse
 composer architecture
 composer cs:check
 composer test:consumer
+composer test:release-package
 composer test:flex-recipe
 SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 ```
@@ -62,7 +63,8 @@ SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 | `architecture` | Deptrac rules for the library's own dependency layers. |
 | `cs:check` | The repository's PHP CS Fixer rules. |
 | `test:consumer` | Independent installations of all six layouts, both kernels, with/without Doctrine. |
-| `test:flex-recipe` | Recipe installation and both consumer kernels; the environment flag also checks Doctrine. |
+| `test:release-package` | Actual Composer ZIP installed in a separate manual consumer, including the documented Hello example. |
+| `test:flex-recipe` | Recipe installation/removal and both consumer kernels; the environment flag also checks Doctrine. |
 
 The Flex check needs Composer network access and permission to open a local HTTP port. Report an environment limitation explicitly if it prevents a check from running.
 

@@ -1,5 +1,6 @@
 # Technische Release-Prüfung — 2026-10-10
 
+> Historischer, abgeschlossener Prüfnachweis. Versionszahlen und Recipe-Details beschreiben diesen Lauf, keine aktuellen Installationsanweisungen. Siehe [aktuelle Release-Notes](../releases/0.1.0.md) und [Flex-Anleitung](../guides/flex-recipe.md).
 Geprüft wurden alle 37 Produktionsdateien des Modullayers und die zugehörigen Unit-/Integrationstests: Discovery und physische Ownership, deklarierte und statische Dependencies, Aktivierungsgraphen, Symfony-DI/Routing, Doctrine, Registries/Request-Kontext, Cache-Ressourcen und Diagnose-API. Ausgangspunkt: `3d1c510`, sauberer Arbeitsbaum, 65 Tests / 240 Assertions.
 
 ## Reproduzierte und korrigierte Fehler

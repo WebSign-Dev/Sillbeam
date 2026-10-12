@@ -2,7 +2,13 @@
 
 This changelog records public Sillbeam releases. No public release has been made yet.
 
-## Unreleased — proposed 0.1.0
+## Unreleased — prepared 0.1.0
+
+### Release preparation
+
+- Symfony-bundle metadata and a zero-config Flex recipe with installation/removal checks preserving application configuration.
+- Standard Symfony service-import regressions, native overrides and strict PHPUnit handler ownership checks.
+- Updated installation, release and security guidance; focused product-website link/metadata corrections prepared locally.
 
 ### Initial package scope
 

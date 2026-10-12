@@ -4,3 +4,7 @@
 /.php-cs-fixer.cache
 /.deptrac.cache
 /.phpstan-cache/
+
+# Generated Symfony config-builder references
+/apps/*/config/reference.php
+/tests/Fixtures/*/config/reference.php

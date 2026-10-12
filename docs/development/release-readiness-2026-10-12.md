@@ -1,5 +1,6 @@
 # Release-Kandidaten-Prüfung v0.1.0 — 2026-10-12
 
+> Historischer, abgeschlossener Prüfnachweis. Versionszahlen und Recipe-Details beschreiben diesen Lauf, keine aktuellen Installationsanweisungen. Siehe [aktuelle Release-Notes](../releases/0.1.0.md) und [Flex-Anleitung](../guides/flex-recipe.md).
 Die Prüfung erweitert den Nachweis vom 2026-10-10 um normale Symfony-Skeleton-Serviceimports, Development-/Production-Container, warme Caches und die verfügbaren PHP-/Symfony-Versionen. Ausgangspunkt: 74 Tests / 263 Assertions; vorhandene Änderung an `docs/assets/sillbeam-logo.png` unverändert erhalten. Kein Push, Merge, Tag oder Release. Composer-Anforderungen, Lockfile und öffentliche Laufzeit-API bleiben unverändert.
 
 ## Korrekturen und Integrationsbefund

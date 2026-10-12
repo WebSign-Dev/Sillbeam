@@ -12,15 +12,13 @@ fork of `symfony/recipes-contrib`:
 websign-dev/sillbeam/0.1/
 ├── manifest.json
 └── config/
-    ├── packages/sillbeam.yaml
     └── routes/sillbeam.yaml
 ```
 
-The recipe deliberately performs only three installation tasks:
+The recipe deliberately performs only two installation tasks:
 
 1. register `Sillbeam\SillbeamBundle` for every environment;
-2. create the central `config/packages/sillbeam.yaml` with zero configuration;
-3. create the one-time `type: sillbeam` route import.
+2. create the one-time `type: sillbeam` route import.
 
 Doctrine mappings activate automatically when the application registers DoctrineBundle.
 The package contains the module architecture layer; Foundation capabilities are removed.
@@ -38,11 +36,13 @@ SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 
 The check builds a local Flex endpoint from this source, installs Sillbeam into a
 temporary Symfony consumer through Composer and verifies the generated bundle,
-configuration, route and `symfony.lock` entries, then boots both kernel variants with the selected Doctrine profile. The normal PHPUnit suite also
+route and `symfony.lock` entries, then boots without package configuration, exercises both kernels and removes the package again. Removal must preserve native services and user-authored package configuration. The normal PHPUnit suite also
 guards the recipe structure and its safe defaults.
 
 The PHP package cannot load its own recipe. Until the recipe is merged into
-Symfony Recipes Contrib, consumers either add the three files manually or use
+Symfony Recipes Contrib, consumers either register the bundle and route import manually or use
 their own Flex endpoint containing this recipe.
 
 The `0.1/` recipe applies to the proposed `0.1.0` package release and later compatible 0.1 versions. Recipe availability is independent of Packagist publication. Manual setup remains supported.
+
+The package declares `type: symfony-bundle`, following [Symfony bundle installation guidance](https://symfony.com/doc/current/bundles/best_practices.html#installation). No semantically empty file is created under `config/packages`, as required by the [recipe checklist](https://github.com/symfony/recipes/blob/main/README.rst#recipe-checklist).

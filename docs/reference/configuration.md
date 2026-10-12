@@ -1,6 +1,6 @@
 # Konfiguration
 
-Standard: `sillbeam: {}`. Die Source-Grenze ist `%kernel.project_dir%/src`, ihr Namespace wird aus Composer-PSR-4 bestimmt. Relative Pfade beziehen sich auf das Anwendungsverzeichnis. Mehrdeutige PSR-4-Zuordnungen brauchen einen expliziten Namespace.
+Ohne Package-Konfigurationsdatei gelten dieselben Defaults wie bei `sillbeam: {}`. Die Source-Grenze ist `%kernel.project_dir%/src`, ihr Namespace wird aus Composer-PSR-4 bestimmt. Relative Pfade beziehen sich auf das Anwendungsverzeichnis. Mehrdeutige PSR-4-Zuordnungen brauchen einen expliziten Namespace.
 
 ```yaml
 sillbeam:

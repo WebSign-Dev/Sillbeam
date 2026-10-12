@@ -9,6 +9,7 @@
     },
     "post-install-output": [
         "  * Sillbeam module architecture is installed.",
+        "  * Exclude Module and Project (or custom architecture areas) from broad native service imports.",
         "  * Add module descriptors and inspect them with <fg=green>sillbeam:architecture</>.",
         "  * Doctrine mappings activate automatically when DoctrineBundle is registered."
     ]

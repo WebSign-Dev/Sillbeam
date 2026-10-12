@@ -22,14 +22,13 @@ final class FlexRecipeTest extends TestCase
             $manifest['bundles'],
         );
         self::assertSame(['config/' => '%CONFIG_DIR%/'], $manifest['copy-from-recipe']);
-        self::assertFileExists(self::RECIPE_DIRECTORY.'/config/packages/sillbeam.yaml');
+        self::assertFileDoesNotExist(self::RECIPE_DIRECTORY.'/config/packages/sillbeam.yaml');
         self::assertFileExists(self::RECIPE_DIRECTORY.'/config/routes/sillbeam.yaml');
     }
 
     public function testRecipeUsesTheSameAutomaticDefaultsAsAnEmptyConfig(): void
     {
-        $recipe = Yaml::parse($this->read('config/packages/sillbeam.yaml'));
-        $config = (new Processor())->processConfiguration(new Configuration(), [$recipe['sillbeam']]);
+        $config = (new Processor())->processConfiguration(new Configuration(), []);
         self::assertNull($config['doctrine']['enabled']);
     }
 
@@ -41,6 +40,12 @@ final class FlexRecipeTest extends TestCase
                 'type' => 'sillbeam',
             ],
         ], Yaml::parse($this->read('config/routes/sillbeam.yaml')));
+    }
+
+    public function testPackageDeclaresSymfonyBundleTypeForFlex(): void
+    {
+        $package = json_decode((string) file_get_contents(__DIR__.'/../../composer.json'), true, flags: \JSON_THROW_ON_ERROR);
+        self::assertSame('symfony-bundle', $package['type']);
     }
 
     private function read(string $path): string

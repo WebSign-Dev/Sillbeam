@@ -10,11 +10,12 @@ composer validate --strict
 composer test:flex-recipe
 SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 composer test:consumer
+composer test:release-package
 ```
 
 Unit-Tests prüfen deklarierte Graphen, flexible Discovery, PSR-4-Auflösung, statische Referenzen und native DI-Attribute/Aliase. Integrationsprüfungen booten normale Symfony-Kernel, sechs Betriebsformen, native Service-Overrides und einen Kernel ohne Doctrine. ORM-Tests prüfen aktive/private/excluded Mappings gemeinsam mit nativen Mappings und Persistenz. Cache-Ressourcen überwachen neu hinzugefügte sowie entfernte Quellpfade.
 
-PHPStan läuft mit `--debug`, damit die Prüfung auch in Umgebungen ohne lokale Worker-Sockets funktioniert. Für die Analyse sind 512 MiB PHP-Speicher vorgesehen. Flex benötigt Composer-Netzwerkzugriff und einen lokalen HTTP-Endpoint; der Test installiert die Recipe in einem temporären Verbraucherprojekt und bootet beide Kernelvarianten, optional mit Doctrine.
+PHPStan läuft mit `--debug`, damit die Prüfung auch in Umgebungen ohne lokale Worker-Sockets funktioniert. Für die Analyse sind 512 MiB PHP-Speicher vorgesehen. Flex benötigt Composer-Netzwerkzugriff und einen lokalen HTTP-Endpoint; der Test installiert die Recipe in einem temporären Verbraucherprojekt und bootet ohne Package-Konfigurationsdatei und beide Kernelvarianten, optional mit Doctrine; danach wird die Recipe entfernt und die Benutzerkonfiguration auf Erhalt geprüft.
 
 `test:consumer` installiert die sechs Anwendungsszenarien jeweils ohne und mit Doctrine in unabhängigen Composer-Projekten und prüft beide Kernels, HTTP/Autowiring, CLI, Mappings/Persistenz und Dependency-Validierung. Der Root-Testautoloader wird dort nicht geladen.
 

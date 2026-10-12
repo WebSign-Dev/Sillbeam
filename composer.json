@@ -1,7 +1,7 @@
 {
     "name": "websign-dev/sillbeam",
     "description": "Modular architecture extension for Symfony applications, organized around Modules and optional Projects.",
-    "type": "library",
+    "type": "symfony-bundle",
     "keywords": [
         "modular-monolith",
         "modules",
@@ -59,14 +59,15 @@
         "cs:check": "php-cs-fixer check --diff --config=.php-cs-fixer.dist.php --allow-unsupported-php-version=yes --sequential",
         "test": "phpunit --configuration=phpunit.xml.dist",
         "test:consumer": "php tools/test-consumer.php",
-        "test:flex-recipe": "php tools/test-flex-recipe.php"
+        "test:flex-recipe": "php tools/test-flex-recipe.php",
+        "test:release-package": "php tools/test-release-package.php"
     },
     "extra": {
         "branch-alias": {
             "dev-main": "0.1.x-dev"
         }
     },
-    "homepage": "https://github.com/WebSign-Dev/Sillbeam",
+    "homepage": "https://getsillbeam.websign.de/",
     "support": {
         "issues": "https://github.com/WebSign-Dev/Sillbeam/issues",
         "source": "https://github.com/WebSign-Dev/Sillbeam",
@@ -86,7 +87,9 @@
             "!/CHANGELOG.md",
             "!/CONTRIBUTING.md",
             "!/SUPPORT.md",
-            "!/SECURITY.md"
+            "!/SECURITY.md",
+            "/docs/superpowers",
+            "/docs/superpowers/**"
         ]
     }
 }

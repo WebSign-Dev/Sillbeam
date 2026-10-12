@@ -1,5 +1,6 @@
 # Paketkompatibilität und Installation — 2026-10-10
 
+> Historical, completed verification snapshot. Version counts and recipe details describe that run, not current installation instructions. See the [current release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
 Ausgangspunkt ist die technische Stabilisierung in `57bfe48`. Die Prüfung verwendet echte PHP-Laufzeiten und unabhängige Composer-Auflösungen in temporären, getrennten Verzeichnissen. Historische private GitHub-CI-Läufe wurden nicht als Fehlernachweis herangezogen.
 
 ## Unterstützte und tatsächlich geprüfte Versionen

@@ -34,6 +34,25 @@ final class SymfonySkeletonTest extends TestCase
         }
     }
 
+    public function testZeroConfigurationBundleBootsWithoutAPackageConfigurationFile(): void
+    {
+        $source = new SourceWorkspace();
+        $kernel = new TestApplicationKernel($source);
+        try {
+            $source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
+            $source->write('config/packages/framework.yaml', 'framework: { secret: test }');
+            $source->write('config/services.yaml', $this->services($source, true));
+            $kernel->boot();
+            $registry = $kernel->getContainer()->get(ModuleRegistryInterface::class);
+            self::assertInstanceOf(ModuleRegistryInterface::class, $registry);
+            self::assertCount(1, $registry->active());
+            self::assertFileDoesNotExist($source->directory.'/config/packages/sillbeam.yaml');
+        } finally {
+            $kernel->shutdown();
+            $source->remove();
+        }
+    }
+
     /** @return iterable<string, array{string, bool}> */
     public static function environments(): iterable
     {

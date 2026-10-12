@@ -14,7 +14,7 @@
 
 **A modular architecture layer for scalable, maintainable Symfony applications.**
 
-[Quick start](#quick-start) · [Documentation](docs/README.md) · [Release notes](docs/releases/0.1.0.md) · [Report an issue][issues-url]
+[Website](https://getsillbeam.websign.de/) · [Quick start](#quick-start) · [Documentation](docs/README.md) · [Release notes](docs/releases/0.1.0.md) · [Report an issue][issues-url]
 
 </div>
 
@@ -81,12 +81,7 @@ return [
 ];
 ```
 
-Create the central configuration and route import:
-
-```yaml
-# config/packages/sillbeam.yaml
-sillbeam: {}
-```
+Create the route import. No `config/packages/sillbeam.yaml` is required for the defaults; create it only when configuring [options](docs/reference/configuration.md). If Flex has already enabled the bundle, keep its existing registration.
 
 ```yaml
 # config/routes/sillbeam.yaml
@@ -98,7 +93,7 @@ sillbeam:
 <details>
 <summary><strong>Install through Symfony Flex</strong></summary>
 
-The prepared [Flex recipe](https://github.com/WebSign-Dev/Sillbeam/blob/main/flex-recipe/README.md) registers the bundle and creates the two configuration files above. Its publication is separate from the PHP package. Until it is available through Symfony Recipes Contrib, use the manual setup or a custom Flex endpoint containing the recipe.
+The prepared [Flex recipe](https://github.com/WebSign-Dev/Sillbeam/blob/main/flex-recipe/README.md) registers the bundle and creates the route import above. Its publication is separate from the PHP package. Until it is available through Symfony Recipes Contrib, use the manual setup or a custom Flex endpoint containing the recipe.
 
 </details>
 

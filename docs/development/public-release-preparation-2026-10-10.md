@@ -1,5 +1,6 @@
 # Public release preparation — 2026-10-10
 
+> Historical, completed verification snapshot. Version counts and recipe details describe that run, not current installation instructions. See the [current release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
 The proposed first public version is **0.1.0**. This preparation changes documentation, distribution rules and package metadata; the architecture, production source and runtime constraints remain unchanged. Changelog and release notes are drafts until publication. No release date, tag, push or publication was created.
 
 ## Documentation and metadata

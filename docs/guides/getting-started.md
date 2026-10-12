@@ -1,6 +1,6 @@
 # Einstieg
 
-Sillbeam kann in einer bestehenden Symfony-Anwendung installiert werden. PHP 8.4+ und Symfony 7.4/8.x sind erforderlich. Bundle und Route-Loader einmal registrieren; die [README](../../README.md) zeigt die drei Einträge. `sillbeam: {}` genügt.
+Sillbeam kann in einer bestehenden Symfony-Anwendung installiert werden. PHP 8.4+ und Symfony 7.4/8.x sind erforderlich. Bundle und Route-Loader einmal registrieren; die [README](../../README.md) zeigt Bundle-Registrierung und Route-Import. Eine `config/packages/sillbeam.yaml` ist für die Defaults nicht erforderlich.
 
 Erstelle `src/Module/Hello/HelloModule.php`:
 
@@ -23,7 +23,7 @@ DoctrineBundle aktiviert die Mapping-Integration automatisch. `sillbeam: { doctr
 
 ## Installation und Autoloading
 
-Für die Entwicklungsversion das lokale Path-Repository und `dev-main` aus der [README](../../README.md#install-from-a-checkout) verwenden. Nach Veröffentlichung gilt `composer require websign-dev/sillbeam:^0.1`; diese Version ist derzeit noch nicht öffentlich verfügbar. Flex-Recipe und Package werden unabhängig veröffentlicht; manuelle Bundle-/Konfigurations-/Routing-Registrierung funktioniert bereits jetzt.
+Für die Entwicklungsversion das lokale Path-Repository und `dev-main` aus der [README](../../README.md#install-from-a-checkout) verwenden. Nach Veröffentlichung gilt `composer require websign-dev/sillbeam:^0.1`; diese Version ist derzeit noch nicht öffentlich verfügbar. Flex-Recipe und Package werden unabhängig veröffentlicht; manuelle Bundle-/Routing-Registrierung funktioniert bereits jetzt.
 
 Die Anwendung braucht eine Composer-PSR-4-Zuordnung wie `"App\\": "src/"`. Alle folgenden PHP-Dateien beginnen mit `<?php`. Den bestehenden Symfony-Kernel beibehalten. Optional kann `src/Kernel.php` so aussehen:
 
