@@ -77,6 +77,9 @@ final class SillbeamExtension extends Extension implements PrependExtensionInter
         }
         $composer = $projectDir.'/composer.json';
         $container->addResource(is_file($composer) ? new FileResource($composer) : new FileExistenceResource($composer));
+        // Also detect newly added configuration, including the first sillbeam.yaml.
+        $configurationDirectory = $projectDir.'/config';
+        $container->addResource(is_dir($configurationDirectory) ? new DirectoryResource($configurationDirectory) : new FileExistenceResource($configurationDirectory));
         $modules = array_map(static fn ($module): array => get_object_vars($module), $architecture->modules);
         $projects = array_map(static fn ($project): array => get_object_vars($project), $architecture->projects);
         $container->register('sillbeam.module_registry', ModuleRegistry::class)->setArguments([$modules, $architecture->applicationModules, $architecture->projectModules]);
@@ -218,12 +221,13 @@ final class SillbeamExtension extends Extension implements PrependExtensionInter
     private function excludedMappingFiles(string $directory, string $class, CompiledArchitecture $architecture): array
     {
         $options = $this->options ?? throw new \LogicException('Missing discovery options.');
+        $files = ($this->inspector ?? throw new \LogicException('Missing source index.'))->files($options);
         $excludes = [];
         foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($directory, \FilesystemIterator::SKIP_DOTS)) as $file) {
             if (!$file instanceof \SplFileInfo || !$file->isFile() || 'php' !== $file->getExtension()) {
                 continue;
             }
-            if ($options->excluded($file->getPathname()) || !$this->belongsToArea($file->getPathname(), $class, $architecture)) {
+            if (!isset($files[$file->getPathname()]) || !$this->belongsToArea($file->getPathname(), $class, $architecture)) {
                 $excludes[] = $file->getPathname();
             }
         }

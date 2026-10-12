@@ -164,6 +164,39 @@ final class ModuleLayerTest extends TestCase
         self::assertCount(1, $classes);
     }
 
+    public function testExactDirectoryExclusionsPruneEntitiesFromEnclosingMappings(): void
+    {
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class ShopProject {}');
+        $body = '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column(type: "integer")] public int $id = 1; }';
+        $live = $this->source->php('src/Project/Shop/Entity/Record.php', $body);
+        $hidden = $this->source->php('src/Project/Shop/Entity/Hidden/Record.php', $body);
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam: { discovery: { excludes: ['Project/Shop/Entity/Hidden'] } }");
+        $this->source->write('config/packages/doctrine.yaml', "doctrine: { dbal: { url: 'sqlite:///:memory:' }, orm: { auto_mapping: false } }");
+        $this->kernel = new TestApplicationKernel($this->source, true);
+        $this->kernel->boot();
+        $manager = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        self::assertInstanceOf(EntityManagerInterface::class, $manager);
+        $classes = array_map(static fn ($metadata): string => $metadata->getName(), $manager->getMetadataFactory()->getAllMetadata());
+        self::assertContains($live, $classes);
+        self::assertNotContains($hidden, $classes);
+        self::assertCount(1, $classes);
+    }
+
+    public function testNativeDoctrineOverrideCanMapAnExplicitlyExcludedDirectory(): void
+    {
+        $this->source->php('src/Module/Live/LiveModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class LiveModule {}');
+        $hidden = $this->source->php('src/Module/Live/Entity/Hidden/Record.php', '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column(type: "integer")] public int $id = 1; }');
+        $directory = $this->source->directory.'/src/Module/Live/Entity';
+        $key = 'Sillbeam'.hash('xxh128', $directory);
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam: { discovery: { excludes: ['Module/Live/Entity/Hidden'] } }");
+        $this->source->write('config/packages/doctrine.yaml', "doctrine:\n    dbal: { url: 'sqlite:///:memory:' }\n    orm:\n        auto_mapping: false\n        mappings:\n            ".$key.":\n                type: attribute\n                is_bundle: false\n                dir: '".$directory."/Hidden'\n                prefix: '".$this->source->namespace."\\Module\\Live\\Entity'\n");
+        $this->kernel = new TestApplicationKernel($this->source, true);
+        $this->kernel->boot();
+        $manager = $this->kernel->getContainer()->get('doctrine.orm.entity_manager');
+        self::assertInstanceOf(EntityManagerInterface::class, $manager);
+        self::assertSame([$hidden], array_map(static fn ($metadata): string => $metadata->getName(), $manager->getMetadataFactory()->getAllMetadata()));
+    }
+
     public function testBuildTimeEnvironmentActivationIsResolvedBeforeCompilation(): void
     {
         $module = $this->source->php('src/Module/Off/OffModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class OffModule {}');

@@ -26,6 +26,22 @@ final class SourceInspector
             if (!is_dir($root->path)) {
                 continue;
             }
+            // An overlapping root must not reenter a directory pruned by another scan.
+            $boundary = $root->path;
+            foreach ($options->roots() as $candidate) {
+                if ($candidate->contains($root->path) && \strlen($candidate->path) < \strlen($boundary)) {
+                    $boundary = $candidate->path;
+                }
+            }
+            for ($path = $root->path;; $path = \dirname($path)) {
+                if ($options->excluded($path)) {
+                    $pruned[$path] = $path.'/';
+                    continue 2;
+                }
+                if ($path === $boundary) {
+                    break;
+                }
+            }
             $iterator = new \RecursiveIteratorIterator(new \RecursiveCallbackFilterIterator(
                 new \RecursiveDirectoryIterator($root->path, \FilesystemIterator::SKIP_DOTS),
                 static function (\SplFileInfo $file) use ($options, &$pruned): bool {

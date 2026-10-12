@@ -45,6 +45,39 @@ final class FlexibleDiscoveryTest extends TestCase
         self::assertSame([], $this->discover()->modules);
     }
 
+    public function testExcludedDefaultRootsAreNotScannedAgain(): void
+    {
+        $this->source->php('src/Module/Hidden/HiddenModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class HiddenModule {}');
+        $this->source->php('src/Project/Hidden/HiddenProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class HiddenProject {}');
+        $result = $this->discover(['discovery' => ['excludes' => ['Module', 'Project']]]);
+        self::assertSame([], $result->modules);
+        self::assertSame([], $result->projects);
+    }
+
+    public function testNestedRootCannotReenterAnExcludedAncestor(): void
+    {
+        $this->source->php('src/Module/Hidden/HiddenModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class HiddenModule {}');
+        $result = $this->discover(['discovery' => [
+            'excludes' => ['Module'],
+            'modules' => [['path' => 'src/Module/Hidden']],
+        ]]);
+        self::assertSame([], $result->modules);
+    }
+
+    public function testExcludedRootDoesNotParseMalformedSource(): void
+    {
+        $this->source->write('src/Module/Hidden/Broken.php', '<?php this is invalid PHP');
+        self::assertSame([], $this->discover(['discovery' => ['excludes' => ['Module']]])->modules);
+    }
+
+    public function testRelativeExclusionsDoNotApplyAboveDiscoveryBoundaries(): void
+    {
+        $module = $this->source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
+        $ancestor = basename(\dirname($this->source->directory));
+        $this->source->write('src/'.$ancestor.'/Broken.php', '<?php this is invalid PHP');
+        self::assertArrayHasKey($module, $this->discover(['discovery' => ['excludes' => [$ancestor]]])->modules);
+    }
+
     public function testDescriptorCannotDeclareBothModuleAndProjectOwnership(): void
     {
         $this->source->php('src/Project/Shop/Shop.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] #[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class Shop {}');

@@ -53,6 +53,35 @@ final class SymfonySkeletonTest extends TestCase
         }
     }
 
+    public function testExcludedProjectRootDoesNotRegisterItsIntegrations(): void
+    {
+        $source = new SourceWorkspace();
+        $kernel = new TestApplicationKernel($source, true);
+        try {
+            $source->php('src/Project/Hidden/HiddenProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class HiddenProject {}');
+            $source->php('src/Project/Hidden/Leak.php', '#[\\Symfony\\Component\\DependencyInjection\\Attribute\\AsAlias(id: "hidden.leak", public: true)] final class Leak {}');
+            $source->php('src/Project/Hidden/Controller/Endpoint.php', 'final class Endpoint { #[\\Symfony\\Component\\Routing\\Attribute\\Route("/hidden", name: "hidden")] public function run(): void {} }');
+            $source->php('src/Project/Hidden/Entity/Record.php', '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column] public int $id = 1; }');
+            $source->write('config/packages/framework.yaml', 'framework: { secret: test, router: { utf8: true } }');
+            $source->write('config/packages/doctrine.yaml', "doctrine: { dbal: { url: 'sqlite:///:memory:' }, orm: { auto_mapping: false } }");
+            $source->write('config/packages/sillbeam.yaml', 'sillbeam: { discovery: { excludes: [Project] } }');
+            $source->write('config/services.yaml', $this->services($source, true));
+            $source->write('config/routes.yaml', 'sillbeam: { resource: ., type: sillbeam }');
+            $kernel->boot();
+            $container = $kernel->getContainer();
+            self::assertFalse($container->has('hidden.leak'));
+            $router = $container->get('router');
+            self::assertInstanceOf(RouterInterface::class, $router);
+            self::assertCount(0, $router->getRouteCollection());
+            $manager = $container->get('doctrine.orm.entity_manager');
+            self::assertInstanceOf(\Doctrine\ORM\EntityManagerInterface::class, $manager);
+            self::assertSame([], $manager->getMetadataFactory()->getAllMetadata());
+        } finally {
+            $kernel->shutdown();
+            $source->remove();
+        }
+    }
+
     /** @return iterable<string, array{string, bool}> */
     public static function environments(): iterable
     {
