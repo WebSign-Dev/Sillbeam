@@ -11,6 +11,8 @@ namespace App\Module\Hello;
 final class HelloModule {}
 ```
 
+Automatic service imports exclude `Entity/`, `Dto/`, `Tests/`, `Fixtures/` and `Migrations/`, including nested directories, in both Modules and Projects. Explicit application service definitions can still register selected classes from those directories.
+
 Place ordinary services in the module directory and controllers with Symfony route attributes under `Controller/`. `#[Exclude]`, `#[When]`, `#[WhenNot]`, `#[AsAlias]`, autowiring and autoconfiguration use Symfony's native class loader. Native service configuration can override the defaults. Automatic interface aliases are created after all Sillbeam imports and only when there is exactly one implementation.
 
 ```bash

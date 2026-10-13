@@ -22,7 +22,7 @@ sillbeam:
         controllers: [Http, '**/Controller']
         entities: [Model, '**/Entity']
         services:
-            exclude: ['Model/**', '**/Entity/**', '**/Dto/**']
+            exclude: ['Model/**', '**/Entity/**', '**/Dto/**', '**/Tests/**', '**/Fixtures/**', '**/Migrations/**']
     modules:
         legacy: { enabled: false }
         'project:shop:old-reports': { enabled: false }
@@ -39,7 +39,7 @@ Without specified lists, Module roots are `src/Module` and Project roots are `sr
 
 Patterns use `/`, `*` (one segment), `**` (recursive) and `?`. Global exclusions are relative to the source root or absolute; local exclusions are relative to their root. Exclusions apply to discovery and automatic service, route and entity imports. Controller/entity patterns select directories relative to the descriptor area. Defaults: `Controller`, `**/Controller` and `Entity`, `**/Entity`.
 
-Service exclusions: `Entity/**`, `**/Entity/**`, `Dto/**`, `**/Dto/**`, relative to the descriptor. If entities are placed under `Model`, add its service exclusion. Native Symfony attributes and explicit `services.yaml` remain available.
+Service imports exclude `Entity/`, `Dto/`, `Tests/`, `Fixtures/` and `Migrations/` by default, directly under the Module/Project descriptor and at any nesting depth. These exclusions apply only to automatic service registration; discovery, routing and Doctrine retain their own configuration. An explicit `integrations.services.exclude` list replaces these defaults, so retain the development-directory patterns when customizing it. An empty list opts into importing all directories. If entities are placed under `Model`, add its service exclusion. Native Symfony attributes and explicit `services.yaml` remain available.
 
 Doctrine: `null` activates automatically when DoctrineBundle is registered; `true` requires it and fails without the bundle; `false` disables Sillbeam mappings. The shorthand `doctrine: false` is allowed. Only active modules are mapped automatically; direct Project entities are also mapped. Manual native mappings are preserved, even when they intentionally include excluded areas again.
 

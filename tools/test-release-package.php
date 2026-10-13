@@ -22,7 +22,7 @@ try {
         'repositories' => [['type' => 'package', 'package' => $metadata]],
         'autoload' => ['psr-4' => ['App\\' => 'src/']],
     ], \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES)."\n");
-    releaseRun(['composer', 'install', '--no-interaction', '--no-progress', '--no-plugins', '--no-scripts', '--prefer-dist'], $application);
+    releaseRun(['composer', 'install', '--no-dev', '--no-interaction', '--no-progress', '--no-plugins', '--no-scripts', '--prefer-dist'], $application);
     releaseRun(['composer', 'validate', '--strict'], $application);
     releaseRun(['composer', 'check-platform-reqs'], $application);
     releaseRun(['composer', 'dump-autoload', '--optimize', '--strict-psr'], $application);
@@ -43,6 +43,22 @@ try {
         throw new RuntimeException('Missing documented native service import.');
     }
     file_put_contents($application.'/config/services.yaml', $services[0]."\n");
+    // Development files stay in application source even in a production-only install.
+    mkdir($application.'/src/Project/Shop', 0777, true);
+    file_put_contents($application.'/src/Project/Shop/ShopProject.php', '<?php namespace App\Project\Shop; #[\Sillbeam\Project\Attribute\SillbeamProject(modules: [\App\Module\Hello\HelloModule::class])] final class ShopProject {}');
+    foreach (['Module/Hello', 'Project/Shop'] as $area) {
+        foreach (['Tests', 'Fixtures', 'Migrations', 'Nested/Tests', 'Nested/Fixtures', 'Nested/Migrations'] as $directory) {
+            mkdir($application.'/src/'.$area.'/'.$directory, 0777, true);
+            $namespace = 'App\\'.str_replace('/', '\\', $area.'/'.$directory);
+            $parent = str_ends_with($directory, 'Tests') ? ' extends \PHPUnit\Framework\TestCase' : '';
+            file_put_contents($application.'/src/'.$area.'/'.$directory.'/Helper.php', '<?php namespace '.$namespace.'; #[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "development.'.str_replace('/', '.', $area.'/'.$directory).'", public: true)] final class Helper'.$parent.' {}');
+        }
+    }
+    file_put_contents($application.'/src/Module/Hello/Fixtures/Manual.php', '<?php namespace App\Module\Hello\Fixtures; final class Manual { public function __construct(public string $value) {} }');
+    file_put_contents($application.'/src/Module/Hello/DevOnly.php', '<?php namespace App\Module\Hello; #[\Symfony\Component\DependencyInjection\Attribute\When("dev")] #[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "dev.only", public: true)] final class DevOnly {}');
+    file_put_contents($application.'/src/Module/Hello/Excluded.php', '<?php namespace App\Module\Hello; #[\Symfony\Component\DependencyInjection\Attribute\Exclude] #[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "excluded", public: true)] final class Excluded {}');
+    file_put_contents($application.'/config/services.yaml', "    App\\Module\\Hello\\Greeting: { arguments: {} }\n    App\\Module\\Hello\\Fixtures\\Manual: { public: true, arguments: { \$value: explicit } }\n", \FILE_APPEND);
+
     file_put_contents($application.'/src/Legacy.php', '<?php namespace App; #[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "legacy", public: true)] final class Legacy {}');
     file_put_contents($application.'/config/bundles.php', '<?php return [\Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ["all" => true], \Sillbeam\SillbeamBundle::class => ["all" => true]];');
     file_put_contents($application.'/config/packages/framework.yaml', "framework: { secret: manual-test, router: { utf8: true } }\n");
@@ -51,10 +67,22 @@ try {
 <?php
 require __DIR__.'/vendor/autoload.php';
 if (class_exists('Doctrine\Bundle\DoctrineBundle\DoctrineBundle') || is_file(__DIR__.'/config/packages/sillbeam.yaml')) { throw new RuntimeException('Unexpected optional integration/configuration.'); }
+
+if (class_exists('PHPUnit\Framework\TestCase')) { throw new RuntimeException('Consumer unexpectedly has development dependencies.'); }
 $kernel = new App\Kernel($argv[1], 'dev' === $argv[1]);
 try {
     $kernel->boot();
     if (!$kernel->getContainer()->has('legacy')) { throw new RuntimeException('Native service import failed.'); }
+    $container = $kernel->getContainer();
+    foreach (['Module/Hello', 'Project/Shop'] as $area) {
+        foreach (['Tests', 'Fixtures', 'Migrations', 'Nested/Tests', 'Nested/Fixtures', 'Nested/Migrations'] as $directory) {
+            $class = 'development.'.str_replace('/', '.', $area.'/'.$directory);
+            if ($container->has($class)) { throw new RuntimeException('Development service leaked: '.$class); }
+        }
+    }
+    if ('explicit' !== $container->get('App\Module\Hello\Fixtures\Manual')->value) { throw new RuntimeException('Explicit fixture override failed.'); }
+    if ($container->has('excluded') || $container->has('dev.only') !== ('dev' === $argv[1])) { throw new RuntimeException('Native Symfony attributes failed.'); }
+
     $response = $kernel->handle(\Symfony\Component\HttpFoundation\Request::create('/hello'));
     if (200 !== $response->getStatusCode() || 'Hello from Sillbeam' !== $response->getContent()) { throw new RuntimeException('Documented Hello example failed.'); }
     $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
@@ -75,7 +103,7 @@ PHP);
             }
         }
     }
-    echo 'PASS real release ZIP / documented Hello / manual installation / both kernels / cold and warm dev+prod / no Doctrine'.\PHP_EOL;
+    echo 'PASS real release ZIP / documented Hello / manual installation / both kernels / cold and warm dev+prod / no Doctrine / no dev dependencies / development directory exclusions'.\PHP_EOL;
 } finally {
     foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($temporary, FilesystemIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST) as $file) {
         $file->isDir() ? rmdir($file->getPathname()) : unlink($file->getPathname());

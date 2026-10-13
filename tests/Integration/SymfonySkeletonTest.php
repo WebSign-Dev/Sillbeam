@@ -144,6 +144,39 @@ final class SymfonySkeletonTest extends TestCase
         }
     }
 
+    #[DataProvider('environments')]
+    public function testDevelopmentDirectoriesAreNotAutomaticallyRegistered(string $environment, bool $debug): void
+    {
+        $source = new SourceWorkspace();
+        $kernel = new TestApplicationKernel($source, false, $environment, $debug);
+        try {
+            $module = $source->php('src/Module/Live/LiveModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class LiveModule {}');
+            $source->php('src/Project/Shop/ShopProject.php', '#[\Sillbeam\Project\Attribute\SillbeamProject(modules: [\\'.$module.'::class])] final class ShopProject {}');
+            $aliases = [];
+            foreach (['Module/Live', 'Project/Shop'] as $areaIndex => $area) {
+                foreach (['Tests', 'Fixtures', 'Migrations', 'Nested/Tests', 'Nested/Fixtures', 'Nested/Migrations'] as $index => $directory) {
+                    $alias = 'development.'.$areaIndex.'.'.$index;
+                    $parent = str_ends_with($directory, 'Tests') ? ' extends \PHPUnit\Framework\TestCase' : '';
+                    $source->php('src/'.$area.'/'.$directory.'/Helper.php', '#[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "'.$alias.'", public: true)] final class Helper'.$parent.' {}');
+                    $aliases[] = $alias;
+                }
+            }
+            $fixture = $source->php('src/Module/Live/Fixtures/Manual.php', 'final class Manual { public function __construct(public string $value) {} }');
+            $source->write('config/packages/framework.yaml', 'framework: { secret: test }');
+            $source->write('config/services.yaml', $this->services($source, true)."    '".$fixture."': { public: true, arguments: { \$value: explicit } }\n");
+            $kernel->boot();
+            foreach ($aliases as $alias) {
+                self::assertFalse($kernel->getContainer()->has($alias), $alias);
+            }
+            /** @var object{value: string} $manual */
+            $manual = $kernel->getContainer()->get($fixture);
+            self::assertSame('explicit', $manual->value);
+        } finally {
+            $kernel->shutdown();
+            $source->remove();
+        }
+    }
+
     private function services(SourceWorkspace $source, bool $excludeAreas): string
     {
         return "services:\n    _defaults: { autowire: true, autoconfigure: true }\n    '".$source->namespace."\\':\n        resource: '../src/'\n        exclude: '../src/{DependencyInjection,Entity,Kernel.php".($excludeAreas ? ',Module,Project' : '')."}'\n";

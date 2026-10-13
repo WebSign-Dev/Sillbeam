@@ -20,7 +20,7 @@ final class ArchitectureServiceLoader
         if (!is_dir($directory)) {
             return;
         }
-        $excludes ??= [$directory.'/**/{Entity,Dto}/'];
+        $excludes ??= [$directory.'/**/{Entity,Dto,Tests,Fixtures,Migrations}/'];
         $environment = $container->hasParameter('kernel.environment') ? $container->getParameter('kernel.environment') : null;
         if (null !== $environment && !\is_string($environment)) {
             throw new \LogicException('kernel.environment must be a string.');

@@ -21,6 +21,8 @@ Sillbeam v0.1.0 is the first public release of the Symfony module architecture l
 
 ### Fixed
 
+- Excluded `Tests/`, `Fixtures/` and `Migrations/` from automatic Module/Project service imports, including nested directories; production-only Composer installations can retain development source files without registering them as services.
+
 - Preserved discovery exclusions across overlapping roots and subsequent service, route and entity imports.
 - Excluded entity subdirectories from generated parent Doctrine mappings while retaining intentional native mapping overrides.
 - Invalidated development containers when the first Sillbeam package configuration is added after a zero-config boot.

@@ -106,4 +106,22 @@ final class ArchitectureServiceLoaderTest extends TestCase
             $source->remove();
         }
     }
+
+    public function testDefaultExclusionsKeepDevelopmentClassesOutOfServices(): void
+    {
+        $source = new SourceWorkspace();
+        try {
+            foreach (['Tests', 'Fixtures', 'Migrations', 'Nested/Tests', 'Nested/Fixtures', 'Nested/Migrations'] as $index => $directory) {
+                $source->php('src/Module/Test/'.$directory.'/Helper.php', '#[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "helper.'.$index.'", public: true)] final class Helper {}');
+            }
+            $container = new ContainerBuilder();
+            (new ArchitectureServiceLoader())->load($container, $source->directory.'/src/Module/Test', $source->namespace.'\\Module\\Test', 'missing');
+            $container->compile();
+            for ($index = 0; $index < 6; ++$index) {
+                self::assertFalse($container->has('helper.'.$index));
+            }
+        } finally {
+            $source->remove();
+        }
+    }
 }

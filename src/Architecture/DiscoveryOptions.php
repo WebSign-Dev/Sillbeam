@@ -27,7 +27,7 @@ final readonly class DiscoveryOptions
         public array $excludes = [],
         public array $controllerPatterns = ['Controller', '**/Controller'],
         public array $entityPatterns = ['Entity', '**/Entity'],
-        public array $serviceExcludes = ['Entity/**', '**/Entity/**', 'Dto/**', '**/Dto/**'],
+        public array $serviceExcludes = ['Entity/**', '**/Entity/**', 'Dto/**', '**/Dto/**', 'Tests/**', '**/Tests/**', 'Fixtures/**', '**/Fixtures/**', 'Migrations/**', '**/Migrations/**'],
     ) {
         $this->moduleRoots = $moduleRoots ?? [new DiscoveryRoot($root.'/Module', $namespace.'Module\\')];
         $this->projectRoots = $projectRoots ?? [new DiscoveryRoot($root.'/Project', $namespace.'Project\\')];

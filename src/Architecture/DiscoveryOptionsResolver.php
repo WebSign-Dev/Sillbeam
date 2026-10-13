@@ -66,7 +66,7 @@ final class DiscoveryOptionsResolver
             $raw['excludes'] ?? [],
             $integrations['controllers'] ?? ['Controller', '**/Controller'],
             $integrations['entities'] ?? ['Entity', '**/Entity'],
-            $integrations['services']['exclude'] ?? ['Entity/**', '**/Entity/**', 'Dto/**', '**/Dto/**'],
+            $integrations['services']['exclude'] ?? ['Entity/**', '**/Entity/**', 'Dto/**', '**/Dto/**', 'Tests/**', '**/Tests/**', 'Fixtures/**', '**/Fixtures/**', 'Migrations/**', '**/Migrations/**'],
         );
     }
 

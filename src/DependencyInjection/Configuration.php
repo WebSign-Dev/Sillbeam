@@ -36,7 +36,7 @@ final class Configuration implements ConfigurationInterface
         $integrations->arrayNode('controllers')->scalarPrototype()->cannotBeEmpty()->end()->defaultValue(['Controller', '**/Controller'])->end();
         $integrations->arrayNode('entities')->scalarPrototype()->cannotBeEmpty()->end()->defaultValue(['Entity', '**/Entity'])->end();
         $integrations->arrayNode('services')->addDefaultsIfNotSet()->children()
-            ->arrayNode('exclude')->scalarPrototype()->cannotBeEmpty()->end()->defaultValue(['Entity/**', '**/Entity/**', 'Dto/**', '**/Dto/**'])->end()
+            ->arrayNode('exclude')->scalarPrototype()->cannotBeEmpty()->end()->defaultValue(['Entity/**', '**/Entity/**', 'Dto/**', '**/Dto/**', 'Tests/**', '**/Tests/**', 'Fixtures/**', '**/Fixtures/**', 'Migrations/**', '**/Migrations/**'])->end()
         ->end()->end();
         $integrations->end()->end();
         $children->arrayNode('doctrine')->addDefaultsIfNotSet()
