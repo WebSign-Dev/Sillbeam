@@ -1,6 +1,6 @@
 # Release package preparation — 2026-10-12
 
-> Historical, completed verification snapshot. Installation, publication and security-channel status describe the dated run, not the current release. For v0.1.0, use `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
+> Historical, completed verification snapshot. Installation, publication and security-channel status describe the pre-release run. Sillbeam v0.1.0 has since been released. Install it with `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
 
 Goal: a prepared, unpublished release candidate **v0.1.0** based on `051dbda`. No tag, push, merge, GitHub release, Packagist upload or live deployment. The runtime API and dependency versions remain unchanged.
 
@@ -40,4 +40,4 @@ Browser checks on the local production preview: desktop 1280 px, tablet 768 px, 
 - Twelve independent consumer installations: six operating modes without/with Doctrine, both kernels, PHP 8.5.4/Symfony 8.1.8.
 - Website: production build with 23 pages, 12 tests, ESLint, Prettier, diff check and static Premium audit; additional actual browser checks as above.
 
-Exact minimum PHP patch versions 8.4.0/8.5.0, Symfony 8.0.0 and fresh PHP 8.4 Flex installations were not run in this step. External prerequisites remain before publication: Packagist/recipe availability, verified private vulnerability reporting, rotation of reused historical test values if applicable, and separately approved website publication. None of these external measures was represented as completed.
+Exact minimum PHP patch versions 8.4.0/8.5.0, Symfony 8.0.0 and fresh PHP 8.4 Flex installations were not run in this step. At the time of this run, the external prerequisites before publication were: Packagist/recipe availability, verified private vulnerability reporting, rotation of reused historical test values if applicable, and separately approved website publication. None of these external measures was represented as completed.

@@ -1,6 +1,6 @@
 # Independent release audit for v0.1.0 — 2026-10-12
 
-> Historical, completed verification snapshot. Installation, publication and security-channel status describe the dated run, not the current release. For v0.1.0, use `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
+> Historical, completed verification snapshot. Installation, publication and security-channel status describe the pre-release run. Sillbeam v0.1.0 has since been released. Install it with `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
 
 ## Source state and method
 
@@ -92,7 +92,7 @@ The public website still serves the older state: generic `github.com` links, inc
 
 - Initial sandbox attempts failed on network/localhost sockets. Repeated with appropriate execution permissions and passed. An initial source copy without `.git` could not run `git diff --check`; a local temporary Git baseline was then created and the actual check passed. A code style deviation in the new loop was corrected and both full runs repeated. The additional CLI harness needed to normalize Symfony line breaks; the expected dependency diagnostic was already correct. The temporary minimum matrix needed to separate exact resolution pins from valid Composer constraints; both validations passed after correcting lock metadata.
 - A blanket `--prefer-lowest` installed PHPStan 2.0.0 and CS-Fixer 3.69.0. The old fixer cannot run PHP 8.4/8.5 checks; PHPStan also showed older inference issues. The Symfony minimum-version matrix therefore uses compatible current development tools. The original development-tool minimum is not represented as fully passed.
-- GitHub metadata confirms: repository still **private**, no published releases. Packagist metadata and the Recipes Contrib package path return HTTP 404. Public access, package publication and recipe merge are pending. Private vulnerability reporting remains unverified.
+- At the time of this audit, GitHub metadata showed a **private** repository with no published releases. Packagist metadata and the Recipes Contrib package path returned HTTP 404. Public access, package publication and recipe merge were pending; private vulnerability reporting was unverified.
 - The current [GitHub CI run](https://github.com/WebSign-Dev/Sillbeam/actions/runs/38220380806) for `21e75cb` is `failure`; six jobs have **no executed steps**. The exact quota/limit cause was not reconfirmed by an annotation; no code defect is inferred from it. A successful public CI run for the final state remains unverified and is separately required after enabling public access.
 - PHP 8.4.0/8.5.0, Symfony 8.0.0, Windows/macOS, FPM/OPcache deployment and external database servers were not tested. SQLite persistence was exercised. No claim of full WCAG compliance or production load capacity.
 - Static validation covers supported actual PHP class references between module areas; dynamic class strings, PHPDoc, string service IDs and ordinary Symfony/direct Project areas remain outside it. All Projects share container, database and event system; no tenant/security isolation or automatic host scoping of global handlers.
@@ -104,6 +104,6 @@ The public website still serves the older state: generic `github.com` links, inc
 
 All mandatory repository checks passed in both final runs. The version matrix and independent installations confirm the technical core. No confirmed open P0/P1/P2 defects remain in the prepared production Sillbeam state. The four findings have been fixed and their evidence documented.
 
-External prerequisites remain: public access, package publication, separate recipe merge, a verified confidential security reporting channel, public CI evidence and deployment of the already corrected website state. The old 7.4.0 simulation environment with known upstream advisories is explicitly not approved for production; the approved current lockfile audit is clean. This decision does not authorize publication as part of this assignment.
+At the end of this audit, external prerequisites were public access, package publication, a separate recipe merge, a verified confidential security reporting channel, public CI evidence and deployment of the corrected website state. The old 7.4.0 simulation environment with known upstream advisories is explicitly not approved for production; the approved current lockfile audit is clean. This decision does not authorize publication as part of this assignment.
 
 Local raw logs, exit codes, reproduction scripts, version lockfiles, source manifest and regression red/green evidence are delivered as `sillbeam-final-audit-evidence.zip` outside the release package. They substantiate the results stated here; historical reports were not reused as test evidence.

@@ -1,6 +1,6 @@
 # Package compatibility and installation — 2026-10-10
 
-> Historical, completed verification snapshot. Installation, publication and security-channel status describe the dated run, not the current release. For v0.1.0, use `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
+> Historical, completed verification snapshot. Installation, publication and security-channel status describe the pre-release run. Sillbeam v0.1.0 has since been released. Install it with `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
 The starting point is technical stabilization in `57bfe48`. Verification uses actual PHP runtimes and independent Composer resolutions in temporary, separate directories. Historical private GitHub CI runs were not used as evidence of defects.
 
 ## Supported and actually tested versions
@@ -26,7 +26,7 @@ Each matrix cell passed PHPUnit (74 tests / 263 assertions), PHPStan, Deptrac, c
 
 Each of the 72 manual matrix installations is tested in separate PHP processes with the standard Symfony kernel and optional SillbeamKernel: 144 successful kernel profiles in total. The test validates active discovery graphs, autowiring through actual HTTP responses, routes/host boundaries, both Sillbeam CLI commands and, with Doctrine, native and Module/Project mappings with persistence through the same EntityManager. An actual consumer build also rejects active references to disabled module code. All other existing dependency rules remain covered by the full PHPUnit suite.
 
-The Flex test installs the prepared recipe through a temporary local HTTP endpoint. It checks bundle registration, exactly the two recipe configuration files, `symfony.lock`, the module route and both kernel variants. The Doctrine profile also checks module mapping. All twelve matrix recipe installations passed. This proves the prepared recipe, not its availability in Recipes Contrib; package and recipe remain unpublished.
+The Flex test installs the prepared recipe through a temporary local HTTP endpoint. It checks bundle registration, exactly the two recipe configuration files, `symfony.lock`, the module route and both kernel variants. The Doctrine profile also checks module mapping. All twelve matrix recipe installations passed. This proves the prepared recipe, not its availability in Recipes Contrib; the package and recipe were unpublished at the time of this run.
 
 ## Reproduction and CI
 

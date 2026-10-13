@@ -1,6 +1,6 @@
 # Release candidate verification v0.1.0 — 2026-10-12
 
-> Historical, completed verification snapshot. Installation, publication and security-channel status describe the dated run, not the current release. For v0.1.0, use `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
+> Historical, completed verification snapshot. Installation, publication and security-channel status describe the pre-release run. Sillbeam v0.1.0 has since been released. Install it with `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
 Verification extends the evidence from 2026-10-10 with normal Symfony skeleton service imports, development/production containers, warm caches and available PHP/Symfony versions. Starting point: 74 tests / 263 assertions; the existing change to `docs/assets/sillbeam-logo.png` was preserved unchanged. No push, merge, tag or release. Composer requirements, lockfile and public runtime API remain unchanged.
 
 ## Corrections and integration findings

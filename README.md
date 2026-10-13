@@ -168,7 +168,7 @@ Architecture errors prevent the container from building, so resolve their report
 
 ## Release status
 
-The release version is **v0.1.0**, installed through Composer as `websign-dev/sillbeam`. The [changelog](CHANGELOG.md) and [release notes](docs/releases/0.1.0.md) describe its scope and limitations. Composer derives the package version from the Git tag; `0.1.x-dev` is the development branch alias.
+Sillbeam **v0.1.0** is released and available through Composer as `websign-dev/sillbeam`. The [changelog](CHANGELOG.md) and [release notes](docs/releases/0.1.0.md) describe its scope and limitations. Composer derives the package version from the Git tag; `0.1.x-dev` is the development branch alias.
 
 ## Scope and migration
 

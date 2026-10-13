@@ -1,27 +1,51 @@
 # Changelog
 
-This changelog records Sillbeam releases.
+This changelog records released versions of Sillbeam.
 
 ## v0.1.0
 
-### Fixes and integration
+Sillbeam v0.1.0 is the first public release of the Symfony module architecture layer, distributed as the Composer package `websign-dev/sillbeam`.
 
-- Excluded discovery roots and entity directories remain excluded across overlapping scans and mappings; new architecture configuration invalidates development containers after a zero-config boot.
-- Symfony-bundle metadata and a zero-config Flex recipe with installation/removal checks preserving application configuration.
-- Standard Symfony service-import regressions, native overrides and strict PHPUnit handler ownership checks.
-- Updated installation, release and security guidance; focused product-website link/metadata corrections prepared locally.
+### Added
 
-### Initial package scope
+- Attribute-based Module and optional Project descriptors with configurable discovery roots, PSR-4 namespaces and exclusions.
+- Build-time validation of descriptor ownership, unique IDs, declared dependencies, cycles and private module boundaries.
+- Static validation of direct PHP class references between active modules, with file and line diagnostics for undeclared or forbidden dependencies.
+- Immutable Module and Project catalogs, active dependency graphs and activation diagnostics through registry contracts.
+- Native Symfony service imports with autowiring, autoconfiguration, environment attributes, exclusions and interface aliases.
+- Attribute routes for active modules and Projects, including Project route-name prefixes and host filters.
+- Optional DoctrineBundle integration for active module and direct Project entities, preserving native mappings and explicit overrides.
+- Request-based Project context, `sillbeam:architecture` text/JSON output and `sillbeam:about` runtime diagnostics.
+- Support for the standard Symfony kernel and the optional `SillbeamKernel`.
+- Symfony Flex recipe source for bundle registration and a single route import; default operation requires no package configuration file.
 
-- Attribute-based Module and optional Project discovery with configurable PSR-4 roots and exclusions.
-- Physical ownership, declared dependency validation, activation graphs and static PHP class-reference checks during container compilation.
-- Native Symfony service autowiring/autoconfiguration and attribute routing for active architecture areas.
-- Optional DoctrineBundle attribute mappings alongside native Symfony mappings.
-- Module and Project registries, request Project context and architecture/runtime CLI diagnostics.
-- Standard Symfony kernel support and optional `SillbeamKernel`.
-- Manual installation and a prepared, separately publishable Symfony Flex recipe.
-- Independent consumer checks for six application layouts, both kernels and operation with/without Doctrine; PHP 8.4/8.5 and Symfony 7.4/8.0/8.1 compatibility evidence.
+### Fixed
 
-The first public package contains the modular core only. Former private Nexum/Foundation APIs are not shipped. Existing development consumers must follow the [migration guide](docs/migration/modular-monolith.md).
+- Preserved discovery exclusions across overlapping roots and subsequent service, route and entity imports.
+- Excluded entity subdirectories from generated parent Doctrine mappings while retaining intentional native mapping overrides.
+- Invalidated development containers when the first Sillbeam package configuration is added after a zero-config boot.
+- Rejected unknown Project configuration even when no Projects are discovered, multiple descriptor attributes on one class and IDs with trailing newlines.
+- Resolved descriptor attribute names consistently with PHP's case-insensitive class resolution.
+- Preserved native Doctrine driver priority when sorting generated Sillbeam mappings.
+- Corrected configuration type annotations for static analysis with Symfony 7.4.0.
 
-Install with `composer require websign-dev/sillbeam:^0.1.0`. See the [v0.1.0 release notes](docs/releases/0.1.0.md) for installation, limitations and verification.
+### Changed
+
+- Standardized installation on `composer require websign-dev/sillbeam:^0.1.0`, with `0.1.0` available as an exact version constraint.
+- Aligned example applications, the isolated test application and independent installation checks with the 0.1.0 package version.
+- Published English guides, configuration and API references, migration instructions and release notes.
+- Updated the security policy with private reporting channels and support for v0.1.0.
+- Restricted library distribution to runtime code, package metadata, license and public documentation; development applications, tools, caches and internal plans are excluded.
+- Removed the former private Nexum/Foundation APIs. API/CRUD, authentication, entity bases, stores and infrastructure helpers are no longer included. Existing development consumers must follow the [migration guide](docs/migration/modular-monolith.md).
+
+### Compatibility and verification
+
+- Requires PHP `^8.4`, Composer runtime API `^2.2` and Symfony `^7.4 || ^8.0`; Doctrine remains optional.
+- Verified PHP 8.4/8.5 with Symfony 7.4/8.0/8.1 through the quality suite and independent Composer installations.
+- Covered Symfony-only, Modules-only, Project-only, Single-Project, Multi-Project and Hybrid layouts, both kernels and operation with/without Doctrine.
+- Verified cold/warm development and production containers, documented service/controller examples, and Flex installation/removal preserving application configuration.
+- Enforced PHPUnit handler ownership checks so risky integration tests fail rather than returning a successful exit code.
+
+Projects share the Symfony container, event system and database; they do not provide tenant or security isolation. Static validation covers supported PHP class references within module areas, not dynamic class strings or application-wide access control. This is a pre-1.0 API.
+
+See the [v0.1.0 release notes](docs/releases/0.1.0.md) for installation, compatibility evidence and known limitations.

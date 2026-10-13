@@ -1,7 +1,7 @@
 # Public release preparation — 2026-10-10
 
-> Historical, completed verification snapshot. Installation, publication and security-channel status describe the dated run, not the current release. For v0.1.0, use `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
-The proposed first public version is **0.1.0**. This preparation changes documentation, distribution rules and package metadata; the architecture, production source and runtime constraints remain unchanged. Changelog and release notes are drafts until publication. No release date, tag, push or publication was created.
+> Historical, completed verification snapshot. Installation, publication and security-channel status describe the pre-release run. Sillbeam v0.1.0 has since been released. Install it with `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
+The target of this pre-release preparation was the first public version, **v0.1.0**. This preparation changes documentation, distribution rules and package metadata; the architecture, production source and runtime constraints remain unchanged. Changelog and release notes were drafts during this run. No release date, tag, push or publication was created.
 
 ## Documentation and metadata
 
