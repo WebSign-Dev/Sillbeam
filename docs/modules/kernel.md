@@ -1,3 +1,3 @@
 # kernel
 
-SillbeamKernel ist ein optionaler Komfort-Kernel. SillbeamBundle funktioniert ebenso mit einem normalen Symfony-Kernel. KernelInformation und `sillbeam:about` zeigen Laufzeitdaten. [Einstieg](../guides/getting-started.md).
+SillbeamKernel is an optional convenience kernel. SillbeamBundle also works with a standard Symfony kernel. KernelInformation and `sillbeam:about` provide runtime information. [Getting started](../guides/getting-started.md).

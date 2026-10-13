@@ -1,11 +1,11 @@
-# Core-Komponenten
+# Core components
 
 - [Architecture](architecture.md)
-- [Module-System](module-system.md)
-- [Project-System](project-system.md)
-- [Dependency Injection](dependency-injection.md)
+- [Module system](module-system.md)
+- [Project system](project-system.md)
+- [Dependency injection](dependency-injection.md)
 - [Routing](routing.md)
-- [Doctrine-Integration](doctrine.md)
+- [Doctrine integration](doctrine.md)
 - [Kernel](kernel.md)
 
-Foundation-Komponenten wurden entfernt; siehe [Umfang](../architecture/foundation.md) und [Migration](../migration/modular-monolith.md).
+Foundation components have been removed; see [Scope](../architecture/foundation.md) and [Migration](../migration/modular-monolith.md).

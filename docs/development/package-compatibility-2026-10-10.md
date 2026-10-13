@@ -1,39 +1,39 @@
-# Paketkompatibilität und Installation — 2026-10-10
+# Package compatibility and installation — 2026-10-10
 
 > Historical, completed verification snapshot. Version counts and recipe details describe that run, not current installation instructions. See the [current release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
-Ausgangspunkt ist die technische Stabilisierung in `57bfe48`. Die Prüfung verwendet echte PHP-Laufzeiten und unabhängige Composer-Auflösungen in temporären, getrennten Verzeichnissen. Historische private GitHub-CI-Läufe wurden nicht als Fehlernachweis herangezogen.
+The starting point is technical stabilization in `57bfe48`. Verification uses actual PHP runtimes and independent Composer resolutions in temporary, separate directories. Historical private GitHub CI runs were not used as evidence of defects.
 
-## Unterstützte und tatsächlich geprüfte Versionen
+## Supported and actually tested versions
 
-`composer.json` erlaubt PHP `^8.4` und die Symfony-Komponenten `^7.4 || ^8.0`. Die geprüften Versionslinien sind PHP 8.4/8.5 mit Symfony 7.4/8.0/8.1. Welche Patchversion installierbar ist, bestimmt Composer einschließlich der Anforderungen aller Dependencies. Es wurde kein Platform-Override und kein `--ignore-platform-reqs` verwendet.
+`composer.json` allows PHP `^8.4` and Symfony components `^7.4 || ^8.0`. Tested version lines are PHP 8.4/8.5 with Symfony 7.4/8.0/8.1. Composer determines which patch version can be installed, including all dependency requirements. No platform override or `--ignore-platform-reqs` was used.
 
-| PHP-Laufzeit | Symfony FrameworkBundle | Vollständige Qualitätssuite | 12 manuelle Consumer-Installationen | Flex ohne/mit Doctrine |
+| PHP runtime | Symfony FrameworkBundle | Full quality suite | 12 manual consumer installations | Flex without/with Doctrine |
 | --- | --- | --- | --- | --- |
-| 8.4.26 | 7.4.20 | bestanden | bestanden | bestanden |
-| 8.4.26 | 8.0.15 | bestanden | bestanden | bestanden |
-| 8.4.26 | 8.1.8 | bestanden | bestanden | bestanden |
-| 8.5.11 | 7.4.20 | bestanden | bestanden | bestanden |
-| 8.5.11 | 8.0.15 | bestanden | bestanden | bestanden |
-| 8.5.11 | 8.1.8 | bestanden | bestanden | bestanden |
+| 8.4.26 | 7.4.20 | passed | passed | passed |
+| 8.4.26 | 8.0.15 | passed | passed | passed |
+| 8.4.26 | 8.1.8 | passed | passed | passed |
+| 8.5.11 | 7.4.20 | passed | passed | passed |
+| 8.5.11 | 8.0.15 | passed | passed | passed |
+| 8.5.11 | 8.1.8 | passed | passed | passed |
 
-Auch transitive Symfony-Komponenten liegen jeweils auf der gewählten Versionslinie. Contracts, Polyfills und Flex besitzen unabhängige Versionsnummern und werden nicht auf 7.4/8.0/8.1 gezwungen. Geprüfte optionale Dependencies: DoctrineBundle 3.3.2 und ORM 3.7.5. AST-Parser: 5.9.0; PHPUnit: 12.5.38. Andere Patchstände und spätere, durch die Composer-Constraints erlaubte Versionen wurden damit nicht automatisch getestet.
+Transitive Symfony components also follow the selected version line. Contracts, polyfills and Flex have independent version numbers and are not forced to 7.4/8.0/8.1. Tested optional dependencies: DoctrineBundle 3.3.2 and ORM 3.7.5. AST parser: 5.9.0; PHPUnit: 12.5.38. This does not automatically test other patch versions or later versions allowed by Composer constraints.
 
-Je Matrix-Zelle bestanden PHPUnit (74 Tests / 263 Assertions), PHPStan, Deptrac und Code-Style sowie `composer validate --strict` und `composer check-platform-reqs`. Deptrac meldet 0 Verstöße, Warnungen und Fehler; externe Dependencies bleiben außerhalb der eigenen Layers. Die Container hatten zunächst 128 MiB PHP-Speicher, wodurch PHPStan abbrach; mit expliziten 512 MiB bestanden alle Läufe. Diese Einstellung ist auch in CI hinterlegt und keine Runtime-Anforderung von Sillbeam.
+Each matrix cell passed PHPUnit (74 tests / 263 assertions), PHPStan, Deptrac, code style, `composer validate --strict` and `composer check-platform-reqs`. Deptrac reports 0 violations, warnings and errors; external dependencies remain outside the project's layers. Containers initially had 128 MiB of PHP memory, causing PHPStan to abort; all runs passed with an explicit 512 MiB. This setting is also configured in CI and is not a Sillbeam runtime requirement.
 
-## Unabhängige Verbraucher
+## Independent consumers
 
-`composer test:consumer` kopiert ausschließlich Source und Konfiguration der sechs Szenarien in frische Anwendungen: Symfony-only, Modules-only, Project-only, Single-Project, Multi-Project und Hybrid. Jedes Szenario erhält eine eigene Installation ohne beziehungsweise mit Doctrine. Sillbeam wird aus einem lokalen Path-Repository **kopiert**, nicht über den Root-Autoloader oder einen Vendor-Symlink verwendet. Jeder Consumer startet ohne Lockfile, verwendet reguläre stabile Composer-Auflösung und besitzt seinen eigenen Vendor-Autoloader. Root-Dev-Dependencies und `Sillbeam\Tests` werden ausdrücklich ausgeschlossen.
+`composer test:consumer` copies only source and configuration for the six scenarios into fresh applications: Symfony-only, Modules-only, Project-only, Single-Project, Multi-Project and Hybrid. Each scenario receives its own installation without or with Doctrine. Sillbeam is **copied** from a local path repository, rather than used through the root autoloader or a vendor symlink. Each consumer starts without a lockfile, uses normal stable Composer resolution and has its own vendor autoloader. Root development dependencies and `Sillbeam\Tests` are explicitly excluded.
 
-Jede der 72 manuellen Matrix-Installationen wird in getrennten PHP-Prozessen mit dem normalen Symfony-Kernel und dem optionalen SillbeamKernel geprüft: insgesamt 144 erfolgreiche Kernel-Profile. Der Test prüft aktive Discovery-Graphen, Autowiring durch tatsächliche HTTP-Antworten, Routen/Hostgrenzen, die beiden Sillbeam-CLI-Kommandos und bei Doctrine native sowie Modul-/Project-Mappings mit Persistenz über denselben EntityManager. Ein tatsächlicher Consumer-Build lehnt zusätzlich aktive Referenzen auf deaktivierten Modulcode ab. Alle bestehenden weiteren Dependency-Regeln bleiben durch die vollständige PHPUnit-Suite abgedeckt.
+Each of the 72 manual matrix installations is tested in separate PHP processes with the standard Symfony kernel and optional SillbeamKernel: 144 successful kernel profiles in total. The test validates active discovery graphs, autowiring through actual HTTP responses, routes/host boundaries, both Sillbeam CLI commands and, with Doctrine, native and Module/Project mappings with persistence through the same EntityManager. An actual consumer build also rejects active references to disabled module code. All other existing dependency rules remain covered by the full PHPUnit suite.
 
-Der Flex-Test installiert die vorbereitete Recipe über einen temporären lokalen HTTP-Endpoint. Er prüft Bundle-Registrierung, genau die beiden Recipe-Konfigurationsdateien, `symfony.lock`, Modulroute und beide Kernelvarianten. Im Doctrine-Profil wird außerdem das Modul-Mapping geprüft. Alle zwölf Recipe-Installationen der Matrix bestanden. Das beweist die vorbereitete Recipe, nicht ihre Verfügbarkeit bei Recipes Contrib; Paket und Recipe bleiben unveröffentlicht.
+The Flex test installs the prepared recipe through a temporary local HTTP endpoint. It checks bundle registration, exactly the two recipe configuration files, `symfony.lock`, the module route and both kernel variants. The Doctrine profile also checks module mapping. All twelve matrix recipe installations passed. This proves the prepared recipe, not its availability in Recipes Contrib; package and recipe remain unpublished.
 
-## Reproduktion und CI
+## Reproduction and CI
 
-Die folgenden Befehle **in einer wegwerfbaren Kopie** unter der gewünschten echten PHP-Laufzeit ausführen. `prepare-compatibility.php` verändert dort bewusst die Composer-Anforderungen. Für jede der drei Symfony-Linien und beide PHP-Versionen wiederholen:
+Run the following commands **in a disposable copy** under the desired actual PHP runtime. `prepare-compatibility.php` intentionally changes Composer requirements there. Repeat for each of the three Symfony lines and both PHP versions:
 
 ```bash
-export SILLBEAM_SYMFONY_VERSION='7.4.*' # alternativ 8.0.* oder 8.1.*
+export SILLBEAM_SYMFONY_VERSION='7.4.*' # alternatively 8.0.* or 8.1.*
 php tools/prepare-compatibility.php
 composer update --with-all-dependencies --no-scripts --no-plugins --no-interaction --prefer-dist
 composer validate --strict
@@ -47,8 +47,8 @@ composer test:flex-recipe
 SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 ```
 
-PHP benötigt für die Suite unter anderem XML/DOM, mbstring und PDO SQLite; der Analyzer erhält 512 MiB Speicher. Installationstests benötigen Composer-Netzwerkzugriff, Flex zusätzlich einen lokalen HTTP-Port. Ohne `SILLBEAM_SYMFONY_VERSION` testet `composer test:consumer` die regulär aufgelösten Versionen des aktuellen Laufzeitsystems. Die CI verwendet dieselbe Vorbereitung und dieselben Tests für alle sechs Kombinationen. GitHub-Workflows wurden hier nicht gestartet; nach öffentlicher Freigabe können sie unabhängig erneut laufen.
+The suite requires PHP extensions including XML/DOM, mbstring and PDO SQLite; the analyzer receives 512 MiB of memory. Installation tests require Composer network access; Flex also needs a local HTTP port. Without `SILLBEAM_SYMFONY_VERSION`, `composer test:consumer` tests normally resolved versions for the current runtime. CI uses the same preparation and tests for all six combinations. GitHub workflows were not started here; they can run independently again after public access is enabled.
 
-## Ergebnis
+## Result
 
-Keine produktiven Kompatibilitäts- oder Integrationsfehler reproduziert; Produktionscode und Runtime-Constraints bleiben unverändert. Ergänzt wurden ausschließlich die erforderlichen unabhängigen Installationsprüfungen, reproduzierbare Versionsauswahl und CI-Abdeckung. Keine offenen technischen Blocker für die sechs geprüften Kombinationen. Es erfolgten keine Veröffentlichung und kein Push.
+No production compatibility or integration defects were reproduced; production code and runtime constraints remain unchanged. Only the required independent installation checks, reproducible version selection and CI coverage were added. No open technical blockers for the six tested combinations. No publication or push took place.

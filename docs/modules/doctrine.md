@@ -1,8 +1,8 @@
 # doctrine
 
-Bei vorhandenem DoctrineBundle werden direkte Project-Entities und aktive Module mit nativen AttributeDriver-Mappings integriert. Dedizierte Treiber halten automatische Ausschlüsse lokal zu Sillbeam und erhalten manuelle native Mappings. `doctrine: false` schaltet die Integration aus. Es gibt keine Sillbeam-Entity-Basen, Stores, Filter oder Listener. [Konfiguration](../reference/configuration.md).
+When DoctrineBundle is present, direct Project entities and active modules are integrated using native AttributeDriver mappings. Dedicated drivers keep automatic exclusions local to Sillbeam and preserve manual native mappings. `doctrine: false` disables integration. There are no Sillbeam entity bases, stores, filters or listeners. [Configuration](../reference/configuration.md).
 
-Die Anwendung installiert und konfiguriert Doctrine selbst, z. B. `composer require symfony/orm-pack`. Die geprüften Dependency-Versionen stehen im [Kompatibilitätsbericht](../development/package-compatibility-2026-10-10.md); das Core-Package erzwingt weder ORM noch Datenbanktreiber. Entity-Klassen unter `src/Module/Hello/Entity/` verwenden normale `Doctrine\ORM\Mapping`-Attribute:
+The application installs and configures Doctrine itself, e.g. `composer require symfony/orm-pack`. Tested dependency versions are listed in the [compatibility report](../development/package-compatibility-2026-10-10.md); the core package requires neither ORM nor database drivers. Entity classes under `src/Module/Hello/Entity/` use ordinary `Doctrine\ORM\Mapping` attributes:
 
 ```php
 namespace App\Module\Hello\Entity;
@@ -22,4 +22,4 @@ class Message
 }
 ```
 
-Diese Datei beginnt mit `<?php` und erhält keine automatische Service-Registrierung. `php bin/console doctrine:mapping:info` prüft das Mapping; Schema-/Migrationserstellung und Datenbankzugriff erfolgen mit normalen Doctrine-Werkzeugen. Sillbeam erstellt keine Tabellen und führt keine Migrationen aus. Native Mappings in `src/Entity/` bleiben bestehen. Breite manuelle Mappings über alle Modulverzeichnisse können deaktivierte Bereiche wieder aufnehmen.
+This file begins with `<?php` and receives no automatic service registration. `php bin/console doctrine:mapping:info` checks the mapping; schema/migration generation and database access use standard Doctrine tools. Sillbeam neither creates tables nor runs migrations. Native mappings in `src/Entity/` remain intact. Broad manual mappings across all module directories can include disabled areas again.

@@ -1,28 +1,28 @@
-# Öffentliche API
+# Public API
 
-- `SillbeamBundle`: zentraler Symfony-Einstieg.
+- `SillbeamBundle`: central Symfony entry point.
 - `Module\Attribute\SillbeamModule`: `id`, `description`, `dependencies`.
 - `Project\Attribute\SillbeamProject`: `id`, `description`, `modules`.
 - `ModuleRegistryInterface`: `all()`, `get(class)`, `active()`, `forApplication()`, `forProject(class)`.
-- `ProjectRegistryInterface`: `all()`, `get(idOrClass)` und `forHost(host)`.
+- `ProjectRegistryInterface`: `all()`, `get(idOrClass)` and `forHost(host)`.
 - `ProjectContextInterface`: `current()`, `id()`, `is(id)`, `hasModule(class)`.
-- `ModuleDefinition`/`ProjectDefinition`: unveränderliche Katalog- und Aktivierungsdaten. Module enthalten deklarierte/erkannte Dependencies, Referenzbelege und Aktivierungsgründe.
-- `Kernel\SillbeamKernel`: optionaler Kernel; gewöhnlicher Symfony-Kernel bleibt unterstützt.
-- `KernelInformationInterface`: Laufzeitdaten für `sillbeam:about`.
+- `ModuleDefinition`/`ProjectDefinition`: immutable catalog and activation data. Modules include declared/observed dependencies, reference evidence and activation reasons.
+- `Kernel\SillbeamKernel`: optional kernel; standard Symfony kernels remain supported.
+- `KernelInformationInterface`: runtime information for `sillbeam:about`.
 
-Discovery, Compiler, AST-Index und native Loader sind Implementierungsbausteine des Builds. Foundation-Verträge gehören seit der Evolution nicht mehr zur öffentlichen API. Der [Migrationsleitfaden](../migration/modular-monolith.md) nennt entfernte Bereiche.
+Discovery, compiler, AST index and native loaders are build implementation components. Foundation contracts are no longer part of the public API since the evolution. The [migration guide](../migration/modular-monolith.md) lists removed areas.
 
-Registry-Lookups unbekannter Klassen, IDs oder Hosts werfen `OutOfBoundsException`. Der optionale Request-Kontext unterscheidet fehlende Projects/Requests (`null`) von nicht zugeordneten Hosts bei vorhandenen Projects (Exception); siehe [Projects](../guides/projects.md).
+Registry lookups for unknown classes, IDs or hosts throw `OutOfBoundsException`. The optional request context distinguishes missing Projects/requests (`null`) from unassigned hosts when Projects exist (exception); see [Projects](../guides/projects.md).
 
-## Typen und Rückgaben
+## Types and return values
 
-Die vollständigen Namespaces der Registry-Verträge sind `Sillbeam\Module\ModuleRegistryInterface`, `Sillbeam\Project\ProjectRegistryInterface` und `Sillbeam\Project\ProjectContextInterface`. Sie können direkt per Konstruktor injiziert werden.
+The full namespaces of the registry contracts are `Sillbeam\Module\ModuleRegistryInterface`, `Sillbeam\Project\ProjectRegistryInterface` and `Sillbeam\Project\ProjectContextInterface`. They can be injected directly through constructors.
 
-Registry-Listen sind Arrays mit Descriptor-Klassennamen als Schlüssel und `ModuleDefinition` beziehungsweise `ProjectDefinition` als Werten. `ModuleRegistryInterface::get()` und `forProject()` nehmen Descriptor-Klassennamen, keine IDs; `ProjectRegistryInterface::get()` akzeptiert ID oder Klasse. `active()` ist die Vereinigung der aktiven Graphen. `forApplication()` ist im Project-Modus leer.
+Registry lists are arrays keyed by descriptor class names with `ModuleDefinition` or `ProjectDefinition` values. `ModuleRegistryInterface::get()` and `forProject()` accept descriptor class names, not IDs; `ProjectRegistryInterface::get()` accepts an ID or class. `active()` is the union of active graphs. `forApplication()` is empty in Project mode.
 
-`ModuleDefinition` bietet unter anderem `id`, `class`, `description`, `dependencies`, `enabled`, `projectClass`, Verzeichnisse/Namespace, `observedDependencies`, `dependencyReferences` und `activationReasons`. `enabled` bedeutet nicht automatisch aktiv; Aktivität wird über Registry-Mitgliedschaft bestimmt, es gibt keine `active`-Property. `isPrivate()` prüft Project-Ownership; `key($projectId)` benötigt für private Module die zugehörige Project-ID.
+`ModuleDefinition` provides, among other fields, `id`, `class`, `description`, `dependencies`, `enabled`, `projectClass`, directories/namespace, `observedDependencies`, `dependencyReferences` and `activationReasons`. `enabled` does not automatically mean active; activity is determined by registry membership, with no `active` property. `isPrivate()` checks Project ownership; `key($projectId)` requires the owning Project ID for private modules.
 
-`ProjectDefinition` enthält `declaredModules`, den kompilierten `modules`-Graphen, `hosts` und Discovery-Daten. `canonicalHost(): ?string` liefert den ersten Host oder `null`. `Sillbeam\Kernel\Runtime\KernelInformationInterface::all()` liefert ein `array<string, string|int>`.
+`ProjectDefinition` contains `declaredModules`, the compiled `modules` graph, `hosts` and discovery data. `canonicalHost(): ?string` returns the first host or `null`. `Sillbeam\Kernel\Runtime\KernelInformationInterface::all()` returns an `array<string, string|int>`.
 
 ```php
 use Sillbeam\Module\ModuleRegistryInterface;

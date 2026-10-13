@@ -1,3 +1,3 @@
 # architecture
 
-Discovery, Compiler und Codeanalysator bilden den gemeinsamen Build. [Architekturablauf](../architecture/overview.md) und [Konfiguration](../reference/configuration.md) beschreiben Grenzen, Quellindex und Graphen.
+Discovery, compiler and code analyzer form the shared build. [Architecture flow](../architecture/overview.md) and [Configuration](../reference/configuration.md) describe boundaries, the source index and graphs.

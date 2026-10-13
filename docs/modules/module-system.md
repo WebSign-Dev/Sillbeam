@@ -1,3 +1,3 @@
 # module-system
 
-ModuleDefinition und ModuleRegistryInterface liefern den gesamten Katalog und aktive Graphen. [Modules](../guides/modules.md) beschreibt Direktabhängigkeiten, Aktivierung und private Grenzen.
+ModuleDefinition and ModuleRegistryInterface provide the entire catalog and active graphs. [Modules](../guides/modules.md) describes direct dependencies, activation and private boundaries.

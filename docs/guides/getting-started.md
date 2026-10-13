@@ -1,8 +1,8 @@
-# Einstieg
+# Getting started
 
-Sillbeam kann in einer bestehenden Symfony-Anwendung installiert werden. PHP 8.4+ und Symfony 7.4/8.x sind erforderlich. Bundle und Route-Loader einmal registrieren; die [README](../../README.md) zeigt Bundle-Registrierung und Route-Import. Eine `config/packages/sillbeam.yaml` ist für die Defaults nicht erforderlich.
+Sillbeam can be installed in an existing Symfony application. PHP 8.4+ and Symfony 7.4/8.x are required. Register the bundle and route loader once; the [README](../../README.md) shows bundle registration and the route import. A `config/packages/sillbeam.yaml` file is not required for the defaults.
 
-Erstelle `src/Module/Hello/HelloModule.php`:
+Create `src/Module/Hello/HelloModule.php`:
 
 ```php
 namespace App\Module\Hello;
@@ -11,7 +11,7 @@ namespace App\Module\Hello;
 final class HelloModule {}
 ```
 
-Lege normale Services im Modulverzeichnis ab und Controller mit Symfony-Route-Attributen unter `Controller/`. `#[Exclude]`, `#[When]`, `#[WhenNot]`, `#[AsAlias]`, Autowiring und Autoconfiguration verwenden Symfonys nativen Klassenloader. Native Service-Konfiguration kann die Defaults überschreiben. Automatische Interface-Aliase entstehen erst nach allen Sillbeam-Importen und nur bei genau einer Implementierung.
+Place ordinary services in the module directory and controllers with Symfony route attributes under `Controller/`. `#[Exclude]`, `#[When]`, `#[WhenNot]`, `#[AsAlias]`, autowiring and autoconfiguration use Symfony's native class loader. Native service configuration can override the defaults. Automatic interface aliases are created after all Sillbeam imports and only when there is exactly one implementation.
 
 ```bash
 php bin/console cache:clear
@@ -19,13 +19,13 @@ php bin/console sillbeam:architecture --format=json
 php bin/console debug:router
 ```
 
-DoctrineBundle aktiviert die Mapping-Integration automatisch. `sillbeam: { doctrine: false }` schaltet nur Sillbeams automatische Mappings aus. Native Mappings bleiben verfügbar.
+DoctrineBundle activates mapping integration automatically. `sillbeam: { doctrine: false }` disables only Sillbeam's automatic mappings. Native mappings remain available.
 
-## Installation und Autoloading
+## Installation and autoloading
 
-Für die Entwicklungsversion das lokale Path-Repository und `dev-main` aus der [README](../../README.md#install-from-a-checkout) verwenden. Nach Veröffentlichung gilt `composer require websign-dev/sillbeam:^0.1`; diese Version ist derzeit noch nicht öffentlich verfügbar. Flex-Recipe und Package werden unabhängig veröffentlicht; manuelle Bundle-/Routing-Registrierung funktioniert bereits jetzt.
+For the development version, use the local path repository and `dev-main` from the [README](../../README.md#install-from-a-checkout). After publication, use `composer require websign-dev/sillbeam:^0.1`; this version is not yet publicly available. The Flex recipe and package are published independently; manual bundle/routing registration already works.
 
-Die Anwendung braucht eine Composer-PSR-4-Zuordnung wie `"App\\": "src/"`. Alle folgenden PHP-Dateien beginnen mit `<?php`. Den bestehenden Symfony-Kernel beibehalten. Optional kann `src/Kernel.php` so aussehen:
+The application needs a Composer PSR-4 mapping such as `"App\\": "src/"`. All PHP files below begin with `<?php`. Keep the existing Symfony kernel. Optionally, `src/Kernel.php` can look like this:
 
 ```php
 namespace App;
@@ -33,9 +33,9 @@ namespace App;
 final class Kernel extends \Sillbeam\Kernel\SillbeamKernel {}
 ```
 
-## Service und Route ausprobieren
+## Try a service and route
 
-Ergänze `src/Module/Hello/Greeting.php`:
+Add `src/Module/Hello/Greeting.php`:
 
 ```php
 namespace App\Module\Hello;
@@ -49,7 +49,7 @@ final class Greeting
 }
 ```
 
-Und `src/Module/Hello/Controller/HelloController.php`:
+And `src/Module/Hello/Controller/HelloController.php`:
 
 ```php
 namespace App\Module\Hello\Controller;
@@ -70,11 +70,11 @@ final readonly class HelloController
 }
 ```
 
-Nach `php bin/console cache:clear` zeigt `php bin/console debug:router hello` die Route. Eine Anfrage an `/hello` liefert `Hello from Sillbeam`. Mit Projects wird das Modul im jeweiligen Project-Descriptor zugeordnet; dort erhält die Route dessen Namenspräfix und gegebenenfalls Hostfilter.
+After `php bin/console cache:clear`, `php bin/console debug:router hello` displays the route. A request to `/hello` returns `Hello from Sillbeam`. With Projects, assign the module in the relevant Project descriptor; the route receives that Project's name prefix and, if configured, host filter.
 
-## Symfony-Integration erhalten
+## Preserve Symfony integration
 
-Globale `App\`-Service-Imports in `config/services.yaml` müssen `src/Module/` und `src/Project/` ausschließen, wenn allein Sillbeam deren Aktivierung steuern soll. Beispiel für die Standardverzeichnisse:
+Global `App\` service imports in `config/services.yaml` must exclude `src/Module/` and `src/Project/` when Sillbeam alone should control their activation. Example for the default directories:
 
 ```yaml
 services:
@@ -84,12 +84,12 @@ services:
         exclude: '../src/{DependencyInjection,Entity,Kernel.php,Module,Project}'
 ```
 
-Bestehende Ausschlüsse/Services beibehalten und bei eigenen Roots entsprechend anpassen. Native breite Route- und Doctrine-Imports ebenso prüfen: explizite Symfony-Imports können bewusst inaktive Bereiche wieder aufnehmen. Sillbeam entfernt solche Anwendungskonfiguration nicht. Für die Modulrouten genügt der einmalige `type: sillbeam`-Import.
+Keep existing exclusions/services and adjust them for custom roots. Also review broad native route and Doctrine imports: explicit Symfony imports can intentionally include inactive areas again. Sillbeam does not remove such application configuration. A single `type: sillbeam` import is sufficient for module routes.
 
-Ein unveränderter Skeleton-Import von ganz `src/` bleibt eine unabhängige Symfony-Registrierung: Ein dort gefundenes `#[AsAlias]` kann beispielsweise auch bei `enabled: false` als Service erreichbar bleiben. Überlappende Imports erzeugen nicht zwei Instanzen pro Service-ID; die native Definition ist maßgeblich, kann aber Sillbeams Aktivierung und Standardausschlüsse umgehen. Die Bereichsausschlüsse sind deshalb erforderlich, wenn Sillbeam die automatische Registrierung kontrollieren soll, auch im Project-Modus für nicht zugeordnete Shared-Module und deaktivierte private Module.
+An unchanged skeleton import of all `src/` remains an independent Symfony registration: an `#[AsAlias]` found there, for example, can remain accessible as a service even with `enabled: false`. Overlapping imports do not create two instances per service ID; the native definition takes precedence, but can bypass Sillbeam's activation and default exclusions. Area exclusions are therefore required when Sillbeam should control automatic registration, including unassigned shared modules and disabled private modules in Project mode.
 
-Innerhalb aktiver Bereiche verwendet Sillbeam den Symfony-Service-Loader. `#[Exclude]`, `#[When]`, `#[WhenNot]` und `#[AsAlias]` gelten weiterhin. Explizite Service-Definitionen, Constructor-Argumente und Interface-Aliase in der Anwendung haben Vorrang; ein bewusst manuell registrierter Service ist ein Escape-Hatch auch für einen deaktivierten Bereich. Die Flex-Recipe ändert bestehende Serviceimports nicht: Die Ausschlüsse bei der Integration selbst ergänzen, vorhandene Ausschlüsse beibehalten. Ein normaler Symfony-Kernel mit `MicroKernelTrait` genügt.
+Within active areas, Sillbeam uses the Symfony service loader. `#[Exclude]`, `#[When]`, `#[WhenNot]` and `#[AsAlias]` still apply. Explicit service definitions, constructor arguments and interface aliases in the application take precedence; an intentionally registered manual service is an escape hatch even for a disabled area. The Flex recipe does not change existing service imports: add exclusions during integration and retain existing exclusions. A standard Symfony kernel with `MicroKernelTrait` is sufficient.
 
-Für native Doctrine-Mappings möglichst die tatsächlich nativen Entity-Verzeichnisse und Namespace-Präfixe verwenden; ein breites Mapping von `src/` kann auch inaktive Modul-Entities einbeziehen. Explizite Overrides generierter Mappings bleiben maßgeblich. Ohne registriertes DoctrineBundle entstehen keine automatischen Mappings; `sillbeam.doctrine: true` ohne Bundle ist ein Konfigurationsfehler.
+For native Doctrine mappings, prefer the actual native entity directories and namespace prefixes; a broad mapping of `src/` can include inactive module entities. Explicit overrides of generated mappings remain authoritative. Without a registered DoctrineBundle, no automatic mappings are created; `sillbeam.doctrine: true` without the bundle is a configuration error.
 
-Development-Caches überwachen Quell-, Konfigurations- und Routing-Ressourcen. Production-Caches werden bei Deployments mit geändertem Code, Routing, Composer-Mapping oder Aktivierung neu gebaut; sie sind kein Live-Discovery-Mechanismus. Auch Änderungen an Build-Environment-Werten erfordern einen Neubau.
+Development caches monitor source, configuration and routing resources. Production caches are rebuilt during deployments that change code, routing, Composer mappings or activation; they are not a live discovery mechanism. Changes to build environment values also require a rebuild.

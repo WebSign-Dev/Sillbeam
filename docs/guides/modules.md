@@ -1,6 +1,6 @@
 # Modules
 
-Ein `#[SillbeamModule]`-Descriptor besitzt sein Verzeichnis samt Unterverzeichnissen. Dateiname und Descriptor-Klassenname müssen PSR-4-konform sein. IDs werden aus dem Klassennamen ohne `Module` abgeleitet oder als `id:` angegeben. Zwei Module dürfen weder dasselbe Verzeichnis noch verschachtelte Verzeichnisse besitzen.
+A `#[SillbeamModule]` descriptor owns its directory and subdirectories. The filename and descriptor class name must comply with PSR-4. IDs are derived from the class name without `Module` or specified as `id:`. Two modules may own neither the same directory nor nested directories.
 
 ```php
 #[\Sillbeam\Module\Attribute\SillbeamModule(
@@ -11,11 +11,11 @@ Ein `#[SillbeamModule]`-Descriptor besitzt sein Verzeichnis samt Unterverzeichni
 final class BillingModule {}
 ```
 
-Jeder direkte statische Zugriff auf eine Klasse eines anderen Moduls braucht dessen Descriptor in `dependencies`. Geprüft werden Typen (inklusive Union/Intersection), Vererbung, Interfaces, Traits, Attribute, `new`, statische Zugriffe, `::class`, `instanceof` und Catch-Typen. Dynamische Klassennamen, PHPDoc, String-Service-IDs sowie nicht modulgebundener Code sind außerhalb der Prüfung. Unbenutzte Imports zählen nicht; Descriptor-Metadaten werden nicht als Geschäftsreferenzen geprüft.
+Every direct static access to a class in another module requires its descriptor in `dependencies`. Validation covers types (including unions/intersections), inheritance, interfaces, traits, attributes, `new`, static access, `::class`, `instanceof` and catch types. Dynamic class names, PHPDoc, string service IDs and code outside module areas are outside validation. Unused imports do not count; descriptor metadata is not checked as business code references.
 
-Shared Modules können nur Shared Modules verwenden. Private Modules dürfen Shared Modules und private Module desselben Projects verwenden. Fehlende Ziele, verbotene Grenzen und Zyklen sind Buildfehler. Aktiver Code darf kein inaktives Modul verwenden. Die Prüfung von Geschäftsreferenzen betrifft aktive Quellmodule; die deklarierte Architektur wird für den gesamten Katalog geprüft.
+Shared modules may use only shared modules. Private modules may use shared modules and private modules of the same Project. Missing targets, forbidden boundaries and cycles are build errors. Active code must not use an inactive module. Business code reference validation applies to active source modules; declared architecture is validated for the entire catalog.
 
-Ohne Projects sind alle aktivierten Shared Modules aktiv. Mit Projects bleiben nicht zugeordnete Module inaktiv. Deaktivieren:
+Without Projects, all enabled shared modules are active. With Projects, unassigned modules remain inactive. To disable modules:
 
 ```yaml
 sillbeam:
@@ -24,6 +24,6 @@ sillbeam:
         'project:shop:reports': { enabled: false }
 ```
 
-Ein aktives Modul, das ein deaktiviertes Modul benötigt, verhindert den Build. Ein deaktiviertes privates Modul ist kein automatischer Project-Root. Native explizite Imports können Sillbeams automatische Auswahl umgehen; solche Imports liegen in der Verantwortung der Anwendung.
+An active module that requires a disabled module prevents the build. A disabled private module is not an automatic Project root. Explicit native imports can bypass Sillbeam's automatic selection; such imports are the application's responsibility.
 
-IDs müssen `[a-z][a-z0-9-]*` entsprechen. Die automatische Ableitung entfernt `Module` und trennt CamelCase: `OrderHistoryModule` ergibt `order-history`. Ein aktiviertes, aber keinem Project zugeordnetes Shared Module bildet keinen aktiven Graphen; dessen deaktivierte Dependency allein verhindert keinen Build.
+IDs must match `[a-z][a-z0-9-]*`. Automatic derivation removes `Module` and splits CamelCase: `OrderHistoryModule` becomes `order-history`. An enabled shared module not assigned to any Project does not form an active graph; its disabled dependency alone does not prevent a build.

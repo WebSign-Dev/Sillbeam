@@ -1,13 +1,13 @@
-# Fehlerdiagnose
+# Troubleshooting
 
-- **Namespace nicht eindeutig:** `discovery.namespace` oder den Namespace je Root angeben; Composer-PSR-4 und `composer dump-autoload` prüfen.
-- **Descriptor außerhalb der Grenze:** Module-/Project-Root konfigurieren oder Datei unter die erlaubte Grenze verschieben. Ein privates Modul braucht einen Project-Descriptor als physischen Eigentümer.
-- **Überlappende Bereiche:** Descriptor-Verzeichnisse trennen. Fachliche Unterordner ohne eigenen Descriptor sind erlaubt.
-- **Fehlende Dependency:** Direkt referenziertes Zielmodul in `dependencies` aufnehmen; Referenz in Datei/Zeile der Exception prüfen.
-- **Deaktiviertes Ziel:** Abhängigkeit entfernen oder Ziel aktivieren. `enabled` und `active` sind verschiedene Zustände; mit Projects brauchen Shared Modules eine Zuordnung.
-- **Fehlender Service:** Excludes, Environment-Attribute und aktive Zuordnung prüfen; native Overrides sind möglich. Mehrere Implementierungen brauchen einen expliziten Alias.
-- **Unerwartete Route/Entity:** Explizite native Imports können Sillbeam-Ausschlüsse umgehen. Bei mehreren Projects Route-Namenspräfix und Hostfilter berücksichtigen.
-- **Doctrine fehlt:** Bundle installieren/registrieren oder Sillbeam-Integration ausschalten. Das Core-Package braucht Doctrine nicht.
-- **Geänderte Aktivierung ohne Effekt:** Build-Umgebungsvariablen verlangen Cache-Neubau. Dev-Ressourcen überwachen Quellverzeichnisse; Produktionscache wird im Deployment neu gebaut.
+- **Ambiguous namespace:** specify `discovery.namespace` or a namespace per root; check Composer PSR-4 and `composer dump-autoload`.
+- **Descriptor outside the boundary:** configure a Module/Project root or move the file inside the permitted boundary. A private module needs a Project descriptor as its physical owner.
+- **Overlapping areas:** separate descriptor directories. Domain subdirectories without their own descriptor are allowed.
+- **Missing dependency:** add the directly referenced target module to `dependencies`; check the reference at the file/line reported by the exception.
+- **Disabled target:** remove the dependency or enable the target. `enabled` and `active` are different states; with Projects, shared modules need an assignment.
+- **Missing service:** check exclusions, environment attributes and active assignment; native overrides are possible. Multiple implementations require an explicit alias.
+- **Unexpected route/entity:** explicit native imports can bypass Sillbeam exclusions. With multiple Projects, account for route name prefixes and host filters.
+- **Missing Doctrine:** install/register the bundle or disable Sillbeam integration. The core package does not require Doctrine.
+- **Activation change has no effect:** build environment variables require a cache rebuild. Development resources monitor source directories; production caches are rebuilt during deployment.
 
-Diagnose: `sillbeam:architecture --format=json`, `debug:container`, `debug:router`; siehe [CLI](../reference/cli.md).
+Diagnostics: `sillbeam:architecture --format=json`, `debug:container`, `debug:router`; see [CLI](../reference/cli.md).

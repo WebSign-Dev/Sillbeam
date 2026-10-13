@@ -1,7 +1,7 @@
-# Umfang von Sillbeam
+# Sillbeam scope
 
-Sillbeam enthält Architecture, Module, Project, native Integration, Diagnose und einen optionalen Kernel. Doctrine-Mapping ist eine optionale Integration, keine verpflichtende Laufzeitabhängigkeit.
+Sillbeam includes Architecture, Module, Project, native integration, diagnostics and an optional kernel. Doctrine mapping is an optional integration, not a required runtime dependency.
 
-Die frühere Foundation wurde aus diesem Package entfernt: APIs/CRUD, Security/User/MFA/Passkeys, Entity-Basen/Stores/Soft-Delete, Filesystem/Mailer/QR und generische Fach- oder Infrastrukturverträge gehören in Anwendungscode oder eigenständige Pakete. [Migration](../migration/modular-monolith.md) beschreibt den Wechsel.
+The former Foundation has been removed from this package: APIs/CRUD, Security/User/MFA/Passkeys, entity bases/stores/soft delete, Filesystem/Mailer/QR and generic domain or infrastructure contracts belong in application code or separate packages. [Migration](../migration/modular-monolith.md) describes the transition.
 
-Strata ist eine mögliche spätere Bibliothek. Diese Änderung erstellt keine Strata-Implementierung und keine gegenseitige Paketabhängigkeit.
+Strata is a possible future library. This change creates neither a Strata implementation nor mutual package dependencies.

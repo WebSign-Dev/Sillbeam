@@ -1,3 +1,3 @@
 # dependency-injection
 
-Der native Symfony-Klassenloader importiert aktive Modul- und Project-Flächen, mit Autowiring, Autoconfiguration, Environment-Attributen, Exclude und AsAlias. Modulflächen sind aus ihren Project-Elternimporten ausgeschlossen. Interface-Aliase werden nach allen Imports bestimmt. Native Service-Konfiguration hat Vorrang. [Einstieg](../guides/getting-started.md).
+The native Symfony class loader imports active Module and Project areas with autowiring, autoconfiguration, environment attributes, Exclude and AsAlias. Module areas are excluded from their parent Project imports. Interface aliases are determined after all imports. Native service configuration takes precedence. [Getting started](../guides/getting-started.md).

@@ -1,6 +1,6 @@
-# Konfiguration
+# Configuration
 
-Ohne Package-Konfigurationsdatei gelten dieselben Defaults wie bei `sillbeam: {}`. Die Source-Grenze ist `%kernel.project_dir%/src`, ihr Namespace wird aus Composer-PSR-4 bestimmt. Relative Pfade beziehen sich auf das Anwendungsverzeichnis. Mehrdeutige PSR-4-Zuordnungen brauchen einen expliziten Namespace.
+Without a package configuration file, the same defaults apply as for `sillbeam: {}`. The source boundary is `%kernel.project_dir%/src`; its namespace is determined from Composer PSR-4. Relative paths refer to the application directory. Ambiguous PSR-4 mappings require an explicit namespace.
 
 ```yaml
 sillbeam:
@@ -8,7 +8,7 @@ sillbeam:
         root: '%kernel.project_dir%/src'
         namespace: 'App\'
         excludes: ['Generated/**', '**/Tests/**']
-        # Bei Angabe ersetzt jede Liste den Standard für diese Art.
+        # When specified, each list replaces the default for that kind.
         modules:
             - path: src/Domain
               namespace: 'App\Domain\'
@@ -33,18 +33,18 @@ sillbeam:
         enabled: null
 ```
 
-Mehrere Konfigurationsdateien werden nach Symfony-Regeln zusammengeführt: Root-, Ausschluss- und Integrationslisten werden angehängt; ein expliziter Eintrag ersetzt den jeweiligen Standard. Eine leere Liste entfernt den Standard, löscht aber keine Einträge aus vorherigen Konfigurationsdateien.
+Multiple configuration files are merged according to Symfony rules: root, exclusion and integration lists are appended; an explicit entry replaces the corresponding default. An empty list removes the default but does not delete entries from earlier configuration files.
 
-Ohne angegebene Listen sind Module-Roots `src/Module` und Project-Roots `src/Project`. Eine leere Liste entfernt den jeweiligen Standard. Explizite Roots müssen existieren und Composer-Autoloading muss ihre Namespaces laden können. Gleiche Pfade mit widersprüchlichen Namespaces sind Fehler. Der Source-Root bleibt zusätzlich überwacht; Descriptoren außerhalb erlaubter Grenzen werden gemeldet.
+Without specified lists, Module roots are `src/Module` and Project roots are `src/Project`. An empty list removes the corresponding default. Explicit roots must exist and Composer autoloading must be able to load their namespaces. Identical paths with conflicting namespaces are errors. The source root remains monitored as well; descriptors outside permitted boundaries are reported.
 
-Patterns verwenden `/`, `*` (ein Segment), `**` (rekursiv) und `?`. Globale Ausschlüsse sind relativ zum Source-Root oder absolut; lokale Ausschlüsse relativ zum jeweiligen Root. Ausschlüsse gelten für Discovery und automatische Service-, Route- und Entity-Imports. Controller-/Entity-Patterns wählen Verzeichnisse relativ zum Descriptorbereich. Ohne Angabe: `Controller`, `**/Controller` und `Entity`, `**/Entity`.
+Patterns use `/`, `*` (one segment), `**` (recursive) and `?`. Global exclusions are relative to the source root or absolute; local exclusions are relative to their root. Exclusions apply to discovery and automatic service, route and entity imports. Controller/entity patterns select directories relative to the descriptor area. Defaults: `Controller`, `**/Controller` and `Entity`, `**/Entity`.
 
-Service-Ausschlüsse: `Entity/**`, `**/Entity/**`, `Dto/**`, `**/Dto/**`, relativ zum Descriptor. Wer Entities unter `Model` ablegt, ergänzt dessen Service-Ausschluss. Symfony-native Attribute und explizite `services.yaml` bleiben verfügbar.
+Service exclusions: `Entity/**`, `**/Entity/**`, `Dto/**`, `**/Dto/**`, relative to the descriptor. If entities are placed under `Model`, add its service exclusion. Native Symfony attributes and explicit `services.yaml` remain available.
 
-Doctrine: `null` aktiviert automatisch bei registriertem DoctrineBundle; `true` fordert es an und scheitert ohne Bundle; `false` deaktiviert Sillbeam-Mappings. Kurzform `doctrine: false` ist erlaubt. Nur aktive Module werden automatisch gemappt; direkte Project-Entities werden zusätzlich gemappt. Native manuelle Mappings bleiben erhalten, auch wenn sie bewusst ausgeschlossene Bereiche wieder aufnehmen.
+Doctrine: `null` activates automatically when DoctrineBundle is registered; `true` requires it and fails without the bundle; `false` disables Sillbeam mappings. The shorthand `doctrine: false` is allowed. Only active modules are mapped automatically; direct Project entities are also mapped. Manual native mappings are preserved, even when they intentionally include excluded areas again.
 
-Aktivierungsoptionen können `%env(bool:...)%` verwenden. Sie werden beim Build aufgelöst. Nach Änderungen von Build-Umgebungsvariablen den Containercache neu bauen.
+Activation options can use `%env(bool:...)%`. They are resolved at build time. Rebuild the container cache after changing build environment variables.
 
-Frühere Foundation-Keys wie `api`, `security`, `user` oder `management` sind ungültig; siehe [Migration](../migration/modular-monolith.md).
+Former Foundation keys such as `api`, `security`, `user` or `management` are invalid; see [Migration](../migration/modular-monolith.md).
 
-Project-Hosts sind exakte, getrimmte Hostnamen ohne Schema, Port, Pfad oder Wildcard; Groß-/Kleinschreibung wird normalisiert. IDs folgen `[a-z][a-z0-9-]*`. Unbekannte Modul-/Project-Konfigurationsadressen sind Buildfehler.
+Project hosts are exact, trimmed hostnames without scheme, port, path or wildcard; case is normalized. IDs match `[a-z][a-z0-9-]*`. Unknown Module/Project configuration addresses are build errors.

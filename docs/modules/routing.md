@@ -1,3 +1,3 @@
 # routing
 
-SillbeamRouteLoader nutzt Symfonys AttributeFileLoader für die erlaubten Controller-Dateien des Quellindexes. Ausschlüsse und private Ownership gelten auch unter übergeordneten Controller-Verzeichnissen. Route-Ressourcen überwachen neue/entfernte Dateien. Projects setzen Namenspräfix und Hostfilter. [Projects](../guides/projects.md).
+SillbeamRouteLoader uses Symfony's AttributeFileLoader for the permitted controller files in the source index. Exclusions and private ownership also apply under parent controller directories. Route resources monitor added/removed files. Projects set name prefixes and host filters. [Projects](../guides/projects.md).

@@ -23,7 +23,7 @@ The recipe deliberately performs only two installation tasks:
 Doctrine mappings activate automatically when the application registers DoctrineBundle.
 The package contains the module architecture layer; Foundation capabilities are removed.
 
-The recipe preserves existing `services.yaml` imports. With the standard `App\:` import of `src/`, consumers must add `Module` and `Project` (or their custom discovery areas) to its exclusions when Sillbeam should control automatic activation. Explicit services remain available. See the [integration rules](../docs/guides/getting-started.md#symfony-integration-erhalten).
+The recipe preserves existing `services.yaml` imports. With the standard `App\:` import of `src/`, consumers must add `Module` and `Project` (or their custom discovery areas) to its exclusions when Sillbeam should control automatic activation. Explicit services remain available. See the [integration rules](../docs/guides/getting-started.md#preserve-symfony-integration).
 
 ## Validation
 

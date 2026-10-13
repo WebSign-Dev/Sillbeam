@@ -1,6 +1,6 @@
 # Projects
 
-Projects bündeln Oberflächen in einer gemeinsamen Symfony-Anwendung. Der Descriptor besitzt sein Verzeichnis; dessen Services, Controller und Entities werden direkt integriert. Ein Project darf weder innerhalb eines Moduls noch innerhalb eines anderen Projects liegen; Project-Descriptoren dürfen kein gemeinsames Verzeichnis besitzen. Private Module dürfen innerhalb des Projects beliebig liegen, solange ihre Verzeichnisse nicht mit anderen Modulen überlappen.
+Projects group application surfaces within a shared Symfony application. The descriptor owns its directory; its services, controllers and entities are integrated directly. A Project must be neither inside a module nor inside another Project; Project descriptors must not share a directory. Private modules may be located anywhere within the Project as long as their directories do not overlap other modules.
 
 ```php
 namespace App\Project\Shop;
@@ -11,7 +11,7 @@ namespace App\Project\Shop;
 final class ShopProject {}
 ```
 
-Private Module werden über physische Zugehörigkeit zum Project erkannt und bei Aktivierung automatisch Teil seines Graphen. Ein Modul unter einer konfigurierten Project-Grenze ohne owning Project ist ein Fehler. IDs privater Module sind innerhalb eines Projects eindeutig; die Konfigurationsadresse ist `project:<project-id>:<module-id>`.
+Private modules are identified by their physical ownership within the Project and automatically join its graph when enabled. A module under a configured Project boundary without an owning Project is an error. Private module IDs are unique within a Project; their configuration address is `project:<project-id>:<module-id>`.
 
 ```yaml
 sillbeam:
@@ -20,12 +20,12 @@ sillbeam:
         admin: { hosts: [admin.example.com] }
 ```
 
-Bei mehreren Projects braucht jedes mindestens einen eindeutigen Host. Das erste Element ist der kanonische Host. Routen erhalten den Präfix `<project-id>.`; Shared-Module-Routen werden für jede zugeordnete Oberfläche importiert. Ein einzelnes Project darf ohne Hostfilter laufen.
+With multiple Projects, each needs at least one unique host. The first entry is the canonical host. Routes receive the prefix `<project-id>.`; shared module routes are imported for every assigned application surface. A single Project may run without a host filter.
 
-`ProjectContextInterface` liefert `current()`, `id()`, `is(id)` und `hasModule(class)` im aktuellen Request. CLI hat ohne Request kein aktuelles Project. Alle Projects teilen Container, Datenbank und Event-System; globale Subscriber/Handler laufen nicht automatisch nur für einen Host.
+`ProjectContextInterface` provides `current()`, `id()`, `is(id)` and `hasModule(class)` in the current request. CLI has no current Project without a request. All Projects share the container, database and event system; global subscribers/handlers are not automatically scoped to a host.
 
-`ProjectRegistryInterface::get()` und `forHost()` werfen bei unbekannten Projects beziehungsweise nicht zugeordneten Hosts eine `OutOfBoundsException`. `forHost()` vergleicht Hosts ohne Beachtung der Groß-/Kleinschreibung; ein einzelnes Project ohne Hosts gilt für jeden Host.
+`ProjectRegistryInterface::get()` and `forHost()` throw `OutOfBoundsException` for unknown Projects or unassigned hosts. `forHost()` compares hosts case-insensitively; a single Project without hosts applies to every host.
 
-Der Context gibt ohne Projects oder ohne aktuellen Request `null` für `current()` und `id()` sowie `false` für `is()` zurück. Sind Projects vorhanden und passt der Request-Host zu keinem davon, reichen alle Context-Methoden die `OutOfBoundsException` weiter. Es gibt keinen Fallback auf ein beliebiges Project. `hasModule()` prüft ohne aktuellen Project-Kontext ausschließlich den Anwendungsgraphen; im Project-Modus ist dieser leer. In Hybrid-Anwendungen können native Symfony-Routen auch auf anderen Hosts laufen; Code, der dort den ProjectContext abfragt, muss den unbekannten Host explizit behandeln. Der Context folgt dem jeweils aktuellen Request, auch bei Subrequests.
+Without Projects or a current request, the context returns `null` for `current()` and `id()` and `false` for `is()`. When Projects exist and the request host matches none of them, all context methods propagate `OutOfBoundsException`. There is no fallback to an arbitrary Project. Without a current Project context, `hasModule()` checks only the application graph; in Project mode that graph is empty. In Hybrid applications, native Symfony routes can also run on other hosts; code querying ProjectContext there must explicitly handle the unknown host. The context follows the current request, including subrequests.
 
-Project-IDs folgen `[a-z][a-z0-9-]*`; `ShopProject` ergibt `shop`. Hosts sind exakte Hostnamen und werden getrimmt sowie kleingeschrieben. Keine URLs, Wildcards, Pfade oder Ports konfigurieren: `shop.example.com` statt `https://shop.example.com`, `*.example.com` oder `localhost:8000`.
+Project IDs match `[a-z][a-z0-9-]*`; `ShopProject` becomes `shop`. Hosts are exact hostnames, trimmed and lowercased. Do not configure URLs, wildcards, paths or ports: use `shop.example.com` rather than `https://shop.example.com`, `*.example.com` or `localhost:8000`.

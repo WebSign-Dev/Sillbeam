@@ -1,8 +1,8 @@
-# Anleitungen
+# Guides
 
-- [Einstieg](getting-started.md)
-- [Flex-Recipe](flex-recipe.md)
+- [Getting started](getting-started.md)
+- [Flex recipe](flex-recipe.md)
 - [Modules](modules.md)
 - [Projects](projects.md)
 
-Frühere Foundation-Anleitungen wurden mit den entfernten Fähigkeiten abgelöst; siehe [Migration](../migration/modular-monolith.md).
+Former Foundation guides were superseded when those capabilities were removed; see [Migration](../migration/modular-monolith.md).

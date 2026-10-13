@@ -1,11 +1,11 @@
-# Architektur
+# Architecture
 
-Der Container-Build erzeugt einen gemeinsamen Quellindex. PHP-Parser löst Namespaces und Imports auf, identifiziert Attribute auf Descriptoren und erfasst statische Klassenreferenzen. Discovery ordnet Descriptoren ihren konfigurierten Grenzen zu und prüft eindeutige, nicht überlappende Modul- beziehungsweise Project-Verzeichnisse.
+The container build creates a shared source index. PHP-Parser resolves namespaces and imports, identifies attributes on descriptors and records static class references. Discovery assigns descriptors to their configured boundaries and checks that Module and Project directories are unique and do not overlap.
 
-Der Compiler prüft IDs, deklarierte Abhängigkeiten, Zyklen und Hostzuordnungen und ermittelt aktive Graphen. Ein besuchter Knoten wird pro Graph einmal expandiert. Der Codeanalysator prüft die direkten Referenzen aktiver Module gegen die direkten Deklarationen und die private Project-Grenze. Transitive Deklarationen erlauben keine direkten Zugriffe.
+The compiler validates IDs, declared dependencies, cycles and host assignments, then determines the active graphs. Each visited node is expanded once per graph. The code analyzer checks direct references from active modules against direct declarations and the private Project boundary. Transitive declarations do not permit direct access.
 
-Dieses Ergebnis versorgt Registries, native Serviceimporte, Routing und optional Doctrine. Deaktivierte oder nicht zugeordnete Module bleiben diagnostizierbar, ohne automatisch importiert zu werden. Auch Elternimporte aus Projects schließen Modulbereiche aus. Explizite native Symfony-/Doctrine-Imports bleiben eine bewusste Escape Hatch und können Code erneut aktivieren.
+This result feeds registries, native service imports, routing and optional Doctrine integration. Disabled or unassigned modules remain available for diagnostics without being imported automatically. Parent imports from Projects also exclude module areas. Explicit native Symfony/Doctrine imports remain an intentional escape hatch and can reactivate code.
 
-Directory-, File- und FileExistence-Resources überwachen die Quellgrenzen, inklusive noch fehlender Standardverzeichnisse. Produktionscache wird wie bei Symfony im Deployment neu gebaut. Aktivierungswerte aus Umgebungsvariablen werden beim Build aufgelöst; Änderungen erfordern einen Cache-Neubau.
+Directory, File and FileExistence resources monitor source boundaries, including default directories that do not yet exist. As with Symfony, production caches are rebuilt during deployment. Activation values from environment variables are resolved at build time; changes require a cache rebuild.
 
-Project ist eine Oberfläche: Host-Routing und Request-Kontext, gemeinsamer Container, Event-System und EntityManager. Keine Isolation globaler Handler oder Sicherheitsgrenze.
+A Project is an application surface: host routing and request context, with a shared container, event system and EntityManager. It provides neither isolation of global handlers nor a security boundary.

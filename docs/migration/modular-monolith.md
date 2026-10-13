@@ -1,36 +1,36 @@
-# Migration zum Sillbeam-Modullayer
+# Migrating to the Sillbeam module layer
 
-Diese Evolution ist eine Breaking Change. Vor einem Update die Nutzung der entfernten Bereiche erfassen, Ersatz implementieren und Anwendungen mit dem neuen Package prüfen. Vorhandene Datenbanken werden durch das Package nicht automatisch geändert; Schema-Migrationen verantwortet die Anwendung.
+This evolution is a breaking change. Before updating, inventory usage of the removed areas, implement replacements and test applications with the new package. The package does not automatically change existing databases; schema migrations are the application's responsibility.
 
-## Entfernte Foundation
+## Removed Foundation
 
-Entfernt wurden die Namespaces `Sillbeam\Api`, `Core`, `Doctrine`, `Entity`, `Exception`, `Filesystem`, `Health`, `Http`, `Location`, `Logger`, `Mailer`, `Management`, `Messenger`, `Notification`, `Payment`, `QrCode`, `Reporting`, `Search`, `Security`, `Serializer`, `User` und `Validator` samt zugehöriger Konfiguration. Alte Versionen bleiben im Git-Verlauf verfügbar.
+The namespaces `Sillbeam\Api`, `Core`, `Doctrine`, `Entity`, `Exception`, `Filesystem`, `Health`, `Http`, `Location`, `Logger`, `Mailer`, `Management`, `Messenger`, `Notification`, `Payment`, `QrCode`, `Reporting`, `Search`, `Security`, `Serializer`, `User` and `Validator` and their configuration have been removed. Older versions remain available in Git history.
 
-- API-Resource-/CRUD-Basen durch Symfony-Controller oder ein explizit gewähltes API-Package ersetzen.
-- Entity-Vererbung, UUID-/Timestamp-/Soft-Delete-Mapping und EntityStores durch eigene Entities, Repositories, Listener/Filter ersetzen. Spalten und bestehende IDs zunächst erhalten; ORM-Schemadiff vor Ausführung prüfen.
-- User, AccessToken, MFA und Passkey-Funktionen mit eigenem Security-/Persistenzkonzept migrieren. Bestehende Credentials/verschlüsselte Geheimnisse und deren Schlüssel nicht verlieren. Sillbeam installiert keine Authentifizierung mehr.
-- Infrastrukturverträge und Adapter in der Anwendung oder einem separaten Package unter eigenem Namespace betreiben; direkte Symfony-/Provider-Konfiguration verwenden.
-- Foundation-Keys aus `sillbeam.yaml` entfernen: `api`, `user`, `security`, `management`, `filesystem`, `mailer`, `messenger`, `qrcode`, `http`, `serializer`, `validator` und weitere frühere Integrationen. Der neue Konfigurationsbaum akzeptiert nur Discovery, Module-Aktivierung, Projects, Integrationspatterns und Doctrine-Mapping.
+- Replace API resource/CRUD bases with Symfony controllers or an explicitly chosen API package.
+- Replace entity inheritance, UUID/timestamp/soft-delete mappings and EntityStores with application entities, repositories, listeners/filters. Initially retain columns and existing IDs; review ORM schema diffs before execution.
+- Migrate User, AccessToken, MFA and passkey features using an application security/persistence design. Preserve existing credentials/encrypted secrets and their keys. Sillbeam no longer installs authentication.
+- Run infrastructure contracts and adapters in the application or a separate package under its own namespace; use direct Symfony/provider configuration.
+- Remove Foundation keys from `sillbeam.yaml`: `api`, `user`, `security`, `management`, `filesystem`, `mailer`, `messenger`, `qrcode`, `http`, `serializer`, `validator` and other former integrations. The new configuration tree accepts only discovery, module activation, Projects, integration patterns and Doctrine mapping.
 
-Strata ist keine verfügbare Ersatzimplementierung und kein Pflichtpackage.
+Strata is neither an available replacement implementation nor a required package.
 
-## Architektur und Imports
+## Architecture and imports
 
-Module-/Project-Attribute bleiben erhalten. PSR-4-Dateinamen sind frei; Discovery erkennt die Attribute statt einer Dateinamenskonvention. Klassennamen ohne `Module`-/`Project`-Suffix brauchen bei gewünschter alter ID ein explizites `id:`.
+Module/Project attributes remain. PSR-4 filenames are unrestricted; discovery recognizes attributes rather than a filename convention. Class names without the `Module`/`Project` suffix need an explicit `id:` if the old ID is desired.
 
-Standardpfade bleiben `src/Module`/`src/Project`. [Konfiguration](../reference/configuration.md) erlaubt weitere Roots und Interiors. Überlappende Modulbereiche und private Descriptoren ohne Project werden jetzt abgelehnt. Fachliche Unterordner bleiben frei.
+Default paths remain `src/Module`/`src/Project`. [Configuration](../reference/configuration.md) supports additional roots and internal layouts. Overlapping module areas and private descriptors without a Project are now rejected. Domain subdirectories remain unrestricted.
 
-Direkte statische Modulzugriffe brauchen direkte `dependencies`; transitive Abhängigkeiten genügen nicht. Fehlermeldungen nennen die Quelle. Nicht verwendete Imports bleiben folgenlos. Shared→Private und private Zugriffe über Project-Grenzen sind verboten.
+Direct static module access requires direct `dependencies`; transitive dependencies are insufficient. Error messages identify the source. Unused imports have no effect. Shared→Private access and private access across Project boundaries are forbidden.
 
-Deaktivierte private Module werden nicht mehr automatisch aktiviert. Aktive Module mit deaktivierten Dependencies bleiben ein Buildfehler. Doctrine mappt automatisch nur aktive Module und direkte Project-Entities. Bei installiertem DoctrineBundle ist Sillbeam-Mapping nun standardmäßig aktiv; für bisherige rein native Konfiguration `doctrine: false` setzen.
+Disabled private modules are no longer activated automatically. Active modules with disabled dependencies remain a build error. Doctrine automatically maps only active modules and direct Project entities. When DoctrineBundle is installed, Sillbeam mapping is now enabled by default; set `doctrine: false` for an existing purely native configuration.
 
-`#[Exclude]`, `#[When]`, `#[WhenNot]`, `#[AsAlias]` und automatische Interface-Aliase folgen dem nativen Symfony-Loader. Prüfe `debug:container` nach dem Update. Manuelle Symfony-/Doctrine-Imports können automatische Ausschlüsse bewusst umgehen.
+`#[Exclude]`, `#[When]`, `#[WhenNot]`, `#[AsAlias]` and automatic interface aliases follow the native Symfony loader. Check `debug:container` after updating. Manual Symfony/Doctrine imports can intentionally bypass automatic exclusions.
 
-## Validierung
+## Validation
 
-1. Composer-Abhängigkeiten aktualisieren; Doctrine bei Bedarf ausdrücklich in der Anwendung installieren.
-2. Cache neu bauen und statisch gemeldete Abhängigkeiten korrigieren.
-3. `sillbeam:architecture --format=json`, `debug:container`, `debug:router` und bei Doctrine `doctrine:mapping:info` vergleichen.
-4. Anwendungs-, Authentifizierungs- und Persistenztests ausführen; Datenbankänderungen separat prüfen.
+1. Update Composer dependencies; explicitly install Doctrine in the application if needed.
+2. Rebuild the cache and correct statically reported dependencies.
+3. Compare `sillbeam:architecture --format=json`, `debug:container`, `debug:router` and, with Doctrine, `doctrine:mapping:info`.
+4. Run application, authentication and persistence tests; review database changes separately.
 
-Die Testanwendung verwendet jetzt gewöhnliche Symfony-Controller und native Doctrine-Entities; [Test-Apps](../development/test-apps.md) zeigen die unterstützten Betriebsformen.
+The test application now uses ordinary Symfony controllers and native Doctrine entities; [Test apps](../development/test-apps.md) shows the supported operating modes.

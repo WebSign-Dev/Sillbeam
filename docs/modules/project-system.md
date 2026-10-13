@@ -1,3 +1,3 @@
 # project-system
 
-ProjectDefinition, Registry und Request-Kontext ordnen Oberflächen in einer gemeinsamen Symfony-Laufzeit zu. [Projects](../guides/projects.md) beschreibt Hosts und Ownership.
+ProjectDefinition, registry and request context associate application surfaces within a shared Symfony runtime. [Projects](../guides/projects.md) describes hosts and ownership.
