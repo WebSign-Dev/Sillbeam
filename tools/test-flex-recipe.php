@@ -17,7 +17,7 @@ require $autoload;
 
 $withDoctrine = '1' === getenv('SILLBEAM_TEST_DOCTRINE');
 $symfony = getenv('SILLBEAM_SYMFONY_VERSION') ?: null;
-$requirements = ['websign-dev/sillbeam' => 'dev-main', 'symfony/flex' => '^2.11', 'symfony/framework-bundle' => $symfony ?? '^7.4 || ^8.0', 'symfony/console' => $symfony ?? '^7.4 || ^8.0', 'symfony/yaml' => $symfony ?? '^7.4 || ^8.0'];
+$requirements = ['websign-dev/sillbeam' => '0.1.0', 'symfony/flex' => '^2.11', 'symfony/framework-bundle' => $symfony ?? '^7.4 || ^8.0', 'symfony/console' => $symfony ?? '^7.4 || ^8.0', 'symfony/yaml' => $symfony ?? '^7.4 || ^8.0'];
 $conflicts = [];
 if ($withDoctrine) {
     $requirements['doctrine/doctrine-bundle'] = '^3.3';
@@ -106,7 +106,7 @@ try {
         'repositories' => [[
             'type' => 'path',
             'url' => $packageDirectory,
-            'options' => ['symlink' => false, 'versions' => ['websign-dev/sillbeam' => 'dev-main']],
+            'options' => ['symlink' => false, 'versions' => ['websign-dev/sillbeam' => '0.1.0']],
         ]],
         'require' => $requirements,
         'conflict' => (object) $conflicts,

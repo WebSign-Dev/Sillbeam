@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f73b6ac191a73426b00dab004b6e8ac4",
+    "content-hash": "d6f671f234bb01de99170dd429d541ea",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -4418,11 +4418,11 @@
         },
         {
             "name": "websign-dev/sillbeam",
-            "version": "dev-main",
+            "version": "0.1.0",
             "dist": {
                 "type": "path",
                 "url": "../../..",
-                "reference": "29cb34737179ee68d046fe51a7d24954ff941e2b"
+                "reference": "9f877d88187f320b76db89a9c6458b64e142b716"
             },
             "require": {
                 "composer-runtime-api": "^2.2",
@@ -4448,7 +4448,7 @@
             "suggest": {
                 "doctrine/doctrine-bundle": "Enables automatic attribute mappings for active Sillbeam modules and projects."
             },
-            "type": "library",
+            "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
                     "dev-main": "0.1.x-dev"
@@ -4471,6 +4471,25 @@
                     "Sillbeam\\Tests\\": "tests/"
                 }
             },
+            "archive": {
+                "exclude": [
+                    "/*",
+                    "/.*",
+                    "!/src",
+                    "!/src/**",
+                    "!/docs",
+                    "!/docs/**",
+                    "!/composer.json",
+                    "!/README.md",
+                    "!/LICENSE",
+                    "!/CHANGELOG.md",
+                    "!/CONTRIBUTING.md",
+                    "!/SUPPORT.md",
+                    "!/SECURITY.md",
+                    "/docs/superpowers",
+                    "/docs/superpowers/**"
+                ]
+            },
             "scripts": {
                 "analyse": [
                     "phpstan analyse --configuration=phpstan.neon.dist --no-progress --debug"
@@ -4484,20 +4503,32 @@
                 "test": [
                     "phpunit --configuration=phpunit.xml.dist"
                 ],
+                "test:consumer": [
+                    "php tools/test-consumer.php"
+                ],
                 "test:flex-recipe": [
                     "php tools/test-flex-recipe.php"
+                ],
+                "test:release-package": [
+                    "php tools/test-release-package.php"
                 ]
             },
             "license": [
                 "MIT"
             ],
             "description": "Modular architecture extension for Symfony applications, organized around Modules and optional Projects.",
+            "homepage": "https://getsillbeam.websign.de/",
             "keywords": [
                 "modular-monolith",
                 "modules",
                 "sillbeam",
                 "symfony"
             ],
+            "support": {
+                "issues": "https://github.com/WebSign-Dev/Sillbeam/issues",
+                "source": "https://github.com/WebSign-Dev/Sillbeam",
+                "docs": "https://github.com/WebSign-Dev/Sillbeam/blob/main/docs/README.md"
+            },
             "transport-options": {
                 "symlink": true,
                 "relative": true

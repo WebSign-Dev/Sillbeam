@@ -10,7 +10,10 @@
             "type": "path",
             "url": "../../..",
             "options": {
-                "symlink": true
+                "symlink": true,
+                "versions": {
+                    "websign-dev/sillbeam": "0.1.0"
+                }
             }
         }
     ],
@@ -29,7 +32,7 @@
         "symfony/runtime": "7.4.*",
         "symfony/validator": "7.4.*",
         "symfony/yaml": "7.4.*",
-        "websign-dev/sillbeam": "^0.1"
+        "websign-dev/sillbeam": "^0.1.0"
     },
     "config": {
         "allow-plugins": {
