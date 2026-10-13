@@ -26,7 +26,7 @@ git switch -c describe-your-change
 
 If contributing through a fork, clone your fork instead. Use a descriptive branch name.
 
-The six example application variants and the main fixtures use the root Composer autoloader. You do not need to start Docker or Harbor to run the root test suite. The separate consumer under `apps/test-app` has its own dependencies and runtime; see the [test-app guide](docs/development/test-apps.md).
+The six example application variants and the main fixtures use the root Composer autoloader. You do not need to start an external runtime to run the root test suite. The separate consumer under `apps/test-app` has its own dependencies and runtime; see the [test-app guide](docs/development/test-apps.md).
 
 ## Make a focused change
 

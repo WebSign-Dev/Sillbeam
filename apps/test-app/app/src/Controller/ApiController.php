@@ -14,7 +14,7 @@ final class ApiController extends AbstractController
         return $this->json([
             'ok' => true,
             'service' => 'backend',
-            'message' => 'Fabryq Harbor Symfony backend is reachable.',
+            'message' => 'Symfony backend is reachable.',
         ]);
     }
 }

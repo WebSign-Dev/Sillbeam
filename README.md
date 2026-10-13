@@ -192,7 +192,7 @@ composer test:flex-recipe
 SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 ```
 
-The example applications cover six operating variants. The isolated consumer lives under `apps/test-app`; its local Harbor workflow is described in the [test-app guide](docs/development/test-apps.md).
+The example applications cover six operating variants. The isolated consumer lives under `apps/test-app`; its setup is described in the [test-app guide](docs/development/test-apps.md).
 
 Read [Contributing](CONTRIBUTING.md) for development setup, required checks and pull request guidance, [Support](SUPPORT.md) for assistance and [Security](SECURITY.md) for private vulnerability reporting.
 
