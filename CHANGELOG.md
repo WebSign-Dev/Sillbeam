@@ -1,10 +1,10 @@
 # Changelog
 
-This changelog records public Sillbeam releases. No public release has been made yet.
+This changelog records Sillbeam releases.
 
-## Unreleased — prepared 0.1.0
+## v0.1.0
 
-### Release preparation
+### Fixes and integration
 
 - Excluded discovery roots and entity directories remain excluded across overlapping scans and mappings; new architecture configuration invalidates development containers after a zero-config boot.
 - Symfony-bundle metadata and a zero-config Flex recipe with installation/removal checks preserving application configuration.
@@ -24,4 +24,4 @@ This changelog records public Sillbeam releases. No public release has been made
 
 The first public package contains the modular core only. Former private Nexum/Foundation APIs are not shipped. Existing development consumers must follow the [migration guide](docs/migration/modular-monolith.md).
 
-See the [draft 0.1.0 release notes](docs/releases/0.1.0.md) for installation, limitations and verification. The release date and tag remain unset until publication is approved.
+Install with `composer require websign-dev/sillbeam:^0.1.0`. See the [v0.1.0 release notes](docs/releases/0.1.0.md) for installation, limitations and verification.

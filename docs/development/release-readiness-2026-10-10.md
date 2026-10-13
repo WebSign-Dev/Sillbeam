@@ -1,6 +1,6 @@
 # Technical release verification — 2026-10-10
 
-> Historical, completed verification snapshot. Version counts and recipe details describe that run, not current installation instructions. See the [current release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
+> Historical, completed verification snapshot. Installation, publication and security-channel status describe the dated run, not the current release. For v0.1.0, use `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
 All 37 production files of the module layer and associated unit/integration tests were reviewed: discovery and physical ownership, declared and static dependencies, activation graphs, Symfony DI/routing, Doctrine, registries/request context, cache resources and diagnostic API. Starting point: `3d1c510`, clean working tree, 65 tests / 240 assertions.
 
 ## Reproduced and corrected defects

@@ -7,7 +7,7 @@ Sillbeam provides security fixes for the latest published release on a best-effo
 
 | Version | Supported |
 |---------|-----------|
-| 1.0.0-rc (latest release) | ✅ |
+| v0.1.0 (latest release) | ✅ |
 | Older versions | ❌ |
 
 No long-term security support or guaranteed maintenance period is provided.

@@ -1,5 +1,7 @@
 # Independent release audit for v0.1.0 — 2026-10-12
 
+> Historical, completed verification snapshot. Installation, publication and security-channel status describe the dated run, not the current release. For v0.1.0, use `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
+
 ## Source state and method
 
 Starting point: `21e75cb3fad489882822faa7003f5e770dd3e6eb`, clean working tree. Verification covers this commit **plus the audit corrections listed below**, not the unchanged commit. Website: `c9e36e40f7796d39d48b5a56a4cacb58625672c0`. No publication, tags, pushes, merges or deployments. Audit corrections are delivered as a working-tree diff.

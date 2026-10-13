@@ -1,5 +1,7 @@
 # Release package preparation — 2026-10-12
 
+> Historical, completed verification snapshot. Installation, publication and security-channel status describe the dated run, not the current release. For v0.1.0, use `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
+
 Goal: a prepared, unpublished release candidate **v0.1.0** based on `051dbda`. No tag, push, merge, GitHub release, Packagist upload or live deployment. The runtime API and dependency versions remain unchanged.
 
 ## Package and Flex

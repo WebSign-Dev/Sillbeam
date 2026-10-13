@@ -1,6 +1,6 @@
 # Package compatibility and installation — 2026-10-10
 
-> Historical, completed verification snapshot. Version counts and recipe details describe that run, not current installation instructions. See the [current release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
+> Historical, completed verification snapshot. Installation, publication and security-channel status describe the dated run, not the current release. For v0.1.0, use `composer require websign-dev/sillbeam:^0.1.0`; see the [release notes](../releases/0.1.0.md) and [Flex guide](../guides/flex-recipe.md).
 The starting point is technical stabilization in `57bfe48`. Verification uses actual PHP runtimes and independent Composer resolutions in temporary, separate directories. Historical private GitHub CI runs were not used as evidence of defects.
 
 ## Supported and actually tested versions

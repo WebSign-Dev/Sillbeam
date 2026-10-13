@@ -43,6 +43,6 @@ The PHP package cannot load its own recipe. Until the recipe is merged into
 Symfony Recipes Contrib, consumers either register the bundle and route import manually or use
 their own Flex endpoint containing this recipe.
 
-The `0.1/` recipe applies to the proposed `0.1.0` package release and later compatible 0.1 versions. Recipe availability is independent of Packagist publication. Manual setup remains supported.
+Install v0.1.0 with `composer require websign-dev/sillbeam:^0.1.0`. The `0.1/` recipe applies to v0.1.0 and later compatible 0.1 versions. Recipe availability is independent of Composer package installation. Manual setup remains supported.
 
 The package declares `type: symfony-bundle`, following [Symfony bundle installation guidance](https://symfony.com/doc/current/bundles/best_practices.html#installation). No semantically empty file is created under `config/packages`, as required by the [recipe checklist](https://github.com/symfony/recipes/blob/main/README.rst#recipe-checklist).

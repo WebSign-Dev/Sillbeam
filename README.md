@@ -9,7 +9,7 @@
 [![CI][ci-shield]][ci-url]
 [![PHP][php-shield]](#requirements)
 [![Symfony][symfony-shield]](#requirements)
-[![Status][status-shield]](#install-from-a-checkout)
+[![Status][status-shield]](#install-with-composer)
 [![License][license-shield]](LICENSE)
 
 **A modular architecture layer for scalable, maintainable Symfony applications.**
@@ -47,27 +47,15 @@ Modules normally live in `src/Module`; Projects live in `src/Project`. These def
 
 PHP 8.4/8.5 with Symfony 7.4/8.0/8.1 has been checked through independent consumer installations. See the [tested versions and reproduction steps](docs/development/package-compatibility-2026-10-10.md).
 
-### Install from a checkout
+### Install with Composer
 
-Sillbeam is currently on the **`0.1.x` development line**. The example below uses a local Composer path repository and does not depend on a published stable package or Flex recipe.
-
-Clone this repository, then run the Composer commands from your Symfony application's root. Replace `/absolute/path/to/sillbeam` with the checkout location:
+Install Sillbeam in your Symfony application's root directory:
 
 ```bash
-git clone https://github.com/WebSign-Dev/Sillbeam.git /absolute/path/to/sillbeam
-composer config repositories.sillbeam path /absolute/path/to/sillbeam
-composer require websign-dev/sillbeam:dev-main
+composer require websign-dev/sillbeam:^0.1.0
 ```
 
-### Install a versioned release (after publication)
-
-Once `0.1.0` is available on Packagist, run in an existing Symfony application:
-
-```bash
-composer require websign-dev/sillbeam:^0.1
-```
-
-This command is for the future published release. For the current checkout use `dev-main` as above. A local path repository takes precedence over Packagist; remove it with `composer config --unset repositories.sillbeam` before switching to the public package.
+The release version is **v0.1.0**. The constraint `^0.1.0` allows compatible updates within the 0.1 release line. To install exactly this version, use `composer require websign-dev/sillbeam:0.1.0`.
 
 ### Register Sillbeam
 
@@ -93,7 +81,7 @@ sillbeam:
 <details>
 <summary><strong>Install through Symfony Flex</strong></summary>
 
-The prepared [Flex recipe](https://github.com/WebSign-Dev/Sillbeam/blob/main/flex-recipe/README.md) registers the bundle and creates the route import above. Its publication is separate from the PHP package. Until it is available through Symfony Recipes Contrib, use the manual setup or a custom Flex endpoint containing the recipe.
+The [Flex recipe](https://github.com/WebSign-Dev/Sillbeam/blob/main/flex-recipe/README.md) registers the bundle and creates the route import above when available through your Symfony Flex endpoint. Recipe availability is independent of Composer package installation. If Composer/Flex does not install the recipe, register the bundle and route import manually as shown above.
 
 </details>
 
@@ -180,7 +168,7 @@ Architecture errors prevent the container from building, so resolve their report
 
 ## Release status
 
-The first public release is being prepared as **0.1.0**. No stable version is published yet. The [changelog](CHANGELOG.md) and [draft release notes](docs/releases/0.1.0.md) describe the existing scope and limitations. The development alias remains `0.1.x-dev`; a release version will come from its Git tag.
+The release version is **v0.1.0**, installed through Composer as `websign-dev/sillbeam`. The [changelog](CHANGELOG.md) and [release notes](docs/releases/0.1.0.md) describe its scope and limitations. Composer derives the package version from the Git tag; `0.1.x-dev` is the development branch alias.
 
 ## Scope and migration
 
@@ -231,5 +219,5 @@ Sillbeam is licensed under the [MIT License](LICENSE).
 [ci-shield]: https://github.com/WebSign-Dev/Sillbeam/actions/workflows/ci.yml/badge.svg
 [php-shield]: https://img.shields.io/badge/PHP-%E2%89%A5%208.4-777bb4?logo=php&logoColor=white
 [symfony-shield]: https://img.shields.io/badge/Symfony-7.4%20%7C%208.x-000000?logo=symfony&logoColor=white
-[status-shield]: https://img.shields.io/badge/status-0.1.x%20development-f05a00
+[status-shield]: https://img.shields.io/badge/release-v0.1.0-57606a
 [license-shield]: https://img.shields.io/badge/license-MIT-57606a

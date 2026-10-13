@@ -23,7 +23,13 @@ DoctrineBundle activates mapping integration automatically. `sillbeam: { doctrin
 
 ## Installation and autoloading
 
-For the development version, use the local path repository and `dev-main` from the [README](../../README.md#install-from-a-checkout). After publication, use `composer require websign-dev/sillbeam:^0.1`; this version is not yet publicly available. The Flex recipe and package are published independently; manual bundle/routing registration already works.
+Install v0.1.0 through Composer from your Symfony application's root directory:
+
+```bash
+composer require websign-dev/sillbeam:^0.1.0
+```
+
+The constraint allows compatible 0.1 updates. Use `composer require websign-dev/sillbeam:0.1.0` to pin this exact version. See [Composer installation](../../README.md#install-with-composer). Flex recipe availability is independent of the package; if no recipe is installed, register the bundle and route import manually as shown in the README.
 
 The application needs a Composer PSR-4 mapping such as `"App\\": "src/"`. All PHP files below begin with `<?php`. Keep the existing Symfony kernel. Optionally, `src/Kernel.php` can look like this:
 
