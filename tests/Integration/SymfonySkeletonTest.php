@@ -152,9 +152,13 @@ final class SymfonySkeletonTest extends TestCase
         try {
             $module = $source->php('src/Module/Live/LiveModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class LiveModule {}');
             $source->php('src/Project/Shop/ShopProject.php', '#[\Sillbeam\Project\Attribute\SillbeamProject(modules: [\\'.$module.'::class])] final class ShopProject {}');
-            $aliases = [];
+            $source->php('src/Project/Shop/Module/Off/OffModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class OffModule {}');
+            $source->php('src/Project/Shop/Module/Off/Service.php', '#[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "disabled", public: true)] final class Service {}');
+            $aliases = ['disabled'];
             foreach (['Module/Live', 'Project/Shop'] as $areaIndex => $area) {
-                foreach (['Tests', 'Fixtures', 'Migrations', 'Nested/Tests', 'Nested/Fixtures', 'Nested/Migrations'] as $index => $directory) {
+                $service = $source->php('src/'.$area.'/RuntimeService.php', '#[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "runtime.'.$areaIndex.'", public: true)] final class RuntimeService { public function message(): string { return "runtime.'.$areaIndex.'"; } }');
+                $source->php('src/'.$area.'/Controller/Endpoint.php', 'final class Endpoint { public function __construct(private \\'.$service.' $service) {} #[\Symfony\Component\Routing\Attribute\Route("/runtime'.$areaIndex.'", name: "runtime'.$areaIndex.'")] public function __invoke(): \Symfony\Component\HttpFoundation\Response { return new \Symfony\Component\HttpFoundation\Response($this->service->message()); } }');
+                foreach (['Entity', 'Dto', 'Tests', 'Fixtures', 'Migrations', 'Nested/Entity', 'Nested/Dto', 'Nested/Tests', 'Nested/Fixtures', 'Nested/Migrations'] as $index => $directory) {
                     $alias = 'development.'.$areaIndex.'.'.$index;
                     $parent = str_ends_with($directory, 'Tests') ? ' extends \PHPUnit\Framework\TestCase' : '';
                     $source->php('src/'.$area.'/'.$directory.'/Helper.php', '#[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "'.$alias.'", public: true)] final class Helper'.$parent.' {}');
@@ -162,15 +166,56 @@ final class SymfonySkeletonTest extends TestCase
                 }
             }
             $fixture = $source->php('src/Module/Live/Fixtures/Manual.php', 'final class Manual { public function __construct(public string $value) {} }');
-            $source->write('config/packages/framework.yaml', 'framework: { secret: test }');
+            $source->write('config/packages/framework.yaml', "framework: { secret: test, router: { utf8: true }, trusted_hosts: ['^localhost$'] }");
+            $source->write('config/routes.yaml', 'sillbeam: { resource: ., type: sillbeam }');
+            $source->write('config/packages/sillbeam.yaml', "sillbeam: { modules: { 'project:shop:off': { enabled: false } } }");
             $source->write('config/services.yaml', $this->services($source, true)."    '".$fixture."': { public: true, arguments: { \$value: explicit } }\n");
             $kernel->boot();
             foreach ($aliases as $alias) {
                 self::assertFalse($kernel->getContainer()->has($alias), $alias);
             }
+            for ($index = 0; $index < 2; ++$index) {
+                self::assertTrue($kernel->getContainer()->has('runtime.'.$index));
+                $response = $kernel->handle(\Symfony\Component\HttpFoundation\Request::create('/runtime'.$index));
+                self::assertSame(200, $response->getStatusCode());
+                self::assertSame('runtime.'.$index, $response->getContent());
+            }
             /** @var object{value: string} $manual */
             $manual = $kernel->getContainer()->get($fixture);
             self::assertSame('explicit', $manual->value);
+        } finally {
+            $kernel->shutdown();
+            $source->remove();
+        }
+    }
+
+    /** @return iterable<string, array{string, bool, bool}> */
+    public static function serviceExclusionOverrides(): iterable
+    {
+        foreach (self::environments() as $name => [$environment, $debug]) {
+            yield $name.' empty list' => [$environment, $debug, false];
+            yield $name.' custom list' => [$environment, $debug, true];
+        }
+    }
+
+    #[DataProvider('serviceExclusionOverrides')]
+    public function testConfiguredServiceExclusionsReplaceTheDefaults(string $environment, bool $debug, bool $excludeFixtures): void
+    {
+        $source = new SourceWorkspace();
+        $kernel = new TestApplicationKernel($source, false, $environment, $debug);
+        try {
+            $source->php('src/Module/Live/LiveModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class LiveModule {}');
+            foreach (['Fixtures', 'Migrations', 'Entity', 'Dto'] as $directory) {
+                $source->php('src/Module/Live/'.$directory.'/Helper.php', '#[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "'.$directory.'", public: true)] final class Helper {}');
+            }
+            $source->write('config/packages/framework.yaml', 'framework: { secret: test }');
+            $source->write('config/packages/sillbeam.yaml', 'sillbeam: { integrations: { services: { exclude: '.($excludeFixtures ? '[Fixtures/**]' : '[]').' } } }');
+            $source->write('config/services.yaml', $this->services($source, true));
+            $kernel->boot();
+            self::assertSame(!$excludeFixtures, $kernel->getContainer()->has('Fixtures'));
+            foreach (['Migrations', 'Entity', 'Dto'] as $alias) {
+                self::assertTrue($kernel->getContainer()->has($alias));
+            }
         } finally {
             $kernel->shutdown();
             $source->remove();
