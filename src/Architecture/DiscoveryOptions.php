@@ -6,6 +6,8 @@ namespace Sillbeam\Architecture;
 
 final readonly class DiscoveryOptions
 {
+    public string $root;
+
     /** @var list<DiscoveryRoot> */
     public array $moduleRoots;
     /** @var list<DiscoveryRoot> */
@@ -20,7 +22,7 @@ final readonly class DiscoveryOptions
      * @param list<string>             $serviceExcludes
      */
     public function __construct(
-        public string $root,
+        string $root,
         public string $namespace,
         ?array $moduleRoots = null,
         ?array $projectRoots = null,
@@ -29,8 +31,9 @@ final readonly class DiscoveryOptions
         public array $entityPatterns = ['Entity', '**/Entity'],
         public array $serviceExcludes = ['Entity/**', '**/Entity/**', 'Dto/**', '**/Dto/**', 'Tests/**', '**/Tests/**', 'Fixtures/**', '**/Fixtures/**', 'Migrations/**', '**/Migrations/**'],
     ) {
-        $this->moduleRoots = $moduleRoots ?? [new DiscoveryRoot($root.'/Module', $namespace.'Module\\')];
-        $this->projectRoots = $projectRoots ?? [new DiscoveryRoot($root.'/Project', $namespace.'Project\\')];
+        $root = $this->root = FilesystemPath::normalize($root);
+        $this->moduleRoots = $moduleRoots ?? [new DiscoveryRoot(FilesystemPath::directoryPrefix($root).'Module', $namespace.'Module\\')];
+        $this->projectRoots = $projectRoots ?? [new DiscoveryRoot(FilesystemPath::directoryPrefix($root).'Project', $namespace.'Project\\')];
         $namespaces = [];
         foreach ($this->roots() as $discoveryRoot) {
             if (isset($namespaces[$discoveryRoot->path]) && $namespaces[$discoveryRoot->path] !== $discoveryRoot->namespace) {
@@ -48,11 +51,12 @@ final readonly class DiscoveryOptions
 
     public function excluded(string $file): bool
     {
-        if (PathMatcher::matches($file, $this->excludes) || (str_starts_with($file, $this->root.'/') && PathMatcher::matches(substr($file, \strlen($this->root) + 1), $this->excludes))) {
+        $file = FilesystemPath::normalize($file);
+        if (PathMatcher::matches($file, $this->excludes) || (str_starts_with($file, FilesystemPath::directoryPrefix($this->root)) && PathMatcher::matches(substr($file, \strlen(FilesystemPath::directoryPrefix($this->root))), $this->excludes))) {
             return true;
         }
         foreach ([...$this->moduleRoots, ...$this->projectRoots] as $root) {
-            if ($root->contains($file) && PathMatcher::matches(substr($file, \strlen($root->path) + 1), $root->excludes)) {
+            if ($root->contains($file) && PathMatcher::matches(substr($file, \strlen(FilesystemPath::directoryPrefix($root->path))), $root->excludes)) {
                 return true;
             }
         }
@@ -62,6 +66,7 @@ final readonly class DiscoveryOptions
 
     public function namespaceForDirectory(string $directory): string
     {
+        $directory = FilesystemPath::normalize($directory);
         $roots = $this->roots();
         usort($roots, static fn (DiscoveryRoot $a, DiscoveryRoot $b): int => \strlen($b->path) <=> \strlen($a->path));
         foreach ($roots as $root) {

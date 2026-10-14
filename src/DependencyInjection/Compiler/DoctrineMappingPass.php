@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sillbeam\DependencyInjection\Compiler;
 
+use Sillbeam\Architecture\FilesystemPath;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -34,7 +35,7 @@ final class DoctrineMappingPass implements CompilerPassInterface
                     }
                     $driver = $container->findDefinition((string) $arguments[0]);
                     // A native override of the generated mapping remains authoritative.
-                    if ('Doctrine\\ORM\\Mapping\\Driver\\AttributeDriver' !== $driver->getClass() || !\in_array($mapping['directory'], $driver->getArgument(0), true)) {
+                    if ('Doctrine\\ORM\\Mapping\\Driver\\AttributeDriver' !== $driver->getClass() || !\in_array(FilesystemPath::normalize($mapping['directory']), array_map(FilesystemPath::normalize(...), $driver->getArgument(0)), true)) {
                         continue;
                     }
                     $driverId = 'sillbeam.doctrine.driver.'.hash('xxh128', $id.$mapping['directory']);

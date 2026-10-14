@@ -31,6 +31,7 @@ final class DiscoveryOptionsResolver
         if (!\is_string($projectDir)) {
             throw new \LogicException('The kernel.project_dir parameter must be a string.');
         }
+        $projectDir = FilesystemPath::normalize($projectDir);
         $configuredRoot = $raw['root'] ?? $projectDir.'/src';
         if (!\is_string($configuredRoot)) {
             throw new \LogicException('sillbeam.discovery.root must be a string.');
@@ -72,13 +73,13 @@ final class DiscoveryOptionsResolver
 
     private function resolvePath(string $path, string $projectDir): string
     {
-        $path = str_replace('%kernel.project_dir%', $projectDir, $path);
-        if (!str_starts_with($path, '/')) {
-            $path = $projectDir.'/'.$path;
+        $path = FilesystemPath::normalize(str_replace('%kernel.project_dir%', $projectDir, $path));
+        if (!str_starts_with($path, '/') && !preg_match('/^[a-zA-Z]:\//', $path)) {
+            $path = FilesystemPath::directoryPrefix($projectDir).$path;
         }
         $resolved = realpath($path);
 
-        return false === $resolved ? rtrim($path, '/') : rtrim($resolved, '/');
+        return FilesystemPath::normalize(false === $resolved ? $path : $resolved);
     }
 
     private function resolveNamespace(string $projectDir, string $root): string
@@ -93,8 +94,12 @@ final class DiscoveryOptionsResolver
         foreach (['autoload', 'autoload-dev'] as $section) {
             foreach (($composer[$section]['psr-4'] ?? []) as $namespace => $paths) {
                 foreach ((array) $paths as $path) {
-                    $mappingPath = realpath($projectDir.'/'.rtrim((string) $path, '/'));
-                    if (false === $mappingPath || ($root !== $mappingPath && !str_starts_with($root.'/', $mappingPath.'/'))) {
+                    $mappingPath = realpath($projectDir.'/'.FilesystemPath::normalize((string) $path));
+                    if (false === $mappingPath) {
+                        continue;
+                    }
+                    $mappingPath = FilesystemPath::normalize($mappingPath);
+                    if (!(new DiscoveryRoot($mappingPath, (string) $namespace))->contains($root)) {
                         continue;
                     }
                     $mapping = ['namespace' => trim((string) $namespace, '\\').'\\', 'path' => $mappingPath];

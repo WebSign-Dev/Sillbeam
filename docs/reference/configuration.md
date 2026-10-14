@@ -48,3 +48,9 @@ Activation options can use `%env(bool:...)%`. They are resolved at build time. R
 Former Foundation keys such as `api`, `security`, `user` or `management` are invalid; see [Migration](../migration/modular-monolith.md).
 
 Project hosts are exact, trimmed hostnames without scheme, port, path or wildcard; case is normalized. IDs match `[a-z][a-z0-9-]*`. Unknown Module/Project configuration addresses are build errors.
+
+## Configuration prepended by other bundles
+
+Symfony runs bundle extension `prepend()` methods in registration order before loading extensions. Without active Doctrine integration, Sillbeam applies the final configuration when loading its extension, including configuration prepended by a later bundle.
+
+When Doctrine integration is enabled, Sillbeam prepares its mappings during `prepend()`. Register any bundle that prepends Sillbeam configuration **before `SillbeamBundle`**, or set the options directly in application configuration. If a later bundle changes Sillbeam configuration while Doctrine integration is enabled or becomes enabled, the build fails with an explicit configuration-order error rather than using conflicting architecture and mapping states. Prepended configuration that leaves the processed settings and discovery options unchanged is allowed.

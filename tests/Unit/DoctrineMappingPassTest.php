@@ -12,6 +12,23 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class DoctrineMappingPassTest extends TestCase
 {
+    public function testGeneratedMappingMatchesDriverDirectoriesWithMixedSeparators(): void
+    {
+        $container = new ContainerBuilder();
+        $container->setParameter('sillbeam.doctrine.mappings', [
+            ['prefix' => 'App\\Entity', 'directory' => '/app/src/Entity', 'excludes' => ['/app/src/Entity/Hidden.php']],
+        ]);
+        $container->register('attributes', AttributeDriver::class)->setArguments([['/app\\src/Entity/']]);
+        $chain = $container->register('doctrine.orm.default_metadata_driver');
+        $chain->addMethodCall('addDriver', [new Reference('attributes'), 'App\\Entity']);
+
+        (new DoctrineMappingPass())->process($container);
+
+        $driver = (string) $chain->getMethodCalls()[0][1][0];
+        self::assertNotSame('attributes', $driver);
+        self::assertSame([['/app/src/Entity']], $container->findDefinition($driver)->getArguments());
+    }
+
     public function testNativeMappingPrecedenceIsPreserved(): void
     {
         $container = new ContainerBuilder();

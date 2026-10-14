@@ -12,6 +12,7 @@ use Sillbeam\Architecture\Console\ArchitectureCommand;
 use Sillbeam\Architecture\DiscoveryOptions;
 use Sillbeam\Architecture\DiscoveryOptionsResolver;
 use Sillbeam\Architecture\DiscoveryResult;
+use Sillbeam\Architecture\FilesystemPath;
 use Sillbeam\Architecture\PathMatcher;
 use Sillbeam\Architecture\SourceInspector;
 use Sillbeam\Kernel\Command\AboutCommand;
@@ -35,6 +36,7 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class SillbeamExtension extends Extension implements PrependExtensionInterface
 {
+    private ?ContainerBuilder $preparationContainer = null;
     private ?CompiledArchitecture $architecture = null;
     private ?DiscoveryResult $discovery = null;
     private ?DiscoveryOptions $options = null;
@@ -49,13 +51,18 @@ final class SillbeamExtension extends Extension implements PrependExtensionInter
 
     public function prepend(ContainerBuilder $container): void
     {
+        $this->preparationContainer = $container;
+        $this->doctrineMappings = [];
         foreach ($container->getResources() as $resource) {
             if ($resource instanceof FileResource) {
                 $this->configurationResources[] = $resource->getResource();
             }
         }
-        $this->build($container->getExtensionConfig($this->getAlias()), $container);
-        if ($this->config['doctrine']['enabled']) {
+        $this->architecture = null;
+        [$configs, $config] = $this->resolveConfiguration($container->getExtensionConfig($this->getAlias()), $container);
+        $this->config = $config;
+        if ($config['doctrine']['enabled']) {
+            $this->build($configs, $container);
             $this->prependDoctrine($container);
         }
     }
@@ -63,8 +70,18 @@ final class SillbeamExtension extends Extension implements PrependExtensionInter
     /** @param array<array-key, array<string, mixed>> $configs */
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $configurationContainer = $this->preparationContainer ?? $container;
+        [$configs, $config] = $this->resolveConfiguration($configs, $configurationContainer);
+        if (null !== $this->preparationContainer && ($this->config['doctrine']['enabled'] || $config['doctrine']['enabled'])) {
+            $options = (new DiscoveryOptionsResolver())->resolve($configurationContainer, $configs, $config);
+            if (null === $this->architecture || $config !== $this->config || $options != $this->options) {
+                // Doctrine may already have loaded the mappings prepared during prepend().
+                throw new \LogicException('Sillbeam configuration changed after prepend() while Doctrine integration is enabled. Register bundles that prepend Sillbeam configuration before SillbeamBundle, or configure Sillbeam directly in the application.');
+            }
+        }
         if (null === $this->architecture) {
-            $this->build($configs, $container);
+            // Without Doctrine, validate only after every bundle has prepended its configuration.
+            $this->build($configs, $configurationContainer);
         }
         $architecture = $this->architecture ?? throw new \LogicException('Sillbeam architecture was not compiled.');
         $discovery = $this->discovery ?? throw new \LogicException('Sillbeam discovery was not run.');
@@ -75,6 +92,7 @@ final class SillbeamExtension extends Extension implements PrependExtensionInter
         if (!\is_string($projectDir)) {
             throw new \LogicException('kernel.project_dir must be a string.');
         }
+        $projectDir = FilesystemPath::normalize($projectDir);
         $composer = $projectDir.'/composer.json';
         $container->addResource(is_file($composer) ? new FileResource($composer) : new FileExistenceResource($composer));
         // Also detect newly added configuration, including the first sillbeam.yaml.
@@ -104,14 +122,7 @@ final class SillbeamExtension extends Extension implements PrependExtensionInter
     /** @param array<array-key, array<string, mixed>> $configs */
     private function build(array $configs, ContainerBuilder $container): void
     {
-        $configs = $container->resolveEnvPlaceholders($container->getParameterBag()->resolveValue($configs), true);
-        $config = $this->processConfiguration(new Configuration(), $configs);
-        $config = $container->getParameterBag()->resolveValue($config);
-        $hasDoctrine = $container->hasExtension('doctrine');
-        $config['doctrine']['enabled'] ??= $hasDoctrine;
-        if ($config['doctrine']['enabled'] && !$hasDoctrine) {
-            throw new \LogicException('sillbeam.doctrine is enabled, but DoctrineBundle is not registered.');
-        }
+        [$configs, $config] = $this->resolveConfiguration($configs, $container);
         $this->config = $config;
         $this->options = (new DiscoveryOptionsResolver())->resolve($container, $configs, $config);
         $this->inspector = new SourceInspector();
@@ -127,6 +138,25 @@ final class SillbeamExtension extends Extension implements PrependExtensionInter
             $modules[$class] = new ModuleDefinition(...$data);
         }
         $this->architecture = new CompiledArchitecture($modules, $architecture->projects, $architecture->applicationModules, $architecture->projectModules);
+    }
+
+    /**
+     * @param array<array-key, array<string, mixed>> $configs
+     *
+     * @return array{array<array-key, array<string, mixed>>, array<string, mixed>}
+     */
+    private function resolveConfiguration(array $configs, ContainerBuilder $container): array
+    {
+        $configs = $container->resolveEnvPlaceholders($container->getParameterBag()->resolveValue($configs), true);
+        $config = $this->processConfiguration(new Configuration(), $configs);
+        $config = $container->getParameterBag()->resolveValue($config);
+        $hasDoctrine = $container->hasExtension('doctrine');
+        $config['doctrine']['enabled'] ??= $hasDoctrine;
+        if ($config['doctrine']['enabled'] && !$hasDoctrine) {
+            throw new \LogicException('sillbeam.doctrine is enabled, but DoctrineBundle is not registered.');
+        }
+
+        return [$configs, $config];
     }
 
     /** @return list<string> */
@@ -227,8 +257,9 @@ final class SillbeamExtension extends Extension implements PrependExtensionInter
             if (!$file instanceof \SplFileInfo || !$file->isFile() || 'php' !== $file->getExtension()) {
                 continue;
             }
-            if (!isset($files[$file->getPathname()]) || !$this->belongsToArea($file->getPathname(), $class, $architecture)) {
-                $excludes[] = $file->getPathname();
+            $path = FilesystemPath::normalize($file->getPathname());
+            if (!isset($files[$path]) || !$this->belongsToArea($path, $class, $architecture)) {
+                $excludes[] = $path;
             }
         }
 

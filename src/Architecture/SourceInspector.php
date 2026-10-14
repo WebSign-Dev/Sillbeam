@@ -45,19 +45,19 @@ final class SourceInspector
             $iterator = new \RecursiveIteratorIterator(new \RecursiveCallbackFilterIterator(
                 new \RecursiveDirectoryIterator($root->path, \FilesystemIterator::SKIP_DOTS),
                 static function (\SplFileInfo $file) use ($options, &$pruned): bool {
-                    if (!$options->excluded($file->getPathname())) {
+                    if (!$options->excluded(FilesystemPath::normalize($file->getPathname()))) {
                         return true;
                     }
-                    $pruned[$file->getPathname()] = $file->getPathname().($file->isDir() ? '/' : '');
+                    $pruned[FilesystemPath::normalize($file->getPathname())] = FilesystemPath::normalize($file->getPathname()).($file->isDir() ? '/' : '');
 
                     return false;
                 },
             ));
             foreach ($iterator as $entry) {
-                if (!$entry->isFile() || 'php' !== $entry->getExtension() || isset($files[$entry->getPathname()])) {
+                if (!$entry->isFile() || 'php' !== $entry->getExtension() || isset($files[FilesystemPath::normalize($entry->getPathname())])) {
                     continue;
                 }
-                $path = $entry->getPathname();
+                $path = FilesystemPath::normalize($entry->getPathname());
                 try {
                     $files[$path] = $parser->parse($path);
                 } catch (\PhpParser\Error $error) {
@@ -109,23 +109,25 @@ final class SourceInspector
      */
     public function directories(string $root, array $patterns, array $excludedRoots = [], ?DiscoveryOptions $options = null): array
     {
+        $root = FilesystemPath::normalize($root);
+        $excludedRoots = array_map(FilesystemPath::normalize(...), $excludedRoots);
         if (!is_dir($root)) {
             return [];
         }
         $directories = [];
         $excluded = static function (\SplFileInfo $entry) use ($excludedRoots, $options): bool {
             foreach ($excludedRoots as $excludedRoot) {
-                if ($entry->getPathname() === $excludedRoot || str_starts_with($entry->getPathname(), $excludedRoot.'/')) {
+                if (FilesystemPath::normalize($entry->getPathname()) === $excludedRoot || str_starts_with(FilesystemPath::normalize($entry->getPathname()), FilesystemPath::directoryPrefix($excludedRoot))) {
                     return false;
                 }
             }
 
-            return null === $options || !$options->excluded($entry->getPathname());
+            return null === $options || !$options->excluded(FilesystemPath::normalize($entry->getPathname()));
         };
         $iterator = new \RecursiveIteratorIterator(new \RecursiveCallbackFilterIterator(new \RecursiveDirectoryIterator($root, \FilesystemIterator::SKIP_DOTS), $excluded), \RecursiveIteratorIterator::SELF_FIRST);
         foreach ($iterator as $entry) {
-            if ($entry->isDir() && PathMatcher::matches(substr($entry->getPathname(), \strlen($root) + 1), $patterns)) {
-                $directories[] = $entry->getPathname();
+            if ($entry->isDir() && PathMatcher::matches(substr(FilesystemPath::normalize($entry->getPathname()), \strlen(FilesystemPath::directoryPrefix($root))), $patterns)) {
+                $directories[] = FilesystemPath::normalize($entry->getPathname());
             }
         }
         sort($directories);
@@ -138,11 +140,12 @@ final class SourceInspector
      */
     public function reflection(string $class, string $file): \ReflectionClass
     {
+        $file = FilesystemPath::normalize($file);
         if (!class_exists($class)) {
             require_once $file;
         }
         $reflection = new \ReflectionClass($class);
-        if ($reflection->getFileName() !== $file) {
+        if (FilesystemPath::normalize((string) $reflection->getFileName()) !== $file) {
             throw new \LogicException(\sprintf('Descriptor class "%s" does not belong to "%s".', $class, $file));
         }
 
