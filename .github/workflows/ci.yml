@@ -1,5 +1,16 @@
 name: CI
-on: [push, pull_request]
+# No PR trigger: this workflow does not provide a required pre-merge CI check.
+# Keep branch protection / ruleset requirements aligned separately.
+on:
+    push:
+        branches: [main, dev]
+    workflow_dispatch:
+
+concurrency:
+    # Share a group only on dev; unique groups elsewhere also preserve pending main runs.
+    group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref == 'refs/heads/dev' && 'latest' || github.run_id }}
+    cancel-in-progress: ${{ github.ref == 'refs/heads/dev' }}
+
 jobs:
     compatibility:
         runs-on: ubuntu-latest
