@@ -6,6 +6,7 @@
 
 <div align="center">
 
+[![Composer][composer-shield]][composer-url]
 [![CI][ci-shield]][ci-url]
 [![PHP][php-shield]](#requirements)
 [![Symfony][symfony-shield]](#requirements)
@@ -213,9 +214,11 @@ Sillbeam is licensed under the [MIT License](LICENSE).
 <!-- Navigation -->
 [issues-url]: https://github.com/WebSign-Dev/Sillbeam/issues
 [releases-url]: https://github.com/WebSign-Dev/Sillbeam/releases
+[composer-url]: https://packagist.org/packages/websign-dev/sillbeam
 [ci-url]: https://github.com/WebSign-Dev/Sillbeam/actions/workflows/ci.yml
 
 <!-- Badges: repository CI and requirements from composer.json -->
+[composer-shield]: https://img.shields.io/packagist/v/websign-dev/sillbeam?label=Composer&logo=composer&logoColor=white
 [ci-shield]: https://github.com/WebSign-Dev/Sillbeam/actions/workflows/ci.yml/badge.svg
 [php-shield]: https://img.shields.io/badge/PHP-%E2%89%A5%208.4-777bb4?logo=php&logoColor=white
 [symfony-shield]: https://img.shields.io/badge/Symfony-7.4%20%7C%208.x-000000?logo=symfony&logoColor=white
