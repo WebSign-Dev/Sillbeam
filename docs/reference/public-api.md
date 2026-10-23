@@ -1,5 +1,7 @@
 # Public API
 
+Structured validation is available through `Sillbeam\Core\Architecture\ArchitectureAnalyzer`; see [Architecture analysis](architecture-analysis.md) for findings, failure semantics and strict entry points.
+
 - `SillbeamCoreBundle`: central Symfony entry point.
 - `Module\Attribute\SillbeamModule`: `id`, `description`, `dependencies`.
 - `Project\Attribute\SillbeamProject`: `id`, `description`, `modules`.

@@ -20,6 +20,7 @@ final class SourceInspector
             return $this->indexes[$key];
         }
         $files = [];
+        $paths = [];
         $pruned = [];
         $parser = new SourceFileParser();
         foreach ($options->roots() as $root) {
@@ -54,18 +55,30 @@ final class SourceInspector
                 },
             ));
             foreach ($iterator as $entry) {
-                if (!$entry->isFile() || 'php' !== $entry->getExtension() || isset($files[FilesystemPath::normalize($entry->getPathname())])) {
+                if (!$entry->isFile() || 'php' !== $entry->getExtension() || isset($paths[FilesystemPath::normalize($entry->getPathname())])) {
                     continue;
                 }
-                $path = FilesystemPath::normalize($entry->getPathname());
-                try {
-                    $files[$path] = $parser->parse($path);
-                } catch (\PhpParser\Error $error) {
-                    throw new \LogicException(\sprintf('Cannot parse Sillbeam source "%s": %s', $path, $error->getMessage()), 0, $error);
-                }
+                $paths[FilesystemPath::normalize($entry->getPathname())] = true;
             }
         }
-        ksort($files);
+        // Enumerate before parsing so fatal diagnostics also ignore filesystem/root order.
+        ksort($paths);
+        $failures = new ArchitectureFindings();
+        $cause = null;
+        foreach (array_keys($paths) as $path) {
+            try {
+                $files[$path] = $parser->parse($path);
+            } catch (\PhpParser\Error $error) {
+                $failures->add(new ArchitectureFinding('source.parse', \sprintf('Cannot parse Sillbeam source "%s": %s', $path, $error->getMessage()), ['file' => $path, 'line' => $error->getStartLine()], 'fatal'));
+                $cause ??= $error;
+            } catch (ArchitectureValidationException $error) {
+                foreach ($error->result->findings as $finding) {
+                    $failures->add($finding);
+                }
+                $cause ??= $error->getPrevious();
+            }
+        }
+        (new ArchitectureAnalysisResult($failures->all(), cause: $cause))->throwIfInvalid();
         $this->prunedPaths[$key] = array_values($pruned);
 
         return $this->indexes[$key] = $files;
@@ -88,10 +101,10 @@ final class SourceInspector
                 if ($type === $attribute) {
                     $expected = $options->namespaceForDirectory(\dirname($file->path)).'\\'.basename($file->path, '.php');
                     if ($class !== $expected) {
-                        throw new \LogicException(\sprintf('Descriptor "%s" must declare PSR-4 class "%s".', $file->path, $expected));
+                        throw ArchitectureValidationException::fatal('discovery.descriptor_class', \sprintf('Descriptor "%s" must declare PSR-4 class "%s".', $file->path, $expected), ['file' => $file->path, 'class' => $class]);
                     }
                     if (isset($descriptors[$file->path])) {
-                        throw new \LogicException('Multiple Sillbeam descriptors in '.$file->path);
+                        throw ArchitectureValidationException::fatal('discovery.multiple_descriptors', 'Multiple Sillbeam descriptors in '.$file->path, ['file' => $file->path]);
                     }
                     $descriptors[$file->path] = $class;
                 }
@@ -135,6 +148,30 @@ final class SourceInspector
         return $directories;
     }
 
+    /**
+     * @template T of object
+     *
+     * @param class-string    $class
+     * @param class-string<T> $attribute
+     *
+     * @return T
+     */
+    public function metadata(string $class, string $file, string $attribute): object
+    {
+        // Loading descriptors executes application code; its programming errors must propagate.
+        $reflection = $this->reflection($class, $file);
+        try {
+            $attributes = $reflection->getAttributes($attribute);
+            if ([] === $attributes) {
+                throw ArchitectureValidationException::fatal('discovery.descriptor_metadata', 'Missing descriptor attribute on '.$class, ['class' => $class, 'file' => $file]);
+            }
+
+            return $attributes[0]->newInstance();
+        } catch (\Error|\ReflectionException|\InvalidArgumentException $error) {
+            throw ArchitectureValidationException::fatal('discovery.descriptor_metadata', \sprintf('Cannot read Sillbeam descriptor "%s": %s', $class, $error->getMessage()), ['class' => $class, 'file' => $file], $error);
+        }
+    }
+
     /** @param class-string $class
      * @return \ReflectionClass<object>
      */
@@ -146,7 +183,7 @@ final class SourceInspector
         }
         $reflection = new \ReflectionClass($class);
         if (FilesystemPath::normalize((string) $reflection->getFileName()) !== $file) {
-            throw new \LogicException(\sprintf('Descriptor class "%s" does not belong to "%s".', $class, $file));
+            throw ArchitectureValidationException::fatal('discovery.descriptor_file', \sprintf('Descriptor class "%s" does not belong to "%s".', $class, $file), ['file' => $file, 'class' => $class]);
         }
 
         return $reflection;

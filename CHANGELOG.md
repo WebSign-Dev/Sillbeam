@@ -4,6 +4,13 @@ This changelog records released versions and unreleased changes of Sillbeam.
 
 ## v0.2.0 — unreleased
 
+### Architecture validation
+
+- Aggregate independently detectable existing Module, Project and dependency violations as structured findings with stable rule identifiers, severity and available context.
+- Add a reusable analysis result with deterministic ordering and deduplication; distinguish rule violations from fatal analysis blockers.
+- Keep strict container-build rejection through a `LogicException`-compatible aggregate exception; do not expose invalid runtime graphs.
+- Preserve existing rules, CLI output and runtime integrations. See [architecture analysis](docs/reference/architecture-analysis.md).
+
 ### Breaking changes
 
 - Rename the Composer package from `websign-dev/sillbeam` to `websign-dev/sillbeam-core` and prepare repository references for `WebSign-Dev/sillbeam-core`.

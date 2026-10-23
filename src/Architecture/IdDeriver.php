@@ -6,7 +6,7 @@ namespace Sillbeam\Core\Architecture;
 
 final class IdDeriver
 {
-    public static function fromClass(string $class, string $suffix): string
+    public static function fromClass(string $class, string $suffix, ?string $file = null): string
     {
         $shortName = substr($class, (int) strrpos($class, '\\') + 1);
         if (str_ends_with($shortName, $suffix)) {
@@ -15,7 +15,7 @@ final class IdDeriver
 
         $id = strtolower((string) preg_replace('/(?<!^)[A-Z]/', '-$0', $shortName));
         if ('' === $id || !preg_match('/^[a-z][a-z0-9-]*$/', $id)) {
-            throw new \LogicException(\sprintf('Cannot derive a valid Sillbeam id from "%s".', $class));
+            throw ArchitectureValidationException::fatal('discovery.descriptor_id', \sprintf('Cannot derive a valid Sillbeam id from "%s".', $class), ['class' => $class, 'file' => $file]);
         }
 
         return $id;

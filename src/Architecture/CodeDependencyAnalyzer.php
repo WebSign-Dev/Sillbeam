@@ -15,6 +15,20 @@ final readonly class CodeDependencyAnalyzer
     /** @return array<class-string, list<array{module: class-string, class: string, file: string, line: int}>> */
     public function analyze(DiscoveryResult $discovery, CompiledArchitecture $architecture, DiscoveryOptions $options): array
     {
+        $findings = new ArchitectureFindings();
+        $references = $this->collect($discovery, $architecture, $options, $findings);
+        (new ArchitectureAnalysisResult($findings->all(), references: $references))->throwIfInvalid();
+
+        return $references;
+    }
+
+    /**
+     * @internal collect without publishing an invalid graph
+     *
+     * @return array<class-string, list<array{module: class-string, class: string, file: string, line: int}>>
+     */
+    public function collect(DiscoveryResult $discovery, CompiledArchitecture $architecture, DiscoveryOptions $options, ArchitectureFindings $findings): array
+    {
         $files = $this->inspector->files($options);
         $owners = [];
         $symbols = [];
@@ -29,7 +43,7 @@ final readonly class CodeDependencyAnalyzer
             foreach ($file->classes as $class) {
                 $key = strtolower($class);
                 if (isset($symbols[$key])) {
-                    throw new \LogicException('Duplicate class in Sillbeam source index: '.$class);
+                    throw ArchitectureValidationException::fatal('source.duplicate_class', 'Duplicate class in Sillbeam source index: '.$class, ['class' => $class, 'file' => $file->path, 'module' => $owner->class]);
                 }
                 $symbols[$key] = $owner;
             }
@@ -46,23 +60,23 @@ final readonly class CodeDependencyAnalyzer
                     continue;
                 }
                 $evidence = ['module' => $target->class, 'class' => $reference['class'], 'file' => $file->path, 'line' => $reference['line']];
-                $key = serialize($evidence);
-                if (!isset($seen[$key])) {
-                    $references[$source->class][] = $evidence;
-                    $seen[$key] = true;
+                $key = serialize([...$evidence, 'class' => strtolower($reference['class'])]);
+                if (isset($seen[$key])) {
+                    continue;
                 }
+                $references[$source->class][] = $evidence;
+                $seen[$key] = true;
                 if (!isset($active[$source->class])) {
                     continue;
                 }
                 $prefix = \sprintf('%s:%d: Module "%s" uses "%s" from module "%s": ', $file->path, $reference['line'], $source->id, $reference['class'], $target->id);
+                $context = ['module' => $source->class, 'project' => $source->projectClass, 'target' => $target->class, 'class' => $reference['class'], 'file' => $file->path, 'line' => $reference['line']];
                 if ($target->isPrivate() && (!$source->isPrivate() || $source->projectClass !== $target->projectClass)) {
-                    throw new \LogicException($prefix.'access to this private module is forbidden.');
-                }
-                if (!isset($active[$target->class])) {
-                    throw new \LogicException($prefix.'references an inactive module.');
-                }
-                if (!\in_array($target->class, $source->dependencies, true)) {
-                    throw new \LogicException($prefix.'does not declare a direct dependency.');
+                    $findings->add(new ArchitectureFinding('code.private', $prefix.'access to this private module is forbidden.', $context));
+                } elseif (!isset($active[$target->class])) {
+                    $findings->add(new ArchitectureFinding('code.inactive', $prefix.'references an inactive module.', $context));
+                } elseif (!\in_array($target->class, $source->dependencies, true)) {
+                    $findings->add(new ArchitectureFinding('code.undeclared_dependency', $prefix.'does not declare a direct dependency.', $context));
                 }
             }
         }

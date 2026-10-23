@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\DependencyInjection;
 
-use Sillbeam\Core\Architecture\ArchitectureCompiler;
-use Sillbeam\Core\Architecture\ArchitectureDiscovery;
-use Sillbeam\Core\Architecture\CodeDependencyAnalyzer;
+use Sillbeam\Core\Architecture\ArchitectureAnalyzer;
 use Sillbeam\Core\Architecture\CompiledArchitecture;
 use Sillbeam\Core\Architecture\Console\ArchitectureCommand;
 use Sillbeam\Core\Architecture\DiscoveryOptions;
@@ -131,9 +129,11 @@ final class SillbeamCoreExtension extends Extension implements PrependExtensionI
         $this->config = $config;
         $this->options = (new DiscoveryOptionsResolver())->resolve($container, $configs, $config);
         $this->inspector = new SourceInspector();
-        $this->discovery = (new ArchitectureDiscovery($this->inspector))->discover($this->options);
-        $architecture = (new ArchitectureCompiler())->compile($this->discovery, $config);
-        $references = (new CodeDependencyAnalyzer($this->inspector))->analyze($this->discovery, $architecture, $this->options);
+        $analysis = (new ArchitectureAnalyzer($this->inspector))->analyze($this->options, $config);
+        $analysis->throwIfInvalid();
+        $this->discovery = $analysis->discovery;
+        $architecture = $analysis->architecture ?? throw new \LogicException('Sillbeam architecture was not compiled.');
+        $references = $analysis->references;
         $modules = [];
         foreach ($architecture->modules as $class => $module) {
             $data = get_object_vars($module);

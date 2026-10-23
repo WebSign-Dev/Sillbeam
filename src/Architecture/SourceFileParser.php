@@ -16,8 +16,16 @@ final class SourceFileParser
 {
     public function parse(string $path): SourceFile
     {
-        $nodes = (new ParserFactory())->createForNewestSupportedVersion()->parse((string) file_get_contents($path)) ?? [];
-        $collector = new class extends NodeVisitorAbstract {
+        $contents = @file_get_contents($path);
+        if (false === $contents) {
+            throw ArchitectureValidationException::fatal('source.read', 'Cannot read Sillbeam source "'.$path.'".', ['file' => $path]);
+        }
+        $nodes = (new ParserFactory())->createForNewestSupportedVersion()->parse($contents) ?? [];
+        $collector = new class($path) extends NodeVisitorAbstract {
+            public function __construct(private readonly string $path)
+            {
+            }
+
             /** @var list<class-string> */
             public array $classes = [];
             /** @var array<class-string, string> */
@@ -38,7 +46,7 @@ final class SourceFileParser
                         foreach ($group->attrs as $attribute) {
                             if (null !== ($descriptor = $this->descriptorType($attribute->name))) {
                                 if (isset($this->descriptors[$class])) {
-                                    throw new \LogicException('Multiple Sillbeam descriptor attributes on '.$class);
+                                    throw ArchitectureValidationException::fatal('discovery.multiple_attributes', 'Multiple Sillbeam descriptor attributes on '.$class, ['file' => $this->path, 'line' => $node->getStartLine(), 'class' => $class]);
                                 }
                                 $this->descriptors[$class] = $descriptor;
                             }
