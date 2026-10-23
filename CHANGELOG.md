@@ -4,6 +4,15 @@ This changelog records released versions and unreleased changes of Sillbeam.
 
 ## v0.2.0 — unreleased
 
+### RC verification and release preparation
+
+- Fix CVE-2026-108082 in development/reference-app lockfiles by updating HttpFoundation to 8.1.9/7.4.21; retain dependency constraints and audit both lockfiles in CI.
+
+- Verify the integrated candidate across PHP 8.4/8.5 and Symfony 7.4/8.1, isolated consumers, Flex and the real no-dev Composer ZIP; record observed results and remaining release gates.
+- Extend the benchmark with paired native Symfony applications, 10/50/100 modules, cold/cached builds, warm boot, HTTP p50/p95 and allocated peak memory; retain raw samples and measurement limits without performance claims.
+- Add benchmark smoke coverage and the ZIP installation check to CI; describe the lifecycle subprocess helper as impure for current static analysis.
+- Complete migration/release notes for aggregate findings, container-independent reports and production prebuild. See the [RC report](docs/development/core-rc-2026-10-23.md).
+
 ### Architecture reporting
 
 - Extend `sillbeam:architecture` with one text/JSON report, schema version 1 and exit codes 0 (valid), 1 (violations), 2 (unavailable or invalid configuration/usage).

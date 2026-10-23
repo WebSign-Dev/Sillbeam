@@ -200,7 +200,13 @@ PHP);
         $this->source->php('src/Module/Broken/BrokenModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(dependencies: [\\Missing\\Module::class])] final class BrokenModule {}');
     }
 
-    /** @return array<string, mixed> */
+    /**
+     * Each invocation observes current source/cache state in a new subprocess.
+     *
+     * @phpstan-impure
+     *
+     * @return array<string, mixed>
+     */
     private function runProcess(string $environment, string $operation, string $runtimeMode = ''): array
     {
         $stdout = $this->source->directory.'/stdout.log';

@@ -22,6 +22,7 @@ jobs:
                 symfony: ['7.4.*', '8.1.*']
         env:
             SILLBEAM_SYMFONY_VERSION: '${{ matrix.symfony }}'
+            COMPOSER_PROCESS_TIMEOUT: '900'
         steps:
             - uses: actions/checkout@v4
             - uses: shivammathur/setup-php@v2
@@ -38,6 +39,8 @@ jobs:
                   composer update --with-all-dependencies --no-scripts --no-plugins --no-interaction --prefer-dist
             - run: composer validate --strict
             - run: composer check-platform-reqs
+            - run: composer audit --locked
+            - run: composer audit --locked --working-dir=apps/test-app/app
             - run: composer test
             - run: composer analyse
             - run: composer architecture
@@ -45,3 +48,4 @@ jobs:
             - run: composer test:flex-recipe
             - run: SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
             - run: composer test:consumer
+            - run: composer test:release-package
