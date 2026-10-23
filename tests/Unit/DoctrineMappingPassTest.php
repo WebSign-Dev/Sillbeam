@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Unit;
+namespace Sillbeam\Core\Tests\Unit;
 
 use Doctrine\ORM\Mapping\Driver\AttributeDriver;
 use PHPUnit\Framework\TestCase;
-use Sillbeam\DependencyInjection\Compiler\DoctrineMappingPass;
+use Sillbeam\Core\DependencyInjection\Compiler\DoctrineMappingPass;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Unit;
+namespace Sillbeam\Core\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Architecture\ArchitectureDiscovery;
-use Sillbeam\Architecture\DiscoveryOptions;
-use Sillbeam\Architecture\DiscoveryOptionsResolver;
-use Sillbeam\Architecture\DiscoveryRoot;
-use Sillbeam\Architecture\SourceInspector;
-use Sillbeam\Tests\Support\SourceWorkspace;
+use Sillbeam\Core\Architecture\ArchitectureDiscovery;
+use Sillbeam\Core\Architecture\DiscoveryOptions;
+use Sillbeam\Core\Architecture\DiscoveryOptionsResolver;
+use Sillbeam\Core\Architecture\DiscoveryRoot;
+use Sillbeam\Core\Architecture\SourceInspector;
+use Sillbeam\Core\Tests\Support\SourceWorkspace;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 final class PathConsistencyTest extends TestCase
@@ -90,8 +90,8 @@ final class PathConsistencyTest extends TestCase
     {
         $source = new SourceWorkspace();
         try {
-            $project = $source->php('src/Project/Shop/Shop.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class Shop {}');
-            $module = $source->php('src/Project/Shop/Billing/Billing.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class Billing {}');
+            $project = $source->php('src/Project/Shop/Shop.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject] final class Shop {}');
+            $module = $source->php('src/Project/Shop/Billing/Billing.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class Billing {}');
             $options = new DiscoveryOptions($source->directory.'/src', $source->namespace.'\\', [], [new DiscoveryRoot($source->directory.'/src\\Project/', $source->namespace.'\\Project\\')]);
             $result = (new ArchitectureDiscovery())->discover($options);
             self::assertSame($source->directory.'/src/Project/Shop', $result->projects[$project]->directory);

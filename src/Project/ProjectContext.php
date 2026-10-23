@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Project;
+namespace Sillbeam\Core\Project;
 
-use Sillbeam\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 final readonly class ProjectContext implements ProjectContextInterface

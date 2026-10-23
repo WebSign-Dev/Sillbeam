@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Unit;
+namespace Sillbeam\Core\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Kernel\SillbeamKernel;
+use Sillbeam\Core\Kernel\SillbeamKernel;
 
 final class SillbeamKernelTest extends TestCase
 {
@@ -18,6 +18,6 @@ final class SillbeamKernelTest extends TestCase
             }
         };
 
-        self::assertSame('websign-dev/sillbeam', $kernel->getApplicationName());
+        self::assertSame('websign-dev/sillbeam-core', $kernel->getApplicationName());
     }
 }

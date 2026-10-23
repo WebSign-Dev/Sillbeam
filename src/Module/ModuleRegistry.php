@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Module;
+namespace Sillbeam\Core\Module;
 
 final readonly class ModuleRegistry implements ModuleRegistryInterface
 {

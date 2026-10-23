@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Routing;
+namespace Sillbeam\Core\Routing;
 
-use Sillbeam\Module\ModuleDefinition;
-use Sillbeam\Module\ModuleRegistryInterface;
-use Sillbeam\Project\ProjectRegistryInterface;
+use Sillbeam\Core\Module\ModuleDefinition;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Project\ProjectRegistryInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileExistenceResource;

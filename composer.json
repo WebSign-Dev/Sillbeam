@@ -1,5 +1,5 @@
 {
-    "name": "websign-dev/sillbeam",
+    "name": "websign-dev/sillbeam-core",
     "description": "Modular architecture extension for Symfony applications, organized around Modules and optional Projects.",
     "type": "symfony-bundle",
     "keywords": [
@@ -32,7 +32,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Sillbeam\\": "src/"
+            "Sillbeam\\Core\\": "src/"
         }
     },
     "autoload-dev": {
@@ -44,7 +44,7 @@
             "ProjectApp\\": "apps/multi-project/src/",
             "SingleProjectApp\\": "apps/single-project/src/",
             "SymfonyOnlyApp\\": "apps/symfony-only/src/",
-            "Sillbeam\\Tests\\": "tests/"
+            "Sillbeam\\Core\\Tests\\": "tests/"
         }
     },
     "suggest": {
@@ -64,14 +64,14 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.1.x-dev"
+            "dev-main": "0.2.x-dev"
         }
     },
     "homepage": "https://getsillbeam.websign.de/",
     "support": {
-        "issues": "https://github.com/WebSign-Dev/Sillbeam/issues",
-        "source": "https://github.com/WebSign-Dev/Sillbeam",
-        "docs": "https://github.com/WebSign-Dev/Sillbeam/blob/main/docs/README.md"
+        "issues": "https://github.com/WebSign-Dev/sillbeam-core/issues",
+        "source": "https://github.com/WebSign-Dev/sillbeam-core",
+        "docs": "https://github.com/WebSign-Dev/sillbeam-core/blob/main/docs/README.md"
     },
     "archive": {
         "exclude": [

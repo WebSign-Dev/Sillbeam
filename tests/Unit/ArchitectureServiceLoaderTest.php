@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Unit;
+namespace Sillbeam\Core\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Sillbeam\DependencyInjection\ArchitectureServiceLoader;
-use Sillbeam\Tests\Support\SourceWorkspace;
+use Sillbeam\Core\DependencyInjection\ArchitectureServiceLoader;
+use Sillbeam\Core\Tests\Support\SourceWorkspace;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 final class ArchitectureServiceLoaderTest extends TestCase

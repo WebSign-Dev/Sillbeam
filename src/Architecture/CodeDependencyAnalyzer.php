@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Architecture;
+namespace Sillbeam\Core\Architecture;
 
-use Sillbeam\Module\ModuleDefinition;
+use Sillbeam\Core\Module\ModuleDefinition;
 
 final readonly class CodeDependencyAnalyzer
 {

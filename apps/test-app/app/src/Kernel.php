@@ -2,7 +2,7 @@
 
 namespace App;
 
-use Sillbeam\Kernel\SillbeamKernel;
+use Sillbeam\Core\Kernel\SillbeamKernel;
 
 final class Kernel extends SillbeamKernel
 {

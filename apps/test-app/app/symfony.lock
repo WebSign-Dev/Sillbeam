@@ -35,7 +35,7 @@
             "migrations/.gitignore"
         ]
     },
-    "websign-dev/sillbeam": {
+    "websign-dev/sillbeam-core": {
         "version": "dev-main"
     },
     "symfony/console": {

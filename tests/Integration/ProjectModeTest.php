@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Integration;
+namespace Sillbeam\Core\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use ProjectApp\Kernel;
@@ -12,9 +12,9 @@ use ProjectApp\Project\Admin\AdminProject;
 use ProjectApp\Project\Storefront\Module\Checkout\CheckoutModule as StorefrontCheckout;
 use ProjectApp\Project\Storefront\StorefrontProject;
 use Psr\Container\ContainerInterface;
-use Sillbeam\Module\ModuleRegistryInterface;
-use Sillbeam\Project\ProjectContextInterface;
-use Sillbeam\Project\ProjectRegistryInterface;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Project\ProjectContextInterface;
+use Sillbeam\Core\Project\ProjectRegistryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -46,7 +46,7 @@ final class ProjectModeTest extends TestCase
         $services = $this->kernel->getContainer()->get('test.service_container');
         self::assertInstanceOf(ContainerInterface::class, $services);
         self::assertTrue($services->has(CatalogSubscriber::class));
-        self::assertFalse($services->has('Sillbeam\\Doctrine\\Store\\EntityStoreInterface'));
+        self::assertFalse($services->has('Sillbeam\\Core\\Doctrine\\Store\\EntityStoreInterface'));
         self::assertFalse($services->has('limiter.sillbeam_security_mfa_verify'));
     }
 

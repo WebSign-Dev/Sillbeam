@@ -14,11 +14,11 @@ try {
     mkdir($application.'/config/packages', 0777, true);
     mkdir($application.'/src/Module/Hello/Controller', 0777, true);
     $metadata = array_intersect_key($package, array_flip(['name', 'description', 'type', 'license', 'require', 'autoload']));
-    $metadata['version'] = '0.1.0';
+    $metadata['version'] = '0.2.0';
     $metadata['dist'] = ['type' => 'zip', 'url' => 'file://'.$temporary.'/sillbeam.zip'];
     file_put_contents($application.'/composer.json', json_encode([
         'name' => 'sillbeam/manual-release-consumer', 'description' => 'Isolated manual release installation test.', 'type' => 'project', 'license' => 'MIT',
-        'require' => ['php' => '^8.4', 'websign-dev/sillbeam' => '0.1.0'],
+        'require' => ['php' => '^8.4', 'websign-dev/sillbeam-core' => '0.2.0'],
         'repositories' => [['type' => 'package', 'package' => $metadata]],
         'autoload' => ['psr-4' => ['App\\' => 'src/']],
     ], \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES)."\n");
@@ -45,7 +45,7 @@ try {
     file_put_contents($application.'/config/services.yaml', $services[0]."\n");
     // Development files stay in application source even in a production-only install.
     mkdir($application.'/src/Project/Shop', 0777, true);
-    file_put_contents($application.'/src/Project/Shop/ShopProject.php', '<?php namespace App\Project\Shop; #[\Sillbeam\Project\Attribute\SillbeamProject(modules: [\App\Module\Hello\HelloModule::class])] final class ShopProject {}');
+    file_put_contents($application.'/src/Project/Shop/ShopProject.php', '<?php namespace App\Project\Shop; #[\Sillbeam\Core\Project\Attribute\SillbeamProject(modules: [\App\Module\Hello\HelloModule::class])] final class ShopProject {}');
     foreach (['Module/Hello', 'Project/Shop'] as $area) {
         foreach (['Tests', 'Fixtures', 'Migrations', 'Nested/Tests', 'Nested/Fixtures', 'Nested/Migrations'] as $directory) {
             mkdir($application.'/src/'.$area.'/'.$directory, 0777, true);
@@ -60,7 +60,7 @@ try {
     file_put_contents($application.'/config/services.yaml', "    App\\Module\\Hello\\Greeting: { arguments: {} }\n    App\\Module\\Hello\\Fixtures\\Manual: { public: true, arguments: { \$value: explicit } }\n", \FILE_APPEND);
 
     file_put_contents($application.'/src/Legacy.php', '<?php namespace App; #[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "legacy", public: true)] final class Legacy {}');
-    file_put_contents($application.'/config/bundles.php', '<?php return [\Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ["all" => true], \Sillbeam\SillbeamBundle::class => ["all" => true]];');
+    file_put_contents($application.'/config/bundles.php', '<?php return [\Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ["all" => true], \Sillbeam\Core\SillbeamCoreBundle::class => ["all" => true]];');
     file_put_contents($application.'/config/packages/framework.yaml', "framework: { secret: manual-test, router: { utf8: true } }\n");
     file_put_contents($application.'/config/routes.yaml', "sillbeam: { resource: ., type: sillbeam }\n");
     file_put_contents($application.'/smoke.php', <<<'PHP'
@@ -94,7 +94,7 @@ try {
 } finally { $kernel->shutdown(); }
 PHP);
     foreach (['symfony', 'sillbeam'] as $kernel) {
-        $base = 'symfony' === $kernel ? '\\Symfony\\Component\\HttpKernel\\Kernel' : '\\Sillbeam\\Kernel\\SillbeamKernel';
+        $base = 'symfony' === $kernel ? '\\Symfony\\Component\\HttpKernel\\Kernel' : '\\Sillbeam\\Core\\Kernel\\SillbeamKernel';
         $trait = 'symfony' === $kernel ? 'use \\Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait;' : '';
         file_put_contents($application.'/src/Kernel.php', '<?php namespace App; final class Kernel extends '.$base.' { '.$trait.' public function getProjectDir(): string { return \\dirname(__DIR__); } public function getCacheDir(): string { return $this->getProjectDir()."/var/'.$kernel.'/".$this->environment; } }');
         foreach (['dev', 'prod'] as $environment) {

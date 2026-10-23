@@ -5,7 +5,7 @@ Projects group application surfaces within a shared Symfony application. The des
 ```php
 namespace App\Project\Shop;
 
-#[\Sillbeam\Project\Attribute\SillbeamProject(
+#[\Sillbeam\Core\Project\Attribute\SillbeamProject(
     modules: [\App\Module\Billing\BillingModule::class],
 )]
 final class ShopProject {}

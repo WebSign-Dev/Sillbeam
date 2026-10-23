@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Integration;
+namespace Sillbeam\Core\Tests\Integration;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Module\ModuleRegistryInterface;
-use Sillbeam\SillbeamBundle;
-use Sillbeam\Tests\Support\SourceWorkspace;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
+use Sillbeam\Core\SillbeamCoreBundle;
+use Sillbeam\Core\Tests\Support\SourceWorkspace;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -51,7 +51,7 @@ final class PrependConfigurationTest extends TestCase
         $source = new SourceWorkspace();
         $kernel = $this->kernel($source, $doctrine, $before, $configuration, $environment, $debug);
         try {
-            $module = $source->php('src/Module/Live/LiveModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class LiveModule {}');
+            $module = $source->php('src/Module/Live/LiveModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class LiveModule {}');
             $source->php('src/Module/Live/Service.php', '#[\\Symfony\\Component\\DependencyInjection\\Attribute\\AsAlias(id: "live", public: true)] final class Service {}');
             $entity = '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column] public int $id = 1; }';
             $standardEntity = $source->php('src/Module/Live/Entity/Record.php', $entity);
@@ -93,8 +93,8 @@ final class PrependConfigurationTest extends TestCase
         $source = new SourceWorkspace();
         $kernel = $this->kernel($source, false, false, ['modules' => ['live' => ['enabled' => false]]], 'prod', false);
         try {
-            $module = $source->php('src/Module/Live/LiveModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class LiveModule {}');
-            $source->php('src/Module/Other/OtherModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class OtherModule {}');
+            $module = $source->php('src/Module/Live/LiveModule.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class LiveModule {}');
+            $source->php('src/Module/Other/OtherModule.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class OtherModule {}');
             $target = $source->php('src/Module/Other/Value.php', 'final class Value {}');
             $source->php('src/Module/Live/Consumer.php', 'final class Consumer { public function target(): string { return \\'.$target.'::class; } }');
             $source->write('config/packages/framework.yaml', 'framework: { secret: test }');
@@ -141,7 +141,7 @@ final class PrependConfigurationTest extends TestCase
                 if ($this->before) {
                     yield $this->bundle;
                 }
-                yield new SillbeamBundle();
+                yield new SillbeamCoreBundle();
                 if (!$this->before) {
                     yield $this->bundle;
                 }

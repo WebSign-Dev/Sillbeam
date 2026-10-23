@@ -1,6 +1,6 @@
 {
     "bundles": {
-        "Sillbeam\\SillbeamBundle": [
+        "Sillbeam\\Core\\SillbeamCoreBundle": [
             "all"
         ]
     },

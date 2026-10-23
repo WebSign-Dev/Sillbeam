@@ -7,7 +7,7 @@ Sillbeam provides security fixes for the latest published release on a best-effo
 
 | Version | Supported |
 |---------|-----------|
-| v0.1.0 (latest release) | ✅ |
+| v0.1.0 (latest published release) | ✅ |
 | Older versions | ❌ |
 
 No long-term security support or guaranteed maintenance period is provided.
@@ -17,7 +17,7 @@ No long-term security support or guaranteed maintenance period is provided.
 If you discover a potential security vulnerability in Sillbeam, please report it privately through one of the following channels:
 
 - **Email:** [security@websign.de](mailto:security@websign.de)
-- **GitHub:** [Private Vulnerability Reporting](https://github.com/WebSign-Dev/Sillbeam/security/advisories/new) (when enabled)
+- **GitHub:** [Private Vulnerability Reporting](https://github.com/WebSign-Dev/sillbeam-core/security/advisories/new) (when enabled)
 
 **Please do not disclose security vulnerabilities through public GitHub issues or discussions.**
 
@@ -63,7 +63,7 @@ Applications remain responsible for their own security configuration, access con
 
 ## General Support
 
-For non-security-related questions, bug reports, and feature requests, please use [GitHub Issues](https://github.com/WebSign-Dev/Sillbeam/issues).
+For non-security-related questions, bug reports, and feature requests, please use [GitHub Issues](https://github.com/WebSign-Dev/sillbeam-core/issues).
 
 For security-related concerns, always use the private reporting channels listed above.
 

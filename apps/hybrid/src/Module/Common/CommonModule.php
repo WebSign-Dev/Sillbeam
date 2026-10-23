@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace HybridApp\Module\Common;
 
-use Sillbeam\Module\Attribute\SillbeamModule;
+use Sillbeam\Core\Module\Attribute\SillbeamModule;
 
 #[SillbeamModule]
 final class CommonModule

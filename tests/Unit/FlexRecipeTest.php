@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Unit;
+namespace Sillbeam\Core\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Sillbeam\DependencyInjection\Configuration;
+use Sillbeam\Core\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\Yaml\Yaml;
 
 final class FlexRecipeTest extends TestCase
 {
-    private const RECIPE_DIRECTORY = __DIR__.'/../../flex-recipe/websign-dev/sillbeam/0.1';
+    private const RECIPE_DIRECTORY = __DIR__.'/../../flex-recipe/websign-dev/sillbeam-core/0.2';
 
-    public function testRecipeHasRecipesContribLayoutAndRegistersOnlySillbeamBundle(): void
+    public function testRecipeHasRecipesContribLayoutAndRegistersOnlySillbeamCoreBundle(): void
     {
         $manifest = json_decode($this->read('manifest.json'), true, flags: \JSON_THROW_ON_ERROR);
 
         self::assertSame(
-            ['Sillbeam\\SillbeamBundle' => ['all']],
+            ['Sillbeam\\Core\\SillbeamCoreBundle' => ['all']],
             $manifest['bundles'],
         );
         self::assertSame(['config/' => '%CONFIG_DIR%/'], $manifest['copy-from-recipe']);

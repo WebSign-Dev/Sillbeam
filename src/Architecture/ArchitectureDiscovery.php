@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Architecture;
+namespace Sillbeam\Core\Architecture;
 
-use Sillbeam\Module\ModuleDiscovery;
-use Sillbeam\Project\ProjectDefinition;
-use Sillbeam\Project\ProjectDiscovery;
+use Sillbeam\Core\Module\ModuleDiscovery;
+use Sillbeam\Core\Project\ProjectDefinition;
+use Sillbeam\Core\Project\ProjectDiscovery;
 
 final readonly class ArchitectureDiscovery
 {

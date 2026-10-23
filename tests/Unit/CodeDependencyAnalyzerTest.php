@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Unit;
+namespace Sillbeam\Core\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Architecture\ArchitectureCompiler;
-use Sillbeam\Architecture\ArchitectureDiscovery;
-use Sillbeam\Architecture\CodeDependencyAnalyzer;
-use Sillbeam\Architecture\DiscoveryOptions;
-use Sillbeam\Architecture\SourceInspector;
-use Sillbeam\Tests\Support\SourceWorkspace;
+use Sillbeam\Core\Architecture\ArchitectureCompiler;
+use Sillbeam\Core\Architecture\ArchitectureDiscovery;
+use Sillbeam\Core\Architecture\CodeDependencyAnalyzer;
+use Sillbeam\Core\Architecture\DiscoveryOptions;
+use Sillbeam\Core\Architecture\SourceInspector;
+use Sillbeam\Core\Tests\Support\SourceWorkspace;
 
 final class CodeDependencyAnalyzerTest extends TestCase
 {
@@ -42,8 +42,8 @@ final class CodeDependencyAnalyzerTest extends TestCase
     /** @return array{class-string, class-string, class-string} */
     private function modules(string $dependencies = '[]'): array
     {
-        $payment = $this->source->php('src/Module/Payment/PaymentModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class PaymentModule {}');
-        $billing = $this->source->php('src/Module/Billing/BillingModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule(dependencies: '.$dependencies.')] final class BillingModule {}');
+        $payment = $this->source->php('src/Module/Payment/PaymentModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class PaymentModule {}');
+        $billing = $this->source->php('src/Module/Billing/BillingModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(dependencies: '.$dependencies.')] final class BillingModule {}');
         $target = $this->source->php('src/Module/Payment/Port.php', 'interface Port {}');
 
         return [$billing, $payment, $target];
@@ -80,8 +80,8 @@ final class CodeDependencyAnalyzerTest extends TestCase
     {
         $payment = $this->source->namespace.'\\Module\\Payment\\PaymentModule';
         [$billing, , $target] = $this->modules();
-        $bridge = $this->source->php('src/Module/Bridge/BridgeModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule(dependencies: [\\'.$payment.'::class])] final class BridgeModule {}');
-        $this->source->php('src/Module/Billing/BillingModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule(dependencies: [\\'.$bridge.'::class])] final class BillingModule {}');
+        $bridge = $this->source->php('src/Module/Bridge/BridgeModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(dependencies: [\\'.$payment.'::class])] final class BridgeModule {}');
+        $this->source->php('src/Module/Billing/BillingModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(dependencies: [\\'.$bridge.'::class])] final class BillingModule {}');
         $this->source->php('src/Module/Billing/Consumer.php', 'final class Consumer { public function get(): string { return \\'.$target.'::class; } }');
         $this->expectExceptionMessage('does not declare');
         $this->analyze();
@@ -98,8 +98,8 @@ final class CodeDependencyAnalyzerTest extends TestCase
     public function testSharedCodeCannotUsePrivateProjectCode(): void
     {
         [$billing] = $this->modules();
-        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject(modules: [\\'.$billing.'::class])] final class ShopProject {}');
-        $this->source->php('src/Project/Shop/Module/Secret/SecretModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class SecretModule {}');
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject(modules: [\\'.$billing.'::class])] final class ShopProject {}');
+        $this->source->php('src/Project/Shop/Module/Secret/SecretModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class SecretModule {}');
         $secret = $this->source->php('src/Project/Shop/Module/Secret/Secret.php', 'final class Secret {}');
         $this->source->php('src/Module/Billing/Consumer.php', 'final class Consumer { public function make(): object { return new \\'.$secret.'(); } }');
         $this->expectExceptionMessage('private module');
@@ -116,10 +116,10 @@ final class CodeDependencyAnalyzerTest extends TestCase
 
     public function testPrivateCodeCannotUseAnotherProjectsPrivateModule(): void
     {
-        $this->source->php('src/Project/One/OneProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class OneProject {}');
-        $this->source->php('src/Project/Two/TwoProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class TwoProject {}');
-        $this->source->php('src/Project/One/Module/Local/LocalModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class LocalModule {}');
-        $this->source->php('src/Project/Two/Module/Remote/RemoteModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class RemoteModule {}');
+        $this->source->php('src/Project/One/OneProject.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject] final class OneProject {}');
+        $this->source->php('src/Project/Two/TwoProject.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject] final class TwoProject {}');
+        $this->source->php('src/Project/One/Module/Local/LocalModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class LocalModule {}');
+        $this->source->php('src/Project/Two/Module/Remote/RemoteModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class RemoteModule {}');
         $target = $this->source->php('src/Project/Two/Module/Remote/Port.php', 'interface Port {}');
         $this->source->php('src/Project/One/Module/Local/Consumer.php', 'final class Consumer { public \\'.$target.' $port; }');
         $this->expectExceptionMessage('private module');
@@ -129,7 +129,7 @@ final class CodeDependencyAnalyzerTest extends TestCase
     public function testExecutableCodeInDescriptorStillNeedsDirectDependencies(): void
     {
         [, , $target] = $this->modules();
-        $this->source->php('src/Module/Billing/BillingModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class BillingModule { public function target(): string { return \\'.$target.'::class; } }');
+        $this->source->php('src/Module/Billing/BillingModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class BillingModule { public function target(): string { return \\'.$target.'::class; } }');
         $this->expectExceptionMessage('does not declare');
         $this->analyze();
     }

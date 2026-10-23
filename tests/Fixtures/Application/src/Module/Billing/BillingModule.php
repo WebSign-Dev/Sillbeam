@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Module\Billing;
 
-use Sillbeam\Module\Attribute\SillbeamModule;
+use Sillbeam\Core\Module\Attribute\SillbeamModule;
 
 #[SillbeamModule(
     id: 'billing',

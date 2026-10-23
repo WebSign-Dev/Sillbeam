@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Project;
+namespace Sillbeam\Core\Project;
 
-use Sillbeam\Architecture\DiscoveryOptions;
-use Sillbeam\Architecture\IdDeriver;
-use Sillbeam\Architecture\SourceInspector;
-use Sillbeam\Project\Attribute\SillbeamProject;
+use Sillbeam\Core\Architecture\DiscoveryOptions;
+use Sillbeam\Core\Architecture\IdDeriver;
+use Sillbeam\Core\Architecture\SourceInspector;
+use Sillbeam\Core\Project\Attribute\SillbeamProject;
 
 final readonly class ProjectDiscovery
 {

@@ -8,4 +8,4 @@
 - [Testing](development/testing.md), [Test apps](development/test-apps.md), [Troubleshooting](operations/troubleshooting.md)
 - [Core components](modules/README.md)
 
-The reference pages describe the current state. [Changelog](../CHANGELOG.md), [Release notes](releases/0.1.0.md), [Support](../SUPPORT.md) and [Security](../SECURITY.md) document the published v0.1.0 release.
+The reference pages describe the current state. [Changelog](../CHANGELOG.md), [Release notes](releases/0.2.0.md), [Support](../SUPPORT.md) document the unreleased v0.2.0 migration; [Security](../SECURITY.md) covers published versions. See the [upgrade guide](migration/0.2.0.md) for breaking changes.

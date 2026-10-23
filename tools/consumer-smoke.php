@@ -7,8 +7,8 @@ require __DIR__.'/vendor/autoload.php';
 use Composer\InstalledVersions;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
-use Sillbeam\Module\ModuleRegistryInterface;
-use Sillbeam\Project\ProjectRegistryInterface;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Project\ProjectRegistryInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpFoundation\Request;
@@ -31,7 +31,7 @@ if (isset($argv[4])) {
 }
 
 consumerAssert(!InstalledVersions::isInstalled('phpunit/phpunit'), 'Root dev dependencies leaked into the consumer.');
-consumerAssert(!class_exists('Sillbeam\\Tests\\Support\\SourceWorkspace'), 'Root dev autoload leaked into the consumer.');
+consumerAssert(!class_exists('Sillbeam\\Core\\Tests\\Support\\SourceWorkspace'), 'Root dev autoload leaked into the consumer.');
 consumerAssert(InstalledVersions::isInstalled('doctrine/doctrine-bundle') === ('1' === $withDoctrine), 'Unexpected Doctrine installation.');
 if ($symfony = getenv('SILLBEAM_SYMFONY_VERSION')) {
     foreach (InstalledVersions::getInstalledPackages() as $package) {

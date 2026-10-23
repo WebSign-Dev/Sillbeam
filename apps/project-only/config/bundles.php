@@ -5,5 +5,5 @@ declare(strict_types=1);
 return [
     Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true],
     Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class => ['all' => true],
-    Sillbeam\SillbeamBundle::class => ['all' => true],
+    Sillbeam\Core\SillbeamCoreBundle::class => ['all' => true],
 ];

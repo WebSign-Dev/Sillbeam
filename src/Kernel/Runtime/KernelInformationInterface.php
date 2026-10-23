@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Kernel\Runtime;
+namespace Sillbeam\Core\Kernel\Runtime;
 
 interface KernelInformationInterface
 {

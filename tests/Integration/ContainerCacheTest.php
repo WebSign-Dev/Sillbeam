@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Integration;
+namespace Sillbeam\Core\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Tests\Support\SourceWorkspace;
+use Sillbeam\Core\Tests\Support\SourceWorkspace;
 
 final class ContainerCacheTest extends TestCase
 {
@@ -14,9 +14,9 @@ final class ContainerCacheTest extends TestCase
         $source = new SourceWorkspace();
         try {
             $kernel = $source->php('src/Kernel.php', 'final class Kernel extends \\Symfony\\Component\\HttpKernel\\Kernel { use \\Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait; public function getProjectDir(): string { return \\dirname(__DIR__); } }');
-            $source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
+            $source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
             $source->php('src/Module/Hello/Live.php', '#[\\Symfony\\Component\\DependencyInjection\\Attribute\\AsAlias(id: "live", public: true)] final class Live {}');
-            $source->write('config/bundles.php', '<?php return [\\Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle::class => ["all" => true], \\Sillbeam\\SillbeamBundle::class => ["all" => true]];');
+            $source->write('config/bundles.php', '<?php return [\\Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle::class => ["all" => true], \\Sillbeam\\Core\\SillbeamCoreBundle::class => ["all" => true]];');
             $source->write('config/packages/framework.yaml', 'framework: { secret: test }');
             $source->write('config/services.yaml', 'services: {}');
             $source->write('snapshot.php', <<<'PHP'
@@ -27,7 +27,7 @@ $kernel = new $argv[3]('dev', true);
 try {
     $kernel->boot();
     $container = $kernel->getContainer();
-    $modules = $container->get(\Sillbeam\Module\ModuleRegistryInterface::class);
+    $modules = $container->get(\Sillbeam\Core\Module\ModuleRegistryInterface::class);
     echo json_encode([count($modules->active()), $container->has('live')], JSON_THROW_ON_ERROR);
 } finally { $kernel->shutdown(); }
 PHP);

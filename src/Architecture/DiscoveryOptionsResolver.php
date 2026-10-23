@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Architecture;
+namespace Sillbeam\Core\Architecture;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 

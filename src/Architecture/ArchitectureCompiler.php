@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Architecture;
+namespace Sillbeam\Core\Architecture;
 
-use Sillbeam\Module\ModuleDefinition;
-use Sillbeam\Project\ProjectDefinition;
+use Sillbeam\Core\Module\ModuleDefinition;
+use Sillbeam\Core\Project\ProjectDefinition;
 
 final class ArchitectureCompiler
 {

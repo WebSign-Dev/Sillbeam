@@ -3,7 +3,7 @@
 A `#[SillbeamModule]` descriptor owns its directory and subdirectories. The filename and descriptor class name must comply with PSR-4. IDs are derived from the class name without `Module` or specified as `id:`. Two modules may own neither the same directory nor nested directories.
 
 ```php
-#[\Sillbeam\Module\Attribute\SillbeamModule(
+#[\Sillbeam\Core\Module\Attribute\SillbeamModule(
     id: 'billing',
     description: 'Invoices',
     dependencies: [\App\Module\Payment\PaymentModule::class],

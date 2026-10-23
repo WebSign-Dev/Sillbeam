@@ -12,4 +12,4 @@ The repository contains independently bootable Symfony applications for referenc
 | `multi-project` | Multiple host-bound Projects, shared/private modules, aliases and canonical URL generation |
 | `hybrid` | Normal Symfony controllers/services beside multiple Projects, transitively shared modules and an unassigned module |
 
-The architecture applications register only `Sillbeam\\SillbeamBundle` as their Sillbeam integration. Module and Project descriptors are excluded from the normal Symfony service scan and are found through Sillbeam discovery. Their boot, container, Doctrine mapping, routing and HTTP behavior is covered by the root PHPUnit suite.
+The architecture applications register only `Sillbeam\\Core\\SillbeamCoreBundle` as their Sillbeam integration. Module and Project descriptors are excluded from the normal Symfony service scan and are found through Sillbeam discovery. Their boot, container, Doctrine mapping, routing and HTTP behavior is covered by the root PHPUnit suite.

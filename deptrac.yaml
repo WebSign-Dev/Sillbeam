@@ -14,7 +14,7 @@ deptrac:
         - name: DependencyInjection
           collectors: [{ type: directory, value: 'src/DependencyInjection/.*' }]
         - name: Bundle
-          collectors: [{ type: classNameRegex, value: '#^Sillbeam\\SillbeamBundle$#' }]
+          collectors: [{ type: classNameRegex, value: '#^Sillbeam\\Core\\SillbeamCoreBundle$#' }]
     ruleset:
         Architecture: [Module, Project]
         Module: [Architecture, Project]

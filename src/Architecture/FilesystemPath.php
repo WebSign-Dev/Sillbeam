@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Architecture;
+namespace Sillbeam\Core\Architecture;
 
 /** Shared representation for filesystem paths; namespace separators are unrelated. */
 final class FilesystemPath

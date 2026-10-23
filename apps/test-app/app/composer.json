@@ -12,7 +12,7 @@
             "options": {
                 "symlink": true,
                 "versions": {
-                    "websign-dev/sillbeam": "0.1.0"
+                    "websign-dev/sillbeam-core": "0.2.0"
                 }
             }
         }
@@ -32,7 +32,7 @@
         "symfony/runtime": "7.4.*",
         "symfony/validator": "7.4.*",
         "symfony/yaml": "7.4.*",
-        "websign-dev/sillbeam": "^0.1.0"
+        "websign-dev/sillbeam-core": "^0.2.0"
     },
     "config": {
         "allow-plugins": {

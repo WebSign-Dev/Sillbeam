@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\DependencyInjection\Compiler;
+namespace Sillbeam\Core\DependencyInjection\Compiler;
 
-use Sillbeam\Architecture\FilesystemPath;
+use Sillbeam\Core\Architecture\FilesystemPath;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;

@@ -5,11 +5,11 @@
 # Sillbeam Symfony Flex Recipe
 
 This directory contains the publishable Symfony Recipes Contrib source for
-`websign-dev/sillbeam`. Its directory layout can be copied directly into a
+`websign-dev/sillbeam-core`. Its directory layout can be copied directly into a
 fork of `symfony/recipes-contrib`:
 
 ```text
-websign-dev/sillbeam/0.1/
+websign-dev/sillbeam-core/0.2/
 ├── manifest.json
 └── config/
     └── routes/sillbeam.yaml
@@ -17,7 +17,7 @@ websign-dev/sillbeam/0.1/
 
 The recipe deliberately performs only two installation tasks:
 
-1. register `Sillbeam\SillbeamBundle` for every environment;
+1. register `Sillbeam\Core\SillbeamCoreBundle` for every environment;
 2. create the one-time `type: sillbeam` route import.
 
 Doctrine mappings activate automatically when the application registers DoctrineBundle.
@@ -43,6 +43,6 @@ The PHP package cannot load its own recipe. Until the recipe is merged into
 Symfony Recipes Contrib, consumers either register the bundle and route import manually or use
 their own Flex endpoint containing this recipe.
 
-Install v0.1.0 with `composer require websign-dev/sillbeam:^0.1.0`. The `0.1/` recipe applies to v0.1.0 and later compatible 0.1 versions. Recipe availability is independent of Composer package installation. Manual setup remains supported.
+After publication, install v0.2.0 with `composer require websign-dev/sillbeam-core:^0.2.0`. The `0.2/` recipe applies to v0.2.0 and later compatible 0.2 versions. Recipe availability is independent of Composer package installation. Manual setup remains supported.
 
 The package declares `type: symfony-bundle`, following [Symfony bundle installation guidance](https://symfony.com/doc/current/bundles/best_practices.html#installation). No semantically empty file is created under `config/packages`, as required by the [recipe checklist](https://github.com/symfony/recipes/blob/main/README.rst#recipe-checklist).

@@ -1,6 +1,18 @@
 # Changelog
 
-This changelog records released versions of Sillbeam.
+This changelog records released versions and unreleased changes of Sillbeam.
+
+## v0.2.0 — unreleased
+
+### Breaking changes
+
+- Rename the Composer package from `websign-dev/sillbeam` to `websign-dev/sillbeam-core` and prepare repository references for `WebSign-Dev/sillbeam-core`.
+- Move all PHP APIs from `Sillbeam\` to `Sillbeam\Core\`.
+- Replace `Sillbeam\SillbeamBundle` with `Sillbeam\Core\SillbeamCoreBundle` and `SillbeamExtension` with `Sillbeam\Core\DependencyInjection\SillbeamCoreExtension`.
+- Move the locally prepared Flex recipe to `websign-dev/sillbeam-core/0.2`.
+- Preserve `sillbeam` configuration, `sillbeam:*` commands, routing type `sillbeam`, named service IDs, and all Module, Project, service, routing and Doctrine behavior.
+
+See the [migration guide](docs/migration/0.2.0.md). No compatibility aliases for the old PHP namespace are provided. Repository renaming, publication and release tagging are separate manual steps; this version is not published.
 
 ## v0.1.0
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App;
 
-use Sillbeam\Kernel\SillbeamKernel;
+use Sillbeam\Core\Kernel\SillbeamKernel;
 
 final class SillbeamTestKernel extends SillbeamKernel
 {

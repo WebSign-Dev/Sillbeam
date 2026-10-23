@@ -1,6 +1,6 @@
 # Public API
 
-- `SillbeamBundle`: central Symfony entry point.
+- `SillbeamCoreBundle`: central Symfony entry point.
 - `Module\Attribute\SillbeamModule`: `id`, `description`, `dependencies`.
 - `Project\Attribute\SillbeamProject`: `id`, `description`, `modules`.
 - `ModuleRegistryInterface`: `all()`, `get(class)`, `active()`, `forApplication()`, `forProject(class)`.
@@ -16,16 +16,16 @@ Registry lookups for unknown classes, IDs or hosts throw `OutOfBoundsException`.
 
 ## Types and return values
 
-The full namespaces of the registry contracts are `Sillbeam\Module\ModuleRegistryInterface`, `Sillbeam\Project\ProjectRegistryInterface` and `Sillbeam\Project\ProjectContextInterface`. They can be injected directly through constructors.
+The full namespaces of the registry contracts are `Sillbeam\Core\Module\ModuleRegistryInterface`, `Sillbeam\Core\Project\ProjectRegistryInterface` and `Sillbeam\Core\Project\ProjectContextInterface`. They can be injected directly through constructors.
 
 Registry lists are arrays keyed by descriptor class names with `ModuleDefinition` or `ProjectDefinition` values. `ModuleRegistryInterface::get()` and `forProject()` accept descriptor class names, not IDs; `ProjectRegistryInterface::get()` accepts an ID or class. `active()` is the union of active graphs. `forApplication()` is empty in Project mode.
 
 `ModuleDefinition` provides, among other fields, `id`, `class`, `description`, `dependencies`, `enabled`, `projectClass`, directories/namespace, `observedDependencies`, `dependencyReferences` and `activationReasons`. `enabled` does not automatically mean active; activity is determined by registry membership, with no `active` property. `isPrivate()` checks Project ownership; `key($projectId)` requires the owning Project ID for private modules.
 
-`ProjectDefinition` contains `declaredModules`, the compiled `modules` graph, `hosts` and discovery data. `canonicalHost(): ?string` returns the first host or `null`. `Sillbeam\Kernel\Runtime\KernelInformationInterface::all()` returns an `array<string, string|int>`.
+`ProjectDefinition` contains `declaredModules`, the compiled `modules` graph, `hosts` and discovery data. `canonicalHost(): ?string` returns the first host or `null`. `Sillbeam\Core\Kernel\Runtime\KernelInformationInterface::all()` returns an `array<string, string|int>`.
 
 ```php
-use Sillbeam\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
 
 final readonly class ArchitectureStatus
 {

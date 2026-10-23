@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Unit;
+namespace Sillbeam\Core\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Architecture\SourceFileParser;
-use Sillbeam\Tests\Support\SourceWorkspace;
+use Sillbeam\Core\Architecture\SourceFileParser;
+use Sillbeam\Core\Tests\Support\SourceWorkspace;
 
 final class SourceFileParserTest extends TestCase
 {

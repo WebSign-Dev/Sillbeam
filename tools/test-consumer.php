@@ -42,7 +42,7 @@ try {
             consumerCopy($repository.'/apps/'.$scenario.'/src', $directory.'/src');
             consumerCopy($repository.'/apps/'.$scenario.'/config', $directory.'/config');
             @unlink($directory.'/config/reference.php');
-            $require = ['php' => '^8.4', 'websign-dev/sillbeam' => '0.1.0'];
+            $require = ['php' => '^8.4', 'websign-dev/sillbeam-core' => '0.2.0'];
             foreach ($package['require'] as $name => $constraint) {
                 if (str_starts_with($name, 'symfony/')) {
                     $require[$name] = $symfony ?? $constraint;
@@ -62,13 +62,13 @@ try {
                 'conflict' => (object) $conflicts,
                 'repositories' => [[
                     'type' => 'path', 'url' => $packageDirectory,
-                    'options' => ['symlink' => false, 'versions' => ['websign-dev/sillbeam' => '0.1.0']],
+                    'options' => ['symlink' => false, 'versions' => ['websign-dev/sillbeam-core' => '0.2.0']],
                 ]],
                 'autoload' => ['psr-4' => [$namespace.'\\' => 'src/']],
             ]);
             $bundles = [
                 'Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle' => ['all' => true],
-                'Sillbeam\\SillbeamBundle' => ['all' => true],
+                'Sillbeam\\Core\\SillbeamCoreBundle' => ['all' => true],
             ];
             if ($doctrine) {
                 $bundles['Doctrine\\Bundle\\DoctrineBundle\\DoctrineBundle'] = ['all' => true];
@@ -102,7 +102,7 @@ try {
             consumerRun(['composer', 'dump-autoload', '--optimize', '--strict-psr'], $directory);
             copy(__DIR__.'/consumer-smoke.php', $directory.'/smoke.php');
             foreach (['symfony', 'sillbeam'] as $kernel) {
-                $base = 'sillbeam' === $kernel ? '\\Sillbeam\\Kernel\\SillbeamKernel' : '\\Symfony\\Component\\HttpKernel\\Kernel';
+                $base = 'sillbeam' === $kernel ? '\\Sillbeam\\Core\\Kernel\\SillbeamKernel' : '\\Symfony\\Component\\HttpKernel\\Kernel';
                 $trait = 'symfony' === $kernel ? 'use \\Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait;' : '';
                 file_put_contents($directory.'/src/Kernel.php', '<?php namespace '.$namespace.'; final class Kernel extends '.$base.' { '.$trait.' public function getProjectDir(): string { return \\dirname(__DIR__); } public function getCacheDir(): string { return $this->getProjectDir()."/var/'.$kernel.'/".$this->environment; } public function getLogDir(): string { return $this->getProjectDir()."/var/log"; } }');
                 consumerRun([\PHP_BINARY, 'smoke.php', $scenario, $namespace, $doctrine ? '1' : '0'], $directory);

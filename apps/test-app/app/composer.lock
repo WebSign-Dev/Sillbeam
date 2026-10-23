@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d6f671f234bb01de99170dd429d541ea",
+    "content-hash": "2d66e40d962be54218bd847799c1c1fe",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -4417,12 +4417,12 @@
             "time": "2026-08-30T00:47:26+00:00"
         },
         {
-            "name": "websign-dev/sillbeam",
-            "version": "0.1.0",
+            "name": "websign-dev/sillbeam-core",
+            "version": "0.2.0",
             "dist": {
                 "type": "path",
                 "url": "../../..",
-                "reference": "9f877d88187f320b76db89a9c6458b64e142b716"
+                "reference": "0600e005e515e680cc71dd51957811b1babc6566"
             },
             "require": {
                 "composer-runtime-api": "^2.2",
@@ -4451,12 +4451,12 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "0.1.x-dev"
+                    "dev-main": "0.2.x-dev"
                 }
             },
             "autoload": {
                 "psr-4": {
-                    "Sillbeam\\": "src/"
+                    "Sillbeam\\Core\\": "src/"
                 }
             },
             "autoload-dev": {
@@ -4468,7 +4468,7 @@
                     "ProjectApp\\": "apps/multi-project/src/",
                     "SingleProjectApp\\": "apps/single-project/src/",
                     "SymfonyOnlyApp\\": "apps/symfony-only/src/",
-                    "Sillbeam\\Tests\\": "tests/"
+                    "Sillbeam\\Core\\Tests\\": "tests/"
                 }
             },
             "archive": {
@@ -4525,9 +4525,9 @@
                 "symfony"
             ],
             "support": {
-                "issues": "https://github.com/WebSign-Dev/Sillbeam/issues",
-                "source": "https://github.com/WebSign-Dev/Sillbeam",
-                "docs": "https://github.com/WebSign-Dev/Sillbeam/blob/main/docs/README.md"
+                "issues": "https://github.com/WebSign-Dev/sillbeam-core/issues",
+                "source": "https://github.com/WebSign-Dev/sillbeam-core",
+                "docs": "https://github.com/WebSign-Dev/sillbeam-core/blob/main/docs/README.md"
             },
             "transport-options": {
                 "symlink": true,

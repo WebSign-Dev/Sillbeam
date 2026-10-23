@@ -7,7 +7,7 @@ Create `src/Module/Hello/HelloModule.php`:
 ```php
 namespace App\Module\Hello;
 
-#[\Sillbeam\Module\Attribute\SillbeamModule]
+#[\Sillbeam\Core\Module\Attribute\SillbeamModule]
 final class HelloModule {}
 ```
 
@@ -25,20 +25,20 @@ DoctrineBundle activates mapping integration automatically. `sillbeam: { doctrin
 
 ## Installation and autoloading
 
-Install v0.1.0 through Composer from your Symfony application's root directory:
+After publication, install v0.2.0 through Composer from your Symfony application's root directory:
 
 ```bash
-composer require websign-dev/sillbeam:^0.1.0
+composer require websign-dev/sillbeam-core:^0.2.0
 ```
 
-The constraint allows compatible 0.1 updates. Use `composer require websign-dev/sillbeam:0.1.0` to pin this exact version. See [Composer installation](../../README.md#install-with-composer). Flex recipe availability is independent of the package; if no recipe is installed, register the bundle and route import manually as shown in the README.
+The constraint allows compatible 0.2 updates. Use `composer require websign-dev/sillbeam-core:0.2.0` to pin this exact version. See [Composer installation](../../README.md#install-with-composer). Flex recipe availability is independent of the package; if no recipe is installed, register the bundle and route import manually as shown in the README.
 
 The application needs a Composer PSR-4 mapping such as `"App\\": "src/"`. All PHP files below begin with `<?php`. Keep the existing Symfony kernel. Optionally, `src/Kernel.php` can look like this:
 
 ```php
 namespace App;
 
-final class Kernel extends \Sillbeam\Kernel\SillbeamKernel {}
+final class Kernel extends \Sillbeam\Core\Kernel\SillbeamKernel {}
 ```
 
 ## Try a service and route

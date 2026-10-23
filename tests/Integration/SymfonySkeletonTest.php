@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Integration;
+namespace Sillbeam\Core\Tests\Integration;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Module\ModuleRegistryInterface;
-use Sillbeam\Tests\Support\SourceWorkspace;
-use Sillbeam\Tests\Support\TestApplicationKernel;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Tests\Support\SourceWorkspace;
+use Sillbeam\Core\Tests\Support\TestApplicationKernel;
 use Symfony\Component\Routing\RouterInterface;
 
 final class SymfonySkeletonTest extends TestCase
@@ -18,7 +18,7 @@ final class SymfonySkeletonTest extends TestCase
         $source = new SourceWorkspace();
         $kernel = new TestApplicationKernel($source);
         try {
-            $source->php('src/Module/Off/OffModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class OffModule {}');
+            $source->php('src/Module/Off/OffModule.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class OffModule {}');
             $service = $source->php('src/Module/Off/Service.php', '#[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "native.off", public: true)] final class Service {}');
             $source->write('config/packages/framework.yaml', 'framework: { secret: test }');
             $source->write('config/packages/sillbeam.yaml', 'sillbeam: { modules: { off: { enabled: false } } }');
@@ -39,7 +39,7 @@ final class SymfonySkeletonTest extends TestCase
         $source = new SourceWorkspace();
         $kernel = new TestApplicationKernel($source);
         try {
-            $source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
+            $source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
             $source->write('config/packages/framework.yaml', 'framework: { secret: test }');
             $source->write('config/services.yaml', $this->services($source, true));
             $kernel->boot();
@@ -58,7 +58,7 @@ final class SymfonySkeletonTest extends TestCase
         $source = new SourceWorkspace();
         $kernel = new TestApplicationKernel($source, true);
         try {
-            $source->php('src/Project/Hidden/HiddenProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class HiddenProject {}');
+            $source->php('src/Project/Hidden/HiddenProject.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject] final class HiddenProject {}');
             $source->php('src/Project/Hidden/Leak.php', '#[\\Symfony\\Component\\DependencyInjection\\Attribute\\AsAlias(id: "hidden.leak", public: true)] final class Leak {}');
             $source->php('src/Project/Hidden/Controller/Endpoint.php', 'final class Endpoint { #[\\Symfony\\Component\\Routing\\Attribute\\Route("/hidden", name: "hidden")] public function run(): void {} }');
             $source->php('src/Project/Hidden/Entity/Record.php', '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column] public int $id = 1; }');
@@ -95,11 +95,11 @@ final class SymfonySkeletonTest extends TestCase
         $source = new SourceWorkspace();
         $kernel = new TestApplicationKernel($source, false, $environment, $debug);
         try {
-            $live = $source->php('src/Module/Live/LiveModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class LiveModule {}');
-            $source->php('src/Module/Off/OffModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class OffModule {}');
-            $source->php('src/Module/Unused/UnusedModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class UnusedModule {}');
-            $source->php('src/Project/Shop/ShopProject.php', '#[\Sillbeam\Project\Attribute\SillbeamProject(modules: [\\'.$live.'::class])] final class ShopProject {}');
-            $source->php('src/Project/Shop/Module/Off/OffModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class OffModule {}');
+            $live = $source->php('src/Module/Live/LiveModule.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class LiveModule {}');
+            $source->php('src/Module/Off/OffModule.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class OffModule {}');
+            $source->php('src/Module/Unused/UnusedModule.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class UnusedModule {}');
+            $source->php('src/Project/Shop/ShopProject.php', '#[\Sillbeam\Core\Project\Attribute\SillbeamProject(modules: [\\'.$live.'::class])] final class ShopProject {}');
+            $source->php('src/Project/Shop/Module/Off/OffModule.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class OffModule {}');
             foreach (['Module/Off', 'Module/Unused', 'Project/Shop/Module/Off'] as $index => $area) {
                 $source->php('src/'.$area.'/Leak.php', '#[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "leak.'.$index.'", public: true)] final class Leak {}');
                 $source->php('src/'.$area.'/Controller/Endpoint.php', 'final class Endpoint { #[\Symfony\Component\Routing\Attribute\Route("/leak'.$index.'", name: "leak'.$index.'")] public function run(): void {} }');
@@ -150,9 +150,9 @@ final class SymfonySkeletonTest extends TestCase
         $source = new SourceWorkspace();
         $kernel = new TestApplicationKernel($source, false, $environment, $debug);
         try {
-            $module = $source->php('src/Module/Live/LiveModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class LiveModule {}');
-            $source->php('src/Project/Shop/ShopProject.php', '#[\Sillbeam\Project\Attribute\SillbeamProject(modules: [\\'.$module.'::class])] final class ShopProject {}');
-            $source->php('src/Project/Shop/Module/Off/OffModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class OffModule {}');
+            $module = $source->php('src/Module/Live/LiveModule.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class LiveModule {}');
+            $source->php('src/Project/Shop/ShopProject.php', '#[\Sillbeam\Core\Project\Attribute\SillbeamProject(modules: [\\'.$module.'::class])] final class ShopProject {}');
+            $source->php('src/Project/Shop/Module/Off/OffModule.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class OffModule {}');
             $source->php('src/Project/Shop/Module/Off/Service.php', '#[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "disabled", public: true)] final class Service {}');
             $aliases = ['disabled'];
             foreach (['Module/Live', 'Project/Shop'] as $areaIndex => $area) {
@@ -204,7 +204,7 @@ final class SymfonySkeletonTest extends TestCase
         $source = new SourceWorkspace();
         $kernel = new TestApplicationKernel($source, false, $environment, $debug);
         try {
-            $source->php('src/Module/Live/LiveModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class LiveModule {}');
+            $source->php('src/Module/Live/LiveModule.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class LiveModule {}');
             foreach (['Fixtures', 'Migrations', 'Entity', 'Dto'] as $directory) {
                 $source->php('src/Module/Live/'.$directory.'/Helper.php', '#[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "'.$directory.'", public: true)] final class Helper {}');
             }

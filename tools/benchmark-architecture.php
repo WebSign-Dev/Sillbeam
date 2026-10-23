@@ -5,13 +5,13 @@ declare(strict_types=1);
 // Development tool: each size/environment runs in its own process and disposable workspace.
 require dirname(__DIR__).'/vendor/autoload.php';
 
-use Sillbeam\Architecture\ArchitectureCompiler;
-use Sillbeam\Architecture\ArchitectureDiscovery;
-use Sillbeam\Architecture\CodeDependencyAnalyzer;
-use Sillbeam\Architecture\DiscoveryOptions;
-use Sillbeam\Architecture\SourceInspector;
-use Sillbeam\Tests\Support\SourceWorkspace;
-use Sillbeam\Tests\Support\TestApplicationKernel;
+use Sillbeam\Core\Architecture\ArchitectureCompiler;
+use Sillbeam\Core\Architecture\ArchitectureDiscovery;
+use Sillbeam\Core\Architecture\CodeDependencyAnalyzer;
+use Sillbeam\Core\Architecture\DiscoveryOptions;
+use Sillbeam\Core\Architecture\SourceInspector;
+use Sillbeam\Core\Tests\Support\SourceWorkspace;
+use Sillbeam\Core\Tests\Support\TestApplicationKernel;
 
 if ('--worker' !== ($argv[1] ?? null)) {
     foreach ([10, 50, 100] as $modules) {
@@ -46,7 +46,7 @@ try {
         $area = 'src/Module/M'.$module;
         $previous = $source->namespace.'\\Module\\M'.($module - 1);
         $dependencies = 0 === $module ? '[]' : '[\\'.$previous.'\\Descriptor::class]';
-        $source->php($area.'/Descriptor.php', '#[\Sillbeam\Module\Attribute\SillbeamModule(id: "m'.$module.'", dependencies: '.$dependencies.')] final class Descriptor {}');
+        $source->php($area.'/Descriptor.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule(id: "m'.$module.'", dependencies: '.$dependencies.')] final class Descriptor {}');
         for ($class = 0; $class < 20; ++$class) {
             $body = 0 === $module ? '' : 'public function __construct(public \\'.$previous.'\\Service'.$class.' $previous) {}';
             $source->php($area.'/Service'.$class.'.php', 'final class Service'.$class.' { '.$body.' }');

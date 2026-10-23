@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Kernel;
+namespace Sillbeam\Core\Kernel;
 
 use Composer\InstalledVersions;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;

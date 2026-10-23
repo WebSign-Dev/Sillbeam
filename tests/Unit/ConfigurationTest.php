@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Unit;
+namespace Sillbeam\Core\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Sillbeam\DependencyInjection\Configuration;
+use Sillbeam\Core\DependencyInjection\Configuration;
 use Symfony\Component\Config\Definition\Processor;
 
 final class ConfigurationTest extends TestCase

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Integration;
+namespace Sillbeam\Core\Tests\Integration;
 
 use App\Entity\LegacyWidget;
 use App\Kernel;

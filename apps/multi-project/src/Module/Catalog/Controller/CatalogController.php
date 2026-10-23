@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace ProjectApp\Module\Catalog\Controller;
 
-use Sillbeam\Project\ProjectContextInterface;
+use Sillbeam\Core\Project\ProjectContextInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 

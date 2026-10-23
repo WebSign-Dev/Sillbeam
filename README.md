@@ -15,11 +15,11 @@
 
 **A modular architecture layer for scalable, maintainable Symfony applications.**
 
-[Website](https://getsillbeam.websign.de/) · [Quick start](#quick-start) · [Documentation](docs/README.md) · [Release notes](docs/releases/0.1.0.md) · [Report an issue][issues-url]
+[Website](https://getsillbeam.websign.de/) · [Quick start](#quick-start) · [Documentation](docs/README.md) · [Release notes](docs/releases/0.2.0.md) · [Report an issue][issues-url]
 
 </div>
 
-Sillbeam extends Symfony with explicit module boundaries, declared dependencies and optional Projects. It discovers your architecture, validates its dependency graph and checks static code references when Symfony builds the container. Symfony continues to handle services, routing and the application runtime.
+Sillbeam Core extends Symfony with explicit module boundaries, declared dependencies and optional Projects. It discovers your architecture, validates its dependency graph and checks static code references when Symfony builds the container. Symfony continues to handle services, routing and the application runtime.
 
 Use it in an existing Symfony application or build a modular monolith from the start. Doctrine integration is optional, and the standard Symfony kernel is sufficient. `SillbeamKernel` provides a convenient alternative.
 
@@ -53,10 +53,10 @@ PHP 8.4/8.5 with Symfony 7.4/8.0/8.1 has been checked through independent consum
 Install Sillbeam in your Symfony application's root directory:
 
 ```bash
-composer require websign-dev/sillbeam:^0.1.0
+composer require websign-dev/sillbeam-core:^0.2.0
 ```
 
-The release version is **v0.1.0**. The constraint `^0.1.0` allows compatible updates within the 0.1 release line. To install exactly this version, use `composer require websign-dev/sillbeam:0.1.0`.
+The target version is **v0.2.0 (unreleased)**. After publication, the constraint `^0.2.0` allows compatible updates within the 0.2 release line. To install exactly this version, use `composer require websign-dev/sillbeam-core:0.2.0`.
 
 ### Register Sillbeam
 
@@ -66,7 +66,7 @@ Register the bundle in your existing bundle array:
 // config/bundles.php
 return [
     // Keep your existing bundles here.
-    Sillbeam\SillbeamBundle::class => ['all' => true],
+    Sillbeam\Core\SillbeamCoreBundle::class => ['all' => true],
 ];
 ```
 
@@ -82,7 +82,7 @@ sillbeam:
 <details>
 <summary><strong>Install through Symfony Flex</strong></summary>
 
-The [Flex recipe](https://github.com/WebSign-Dev/Sillbeam/blob/main/flex-recipe/README.md) registers the bundle and creates the route import above when available through your Symfony Flex endpoint. Recipe availability is independent of Composer package installation. If Composer/Flex does not install the recipe, register the bundle and route import manually as shown above.
+The [Flex recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md) registers the bundle and creates the route import above when available through your Symfony Flex endpoint. Recipe availability is independent of Composer package installation. If Composer/Flex does not install the recipe, register the bundle and route import manually as shown above.
 
 </details>
 
@@ -97,7 +97,7 @@ Create `src/Module/Billing/BillingModule.php`:
 
 namespace App\Module\Billing;
 
-use Sillbeam\Module\Attribute\SillbeamModule;
+use Sillbeam\Core\Module\Attribute\SillbeamModule;
 
 #[SillbeamModule]
 final class BillingModule
@@ -169,7 +169,9 @@ Architecture errors prevent the container from building, so resolve their report
 
 ## Release status
 
-Sillbeam **v0.1.0** is released and available through Composer as `websign-dev/sillbeam`. The [changelog](CHANGELOG.md) and [release notes](docs/releases/0.1.0.md) describe its scope and limitations. Composer derives the package version from the Git tag; `0.1.x-dev` is the development branch alias.
+Sillbeam Core **v0.2.0** is being prepared as `websign-dev/sillbeam-core`; it has not been published. The [changelog](CHANGELOG.md) and [release notes](docs/releases/0.2.0.md) describe its scope and limitations. Composer derives the package version from the Git tag; `0.2.x-dev` is the development branch alias.
+
+See the [v0.2 migration guide](docs/migration/0.2.0.md) for the breaking package, namespace and bundle changes.
 
 ## Scope and migration
 
@@ -212,15 +214,15 @@ Sillbeam is licensed under the [MIT License](LICENSE).
 </div>
 
 <!-- Navigation -->
-[issues-url]: https://github.com/WebSign-Dev/Sillbeam/issues
-[releases-url]: https://github.com/WebSign-Dev/Sillbeam/releases
-[composer-url]: https://packagist.org/packages/websign-dev/sillbeam
-[ci-url]: https://github.com/WebSign-Dev/Sillbeam/actions/workflows/ci.yml
+[issues-url]: https://github.com/WebSign-Dev/sillbeam-core/issues
+[releases-url]: https://github.com/WebSign-Dev/sillbeam-core/releases
+[composer-url]: https://packagist.org/packages/websign-dev/sillbeam-core
+[ci-url]: https://github.com/WebSign-Dev/sillbeam-core/actions/workflows/ci.yml
 
 <!-- Badges: repository CI and requirements from composer.json -->
-[composer-shield]: https://img.shields.io/packagist/v/websign-dev/sillbeam?label=Composer&logo=composer&logoColor=white
-[ci-shield]: https://github.com/WebSign-Dev/Sillbeam/actions/workflows/ci.yml/badge.svg
+[composer-shield]: https://img.shields.io/packagist/v/websign-dev/sillbeam-core?label=Composer&logo=composer&logoColor=white
+[ci-shield]: https://github.com/WebSign-Dev/sillbeam-core/actions/workflows/ci.yml/badge.svg
 [php-shield]: https://img.shields.io/badge/PHP-%E2%89%A5%208.4-777bb4?logo=php&logoColor=white
 [symfony-shield]: https://img.shields.io/badge/Symfony-7.4%20%7C%208.x-000000?logo=symfony&logoColor=white
-[status-shield]: https://img.shields.io/badge/release-v0.1.0-57606a
+[status-shield]: https://img.shields.io/badge/status-v0.2.0%20unreleased-57606a
 [license-shield]: https://img.shields.io/badge/license-MIT-57606a

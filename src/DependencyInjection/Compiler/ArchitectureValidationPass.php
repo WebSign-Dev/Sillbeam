@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\DependencyInjection\Compiler;
+namespace Sillbeam\Core\DependencyInjection\Compiler;
 
-use Sillbeam\Module\ModuleRegistryInterface;
-use Sillbeam\Project\ProjectRegistryInterface;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Project\ProjectRegistryInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 

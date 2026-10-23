@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Unit;
+namespace Sillbeam\Core\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Tests\Support\SourceWorkspace;
+use Sillbeam\Core\Tests\Support\SourceWorkspace;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class PackageDistributionTest extends TestCase
@@ -33,7 +33,7 @@ final class PackageDistributionTest extends TestCase
                 $files[] = $relative;
                 self::assertDoesNotMatchRegularExpression('~^(?:vendor|apps|tests|tools|skeleton|flex-recipe|docs/superpowers)/|(?:^|/)(?:\.env(?:\..*)?|[^/]*\.cache|reference\.php)$~', $relative);
             }
-            self::assertContains('src/SillbeamBundle.php', $files);
+            self::assertContains('src/SillbeamCoreBundle.php', $files);
             self::assertContains('LICENSE', $files);
             self::assertContains('SECURITY.md', $files);
             self::assertContains('docs/guides/getting-started.md', $files);

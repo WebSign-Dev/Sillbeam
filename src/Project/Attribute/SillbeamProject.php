@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Project\Attribute;
+namespace Sillbeam\Core\Project\Attribute;
 
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final readonly class SillbeamProject

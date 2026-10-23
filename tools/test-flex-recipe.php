@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Symfony\Component\Yaml\Yaml;
 
 $repositoryDirectory = dirname(__DIR__);
-$recipeDirectory = $repositoryDirectory.'/flex-recipe/websign-dev/sillbeam/0.1';
+$recipeDirectory = $repositoryDirectory.'/flex-recipe/websign-dev/sillbeam-core/0.2';
 $autoload = $repositoryDirectory.'/vendor/autoload.php';
 
 if (!is_file($autoload)) {
@@ -17,7 +17,7 @@ require $autoload;
 
 $withDoctrine = '1' === getenv('SILLBEAM_TEST_DOCTRINE');
 $symfony = getenv('SILLBEAM_SYMFONY_VERSION') ?: null;
-$requirements = ['websign-dev/sillbeam' => '0.1.0', 'symfony/flex' => '^2.11', 'symfony/framework-bundle' => $symfony ?? '^7.4 || ^8.0', 'symfony/console' => $symfony ?? '^7.4 || ^8.0', 'symfony/yaml' => $symfony ?? '^7.4 || ^8.0'];
+$requirements = ['websign-dev/sillbeam-core' => '0.2.0', 'symfony/flex' => '^2.11', 'symfony/framework-bundle' => $symfony ?? '^7.4 || ^8.0', 'symfony/console' => $symfony ?? '^7.4 || ^8.0', 'symfony/yaml' => $symfony ?? '^7.4 || ^8.0'];
 $conflicts = [];
 if ($withDoctrine) {
     $requirements['doctrine/doctrine-bundle'] = '^3.3';
@@ -63,20 +63,20 @@ try {
 
     $recipeResponse = [
         'manifests' => [
-            'websign-dev/sillbeam' => [
+            'websign-dev/sillbeam-core' => [
                 'manifest' => $manifest,
                 'files' => $files,
                 'ref' => hashDirectory($recipeDirectory),
             ],
         ],
     ];
-    writeJson($endpointDirectory.'/websign-dev.sillbeam.0.1.json', $recipeResponse);
+    writeJson($endpointDirectory.'/websign-dev.sillbeam-core.0.2.json', $recipeResponse);
 
     $endpointPort = availablePort();
     $endpointBaseUrl = sprintf('http://127.0.0.1:%d', $endpointPort);
     $endpoint = [
         'recipes' => [
-            'websign-dev/sillbeam' => ['0.1'],
+            'websign-dev/sillbeam-core' => ['0.2'],
         ],
         'branch' => 'main',
         'is_contrib' => true,
@@ -106,7 +106,7 @@ try {
         'repositories' => [[
             'type' => 'path',
             'url' => $packageDirectory,
-            'options' => ['symlink' => false, 'versions' => ['websign-dev/sillbeam' => '0.1.0']],
+            'options' => ['symlink' => false, 'versions' => ['websign-dev/sillbeam-core' => '0.2.0']],
         ]],
         'require' => $requirements,
         'conflict' => (object) $conflicts,
@@ -128,12 +128,12 @@ try {
     runComposer($applicationDirectory);
 
     $bundles = require $applicationDirectory.'/config/bundles.php';
-    assertSame(['all' => true], $bundles['Sillbeam\\SillbeamBundle'] ?? null, 'SillbeamBundle was not registered.');
+    assertSame(['all' => true], $bundles['Sillbeam\\Core\\SillbeamCoreBundle'] ?? null, 'SillbeamCoreBundle was not registered.');
     $sillbeamBundles = array_values(array_filter(
         array_keys($bundles),
-        static fn (string $bundle): bool => str_starts_with($bundle, 'Sillbeam\\'),
+        static fn (string $bundle): bool => str_starts_with($bundle, 'Sillbeam\\Core\\'),
     ));
-    assertSame(['Sillbeam\\SillbeamBundle'], $sillbeamBundles, 'The recipe must register only the central SillbeamBundle.');
+    assertSame(['Sillbeam\\Core\\SillbeamCoreBundle'], $sillbeamBundles, 'The recipe must register only the central SillbeamCoreBundle.');
 
     assertSame(false, is_file($applicationDirectory.'/config/packages/sillbeam.yaml'), 'The recipe must not install an empty package configuration.');
 
@@ -141,8 +141,8 @@ try {
     assertSame('sillbeam', $routes['sillbeam']['type'] ?? null, 'The Sillbeam route loader was not installed.');
 
     $lock = decodeJson($applicationDirectory.'/symfony.lock');
-    assertSame('0.1', $lock['websign-dev/sillbeam']['recipe']['version'] ?? null, 'The recipe is missing from symfony.lock.');
-    $installedFiles = $lock['websign-dev/sillbeam']['files'] ?? [];
+    assertSame('0.2', $lock['websign-dev/sillbeam-core']['recipe']['version'] ?? null, 'The recipe is missing from symfony.lock.');
+    $installedFiles = $lock['websign-dev/sillbeam-core']['files'] ?? [];
     sort($installedFiles);
     assertSame([
         'config/routes/sillbeam.yaml',
@@ -259,11 +259,11 @@ services:
         exclude: '../src/{DependencyInjection,Entity,Kernel.php,Module,Project}'
 YAML);
     mkdir($directory.'/src/Module/Off', 0777, true);
-    file_put_contents($directory.'/src/Module/Off/OffModule.php', '<?php namespace App\Module\Off; #[\Sillbeam\Module\Attribute\SillbeamModule] final class OffModule {}');
+    file_put_contents($directory.'/src/Module/Off/OffModule.php', '<?php namespace App\Module\Off; #[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class OffModule {}');
     file_put_contents($directory.'/src/Module/Off/Leak.php', '<?php namespace App\Module\Off; #[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "off.leak", public: true)] final class Leak {}');
     file_put_contents($directory.'/src/Legacy.php', '<?php namespace App; #[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "legacy", public: true)] final class Legacy {}');
     mkdir($directory.'/src/Module/Hello/Controller', 0777, true);
-    file_put_contents($directory.'/src/Module/Hello/HelloModule.php', '<?php namespace App\Module\Hello; #[\Sillbeam\Module\Attribute\SillbeamModule] final class HelloModule {}');
+    file_put_contents($directory.'/src/Module/Hello/HelloModule.php', '<?php namespace App\Module\Hello; #[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class HelloModule {}');
     file_put_contents($directory.'/src/Module/Hello/Controller/HelloController.php', '<?php namespace App\Module\Hello\Controller; final class HelloController { #[\Symfony\Component\Routing\Attribute\Route("/hello", name: "hello")] public function hello(): \Symfony\Component\HttpFoundation\Response { return new \Symfony\Component\HttpFoundation\Response("hello"); } }');
     if ($withDoctrine) {
         mkdir($directory.'/src/Module/Hello/Entity', 0777, true);
@@ -288,7 +288,7 @@ $kernel = new App\Kernel($argv[2], 'dev' === $argv[2]);
 $kernel->boot();
 try {
     if (!$kernel->getContainer()->has('legacy') || $kernel->getContainer()->has('off.leak') !== $zero) { throw new \RuntimeException('Skeleton service import boundaries failed.'); }
-    $registry = $kernel->getContainer()->get(\Sillbeam\Module\ModuleRegistryInterface::class);
+    $registry = $kernel->getContainer()->get(\Sillbeam\Core\Module\ModuleRegistryInterface::class);
     if (($zero ? 2 : 1) !== \count($registry->active())) { throw new \RuntimeException('Missing active module.'); }
     $response = $kernel->handle(\Symfony\Component\HttpFoundation\Request::create('/hello'));
     if (200 !== $response->getStatusCode() || 'hello' !== $response->getContent()) { throw new \RuntimeException('Module route failed.'); }
@@ -306,7 +306,7 @@ PHP);
     file_put_contents($directory.'/config/packages/sillbeam.yaml', "sillbeam: { modules: { off: { enabled: false } } }\n");
     foreach (['symfony', 'sillbeam'] as $kernel) {
         if ('sillbeam' === $kernel) {
-            file_put_contents($directory.'/src/Kernel.php', '<?php namespace App; final class Kernel extends \\Sillbeam\\Kernel\\SillbeamKernel { public function getProjectDir(): string { return \\dirname(__DIR__); } }');
+            file_put_contents($directory.'/src/Kernel.php', '<?php namespace App; final class Kernel extends \\Sillbeam\\Core\\Kernel\\SillbeamKernel { public function getProjectDir(): string { return \\dirname(__DIR__); } }');
         }
         foreach (['dev', 'prod'] as $environment) {
             for ($boot = 0; $boot < 2; ++$boot) {
@@ -326,18 +326,18 @@ function uninstallRecipe(string $directory): void
 {
     $services = file_get_contents($directory.'/config/services.yaml');
     $configuration = file_get_contents($directory.'/config/packages/sillbeam.yaml');
-    $process = proc_open(['composer', 'remove', 'websign-dev/sillbeam', '--no-interaction', '--no-progress', '--no-scripts'], [\STDIN, \STDOUT, \STDERR], $pipes, $directory);
+    $process = proc_open(['composer', 'remove', 'websign-dev/sillbeam-core', '--no-interaction', '--no-progress', '--no-scripts'], [\STDIN, \STDOUT, \STDERR], $pipes, $directory);
     if (!is_resource($process) || 0 !== proc_close($process)) {
         throw new RuntimeException('Recipe removal failed.');
     }
     $bundles = require $directory.'/config/bundles.php';
-    assertSame(false, isset($bundles['Sillbeam\\SillbeamBundle']), 'Recipe bundle registration was not removed.');
+    assertSame(false, isset($bundles['Sillbeam\\Core\\SillbeamCoreBundle']), 'Recipe bundle registration was not removed.');
     assertSame(true, isset($bundles['Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle']), 'Native bundle registration must survive.');
     assertSame(false, is_file($directory.'/config/routes/sillbeam.yaml'), 'Recipe route import was not removed.');
     assertSame($services, file_get_contents($directory.'/config/services.yaml'), 'Recipe removal changed native services.');
     assertSame($configuration, file_get_contents($directory.'/config/packages/sillbeam.yaml'), 'Recipe removal deleted user configuration.');
     $lock = decodeJson($directory.'/symfony.lock');
-    assertSame(false, isset($lock['websign-dev/sillbeam']), 'Recipe lock entry was not removed.');
+    assertSame(false, isset($lock['websign-dev/sillbeam-core']), 'Recipe lock entry was not removed.');
     // Application-owned options and an optional custom Kernel need explicit cleanup.
     // Preserve the configuration contents while moving them out of Symfony's imports.
     rename($directory.'/config/packages/sillbeam.yaml', $directory.'/config/sillbeam.yaml.uninstalled');
@@ -348,7 +348,7 @@ require __DIR__.'/vendor/autoload.php';
 $kernel = new App\Kernel('prod', false);
 try {
     $kernel->boot();
-    if (!$kernel->getContainer()->has('legacy') || class_exists('Sillbeam\\SillbeamBundle')) { throw new RuntimeException('Native consumer failed after removal and application cleanup.'); }
+    if (!$kernel->getContainer()->has('legacy') || class_exists('Sillbeam\\Core\\SillbeamCoreBundle')) { throw new RuntimeException('Native consumer failed after removal and application cleanup.'); }
 } finally { $kernel->shutdown(); }
 PHP);
     $process = proc_open([\PHP_BINARY, 'removed.php'], [\STDIN, \STDOUT, \STDERR], $pipes, $directory);

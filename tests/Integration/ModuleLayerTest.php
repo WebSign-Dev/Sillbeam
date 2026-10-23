@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Integration;
+namespace Sillbeam\Core\Tests\Integration;
 
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Module\ModuleRegistryInterface;
-use Sillbeam\Tests\Support\SourceWorkspace;
-use Sillbeam\Tests\Support\TestApplicationKernel;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Tests\Support\SourceWorkspace;
+use Sillbeam\Core\Tests\Support\TestApplicationKernel;
 use Symfony\Component\HttpFoundation\Request;
 
 final class ModuleLayerTest extends TestCase
@@ -32,7 +32,7 @@ final class ModuleLayerTest extends TestCase
 
     public function testEmptySillbeamConfigWorksWithoutDoctrineOrFoundation(): void
     {
-        $module = $this->source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
+        $module = $this->source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
         $this->source->php('src/Module/Hello/Controller/HelloController.php', 'final class HelloController { #[\\Symfony\\Component\\Routing\\Attribute\\Route("/hello", name: "hello")] public function hello(): \\Symfony\\Component\\HttpFoundation\\Response { return new \\Symfony\\Component\\HttpFoundation\\Response("hello"); } }');
         $this->kernel = new TestApplicationKernel($this->source);
         $this->kernel->boot();
@@ -46,9 +46,9 @@ final class ModuleLayerTest extends TestCase
 
     public function testContextPropagatesUnknownHostLookupWithoutBlockingNativeRoutes(): void
     {
-        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class ShopProject {}');
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject] final class ShopProject {}');
         $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    projects:\n        shop: { hosts: [shop.test] }\n");
-        $controller = $this->source->php('src/Controller/Health.php', 'final class Health { #[\\Symfony\\Component\\Routing\\Attribute\\Route("/health", name: "health")] public function run(\\Sillbeam\\Project\\ProjectContextInterface $context): \\Symfony\\Component\\HttpFoundation\\Response { try { $id = $context->id(); } catch (\\OutOfBoundsException) { $id = "outside"; } return new \\Symfony\\Component\\HttpFoundation\\Response($id); } }');
+        $controller = $this->source->php('src/Controller/Health.php', 'final class Health { #[\\Symfony\\Component\\Routing\\Attribute\\Route("/health", name: "health")] public function run(\\Sillbeam\\Core\\Project\\ProjectContextInterface $context): \\Symfony\\Component\\HttpFoundation\\Response { try { $id = $context->id(); } catch (\\OutOfBoundsException) { $id = "outside"; } return new \\Symfony\\Component\\HttpFoundation\\Response($id); } }');
         $this->source->write('config/services.yaml', "services:\n    '".$controller."':\n        autowire: true\n        tags: [controller.service_arguments]\n");
         $this->source->write('config/routes.yaml', "native:\n    resource: ../src/Controller/Health.php\n    type: attribute\nsillbeam:\n    resource: .\n    type: sillbeam\n");
         $this->kernel = new TestApplicationKernel($this->source);
@@ -58,15 +58,15 @@ final class ModuleLayerTest extends TestCase
 
     public function testDoctrineOnlyMapsActiveModulesAndKeepsNativeMapping(): void
     {
-        $live = $this->source->php('src/Module/Live/LiveModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class LiveModule {}');
-        $this->source->php('src/Module/Off/OffModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class OffModule {}');
+        $live = $this->source->php('src/Module/Live/LiveModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class LiveModule {}');
+        $this->source->php('src/Module/Off/OffModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class OffModule {}');
         $body = '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column(type: "integer")] public int $id = 1; }';
         $active = $this->source->php('src/Module/Live/Entity/Record.php', $body);
         $disabled = $this->source->php('src/Module/Off/Entity/Record.php', $body);
         $unused = $this->source->php('src/Module/Unused/Entity/Record.php', $body);
-        $this->source->php('src/Module/Unused/UnusedModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class UnusedModule {}');
+        $this->source->php('src/Module/Unused/UnusedModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class UnusedModule {}');
         $legacy = $this->source->php('src/Entity/Record.php', $body);
-        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject(modules: [\\'.$live.'::class])] final class ShopProject {}');
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject(modules: [\\'.$live.'::class])] final class ShopProject {}');
         $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    modules:\n        off: { enabled: false }\n");
         $this->source->write('config/packages/doctrine.yaml', "doctrine:\n    dbal: { url: 'sqlite:///:memory:' }\n    orm:\n        auto_mapping: false\n        mappings:\n            Legacy:\n                type: attribute\n                is_bundle: false\n                dir: '%kernel.project_dir%/src/Entity'\n                prefix: '".$this->source->namespace."\\Entity'\n");
         $this->kernel = new TestApplicationKernel($this->source, true);
@@ -83,7 +83,7 @@ final class ModuleLayerTest extends TestCase
 
     public function testNativeDoctrineOverrideOfGeneratedMappingRemainsAuthoritative(): void
     {
-        $this->source->php('src/Module/Live/LiveModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class LiveModule {}');
+        $this->source->php('src/Module/Live/LiveModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class LiveModule {}');
         $body = '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column(type: "integer")] public int $id = 1; }';
         $selected = $this->source->php('src/Module/Live/Entity/Selected/Record.php', $body);
         $ignored = $this->source->php('src/Module/Live/Entity/Record.php', $body);
@@ -102,7 +102,7 @@ final class ModuleLayerTest extends TestCase
 
     public function testNativeServiceOverrideWinsOverModuleDefaults(): void
     {
-        $this->source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
+        $this->source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
         $service = $this->source->php('src/Module/Hello/Greeting.php', 'final class Greeting { public function __construct(public string $text = "default") {} }');
         $this->source->write('config/services.yaml', "services:\n    '".$service."':\n        public: true\n        arguments: ['native']\n");
         $this->source->write('config/packages/sillbeam.yaml', "sillbeam: {}\n");
@@ -115,7 +115,7 @@ final class ModuleLayerTest extends TestCase
 
     public function testArchitectureCommandIncludesInactiveCatalogAndJsonEvidence(): void
     {
-        $this->source->php('src/Module/Off/OffModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class OffModule {}');
+        $this->source->php('src/Module/Off/OffModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class OffModule {}');
         $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    modules:\n        off: { enabled: false }\n");
         $this->kernel = new TestApplicationKernel($this->source);
         $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($this->kernel);
@@ -131,7 +131,7 @@ final class ModuleLayerTest extends TestCase
 
     public function testExcludedCustomRootControllerDoesNotLeakIntoRoutes(): void
     {
-        $this->source->php('src/Domain/Hello/Hello.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule(id: "hello")] final class Hello {}');
+        $this->source->php('src/Domain/Hello/Hello.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(id: "hello")] final class Hello {}');
         $controller = '#[\\Symfony\\Component\\DependencyInjection\\Attribute\\Autoconfigure(public: true)] final class Endpoint { #[\\Symfony\\Component\\Routing\\Attribute\\Route("/hidden", name: "hidden")] public function run(): \\Symfony\\Component\\HttpFoundation\\Response { return new \\Symfony\\Component\\HttpFoundation\\Response("hidden"); } }';
         $endpoint = $this->source->php('src/Domain/Hello/Http/Hidden/Endpoint.php', $controller);
         $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    discovery:\n        modules:\n            - path: src/Domain\n              excludes: ['Hello/Http/Hidden/**']\n    integrations:\n        controllers: [Http]\n");
@@ -145,8 +145,8 @@ final class ModuleLayerTest extends TestCase
 
     public function testExcludedEntitiesAndDisabledPrivateAreasDoNotLeakThroughParentMappings(): void
     {
-        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class ShopProject {}');
-        $this->source->php('src/Project/Shop/Entity/Private/OffModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule(id: "off")] final class OffModule {}');
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject] final class ShopProject {}');
+        $this->source->php('src/Project/Shop/Entity/Private/OffModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(id: "off")] final class OffModule {}');
         $body = '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column(type: "integer")] public int $id = 1; }';
         $live = $this->source->php('src/Project/Shop/Entity/Record.php', $body);
         $off = $this->source->php('src/Project/Shop/Entity/Private/Entity/Record.php', $body);
@@ -166,7 +166,7 @@ final class ModuleLayerTest extends TestCase
 
     public function testExactDirectoryExclusionsPruneEntitiesFromEnclosingMappings(): void
     {
-        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Project\\Attribute\\SillbeamProject] final class ShopProject {}');
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject] final class ShopProject {}');
         $body = '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column(type: "integer")] public int $id = 1; }';
         $live = $this->source->php('src/Project/Shop/Entity/Record.php', $body);
         $hidden = $this->source->php('src/Project/Shop/Entity/Hidden/Record.php', $body);
@@ -184,7 +184,7 @@ final class ModuleLayerTest extends TestCase
 
     public function testNativeDoctrineOverrideCanMapAnExplicitlyExcludedDirectory(): void
     {
-        $this->source->php('src/Module/Live/LiveModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class LiveModule {}');
+        $this->source->php('src/Module/Live/LiveModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class LiveModule {}');
         $hidden = $this->source->php('src/Module/Live/Entity/Hidden/Record.php', '#[\\Doctrine\\ORM\\Mapping\\Entity] final class Record { #[\\Doctrine\\ORM\\Mapping\\Id] #[\\Doctrine\\ORM\\Mapping\\Column(type: "integer")] public int $id = 1; }');
         $directory = $this->source->directory.'/src/Module/Live/Entity';
         $key = 'Sillbeam'.hash('xxh128', $directory);
@@ -199,7 +199,7 @@ final class ModuleLayerTest extends TestCase
 
     public function testBuildTimeEnvironmentActivationIsResolvedBeforeCompilation(): void
     {
-        $module = $this->source->php('src/Module/Off/OffModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class OffModule {}');
+        $module = $this->source->php('src/Module/Off/OffModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class OffModule {}');
         $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    modules:\n        off: { enabled: '%env(bool:SILLBEAM_TEST_ENABLED)%' }\n");
         $_ENV['SILLBEAM_TEST_ENABLED'] = '0';
         try {
@@ -225,7 +225,7 @@ final class ModuleLayerTest extends TestCase
         $resource = array_values($resources)[0];
         self::assertInstanceOf(\Symfony\Component\Config\Resource\FileExistenceResource::class, $resource);
         self::assertTrue($resource->isFresh(time()));
-        $this->source->php('src/Module/NewModule/NewModule.php', '#[\\Sillbeam\\Module\\Attribute\\SillbeamModule] final class NewModule {}');
+        $this->source->php('src/Module/NewModule/NewModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class NewModule {}');
         self::assertFalse($resource->isFresh(time()));
     }
 
@@ -256,7 +256,7 @@ final class ModuleLayerTest extends TestCase
 
     public function testRootLocalExclusionsAlsoApplyToEnclosingProjectServiceImport(): void
     {
-        $this->source->php('src/Project/Shop/ShopProject.php', '#[\Sillbeam\Project\Attribute\SillbeamProject] final class ShopProject {}');
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\Sillbeam\Core\Project\Attribute\SillbeamProject] final class ShopProject {}');
         $this->source->php('src/Project/Shop/Extension/Hidden/Leak.php', '#[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "leak", public: true)] final class Leak {}');
         $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    discovery:\n        modules:\n            - path: src/Project/Shop/Extension\n              excludes: ['Hidden/**']\n");
         $this->kernel = new TestApplicationKernel($this->source);
@@ -266,7 +266,7 @@ final class ModuleLayerTest extends TestCase
 
     public function testRoutingResourcesInvalidateWhenArchitectureConfigOrComposerChanges(): void
     {
-        $this->source->php('src/Module/Hello/HelloModule.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class HelloModule {}');
+        $this->source->php('src/Module/Hello/HelloModule.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class HelloModule {}');
         $this->source->php('src/Module/Hello/Controller/Endpoint.php', 'final class Endpoint { #[\\Symfony\\Component\\Routing\\Attribute\\Route("/hello", name: "hello")] public function run(): void {} }');
         $this->source->write('config/packages/sillbeam.yaml', "sillbeam: {}\n");
         $this->kernel = new TestApplicationKernel($this->source);

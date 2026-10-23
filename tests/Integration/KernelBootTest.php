@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Integration;
+namespace Sillbeam\Core\Tests\Integration;
 
 use App\Kernel;
 use App\Module\Billing\BillingModule;
 use App\SillbeamTestKernel;
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\Routing\RouterInterface;

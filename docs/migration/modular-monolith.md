@@ -4,7 +4,7 @@ This evolution is a breaking change. Before updating, inventory usage of the rem
 
 ## Removed Foundation
 
-The namespaces `Sillbeam\Api`, `Core`, `Doctrine`, `Entity`, `Exception`, `Filesystem`, `Health`, `Http`, `Location`, `Logger`, `Mailer`, `Management`, `Messenger`, `Notification`, `Payment`, `QrCode`, `Reporting`, `Search`, `Security`, `Serializer`, `User` and `Validator` and their configuration have been removed. Older versions remain available in Git history.
+The namespaces `Sillbeam\Core\Api`, `Core`, `Doctrine`, `Entity`, `Exception`, `Filesystem`, `Health`, `Http`, `Location`, `Logger`, `Mailer`, `Management`, `Messenger`, `Notification`, `Payment`, `QrCode`, `Reporting`, `Search`, `Security`, `Serializer`, `User` and `Validator` and their configuration have been removed. Older versions remain available in Git history.
 
 - Replace API resource/CRUD bases with Symfony controllers or an explicitly chosen API package.
 - Replace entity inheritance, UUID/timestamp/soft-delete mappings and EntityStores with application entities, repositories, listeners/filters. Initially retain columns and existing IDs; review ORM schema diffs before execution.

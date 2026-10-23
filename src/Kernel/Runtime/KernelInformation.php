@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Kernel\Runtime;
+namespace Sillbeam\Core\Kernel\Runtime;
 
 use Composer\InstalledVersions;
-use Sillbeam\Kernel\SillbeamKernel;
-use Sillbeam\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Kernel\SillbeamKernel;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
 final readonly class KernelInformation implements KernelInformationInterface
@@ -27,8 +27,8 @@ final readonly class KernelInformation implements KernelInformationInterface
             'debug' => $this->kernel->isDebug() ? 'yes' : 'no',
             'php' => \PHP_VERSION,
             'symfony' => Kernel::VERSION,
-            'sillbeam' => InstalledVersions::isInstalled('websign-dev/sillbeam')
-                ? (InstalledVersions::getPrettyVersion('websign-dev/sillbeam') ?? 'unknown')
+            'sillbeam' => InstalledVersions::isInstalled('websign-dev/sillbeam-core')
+                ? (InstalledVersions::getPrettyVersion('websign-dev/sillbeam-core') ?? 'unknown')
                 : 'source',
             'modules' => \count($this->modules->all()),
             'modules_enabled' => \count($this->modules->active()),

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Architecture\Console;
+namespace Sillbeam\Core\Architecture\Console;
 
-use Sillbeam\Module\ModuleRegistryInterface;
-use Sillbeam\Project\ProjectRegistryInterface;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Project\ProjectRegistryInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

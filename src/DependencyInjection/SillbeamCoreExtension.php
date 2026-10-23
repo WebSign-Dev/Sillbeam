@@ -2,30 +2,30 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\DependencyInjection;
+namespace Sillbeam\Core\DependencyInjection;
 
-use Sillbeam\Architecture\ArchitectureCompiler;
-use Sillbeam\Architecture\ArchitectureDiscovery;
-use Sillbeam\Architecture\CodeDependencyAnalyzer;
-use Sillbeam\Architecture\CompiledArchitecture;
-use Sillbeam\Architecture\Console\ArchitectureCommand;
-use Sillbeam\Architecture\DiscoveryOptions;
-use Sillbeam\Architecture\DiscoveryOptionsResolver;
-use Sillbeam\Architecture\DiscoveryResult;
-use Sillbeam\Architecture\FilesystemPath;
-use Sillbeam\Architecture\PathMatcher;
-use Sillbeam\Architecture\SourceInspector;
-use Sillbeam\Kernel\Command\AboutCommand;
-use Sillbeam\Kernel\Runtime\KernelInformation;
-use Sillbeam\Kernel\Runtime\KernelInformationInterface;
-use Sillbeam\Module\ModuleDefinition;
-use Sillbeam\Module\ModuleRegistry;
-use Sillbeam\Module\ModuleRegistryInterface;
-use Sillbeam\Project\ProjectContext;
-use Sillbeam\Project\ProjectContextInterface;
-use Sillbeam\Project\ProjectRegistry;
-use Sillbeam\Project\ProjectRegistryInterface;
-use Sillbeam\Routing\SillbeamRouteLoader;
+use Sillbeam\Core\Architecture\ArchitectureCompiler;
+use Sillbeam\Core\Architecture\ArchitectureDiscovery;
+use Sillbeam\Core\Architecture\CodeDependencyAnalyzer;
+use Sillbeam\Core\Architecture\CompiledArchitecture;
+use Sillbeam\Core\Architecture\Console\ArchitectureCommand;
+use Sillbeam\Core\Architecture\DiscoveryOptions;
+use Sillbeam\Core\Architecture\DiscoveryOptionsResolver;
+use Sillbeam\Core\Architecture\DiscoveryResult;
+use Sillbeam\Core\Architecture\FilesystemPath;
+use Sillbeam\Core\Architecture\PathMatcher;
+use Sillbeam\Core\Architecture\SourceInspector;
+use Sillbeam\Core\Kernel\Command\AboutCommand;
+use Sillbeam\Core\Kernel\Runtime\KernelInformation;
+use Sillbeam\Core\Kernel\Runtime\KernelInformationInterface;
+use Sillbeam\Core\Module\ModuleDefinition;
+use Sillbeam\Core\Module\ModuleRegistry;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Project\ProjectContext;
+use Sillbeam\Core\Project\ProjectContextInterface;
+use Sillbeam\Core\Project\ProjectRegistry;
+use Sillbeam\Core\Project\ProjectRegistryInterface;
+use Sillbeam\Core\Routing\SillbeamRouteLoader;
 use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileExistenceResource;
 use Symfony\Component\Config\Resource\FileResource;
@@ -34,7 +34,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
-final class SillbeamExtension extends Extension implements PrependExtensionInterface
+final class SillbeamCoreExtension extends Extension implements PrependExtensionInterface
 {
     private ?ContainerBuilder $preparationContainer = null;
     private ?CompiledArchitecture $architecture = null;
@@ -48,6 +48,11 @@ final class SillbeamExtension extends Extension implements PrependExtensionInter
 
     /** @var list<string> */
     private array $configurationResources = [];
+
+    public function getAlias(): string
+    {
+        return 'sillbeam';
+    }
 
     public function prepend(ContainerBuilder $container): void
     {
@@ -76,7 +81,7 @@ final class SillbeamExtension extends Extension implements PrependExtensionInter
             $options = (new DiscoveryOptionsResolver())->resolve($configurationContainer, $configs, $config);
             if (null === $this->architecture || $config !== $this->config || $options != $this->options) {
                 // Doctrine may already have loaded the mappings prepared during prepend().
-                throw new \LogicException('Sillbeam configuration changed after prepend() while Doctrine integration is enabled. Register bundles that prepend Sillbeam configuration before SillbeamBundle, or configure Sillbeam directly in the application.');
+                throw new \LogicException('Sillbeam configuration changed after prepend() while Doctrine integration is enabled. Register bundles that prepend Sillbeam configuration before SillbeamCoreBundle, or configure Sillbeam directly in the application.');
             }
         }
         if (null === $this->architecture) {

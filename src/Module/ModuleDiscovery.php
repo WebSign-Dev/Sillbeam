@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Module;
+namespace Sillbeam\Core\Module;
 
-use Sillbeam\Architecture\DiscoveryOptions;
-use Sillbeam\Architecture\IdDeriver;
-use Sillbeam\Architecture\SourceInspector;
-use Sillbeam\Module\Attribute\SillbeamModule;
-use Sillbeam\Project\ProjectDefinition;
+use Sillbeam\Core\Architecture\DiscoveryOptions;
+use Sillbeam\Core\Architecture\IdDeriver;
+use Sillbeam\Core\Architecture\SourceInspector;
+use Sillbeam\Core\Module\Attribute\SillbeamModule;
+use Sillbeam\Core\Project\ProjectDefinition;
 
 final readonly class ModuleDiscovery
 {

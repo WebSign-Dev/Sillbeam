@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Unit;
+namespace Sillbeam\Core\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Architecture\DiscoveryOptionsResolver;
+use Sillbeam\Core\Architecture\DiscoveryOptionsResolver;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -13,7 +13,7 @@ final class DiscoveryOptionsResolverTest extends TestCase
 {
     public function testRelativeRootIsResolvedAgainstApplicationDirectory(): void
     {
-        $source = new \Sillbeam\Tests\Support\SourceWorkspace();
+        $source = new \Sillbeam\Core\Tests\Support\SourceWorkspace();
         try {
             $container = new ContainerBuilder();
             $container->setParameter('kernel.project_dir', $source->directory);
@@ -65,10 +65,10 @@ final class DiscoveryOptionsResolverTest extends TestCase
 
     public function testLayeredListsUseSymfonyConfigurationMergeSemantics(): void
     {
-        $source = new \Sillbeam\Tests\Support\SourceWorkspace();
+        $source = new \Sillbeam\Core\Tests\Support\SourceWorkspace();
         try {
-            $source->php('src/One/First/First.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class First {}');
-            $source->php('src/Two/Second/Second.php', '#[\Sillbeam\Module\Attribute\SillbeamModule] final class Second {}');
+            $source->php('src/One/First/First.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class First {}');
+            $source->php('src/Two/Second/Second.php', '#[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class Second {}');
             $container = new ContainerBuilder();
             $container->setParameter('kernel.project_dir', $source->directory);
             $configs = [
@@ -81,7 +81,7 @@ final class DiscoveryOptionsResolverTest extends TestCase
             self::assertSame(['Http', 'Endpoints'], $options->controllerPatterns);
             self::assertSame(['Model', 'Records'], $options->entityPatterns);
             self::assertSame(['Data/**', 'Dto/**'], $options->serviceExcludes);
-            self::assertCount(2, (new \Sillbeam\Architecture\ArchitectureDiscovery())->discover($options)->modules);
+            self::assertCount(2, (new \Sillbeam\Core\Architecture\ArchitectureDiscovery())->discover($options)->modules);
         } finally {
             $source->remove();
         }

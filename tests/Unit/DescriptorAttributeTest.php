@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Unit;
+namespace Sillbeam\Core\Tests\Unit;
 
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Module\Attribute\SillbeamModule;
-use Sillbeam\Project\Attribute\SillbeamProject;
+use Sillbeam\Core\Module\Attribute\SillbeamModule;
+use Sillbeam\Core\Project\Attribute\SillbeamProject;
 
 final class DescriptorAttributeTest extends TestCase
 {

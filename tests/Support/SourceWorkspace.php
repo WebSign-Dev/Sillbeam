@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Support;
+namespace Sillbeam\Core\Tests\Support;
 
 use Composer\Autoload\ClassLoader;
 use Symfony\Component\Filesystem\Filesystem;

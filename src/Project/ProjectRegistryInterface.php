@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Project;
+namespace Sillbeam\Core\Project;
 
 interface ProjectRegistryInterface
 {

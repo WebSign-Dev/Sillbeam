@@ -2,17 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Unit;
+namespace Sillbeam\Core\Tests\Unit;
 
 use App\Module\Billing\BillingModule;
 use App\Module\Identity\IdentityModule;
 use PHPUnit\Framework\TestCase;
-use Sillbeam\Architecture\ArchitectureCompiler;
-use Sillbeam\Architecture\ArchitectureDiscovery;
-use Sillbeam\Architecture\DiscoveryOptions;
-use Sillbeam\Architecture\DiscoveryResult;
-use Sillbeam\Module\ModuleDefinition;
-use Sillbeam\Project\ProjectDefinition;
+use Sillbeam\Core\Architecture\ArchitectureCompiler;
+use Sillbeam\Core\Architecture\ArchitectureDiscovery;
+use Sillbeam\Core\Architecture\DiscoveryOptions;
+use Sillbeam\Core\Architecture\DiscoveryResult;
+use Sillbeam\Core\Module\ModuleDefinition;
+use Sillbeam\Core\Project\ProjectDefinition;
 
 final class ArchitectureTest extends TestCase
 {

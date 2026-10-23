@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Tests\Integration;
+namespace Sillbeam\Core\Tests\Integration;
 
 use Doctrine\ORM\EntityManagerInterface;
 use HybridApp\Kernel as HybridKernel;
@@ -23,9 +23,9 @@ use ProjectOnlyApp\Project\Portal\Entity\ProjectRecord;
 use ProjectOnlyApp\Project\Portal\PortalProject as ProjectOnlyPortal;
 use ProjectOnlyApp\Project\Portal\Service\ProjectGreeting;
 use Psr\Container\ContainerInterface;
-use Sillbeam\Module\ModuleRegistryInterface;
-use Sillbeam\Project\ProjectContextInterface;
-use Sillbeam\Project\ProjectRegistryInterface;
+use Sillbeam\Core\Module\ModuleRegistryInterface;
+use Sillbeam\Core\Project\ProjectContextInterface;
+use Sillbeam\Core\Project\ProjectRegistryInterface;
 use SingleProjectApp\Kernel as SingleProjectKernel;
 use SingleProjectApp\Module\Profile\ProfileModule;
 use SingleProjectApp\Project\Portal\Module\Dashboard\DashboardModule;

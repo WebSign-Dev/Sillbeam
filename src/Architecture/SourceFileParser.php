@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Sillbeam\Architecture;
+namespace Sillbeam\Core\Architecture;
 
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitor\NameResolver;
 use PhpParser\NodeVisitorAbstract;
 use PhpParser\ParserFactory;
-use Sillbeam\Module\Attribute\SillbeamModule;
-use Sillbeam\Project\Attribute\SillbeamProject;
+use Sillbeam\Core\Module\Attribute\SillbeamModule;
+use Sillbeam\Core\Project\Attribute\SillbeamProject;
 
 final class SourceFileParser
 {
