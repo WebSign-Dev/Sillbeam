@@ -53,7 +53,14 @@ final readonly class ArchitectureReport
             'schema_version' => 1,
             'status' => !$analysis->isComplete() ? 'unavailable' : ($analysis->isValid() ? 'valid' : 'violations'),
             'valid' => $analysis->isValid(), 'complete' => $analysis->isComplete(),
-            'findings' => array_map(static fn (ArchitectureFinding $finding): array => get_object_vars($finding), $analysis->findings),
+            'findings' => array_map(static function (ArchitectureFinding $finding): array {
+                $data = get_object_vars($finding);
+                if (null !== ($suggestion = $finding->suggestion())) {
+                    $data['context']['suggestion'] = $suggestion;
+                }
+
+                return $data;
+            }, $analysis->findings),
             'modules' => $modules, 'projects' => $projectData,
         ]);
     }

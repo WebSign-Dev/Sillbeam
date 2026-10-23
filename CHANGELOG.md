@@ -12,6 +12,10 @@ This changelog records released versions and unreleased changes of Sillbeam.
 
 ### Architecture validation
 
+- Follow Symfony debug mode: validate cold/rebuilt development containers and CLI builds; production HTTP uses prebuilt state and returns generic 503 when compilation would be required.
+- Validate current sources/configuration before cache clear/warmup, including warm caches and no-warmup/optional-warmer flags. Invalid builds fail before proceeding.
+- Include remediation hints and available locations in development diagnostics and the existing text/JSON reports. See [validation lifecycle](docs/reference/architecture-analysis.md#development-and-production-lifecycle).
+
 - Aggregate independently detectable existing Module, Project and dependency violations as structured findings with stable rule identifiers, severity and available context.
 - Add a reusable analysis result with deterministic ordering and deduplication; distinguish rule violations from fatal analysis blockers.
 - Keep strict container-build rejection through a `LogicException`-compatible aggregate exception; do not expose invalid runtime graphs.

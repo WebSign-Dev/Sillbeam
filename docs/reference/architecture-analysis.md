@@ -60,6 +60,30 @@ The bundle's container build now uses the same analyzer and throws `Architecture
 
 The shared result also powers [CLI architecture reporting](cli.md), including the entry point that works without a compiled container. CLI names, configuration alias, services, routing and Doctrine behavior remain unchanged.
 
-## Verification for this change
+## Development and production lifecycle
 
-On PHP 8.5.4, the full suite passes with 186 tests / 829 assertions against locked Symfony 8.1.6 and an isolated Symfony 7.4 installation. The 25 new test cases cover single/multiple violations, cycles and unknown edges, stable ordering/deduplication, inactive/private modules, fatal source/descriptor/identity failures and strict kernel boot with/without Doctrine. PHPStan, Deptrac, coding standards, strict Composer validation, twelve isolated consumer installations (both kernels, with/without Doctrine) and Flex installation/removal with Doctrine also passed. PHP 8.4 was not rerun in this step.
+The policy follows Symfony's existing `kernel.debug` flag, normally controlled by `APP_DEBUG`. No additional architecture configuration is required. The environment name alone does not select the policy.
+
+| Operation | Validation |
+| --- | --- |
+| Debug container compilation, including a cold HTTP request | Full existing analyzer; invalid input rejects compilation with detailed findings |
+| Warm debug request | Symfony checks tracked resources; relevant source/configuration changes rebuild and revalidate the container |
+| CLI cold container compilation, with or without debug | Full analyzer; invalid input rejects compilation |
+| `cache:clear` or `cache:warmup`, including an already warm cache | Fresh report from the current Symfony/Composer configuration before the command proceeds; failures return nonzero |
+| Non-debug HTTP with a compiled container | Uses the compiled Module/Project registries, services, routing and Doctrine mappings; no source analysis |
+| Non-debug HTTP without a compiled container | Compilation is refused before Sillbeam discovery/analysis with generic HTTP 503, `Service temporarily unavailable.` |
+| Explicit `sillbeam:architecture` | Fresh analysis in either environment; text/JSON and exit codes remain as documented in [CLI reporting](cli.md) |
+
+The cold-request restriction also covers CLI-based HTTP workers using `Kernel::handle()` and Symfony's `APP_RUNTIME_MODE` web context. Production must run with debug disabled so Symfony's normal error rendering does not expose exception details to visitors. Development exceptions and text reports include the rule, available module/project/file/line context and a rule-specific remediation hint. JSON reports retain schema version 1 and include available hints as `findings[].context.suggestion`.
+
+Build preflight applies even with `cache:clear --no-warmup` and `cache:warmup --no-optional-warmers`. It uses the same analyzer as compilation and reporting, preserves application bundle-initialization hooks, and reads changed bundle registration rather than trusting a cached production bundle list. It works with the ordinary Symfony Console Application; the reporting adapter is only needed to retrieve reports when container boot itself fails.
+
+Create each production release with its own fresh Symfony cache/build directory, then run:
+
+```bash
+APP_ENV=prod APP_DEBUG=0 php bin/console cache:clear
+APP_ENV=prod APP_DEBUG=0 php bin/console cache:warmup
+APP_ENV=prod APP_DEBUG=0 php bin/console sillbeam:architecture --format=json
+```
+
+Stop deployment on any nonzero exit code and only switch traffic after successful warmup/validation. `--no-warmup` validates but does not prepare an HTTP-ready release. Do not edit source files underneath a running production container or reuse another release's compiled cache: warm production requests deliberately trust the previously built state. A rejected new build does not revoke the running release's valid state. Merely booting an already cached CLI container is not a fresh architecture check. No deployment or remote publication is performed by Sillbeam.

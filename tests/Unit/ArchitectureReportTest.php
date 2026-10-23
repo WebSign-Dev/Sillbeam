@@ -31,6 +31,24 @@ final class ArchitectureReportTest extends TestCase
         self::assertInstanceOf(\stdClass::class, json_decode($json, flags: \JSON_THROW_ON_ERROR)->findings[0]->context);
     }
 
+    public function testRemediationAndLocationsAreSharedByTextJsonAndExceptions(): void
+    {
+        $finding = new ArchitectureFinding('dependency.unknown', 'Unknown dependency.', ['module' => 'App\\HelloModule', 'file' => '/app/src/HelloModule.php', 'line' => 12]);
+        $report = ArchitectureReport::fromAnalysis(new ArchitectureAnalysisResult([$finding]));
+        $json = json_decode($report->toJson(), true, flags: \JSON_THROW_ON_ERROR);
+        self::assertSame(1, $json['schema_version']);
+        self::assertSame($finding->suggestion(), $json['findings'][0]['context']['suggestion']);
+        self::assertSame(12, $json['findings'][0]['context']['line']);
+        $tester = new CommandTester(new ArchitectureCommand($report));
+        self::assertSame(1, $tester->execute([]));
+        self::assertStringContainsString('App\\HelloModule', $tester->getDisplay());
+        self::assertStringContainsString('/app/src/HelloModule.php:12', $tester->getDisplay());
+        self::assertStringContainsString((string) $finding->suggestion(), $tester->getDisplay());
+        self::assertStringContainsString('module=App\\HelloModule', $finding->describe());
+        self::assertStringContainsString('line=12', $finding->describe());
+        self::assertNull((new ArchitectureFinding('custom.rule', 'Custom finding.'))->suggestion());
+    }
+
     public function testProviderFailuresUseCleanJsonAndExitTwo(): void
     {
         $tester = new CommandTester(new ArchitectureCommand(static function (): ArchitectureReport {

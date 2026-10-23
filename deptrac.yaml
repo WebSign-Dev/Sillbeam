@@ -23,6 +23,6 @@ deptrac:
         Project: [Architecture, Module]
         Kernel: [Module]
         Routing: [Module, Project]
-        DependencyInjection: [Architecture, Module, Project, Kernel, Routing]
+        DependencyInjection: [Architecture, Module, Project, Kernel, Routing, Console]
         Console: [Architecture, DependencyInjection]
         Bundle: [DependencyInjection]

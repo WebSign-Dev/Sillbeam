@@ -20,7 +20,7 @@ final class KernelArchitectureReporter
         $kernel = clone $kernel;
         // Symfony has no public API for preparing only the uncompiled configuration.
         // Keep the two protected-hook calls here and verify them across supported minors.
-        (new \ReflectionMethod($kernel, 'initializeBundles'))->invoke($kernel);
+        $this->initializeFreshBundles($kernel);
         $container = (new \ReflectionMethod($kernel, 'buildContainer'))->invoke($kernel);
         if (!$container instanceof ContainerBuilder || $container->isCompiled()) {
             throw new \LogicException('The kernel must prepare an uncompiled Symfony ContainerBuilder for architecture reporting.');
@@ -55,5 +55,20 @@ final class KernelArchitectureReporter
         }
 
         return ArchitectureReport::fromAnalysis((new ArchitectureAnalyzer())->analyze($options, $config), $config);
+    }
+
+    private function initializeFreshBundles(KernelInterface $kernel): void
+    {
+        // Use Symfony's real initialization hook, including application overrides.
+        // A temporary build location on this clone prevents Symfony 8.1 from reading
+        // an old production bundle list. Restore it before loading configuration.
+        $warmupDir = new \ReflectionProperty(\Symfony\Component\HttpKernel\Kernel::class, 'warmupDir');
+        $previous = $warmupDir->getValue($kernel);
+        $warmupDir->setValue($kernel, $kernel->getBuildDir().'/.sillbeam-report-'.bin2hex(random_bytes(16)));
+        try {
+            (new \ReflectionMethod($kernel, 'initializeBundles'))->invoke($kernel);
+        } finally {
+            $warmupDir->setValue($kernel, $previous);
+        }
     }
 }

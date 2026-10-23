@@ -9,7 +9,7 @@ final class ArchitectureValidationException extends \LogicException
     public function __construct(public readonly ArchitectureAnalysisResult $result, ?\Throwable $previous = null)
     {
         parent::__construct(implode("\n", array_map(
-            static fn (ArchitectureFinding $finding): string => '['.$finding->rule.'] '.$finding->message,
+            static fn (ArchitectureFinding $finding): string => $finding->describe(),
             $result->findings,
         )), 0, $previous);
     }

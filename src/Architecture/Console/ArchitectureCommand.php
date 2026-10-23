@@ -70,6 +70,12 @@ final class ArchitectureCommand extends Command
             $context = $finding['context'];
             $location = isset($context['file']) ? ' ('.$context['file'].(isset($context['line']) ? ':'.$context['line'] : '').')' : '';
             $io->writeln('['.$finding['severity'].'] '.$finding['rule'].': '.$finding['message'].$location, OutputInterface::OUTPUT_RAW);
+            if (isset($context['module'])) {
+                $io->writeln('Module: '.$context['module'], OutputInterface::OUTPUT_RAW);
+            }
+            if (isset($context['suggestion'])) {
+                $io->writeln('Hint: '.$context['suggestion'], OutputInterface::OUTPUT_RAW);
+            }
         }
         $io->table(['Module', 'Scope', 'State', 'Declared / observed', 'Directory'], array_map(static fn (array $module): array => [
             $module['id'], $module['scope'], $module['active'] ? 'active' : $module['inactive_reason'],
