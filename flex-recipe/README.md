@@ -46,3 +46,5 @@ their own Flex endpoint containing this recipe.
 After publication, install v0.2.0 with `composer require websign-dev/sillbeam-core:^0.2.0`. The `0.2/` recipe applies to v0.2.0 and later compatible 0.2 versions. Recipe availability is independent of Composer package installation. Manual setup remains supported.
 
 The package declares `type: symfony-bundle`, following [Symfony bundle installation guidance](https://symfony.com/doc/current/bundles/best_practices.html#installation). No semantically empty file is created under `config/packages`, as required by the [recipe checklist](https://github.com/symfony/recipes/blob/main/README.rst#recipe-checklist).
+
+For architecture reports when container compilation fails, change the existing `bin/console` Application import to `Sillbeam\Core\Console\Application`; see [CLI setup](../docs/reference/cli.md). The recipe prints this hint and leaves your existing console bootstrap intact.

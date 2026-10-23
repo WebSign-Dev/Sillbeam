@@ -7,9 +7,9 @@ require __DIR__.'/vendor/autoload.php';
 use Composer\InstalledVersions;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
+use Sillbeam\Core\Console\Application;
 use Sillbeam\Core\Module\ModuleRegistryInterface;
 use Sillbeam\Core\Project\ProjectRegistryInterface;
-use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Tester\CommandTester;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -80,6 +80,7 @@ try {
     consumerAssert(0 === $architecture->execute(['--format' => 'json']), 'CLI architecture failed.');
     $data = json_decode($architecture->getDisplay(), true, flags: \JSON_THROW_ON_ERROR);
     consumerAssert(count($data['projects']) === $projectCount, 'CLI project catalog differs from runtime.');
+    consumerAssert(1 === $data['schema_version'] && 'valid' === $data['status'], 'CLI report schema or status is invalid.');
     if ('1' === $withDoctrine) {
         $manager = $container->get('doctrine.orm.entity_manager');
         consumerAssert($manager instanceof EntityManagerInterface, 'Missing EntityManager.');

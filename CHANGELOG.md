@@ -4,6 +4,12 @@ This changelog records released versions and unreleased changes of Sillbeam.
 
 ## v0.2.0 — unreleased
 
+### Architecture reporting
+
+- Extend `sillbeam:architecture` with one text/JSON report, schema version 1 and exit codes 0 (valid), 1 (violations), 2 (unavailable or invalid configuration/usage).
+- Add an opt-in Console Application adapter that uses the existing kernel/bootstrap and Symfony configuration loaders before container compilation, sharing the same analyzer and configuration processor.
+- Preserve module/Project catalogs and represent unavailable activation graphs explicitly as unknown. See [CLI setup and schema](docs/reference/cli.md).
+
 ### Architecture validation
 
 - Aggregate independently detectable existing Module, Project and dependency violations as structured findings with stable rule identifiers, severity and available context.

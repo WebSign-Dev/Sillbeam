@@ -38,4 +38,28 @@ final readonly class CompiledArchitecture
 
         return array_values(array_unique($used));
     }
+
+    /** @return list<string> */
+    public function activationReasons(string $class): array
+    {
+        $reasons = [];
+        if (\in_array($class, $this->applicationModules, true)) {
+            $reasons[] = 'application';
+        }
+        foreach ($this->projects as $project) {
+            if (\in_array($class, $project->declaredModules, true)) {
+                $reasons[] = 'project:'.$project->id.':declared';
+            }
+            if ($this->modules[$class]->projectClass === $project->class && $this->modules[$class]->enabled) {
+                $reasons[] = 'project:'.$project->id.':private';
+            }
+        }
+        foreach ($this->usedModules() as $source) {
+            if (\in_array($class, $this->modules[$source]->dependencies, true)) {
+                $reasons[] = 'dependency:'.$source;
+            }
+        }
+
+        return array_values(array_unique($reasons));
+    }
 }

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sillbeam\Core\DependencyInjection;
 
 use Sillbeam\Core\Architecture\ArchitectureAnalyzer;
+use Sillbeam\Core\Architecture\ArchitectureReport;
 use Sillbeam\Core\Architecture\CompiledArchitecture;
 use Sillbeam\Core\Architecture\Console\ArchitectureCommand;
 use Sillbeam\Core\Architecture\DiscoveryOptions;
@@ -118,7 +119,7 @@ final class SillbeamCoreExtension extends Extension implements PrependExtensionI
         $container->autowire(KernelInformation::class)->setArguments([new Reference('kernel'), new Reference(ModuleRegistryInterface::class)]);
         $container->setAlias(KernelInformationInterface::class, KernelInformation::class);
         $container->autowire(AboutCommand::class)->setAutoconfigured(true);
-        $container->autowire(ArchitectureCommand::class)->setAutoconfigured(true);
+        $container->register(ArchitectureCommand::class)->setArguments([new Reference(ArchitectureReport::class)])->setAutoconfigured(true);
         $container->setParameter('sillbeam.doctrine.mappings', $this->doctrineMappings);
     }
 
@@ -134,23 +135,26 @@ final class SillbeamCoreExtension extends Extension implements PrependExtensionI
         $this->discovery = $analysis->discovery;
         $architecture = $analysis->architecture ?? throw new \LogicException('Sillbeam architecture was not compiled.');
         $references = $analysis->references;
+        $container->register(ArchitectureReport::class)->setArguments([ArchitectureReport::fromAnalysis($analysis, $config)->data]);
         $modules = [];
         foreach ($architecture->modules as $class => $module) {
             $data = get_object_vars($module);
             $data['dependencyReferences'] = $references[$class] ?? [];
             $data['observedDependencies'] = array_values(array_unique(array_column($references[$class] ?? [], 'module')));
-            $data['activationReasons'] = $this->activationReasons($class, $architecture);
+            $data['activationReasons'] = $architecture->activationReasons($class);
             $modules[$class] = new ModuleDefinition(...$data);
         }
         $this->architecture = new CompiledArchitecture($modules, $architecture->projects, $architecture->applicationModules, $architecture->projectModules);
     }
 
     /**
+     * @internal shared with pre-compilation reporting; use the same configuration semantics
+     *
      * @param array<array-key, array<string, mixed>> $configs
      *
      * @return array{array<array-key, array<string, mixed>>, array<string, mixed>}
      */
-    private function resolveConfiguration(array $configs, ContainerBuilder $container): array
+    public function resolveConfiguration(array $configs, ContainerBuilder $container): array
     {
         $configs = $container->resolveEnvPlaceholders($container->getParameterBag()->resolveValue($configs), true);
         $config = $this->processConfiguration(new Configuration(), $configs);
@@ -162,30 +166,6 @@ final class SillbeamCoreExtension extends Extension implements PrependExtensionI
         }
 
         return [$configs, $config];
-    }
-
-    /** @return list<string> */
-    private function activationReasons(string $class, CompiledArchitecture $architecture): array
-    {
-        $reasons = [];
-        if (\in_array($class, $architecture->applicationModules, true)) {
-            $reasons[] = 'application';
-        }
-        foreach ($architecture->projects as $project) {
-            if (\in_array($class, $project->declaredModules, true)) {
-                $reasons[] = 'project:'.$project->id.':declared';
-            }
-            if ($architecture->modules[$class]->projectClass === $project->class && $architecture->modules[$class]->enabled) {
-                $reasons[] = 'project:'.$project->id.':private';
-            }
-        }
-        foreach ($architecture->usedModules() as $source) {
-            if (\in_array($class, $architecture->modules[$source]->dependencies, true)) {
-                $reasons[] = 'dependency:'.$source;
-            }
-        }
-
-        return array_values(array_unique($reasons));
     }
 
     private function prependDoctrine(ContainerBuilder $container): void

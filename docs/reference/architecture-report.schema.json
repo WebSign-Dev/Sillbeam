@@ -1,0 +1,271 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Sillbeam Core architecture report v1",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schema_version",
+        "status",
+        "valid",
+        "complete",
+        "findings",
+        "modules",
+        "projects"
+    ],
+    "properties": {
+        "schema_version": {
+            "const": 1
+        },
+        "status": {
+            "enum": [
+                "valid",
+                "violations",
+                "unavailable"
+            ]
+        },
+        "valid": {
+            "type": "boolean"
+        },
+        "complete": {
+            "type": "boolean"
+        },
+        "findings": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "rule",
+                    "message",
+                    "context",
+                    "severity"
+                ],
+                "properties": {
+                    "rule": {
+                        "type": "string"
+                    },
+                    "message": {
+                        "type": "string"
+                    },
+                    "context": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": [
+                                "string",
+                                "integer",
+                                "null"
+                            ]
+                        }
+                    },
+                    "severity": {
+                        "enum": [
+                            "error",
+                            "fatal"
+                        ]
+                    }
+                }
+            }
+        },
+        "modules": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "id",
+                    "class",
+                    "scope",
+                    "directory",
+                    "descriptor",
+                    "project",
+                    "enabled",
+                    "active",
+                    "inactive_reason",
+                    "declared_dependencies",
+                    "observed_dependencies",
+                    "activation_reasons",
+                    "controllers",
+                    "entities",
+                    "references"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "class": {
+                        "type": "string"
+                    },
+                    "scope": {
+                        "enum": [
+                            "shared",
+                            "private"
+                        ]
+                    },
+                    "directory": {
+                        "type": "string"
+                    },
+                    "descriptor": {
+                        "type": "string"
+                    },
+                    "project": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "enabled": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    },
+                    "active": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    },
+                    "inactive_reason": {
+                        "enum": [
+                            null,
+                            "unknown",
+                            "disabled",
+                            "unassigned"
+                        ]
+                    },
+                    "declared_dependencies": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "observed_dependencies": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "activation_reasons": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "controllers": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "entities": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "references": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                                "module",
+                                "class",
+                                "file",
+                                "line"
+                            ],
+                            "properties": {
+                                "module": {
+                                    "type": "string"
+                                },
+                                "class": {
+                                    "type": "string"
+                                },
+                                "file": {
+                                    "type": "string"
+                                },
+                                "line": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "projects": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "id",
+                    "class",
+                    "description",
+                    "directory",
+                    "descriptorFile",
+                    "namespace",
+                    "declaredModules",
+                    "hosts",
+                    "controllerDirectories",
+                    "entityDirectories",
+                    "modules"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "class": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "directory": {
+                        "type": "string"
+                    },
+                    "descriptorFile": {
+                        "type": "string"
+                    },
+                    "namespace": {
+                        "type": "string"
+                    },
+                    "declaredModules": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "hosts": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "controllerDirectories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "entityDirectories": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "modules": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -4,8 +4,7 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Architecture\Console;
 
-use Sillbeam\Core\Module\ModuleRegistryInterface;
-use Sillbeam\Core\Project\ProjectRegistryInterface;
+use Sillbeam\Core\Architecture\ArchitectureReport;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,10 +12,11 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'sillbeam:architecture', description: 'Inspect the discovered module catalog and compiled architecture.')]
+#[AsCommand(name: 'sillbeam:architecture', description: 'Analyze architecture and report findings, modules and projects.')]
 final class ArchitectureCommand extends Command
 {
-    public function __construct(private readonly ModuleRegistryInterface $modules, private readonly ProjectRegistryInterface $projects)
+    /** @param ArchitectureReport|\Closure(): ArchitectureReport $report */
+    public function __construct(private readonly ArchitectureReport|\Closure $report)
     {
         parent::__construct();
     }
@@ -29,39 +29,56 @@ final class ArchitectureCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = $input->getOption('format');
-        if (!\in_array($format, ['text', 'json'], true)) {
-            (new SymfonyStyle($input, $output))->error('Supported formats: text, json.');
-
-            return self::INVALID;
-        }
-        $active = $this->modules->active();
-        $modules = [];
-        foreach ($this->modules->all() as $module) {
-            $used = isset($active[$module->class]);
-            $modules[] = [
-                'id' => $module->id, 'class' => $module->class, 'scope' => $module->isPrivate() ? 'private' : 'shared',
-                'project' => $module->projectClass, 'enabled' => $module->enabled, 'active' => $used,
-                'inactive_reason' => $used ? null : ($module->enabled ? 'unassigned' : 'disabled'),
-                'directory' => $module->directory, 'descriptor' => $module->descriptorFile,
-                'declared_dependencies' => $module->dependencies, 'observed_dependencies' => $module->observedDependencies,
-                'references' => $module->dependencyReferences, 'activation_reasons' => $module->activationReasons,
-                'controllers' => $module->controllerDirectories, 'entities' => $module->entityDirectories,
-            ];
-        }
-        $projects = array_values(array_map(static fn ($project): array => get_object_vars($project), $this->projects->all()));
-        if ('json' === $format) {
-            $output->writeln(json_encode(['modules' => $modules, 'projects' => $projects], \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES));
-        } else {
-            $io = new SymfonyStyle($input, $output);
-            $io->table(['Module', 'Scope', 'State', 'Declared / observed', 'Directory'], array_map(static fn (array $module): array => [
-                $module['id'], $module['scope'], $module['active'] ? 'active' : $module['inactive_reason'],
-                \count($module['declared_dependencies']).' / '.\count($module['observed_dependencies']), $module['directory'],
-            ], $modules));
-            foreach ($this->projects->all() as $project) {
-                $io->writeln($project->id.': '.implode(', ', $project->hosts).' ('.\count($this->modules->forProject($project->class)).' modules)');
+        $level = ob_get_level();
+        ob_start();
+        set_error_handler(static function (int $severity, string $message, string $file, int $line): bool {
+            if (!(error_reporting() & $severity)) {
+                return false;
+            }
+            if ($severity & (\E_DEPRECATED | \E_USER_DEPRECATED | \E_NOTICE | \E_USER_NOTICE)) {
+                return true;
+            }
+            throw new \ErrorException($message, 0, $severity, $file, $line);
+        });
+        try {
+            if (!\in_array($format, ['text', 'json'], true)) {
+                throw new \InvalidArgumentException('Supported formats: text, json.');
+            }
+            $report = $this->report instanceof \Closure ? ($this->report)() : $this->report;
+        } catch (\Throwable $error) {
+            $report = ArchitectureReport::unavailable($error);
+        } finally {
+            restore_error_handler();
+            while (ob_get_level() > $level) {
+                ob_end_clean();
             }
         }
 
-        return self::SUCCESS;
+        return self::render($report, 'json' === $format ? 'json' : 'text', $input, $output);
+    }
+
+    public static function render(ArchitectureReport $report, string $format, InputInterface $input, OutputInterface $output): int
+    {
+        if ('json' === $format) {
+            $output->writeln($report->toJson(), OutputInterface::OUTPUT_RAW | OutputInterface::VERBOSITY_QUIET);
+
+            return $report->exitCode();
+        }
+        $io = new SymfonyStyle($input, $output);
+        $io->title('Sillbeam architecture: '.$report->data['status']);
+        foreach ($report->data['findings'] as $finding) {
+            $context = $finding['context'];
+            $location = isset($context['file']) ? ' ('.$context['file'].(isset($context['line']) ? ':'.$context['line'] : '').')' : '';
+            $io->writeln('['.$finding['severity'].'] '.$finding['rule'].': '.$finding['message'].$location, OutputInterface::OUTPUT_RAW);
+        }
+        $io->table(['Module', 'Scope', 'State', 'Declared / observed', 'Directory'], array_map(static fn (array $module): array => [
+            $module['id'], $module['scope'], $module['active'] ? 'active' : $module['inactive_reason'],
+            \count($module['declared_dependencies']).' / '.\count($module['observed_dependencies']), $module['directory'],
+        ], $report->data['modules']));
+        foreach ($report->data['projects'] as $project) {
+            $io->writeln($project['id'].': '.implode(', ', $project['hosts']).' ('.(null === $project['modules'] ? 'unknown' : \count($project['modules'])).' modules)');
+        }
+
+        return $report->exitCode();
     }
 }

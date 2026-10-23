@@ -1,0 +1,9 @@
+# Unified architecture reporting
+
+Keep sillbeam:architecture and ArchitectureAnalyzer. Add a Console Application adapter that intercepts that command before Symfony boots; all other commands delegate unchanged. The existing application bootstrap still supplies the real kernel/environment/Composer autoloader. Opt in through one Application import in bin/console; no alternate configuration files or kernel convention.
+
+Use the real kernel's protected configuration preparation hooks (isolated reflection adapter, tested on Symfony 7.4 and 8.1) to obtain an uncompiled ContainerBuilder. Run bundle prepend hooks without executing Sillbeam's validation/Doctrine mapping preparation, then use the exact shared extension configuration normalization and DiscoveryOptionsResolver. Detect the existing Doctrine/late-prepend inconsistency rather than silently using different input. Do not execute optimization/autowiring passes or boot bundles.
+
+A small immutable report maps the existing analysis to schema_version 1, status/valid/complete, findings, modules and projects. Valid graphs keep existing information; invalid graphs show unknown activation rather than claiming a partial graph is valid. Command text and JSON consume that same report. Strict exit codes: 0 valid, 1 complete architectural violations, 2 incomplete/unexecutable/configuration or usage failures. JSON is raw, undecorated and contains no diagnostic chatter. Command providers catch execution errors at the CLI boundary, retaining strict analyzer behavior elsewhere.
+
+Test valid/invalid/multiple/fatal states, broken service containers, native environment/import/parameter handling, prepend parity, both output formats, schema/exit codes, no ANSI/noise, and normal command delegation. Run full PHPUnit, PHPStan, Deptrac, CS and compatibility checks. No new architecture rules or remote writes.

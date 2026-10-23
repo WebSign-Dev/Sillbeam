@@ -58,7 +58,7 @@ The bundle's container build now uses the same analyzer and throws `Architecture
 
 `ArchitectureCompiler::compile()` and `CodeDependencyAnalyzer::analyze()` remain strict and aggregate their own findings before rejecting invalid input. The `collect()` methods and mutable collector are internal implementation details; candidate graphs from them must not be used at runtime.
 
-CLI names, existing CLI JSON output, configuration alias, services, routing and Doctrine behavior are unchanged. No new report format or command is introduced in this step.
+The shared result also powers [CLI architecture reporting](cli.md), including the entry point that works without a compiled container. CLI names, configuration alias, services, routing and Doctrine behavior remain unchanged.
 
 ## Verification for this change
 

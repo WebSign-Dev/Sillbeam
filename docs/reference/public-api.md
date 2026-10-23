@@ -1,5 +1,7 @@
 # Public API
 
+Container-independent CLI reporting uses `Sillbeam\Core\Console\Application` with `ArchitectureReport`; see [CLI setup and schema](cli.md).
+
 Structured validation is available through `Sillbeam\Core\Architecture\ArchitectureAnalyzer`; see [Architecture analysis](architecture-analysis.md) for findings, failure semantics and strict entry points.
 
 - `SillbeamCoreBundle`: central Symfony entry point.

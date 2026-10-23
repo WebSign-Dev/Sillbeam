@@ -173,6 +173,8 @@ Sillbeam Core **v0.2.0** is being prepared as `websign-dev/sillbeam-core`; it ha
 
 See the [v0.2 migration guide](docs/migration/0.2.0.md) for the breaking package, namespace and bundle changes.
 
+For reports even when the service container cannot compile, use `Sillbeam\Core\Console\Application` in the existing `bin/console` bootstrap. See [CLI reporting](docs/reference/cli.md) for setup, JSON schema and exit codes.
+
 ## Scope and migration
 
 Sillbeam focuses on module architecture within Symfony. Services, HTTP handling and runtime behavior use Symfony's existing mechanisms. Applications supply their own business functionality and infrastructure integrations.

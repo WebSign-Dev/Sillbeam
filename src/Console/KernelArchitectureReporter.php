@@ -1,0 +1,59 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Sillbeam\Core\Console;
+
+use Sillbeam\Core\Architecture\ArchitectureAnalyzer;
+use Sillbeam\Core\Architecture\ArchitectureReport;
+use Sillbeam\Core\Architecture\DiscoveryOptionsResolver;
+use Sillbeam\Core\DependencyInjection\SillbeamCoreExtension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+
+/** Prepares the real kernel's configuration, without compiling or booting it. */
+final class KernelArchitectureReporter
+{
+    public function report(KernelInterface $kernel): ArchitectureReport
+    {
+        $kernel = clone $kernel;
+        // Symfony has no public API for preparing only the uncompiled configuration.
+        // Keep the two protected-hook calls here and verify them across supported minors.
+        (new \ReflectionMethod($kernel, 'initializeBundles'))->invoke($kernel);
+        $container = (new \ReflectionMethod($kernel, 'buildContainer'))->invoke($kernel);
+        if (!$container instanceof ContainerBuilder || $container->isCompiled()) {
+            throw new \LogicException('The kernel must prepare an uncompiled Symfony ContainerBuilder for architecture reporting.');
+        }
+        $extension = $container->getExtension('sillbeam');
+        if (!$extension instanceof SillbeamCoreExtension) {
+            throw new \LogicException('SillbeamCoreBundle must be registered in the selected environment.');
+        }
+        foreach ($container->getExtensions() as $candidate) {
+            if (!$container->getExtensionConfig($candidate->getAlias())) {
+                $container->loadFromExtension($candidate->getAlias(), []);
+            }
+        }
+        $initial = null;
+        $initialOptions = null;
+        foreach ($container->getExtensions() as $candidate) {
+            if ($candidate === $extension) {
+                [$initialConfigs, $initial] = $extension->resolveConfiguration($container->getExtensionConfig('sillbeam'), $container);
+                if ($initial['doctrine']['enabled']) {
+                    $initialOptions = (new DiscoveryOptionsResolver())->resolve($container, $initialConfigs, $initial);
+                }
+            } elseif ($candidate instanceof PrependExtensionInterface) {
+                $candidate->prepend($container);
+            }
+        }
+        [$configs, $config] = $extension->resolveConfiguration($container->getExtensionConfig('sillbeam'), $container);
+        $options = (new DiscoveryOptionsResolver())->resolve($container, $configs, $config);
+        if (($initial['doctrine']['enabled'] ?? false) || $config['doctrine']['enabled']) {
+            if ($initial !== $config || $initialOptions != $options) {
+                throw new \LogicException('Sillbeam configuration changed after prepend() while Doctrine integration is enabled. Register bundles that prepend Sillbeam configuration before SillbeamCoreBundle, or configure Sillbeam directly in the application.');
+            }
+        }
+
+        return ArchitectureReport::fromAnalysis((new ArchitectureAnalyzer())->analyze($options, $config), $config);
+    }
+}
