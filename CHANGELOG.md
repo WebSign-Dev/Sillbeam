@@ -4,6 +4,10 @@ This changelog records released versions and unreleased changes of Sillbeam.
 
 ## v0.2.0 — unreleased
 
+### Minimal descriptor creation
+
+- Add `sillbeam:make:module`, `sillbeam:make:project` and private module creation with `--project`, using configured discovery roots and namespaces without generating application or configuration files.
+
 ### RC verification and release preparation
 
 - Fix CVE-2026-108082 in development/reference-app lockfiles by updating HttpFoundation to 8.1.9/7.4.21; retain dependency constraints and audit both lockfiles in CI.

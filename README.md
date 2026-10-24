@@ -90,7 +90,7 @@ With the usual `App\:` import of `src/`, exclude `Module` and `Project` from tha
 
 ### Create your first module
 
-Create `src/Module/Billing/BillingModule.php`:
+Run `php bin/console sillbeam:make:module Billing` to create the minimal descriptor, or create `src/Module/Billing/BillingModule.php` manually:
 
 ```php
 <?php

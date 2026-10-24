@@ -30,6 +30,23 @@ final class ModuleLayerTest extends TestCase
         $this->source->remove();
     }
 
+    public function testMakerCommandsAreRegisteredInSymfonyAndCreateDiscoverableDescriptors(): void
+    {
+        $this->kernel = new TestApplicationKernel($this->source);
+        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($this->kernel);
+        $application->setAutoExit(false);
+        foreach ([['sillbeam:make:module', ['Name' => 'User']], ['sillbeam:make:project', ['Name' => 'Shop']], ['sillbeam:make:module', ['Name' => 'Checkout', '--project' => 'Shop']]] as [$name, $input]) {
+            $tester = new \Symfony\Component\Console\Tester\CommandTester($application->find($name));
+            self::assertSame(0, $tester->execute($input), $tester->getDisplay());
+        }
+        $container = new \Symfony\Component\DependencyInjection\ContainerBuilder();
+        $container->setParameter('kernel.project_dir', $this->source->directory);
+        $options = (new \Sillbeam\Core\Architecture\DiscoveryOptionsResolver())->resolve($container, []);
+        $discovery = (new \Sillbeam\Core\Architecture\ArchitectureDiscovery())->discover($options);
+        self::assertCount(2, $discovery->modules);
+        self::assertCount(1, $discovery->projects);
+    }
+
     public function testEmptySillbeamConfigWorksWithoutDoctrineOrFoundation(): void
     {
         $module = $this->source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');

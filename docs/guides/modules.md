@@ -1,5 +1,7 @@
 # Modules
 
+Create a minimal descriptor with `php bin/console sillbeam:make:module User`. For a private module, use `php bin/console sillbeam:make:module Checkout --project=Shop`. See [CLI creation rules](../reference/cli.md#minimal-module-and-project-creation).
+
 A `#[SillbeamModule]` descriptor owns its directory and subdirectories. The filename and descriptor class name must comply with PSR-4. IDs are derived from the class name without `Module` or specified as `id:`. Two modules may own neither the same directory nor nested directories.
 
 ```php

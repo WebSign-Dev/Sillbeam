@@ -76,3 +76,43 @@ Symfony's regular `debug:container`, `debug:router` and optional `doctrine:mappi
 ## Verification
 
 This reporting change passed 202 tests / 919 assertions on PHP 8.5.4 with Symfony 8.1.6 and an isolated Symfony 7.4 installation. PHPStan, Deptrac, coding standards and strict Composer validation passed. Twelve isolated consumer installations exercise the new Console Application with both kernels, without/with Doctrine; Flex installation/removal with Doctrine also passed. PHP 8.4 was not rerun in this step.
+
+## Minimal module and Project creation
+
+```bash
+php bin/console sillbeam:make:module User
+php bin/console sillbeam:make:project Shop
+php bin/console sillbeam:make:module Checkout --project=Shop
+```
+
+Each command creates only a directory and an empty final PHP descriptor class with
+`#[SillbeamModule]` or `#[SillbeamProject]`. With the defaults, these are
+`src/Module/User/UserModule.php`, `src/Project/Shop/ShopProject.php`, and
+`src/Project/Shop/Module/Checkout/CheckoutModule.php`. No controllers, services,
+entities, templates or configuration files are generated. Core provides these
+commands without Frame or Symfony MakerBundle.
+
+Names start with an uppercase ASCII letter and contain only ASCII letters and
+digits (for example `User` or `OrderItem`). Pass the base name without a namespace
+or path; the descriptor receives the `Module` or `Project` suffix automatically.
+`--project` accepts an existing discovered Project's directory name, ID or full
+descriptor class name. Missing or ambiguous Projects fail without creating files.
+
+Creation uses the application's resolved `sillbeam.discovery` roots, namespaces,
+excludes and Composer PSR-4 mappings, exactly as discovery does. Exactly one root
+of the requested type must be configured; empty or multiple root lists require
+an explicit configuration adjustment before creation. Explicit custom discovery
+roots must already exist, as required by discovery. Private modules use
+`Module/<Name>` inside their owning Project and the namespace resolved for that
+location. Excluded paths, symbolic links in creation paths, overlapping areas,
+invalid PHP namespaces and existing target directories/files are rejected.
+Existing content is never overwritten. Exit codes are 0 for creation and 1 for
+validation or write failures.
+
+Descriptors are discoverable immediately. Discovery and activation are separate:
+shared modules still need to be selected by a Project when operating in Project
+mode. Private modules belong to their owning Project automatically. When multiple
+Projects exist, configure `sillbeam.projects.<id>.hosts` for every Project before
+the next application boot; the Project command prints this reminder and never
+creates configuration on your behalf. An application with invalid existing
+architecture/configuration must be corrected before Symfony can run these commands.

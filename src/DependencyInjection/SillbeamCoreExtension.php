@@ -8,9 +8,13 @@ use Sillbeam\Core\Architecture\ArchitectureAnalyzer;
 use Sillbeam\Core\Architecture\ArchitectureReport;
 use Sillbeam\Core\Architecture\CompiledArchitecture;
 use Sillbeam\Core\Architecture\Console\ArchitectureCommand;
+use Sillbeam\Core\Architecture\Console\MakeModuleCommand;
+use Sillbeam\Core\Architecture\Console\MakeProjectCommand;
+use Sillbeam\Core\Architecture\DescriptorCreator;
 use Sillbeam\Core\Architecture\DiscoveryOptions;
 use Sillbeam\Core\Architecture\DiscoveryOptionsResolver;
 use Sillbeam\Core\Architecture\DiscoveryResult;
+use Sillbeam\Core\Architecture\DiscoveryRoot;
 use Sillbeam\Core\Architecture\FilesystemPath;
 use Sillbeam\Core\Architecture\PathMatcher;
 use Sillbeam\Core\Architecture\SourceInspector;
@@ -30,6 +34,7 @@ use Symfony\Component\Config\Resource\DirectoryResource;
 use Symfony\Component\Config\Resource\FileExistenceResource;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
@@ -123,6 +128,17 @@ final class SillbeamCoreExtension extends Extension implements PrependExtensionI
         $container->setAlias(KernelInformationInterface::class, KernelInformation::class);
         $container->autowire(AboutCommand::class)->setAutoconfigured(true);
         $container->register(ArchitectureCommand::class)->setArguments([new Reference(ArchitectureReport::class)])->setAutoconfigured(true);
+        $options = $this->options ?? throw new \LogicException('Missing discovery options.');
+        $rootDefinition = static fn (DiscoveryRoot $root): Definition => new Definition(DiscoveryRoot::class, [$root->path, $root->namespace, $root->excludes]);
+        $container->register(DiscoveryOptions::class)->setArguments([
+            $options->root, $options->namespace,
+            array_map($rootDefinition, $options->moduleRoots), array_map($rootDefinition, $options->projectRoots),
+            $options->excludes, $options->controllerPatterns, $options->entityPatterns, $options->serviceExcludes,
+        ]);
+        $container->register(DescriptorCreator::class)->setArguments([new Reference(DiscoveryOptions::class)]);
+        foreach ([MakeModuleCommand::class, MakeProjectCommand::class] as $command) {
+            $container->register($command)->setArguments([new Reference(DescriptorCreator::class)])->setAutoconfigured(true);
+        }
         $container->register(ArchitectureBuildSubscriber::class)->setArguments([new Reference('kernel')])->addTag('kernel.event_subscriber');
         $container->setParameter('sillbeam.doctrine.mappings', $this->doctrineMappings);
     }
