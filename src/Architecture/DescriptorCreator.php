@@ -16,8 +16,14 @@ final readonly class DescriptorCreator
 
     public function create(string $name, bool $project = false, ?string $owner = null): string
     {
-        if (!preg_match('/^[A-Z][a-zA-Z0-9]*$/D', $name)) {
-            throw new \InvalidArgumentException('Name must start with an uppercase ASCII letter and contain only letters and digits.');
+        if (!preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/D', $name)) {
+            throw new \InvalidArgumentException('Name must start with an ASCII letter and contain only ASCII letters and digits.');
+        }
+        // Only the first ASCII letter changes; preserve the rest of the base name.
+        $name = ucfirst($name);
+        $suffix = $project ? 'Project' : 'Module';
+        if (str_ends_with($name, $suffix)) {
+            throw new \InvalidArgumentException('Pass the base name without the '.$suffix.' suffix.');
         }
         $roots = $project ? $this->options->projectRoots : $this->options->moduleRoots;
         if (null === $owner) {
@@ -37,7 +43,6 @@ final readonly class DescriptorCreator
             }
             $directory = $matches[0]->directory.'/Module/'.$name;
         }
-        $suffix = $project ? 'Project' : 'Module';
         $file = $directory.'/'.$name.$suffix.'.php';
         for ($path = $file; '/' !== $path && '.' !== $path; $path = \dirname($path)) {
             if (is_link($path) || preg_match('~(?:^|/)\.\.?(/|$)~', $path)) {

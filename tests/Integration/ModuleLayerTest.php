@@ -35,9 +35,15 @@ final class ModuleLayerTest extends TestCase
         $this->kernel = new TestApplicationKernel($this->source);
         $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($this->kernel);
         $application->setAutoExit(false);
-        foreach ([['sillbeam:make:module', ['Name' => 'User']], ['sillbeam:make:project', ['Name' => 'Shop']], ['sillbeam:make:module', ['Name' => 'Checkout', '--project' => 'Shop']]] as [$name, $input]) {
+        foreach ([['sillbeam:make:module', ['Name' => 'user'], 'User'], ['sillbeam:make:project', ['Name' => 'shop'], 'Shop'], ['sillbeam:make:module', ['Name' => 'checkout', '--project' => 'Shop'], 'Checkout']] as [$name, $input, $effectiveName]) {
             $tester = new \Symfony\Component\Console\Tester\CommandTester($application->find($name));
             self::assertSame(0, $tester->execute($input), $tester->getDisplay());
+            self::assertStringContainsString($effectiveName, $tester->getDisplay());
+            self::assertSame(1, $tester->execute($input));
+            self::assertStringContainsString('already exists', $tester->getDisplay());
+            foreach (['123user', 'user-profile', '../user', 'user name', 'user_name', 'Foo\\Bar'] as $invalid) {
+                self::assertSame(1, $tester->execute(array_replace($input, ['Name' => $invalid])));
+            }
         }
         $container = new \Symfony\Component\DependencyInjection\ContainerBuilder();
         $container->setParameter('kernel.project_dir', $this->source->directory);
@@ -45,6 +51,37 @@ final class ModuleLayerTest extends TestCase
         $discovery = (new \Sillbeam\Core\Architecture\ArchitectureDiscovery())->discover($options);
         self::assertCount(2, $discovery->modules);
         self::assertCount(1, $discovery->projects);
+    }
+
+    public function testMakerCommandsNormalizeWithinCustomRootsAndKeepProjectOwnership(): void
+    {
+        mkdir($this->source->directory.'/src/Features');
+        mkdir($this->source->directory.'/src/Sites');
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    discovery:\n        modules: [{ path: src/Features }]\n        projects: [{ path: src/Sites }]\n");
+        $this->kernel = new TestApplicationKernel($this->source);
+        $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($this->kernel);
+        $application->setAutoExit(false);
+        foreach ([
+            ['sillbeam:make:module', ['Name' => 'userProfile'], 'Features/UserProfile/UserProfileModule.php', 'Features\\UserProfile', 'UserProfileModule'],
+            ['sillbeam:make:project', ['Name' => 'shop'], 'Sites/Shop/ShopProject.php', 'Sites\\Shop', 'ShopProject'],
+            ['sillbeam:make:module', ['Name' => 'checkout', '--project' => 'shop'], 'Sites/Shop/Module/Checkout/CheckoutModule.php', 'Sites\\Shop\\Module\\Checkout', 'CheckoutModule'],
+        ] as [$name, $input, $relative, $namespace, $class]) {
+            $tester = new \Symfony\Component\Console\Tester\CommandTester($application->find($name));
+            self::assertSame(0, $tester->execute($input), $tester->getDisplay());
+            $file = $this->source->directory.'/src/'.$relative;
+            $display = preg_replace('/\s+/', '', $tester->getDisplay());
+            self::assertIsString($display);
+            self::assertStringContainsString($file, $display);
+            $contents = file_get_contents($file);
+            self::assertIsString($contents);
+            self::assertStringContainsString('namespace '.$this->source->namespace.'\\'.$namespace.';', $contents);
+            self::assertStringContainsString('final class '.$class, $contents);
+            self::assertSame(1, $tester->execute(array_replace($input, ['Name' => ucfirst($input['Name'])])));
+            self::assertStringContainsString('already exists', $tester->getDisplay());
+            self::assertSame($contents, file_get_contents($file));
+        }
+        self::assertDirectoryDoesNotExist($this->source->directory.'/src/Module');
+        self::assertDirectoryDoesNotExist($this->source->directory.'/src/Project');
     }
 
     public function testEmptySillbeamConfigWorksWithoutDoctrineOrFoundation(): void

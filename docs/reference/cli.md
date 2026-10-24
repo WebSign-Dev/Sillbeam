@@ -128,9 +128,9 @@ a local run on one combination does not verify the whole compatibility matrix.
 ## Minimal module and Project creation
 
 ```bash
-php bin/console sillbeam:make:module User
-php bin/console sillbeam:make:project Shop
-php bin/console sillbeam:make:module Checkout --project=Shop
+php bin/console sillbeam:make:module user
+php bin/console sillbeam:make:project shop
+php bin/console sillbeam:make:module checkout --project=Shop
 ```
 
 Each command creates only a directory and an empty final PHP descriptor class with
@@ -140,11 +140,19 @@ Each command creates only a directory and an empty final PHP descriptor class wi
 entities, templates or configuration files are generated. Core provides these
 commands without Frame or Symfony MakerBundle.
 
-Names start with an uppercase ASCII letter and contain only ASCII letters and
-digits (for example `User` or `OrderItem`). Pass the base name without a namespace
-or path; the descriptor receives the `Module` or `Project` suffix automatically.
+Names start with an ASCII letter and contain only ASCII letters and digits.
+Only an initial lowercase ASCII letter is uppercased: `user` becomes `User`,
+`userProfile` becomes `UserProfile`, `shop` becomes `Shop`, and `User` stays `User`.
+Every other character is preserved exactly. The effective name is used consistently
+for the directory, namespace, descriptor class and filename, and appears in the
+success output as part of the created path. Paths, namespaces, leading digits,
+spaces, underscores, hyphens and non-ASCII letters are rejected.
+Pass the base name without a namespace, path or the corresponding `Module` or
+`Project` suffix; that suffix is added automatically, and already suffixed names
+are rejected to prevent double suffixes.
 `--project` accepts an existing discovered Project's directory name, ID or full
-descriptor class name. Missing or ambiguous Projects fail without creating files.
+descriptor class name. This selector is matched as supplied, without name
+normalization. Missing or ambiguous Projects fail without creating files.
 
 Creation uses the application's resolved `sillbeam.discovery` roots, namespaces,
 excludes and Composer PSR-4 mappings, exactly as discovery does. Exactly one root
@@ -154,7 +162,8 @@ roots must already exist, as required by discovery. Private modules use
 `Module/<Name>` inside their owning Project and the namespace resolved for that
 location. Excluded paths, symbolic links in creation paths, overlapping areas,
 invalid PHP namespaces and existing target directories/files are rejected.
-Existing content is never overwritten. Exit codes are 0 for creation and 1 for
+Existing content is never overwritten, including when normalization makes `user`
+and `User` resolve to the same target. Exit codes are 0 for creation and 1 for
 validation or write failures.
 
 Descriptors are discoverable immediately. Discovery and activation are separate:

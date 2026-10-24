@@ -1,6 +1,6 @@
 # Projects
 
-Create a minimal descriptor with `php bin/console sillbeam:make:project Shop`. The command creates no configuration; when multiple Projects exist, configure hosts for each before the next boot. See [CLI creation rules](../reference/cli.md#minimal-module-and-project-creation).
+Create a minimal descriptor with `php bin/console sillbeam:make:project shop`. The command creates no configuration; when multiple Projects exist, configure hosts for each before the next boot. See [CLI creation rules](../reference/cli.md#minimal-module-and-project-creation).
 
 Projects group application surfaces within a shared Symfony application. The descriptor owns its directory; its services, controllers and entities are integrated directly. A Project must be neither inside a module nor inside another Project; Project descriptors must not share a directory. Private modules may be located anywhere within the Project as long as their directories do not overlap other modules.
 
