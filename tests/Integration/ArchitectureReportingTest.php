@@ -253,7 +253,9 @@ final class ArchitectureReportingTest extends TestCase
         self::assertStringContainsString('Sillbeam architecture: valid', $text);
         self::assertStringContainsString('shared', $text);
         self::assertStringContainsString('active', $text);
-        self::assertStringContainsString($this->source->directory.'/src/Module/A', $text);
+        self::assertStringContainsString('Modules: 1', $text);
+        [, $verbose] = $this->runReport('text', ['--verbose' => true]);
+        self::assertStringContainsString($this->source->directory.'/src/Module/A', $verbose);
     }
 
     /** @param array<string, mixed> $data */
@@ -266,6 +268,107 @@ final class ArchitectureReportingTest extends TestCase
                 self::assertEqualsCanonicalizing($schema['properties'][$field]['items']['required'], array_keys($item));
             }
         }
+    }
+
+    public function testMarkdownExportWorksWithoutCompilableContainerForValidAndInvalidArchitecture(): void
+    {
+        $this->module('A');
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject] final class ShopProject {}');
+        $this->source->write('config/services.yaml', "services:\n    broken:\n        class: stdClass\n        public: true\n        arguments: ['@nonexistent_service']\n");
+        $kernel = new TestApplicationKernel($this->source);
+        try {
+            $kernel->boot();
+            self::fail('The service container must be uncompilable.');
+        } catch (\Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException) {
+        } finally {
+            $kernel->shutdown();
+        }
+        foreach ([false, true] as $invalid) {
+            if ($invalid) {
+                $this->module('B', '[\\Missing\\One::class]');
+            }
+            $application = new Application(new TestApplicationKernel($this->source));
+            $application->setAutoExit(false);
+            $tester = new ApplicationTester($application);
+            self::assertSame($invalid ? 1 : 0, $tester->run(['command' => 'sillbeam:report']));
+            $markdown = (string) file_get_contents($this->source->directory.'/architecture-report.md');
+            self::assertStringContainsString('Status: '.($invalid ? 'violations' : 'valid'), $markdown);
+            self::assertStringContainsString('Modules checked: '.($invalid ? 2 : 1), $markdown);
+            self::assertStringContainsString('Projects checked: 1', $markdown);
+            self::assertStringContainsString('Violations: '.($invalid ? 1 : 0), $markdown);
+            self::assertSame([], glob($application->getKernel()->getBuildDir().'/*Container.php'));
+        }
+    }
+
+    public function testMarkdownCommandFindGetAndArgvOutputWorkWithoutBoot(): void
+    {
+        $this->module('A', '[\\Missing\\One::class]');
+        $application = new Application(new TestApplicationKernel($this->source));
+        $application->setAutoExit(false);
+        foreach ([$application->find('sillbeam:report'), $application->get('sillbeam:report')] as $command) {
+            $tester = new \Symfony\Component\Console\Tester\CommandTester($command);
+            self::assertSame(1, $tester->execute(['--output' => 'custom.md']));
+        }
+        $input = new \Symfony\Component\Console\Input\ArgvInput(['console', '--env', 'test', '--output', 'argv.md', 'sillbeam:report']);
+        self::assertSame(1, $application->run($input, new \Symfony\Component\Console\Output\BufferedOutput()));
+        self::assertFileExists($this->source->directory.'/argv.md');
+    }
+
+    public function testMarkdownUnavailableAnalysisAndUsageFailuresUseExitTwo(): void
+    {
+        $this->source->write('config/packages/sillbeam.yaml', 'sillbeam: { nonexistent_setting: true }');
+        $application = new Application(new TestApplicationKernel($this->source));
+        $application->setAutoExit(false);
+        $tester = new ApplicationTester($application);
+        self::assertSame(2, $tester->run(['command' => 'sillbeam:report', '--output' => 'unavailable.md']));
+        $markdown = (string) file_get_contents($this->source->directory.'/unavailable.md');
+        self::assertStringContainsString('Status: unavailable', $markdown);
+        self::assertStringContainsString('nonexistent\\_setting', $markdown);
+        self::assertSame(2, $tester->run(['command' => 'sillbeam:report', '--unknown-option' => true]));
+        self::assertSame(2, $tester->run(['command' => 'sillbeam:report', '--format' => 'json']));
+    }
+
+    public function testMarkdownCommandIsAlsoRegisteredInNormalSymfonyConsole(): void
+    {
+        $this->module('A');
+        $kernel = new TestApplicationKernel($this->source);
+        try {
+            $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
+            $tester = new \Symfony\Component\Console\Tester\CommandTester($application->find('sillbeam:report'));
+            self::assertSame(0, $tester->execute([]));
+            self::assertFileExists($this->source->directory.'/architecture-report.md');
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testMissingConstructorClassAppearsInTextJsonAndMarkdownWithoutContainer(): void
+    {
+        $this->source->php('src/Module/Hello/HelloModule.php', <<<'CODE'
+#[\Sillbeam\Core\Module\Attribute\SillbeamModule(dependencies: [\Missing\UnknownModule::class])]
+final class HelloModule {
+    public function __construct(private \Missing\ConstructorType $missing) {}
+}
+CODE);
+        [$code, $json] = $this->runReport('json');
+        self::assertSame(1, $code);
+        $data = json_decode($json, true, flags: \JSON_THROW_ON_ERROR);
+        self::assertSame(['code.unknown_class', 'dependency.unknown'], array_column($data['findings'], 'rule'));
+        self::assertSame(3, $data['findings'][0]['context']['line']);
+        self::assertStringContainsString('Correct the class name', $data['findings'][0]['context']['suggestion']);
+        [$code, $text] = $this->runReport('text');
+        self::assertSame(1, $code);
+        self::assertStringContainsString('Violations: 2', $text);
+        self::assertStringContainsString('Referenced class cannot be resolved', $text);
+        self::assertStringContainsString('Missing\\ConstructorType', $text);
+        self::assertStringContainsString('HelloModule.php:3', $text);
+        $application = new Application(new TestApplicationKernel($this->source));
+        $application->setAutoExit(false);
+        self::assertSame(1, (new ApplicationTester($application))->run(['command' => 'sillbeam:report']));
+        $markdown = (string) file_get_contents($this->source->directory.'/architecture-report.md');
+        self::assertStringContainsString('code.unknown\\_class', $markdown);
+        self::assertStringContainsString('Violations: 2', $markdown);
+        self::assertStringContainsString('HelloModule.php:3', $markdown);
     }
 
     private function module(string $name, string $dependencies = '[]'): void

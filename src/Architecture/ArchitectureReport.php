@@ -72,6 +72,32 @@ final readonly class ArchitectureReport
         ]));
     }
 
+    /** @param self|\Closure(): self $provider */
+    public static function collect(self|\Closure $provider): self
+    {
+        $level = ob_get_level();
+        ob_start();
+        set_error_handler(static function (int $severity, string $message, string $file, int $line): bool {
+            if (!(error_reporting() & $severity)) {
+                return false;
+            }
+            if ($severity & (\E_DEPRECATED | \E_USER_DEPRECATED | \E_NOTICE | \E_USER_NOTICE)) {
+                return true;
+            }
+            throw new \ErrorException($message, 0, $severity, $file, $line);
+        });
+        try {
+            return $provider instanceof \Closure ? $provider() : $provider;
+        } catch (\Throwable $error) {
+            return self::unavailable($error);
+        } finally {
+            restore_error_handler();
+            while (ob_get_level() > $level) {
+                ob_end_clean();
+            }
+        }
+    }
+
     public function exitCode(): int
     {
         return match ($this->data['status']) {

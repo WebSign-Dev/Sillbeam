@@ -144,6 +144,7 @@ Run these commands from your Symfony application's root:
 | :--- | :--- |
 | `php bin/console sillbeam:architecture` | Inspect modules, Projects, dependencies and activation reasons. |
 | `php bin/console sillbeam:architecture --format=json` | Export the architecture catalog and dependency evidence. |
+| `php bin/console sillbeam:report` | Write a standalone Markdown architecture report. |
 | `php bin/console sillbeam:about` | Show application, runtime and module information. |
 | `php bin/console debug:container` | Inspect Symfony service registration. |
 | `php bin/console debug:router` | Inspect imported application routes. |

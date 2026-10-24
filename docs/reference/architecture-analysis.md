@@ -37,12 +37,33 @@ Each `ArchitectureFinding` contains `rule`, `severity`, `message` and a scalar `
 | `dependency.unknown`, `dependency.private`, `dependency.cycle`, `dependency.disabled` | Declared targets, private boundaries, acyclic graphs, enabled activation closure |
 | `project.unknown_module`, `project.private_module` | Project activation must reference existing and permitted modules |
 | `project.host_invalid`, `project.host_required`, `project.host_duplicate` | Exact, required and unique Project hosts |
+| `code.unknown_class` | Statically referenced classes/types must be present in the source index, already loaded by PHP, or resolvable to an existing file by a registered Composer autoloader |
 | `code.private`, `code.inactive`, `code.undeclared_dependency` | Existing static cross-module access/dependency checks for active modules |
 | `discovery.module_boundary`, `discovery.project_boundary`, `discovery.owner_missing`, `discovery.project_inside_module`, `discovery.module_overlap`, `discovery.project_overlap` | Existing discovery and ownership boundaries |
 | `discovery.descriptor_class`, `discovery.descriptor_file`, `discovery.multiple_descriptors`, `discovery.multiple_attributes`, `discovery.descriptor_metadata`, `discovery.descriptor_id` | Usable, unambiguous PHP descriptors |
 | `source.parse`, `source.read`, `source.duplicate_class` | Readable PHP and an unambiguous source-symbol index |
 
-Identifiers label existing checks and analysis failures; they add no architecture model or new architectural restrictions.
+`code.unknown_class` also checks constructor/property/return types and other static
+class references in Module and Project areas, including descriptor bodies and
+inactive modules. Development-only `Tests` and `Fixtures` directories (also nested)
+are excluded from this resolution check so production installs do not require
+their development dependencies. Bare attribute names are not required to resolve:
+PHP permits optional metadata until an integration instantiates the attribute.
+Class references inside attribute arguments still undergo the check. It reports the class, owning module/Project, source file and
+line. Unresolved references are checked independently of declared-dependency
+errors, so both can appear in one report. This is a class-resolution check, not
+verification of method signatures, service availability or runtime behavior.
+
+Resolution uses the complete discovery source index, loaded PHP classes,
+interfaces/traits/enums, and registered Composer PSR-4/classmap loaders. Composer
+target files are located without loading/executing them; their declarations are
+not independently validated outside discovery. Custom non-Composer autoloaders
+are not executed: dynamically generated/aliased types must already be loaded or
+visible in discovery/Composer to be recognized. Dynamic names, PHPDoc, unused
+imports and descriptor attribute metadata retain their existing scope. An
+optional missing type in an actual static code reference is still reported.
+
+Other identifiers retain their existing checks and failure semantics.
 
 ## Continuation and ordering
 

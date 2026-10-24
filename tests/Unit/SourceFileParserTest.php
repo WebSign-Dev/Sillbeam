@@ -35,6 +35,7 @@ CODE);
             $classes = array_values(array_unique(array_column($file->references, 'class')));
             sort($classes);
             self::assertSame(['External\Base', 'External\Contract', 'External\Failure', 'External\Marker', 'External\Mix', 'External\Other', 'External\Third', 'External\Value'], $classes);
+            self::assertSame(['External\\Marker'], array_column(array_filter($file->references, static fn (array $reference): bool => 'attribute' === ($reference['kind'] ?? null)), 'class'));
             self::assertSame([$source->namespace.'\Example'], $file->classes);
             self::assertGreaterThan(1, $file->references[0]['line']);
         } finally {

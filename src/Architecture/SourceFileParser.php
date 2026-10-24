@@ -30,7 +30,7 @@ final class SourceFileParser
             public array $classes = [];
             /** @var array<class-string, string> */
             public array $descriptors = [];
-            /** @var list<array{class: string, line: int}> */
+            /** @var list<array{class: string, line: int, kind?: 'attribute'}> */
             public array $references = [];
 
             public function enterNode(Node $node): ?int
@@ -79,7 +79,7 @@ final class SourceFileParser
                     if (null !== $this->descriptorType($node->name)) {
                         return NodeTraverser::DONT_TRAVERSE_CHILDREN;
                     }
-                    $this->type($node->name);
+                    $this->type($node->name, attribute: true);
                 }
                 if ($node instanceof Node\Stmt\Catch_) {
                     foreach ($node->types as $type) {
@@ -106,11 +106,15 @@ final class SourceFileParser
                 return null;
             }
 
-            private function type(?Node $type): void
+            private function type(?Node $type, bool $attribute = false): void
             {
                 if ($type instanceof Node\Name) {
                     if (!\in_array(strtolower((string) $type), ['self', 'static', 'parent'], true)) {
-                        $this->references[] = ['class' => (string) $type, 'line' => $type->getStartLine()];
+                        $reference = ['class' => (string) $type, 'line' => $type->getStartLine()];
+                        if ($attribute) {
+                            $reference['kind'] = 'attribute';
+                        }
+                        $this->references[] = $reference;
                     }
                 } elseif ($type instanceof Node\NullableType) {
                     $this->type($type->type);

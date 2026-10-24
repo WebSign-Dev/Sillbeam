@@ -29,3 +29,11 @@ sillbeam:
 An active module that requires a disabled module prevents the build. A disabled private module is not an automatic Project root. Explicit native imports can bypass Sillbeam's automatic selection; such imports are the application's responsibility.
 
 IDs must match `[a-z][a-z0-9-]*`. Automatic derivation removes `Module` and splits CamelCase: `OrderHistoryModule` becomes `order-history`. An enabled shared module not assigned to any Project does not form an active graph; its disabled dependency alone does not prevent a build.
+
+Static class references in Module and Project code (including descriptor bodies)
+also produce `code.unknown_class` when the type cannot be resolved from discovery,
+loaded PHP types or Composer. This includes missing constructor types and applies
+to inactive modules too. Optional attribute names and development-only `Tests`/`Fixtures`
+directories are exempt from class resolution. Findings include file/line evidence and appear alongside
+other architecture errors in text, JSON and Markdown reports. See
+[class-resolution scope](../reference/architecture-analysis.md#existing-checks-and-identifiers).

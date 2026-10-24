@@ -25,6 +25,7 @@ final readonly class ArchitectureFinding
             'dependency.private', 'code.private', 'project.private_module' => 'Keep private modules within their owning Project; move reusable contracts or code into a shared module.',
             'dependency.cycle' => 'Remove a dependency in the reported cycle or extract shared contracts to break it.',
             'dependency.disabled', 'code.inactive' => 'Enable and activate the required module in this graph, or remove the dependency/reference.',
+            'code.unknown_class' => 'Correct the class name or import, restore the class, or configure its Composer autoload mapping and regenerate the autoloader.',
             'code.undeclared_dependency' => 'Declare the target module as a direct dependency in the source module descriptor.',
             'module.duplicate_key', 'project.duplicate_id' => 'Give the descriptors unique IDs within their scope.',
             'module.owner_missing', 'discovery.owner_missing' => 'Place the module inside its owning Project or a configured shared-module root.',

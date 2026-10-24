@@ -3,6 +3,9 @@
 ```bash
 php bin/console sillbeam:architecture
 php bin/console sillbeam:architecture --format=json
+php bin/console sillbeam:architecture -v
+php bin/console sillbeam:report
+php bin/console sillbeam:report --output=docs/architecture-report.md
 php bin/console sillbeam:architecture --env=prod --no-debug --format=json
 php bin/console sillbeam:about
 ```
@@ -26,9 +29,9 @@ return function (array $context) {
 };
 ```
 
-This adapter runs the full `sillbeam:architecture` command before kernel boot; it also supports retrieving that exact command through `find()`/`get()`. Other commands, including `list`, delegate to Symfony and retain their normal boot behavior. Use the full command name when reporting a broken application. The package's test-app entry point demonstrates this import.
+This adapter runs the full `sillbeam:architecture` and `sillbeam:report` commands before kernel boot; it also supports retrieving either exact command through `find()`/`get()`. Other commands, including `list`, delegate to Symfony and retain their normal boot behavior. Use the full command name when reporting a broken application. The package's test-app entry point demonstrates this import.
 
-Without this import, the command remains available through the normal Symfony application when its container compiles. Symfony's normal console cannot discover container services when boot fails; the adapter is needed for that case. No additional command, executable, configuration file or dependency is required.
+Without this import, the command remains available through the normal Symfony application when its container compiles. Symfony's normal console cannot discover container services when boot fails; the adapter is needed for that case. No additional executable, configuration file or dependency is required.
 
 ## Effective configuration
 
@@ -44,9 +47,9 @@ The existing bootstrap selects the kernel, environment and debug mode as usual, 
 | --- | --- |
 | 0 | Architecture is valid; this is not a service-container health check |
 | 1 | Analysis completed and found architecture violations |
-| 2 | Analysis incomplete/unexecutable, configuration or command usage invalid |
+| 2 | Analysis incomplete/unexecutable, configuration or command usage invalid, or report file could not be written |
 
-Text output shows status, each finding with its rule/severity and available location, the module catalog, and Project hosts/activation. `--format=json` writes exactly one raw JSON document, with no ANSI escapes, banners, stack traces or progress output from Sillbeam. JSON remains available with `--ansi`, verbose or quiet console settings. Buffered configuration output and PHP notices/deprecations are suppressed during analysis; execution failures become structured fatal findings. The application bootstrap itself should not print output before returning the Console Application.
+Text output starts with status and counts of violations, fatal blockers, modules and Projects. Findings are grouped by affected module or Project, with readable titles, rule IDs, explanations and available file/line locations. Remediation hints are collected under **How to fix** and shown once per group. The compact module catalog shows scope, activation state and declared/observed dependency counts; `-v` also shows module directories. Project hosts and activation counts remain visible. All existing report data remains available in JSON. `--format=json` writes exactly one raw JSON document, with no ANSI escapes, banners, stack traces or progress output from Sillbeam. JSON remains available with `--ansi`, verbose or quiet console settings. Buffered configuration output and PHP notices/deprecations are suppressed during analysis; execution failures become structured fatal findings. The application bootstrap itself should not print output before returning the Console Application.
 
 JSON uses [schema version 1](architecture-report.schema.json):
 
@@ -73,9 +76,53 @@ Existing valid JSON module/Project fields are retained; version/status/findings 
 
 Symfony's regular `debug:container`, `debug:router` and optional `doctrine:mapping:info` commands continue to use the ordinary compiled-container path.
 
+## Standalone Markdown report
+
+```bash
+php bin/console sillbeam:report
+php bin/console sillbeam:report --output=docs/architecture-report.md
+php bin/console sillbeam:report --env=prod --no-debug
+```
+
+The default file is `<project-root>/architecture-report.md`. Relative output paths
+are resolved against the kernel's project root, independently of the current
+working directory; absolute local paths are also accepted. The parent directory
+must already exist. The command does not create directories or other files.
+
+The report includes the installed Sillbeam version from Composer (or `source` when
+not installed), the check time in UTC, architecture status, module/Project counts,
+violation and blocker counts, and relevant findings with locations and remediation
+hints. Findings are grouped as in the console view. Only Sillbeam architecture
+rules are checked; the report makes no general code-quality, security or
+service-container health assessment. No HTML, diagrams or other export formats
+are generated.
+
+The Markdown command uses the same analysis and report data as
+`sillbeam:architecture`, including the same effective configuration. It writes the
+file even when violations are found (exit 1), or the analysis is unavailable (exit
+2). For incomplete analysis, counts represent only available catalog entries and
+findings, not an assurance that all sources were checked. Fatal blockers are
+counted separately from architecture violations. The JSON schema is unchanged.
+
+An existing report is replaced only after the complete new content has been
+written to a temporary file in the same directory. Write/replacement failures
+return exit 2 with an actionable console error and preserve the previous file;
+temporary files are cleaned up. On a valid analysis with successful writing, the
+exit code is 0. Invalid command usage returns exit 2 without writing a report.
+
+Use the Console adapter described above to export even when architecture
+violations or unrelated service errors prevent container compilation. With the
+regular Symfony Console Application the command is registered as usual, but
+requires a compilable container. Both reporting commands continue to support
+normal Symfony environment, verbosity, help and quiet options.
+
 ## Verification
 
-This reporting change passed 202 tests / 919 assertions on PHP 8.5.4 with Symfony 8.1.6 and an isolated Symfony 7.4 installation. PHPStan, Deptrac, coding standards and strict Composer validation passed. Twelve isolated consumer installations exercise the new Console Application with both kernels, without/with Doctrine; Flex installation/removal with Doctrine also passed. PHP 8.4 was not rerun in this step.
+See [testing](../development/testing.md) for the test suite and quality commands.
+Reporting tests cover text grouping and summaries, the unchanged JSON schema,
+Markdown output paths and atomic replacement, and reporting without a compilable
+container. Run compatibility checks on each supported PHP/Symfony combination;
+a local run on one combination does not verify the whole compatibility matrix.
 
 ## Minimal module and Project creation
 

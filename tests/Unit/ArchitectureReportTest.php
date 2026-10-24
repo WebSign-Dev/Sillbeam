@@ -49,6 +49,27 @@ final class ArchitectureReportTest extends TestCase
         self::assertNull((new ArchitectureFinding('custom.rule', 'Custom finding.'))->suggestion());
     }
 
+    public function testTextGroupsFindingsAndShowsSummaryBeforeDetails(): void
+    {
+        $report = ArchitectureReport::fromAnalysis(new ArchitectureAnalysisResult([
+            new ArchitectureFinding('dependency.unknown', 'First unknown module.', ['module' => 'App\\A', 'file' => '/app/A.php', 'line' => 3]),
+            new ArchitectureFinding('dependency.unknown', 'Other unknown module.', ['module' => 'App\\B']),
+            new ArchitectureFinding('dependency.unknown', 'Second unknown module.', ['module' => 'App\\A']),
+            new ArchitectureFinding('project.host_required', 'Project needs a host.', ['project' => 'App\\Shop']),
+        ]));
+        $tester = new CommandTester(new ArchitectureCommand($report));
+        self::assertSame(1, $tester->execute([]));
+        $text = $tester->getDisplay();
+        self::assertStringContainsString('Violations: 4', $text);
+        self::assertLessThan(strpos($text, 'First unknown module.'), strpos($text, 'Violations: 4'));
+        self::assertLessThan(strpos($text, 'Other unknown module.'), strpos($text, 'Second unknown module.'));
+        self::assertSame(1, substr_count($text, 'Module App\\A'));
+        self::assertStringContainsString('Project App\\Shop', $text);
+        self::assertStringContainsString('Unknown module dependency', $text);
+        self::assertStringContainsString('/app/A.php:3', $text);
+        self::assertStringContainsString('How to fix', $text);
+    }
+
     public function testProviderFailuresUseCleanJsonAndExitTwo(): void
     {
         $tester = new CommandTester(new ArchitectureCommand(static function (): ArchitectureReport {

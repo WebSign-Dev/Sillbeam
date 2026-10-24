@@ -29,30 +29,13 @@ final class ArchitectureCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $format = $input->getOption('format');
-        $level = ob_get_level();
-        ob_start();
-        set_error_handler(static function (int $severity, string $message, string $file, int $line): bool {
-            if (!(error_reporting() & $severity)) {
-                return false;
-            }
-            if ($severity & (\E_DEPRECATED | \E_USER_DEPRECATED | \E_NOTICE | \E_USER_NOTICE)) {
-                return true;
-            }
-            throw new \ErrorException($message, 0, $severity, $file, $line);
-        });
-        try {
+        $report = ArchitectureReport::collect(function () use ($format): ArchitectureReport {
             if (!\in_array($format, ['text', 'json'], true)) {
                 throw new \InvalidArgumentException('Supported formats: text, json.');
             }
-            $report = $this->report instanceof \Closure ? ($this->report)() : $this->report;
-        } catch (\Throwable $error) {
-            $report = ArchitectureReport::unavailable($error);
-        } finally {
-            restore_error_handler();
-            while (ob_get_level() > $level) {
-                ob_end_clean();
-            }
-        }
+
+            return $this->report instanceof \Closure ? ($this->report)() : $this->report;
+        });
 
         return self::render($report, 'json' === $format ? 'json' : 'text', $input, $output);
     }
@@ -64,26 +47,7 @@ final class ArchitectureCommand extends Command
 
             return $report->exitCode();
         }
-        $io = new SymfonyStyle($input, $output);
-        $io->title('Sillbeam architecture: '.$report->data['status']);
-        foreach ($report->data['findings'] as $finding) {
-            $context = $finding['context'];
-            $location = isset($context['file']) ? ' ('.$context['file'].(isset($context['line']) ? ':'.$context['line'] : '').')' : '';
-            $io->writeln('['.$finding['severity'].'] '.$finding['rule'].': '.$finding['message'].$location, OutputInterface::OUTPUT_RAW);
-            if (isset($context['module'])) {
-                $io->writeln('Module: '.$context['module'], OutputInterface::OUTPUT_RAW);
-            }
-            if (isset($context['suggestion'])) {
-                $io->writeln('Hint: '.$context['suggestion'], OutputInterface::OUTPUT_RAW);
-            }
-        }
-        $io->table(['Module', 'Scope', 'State', 'Declared / observed', 'Directory'], array_map(static fn (array $module): array => [
-            $module['id'], $module['scope'], $module['active'] ? 'active' : $module['inactive_reason'],
-            \count($module['declared_dependencies']).' / '.\count($module['observed_dependencies']), $module['directory'],
-        ], $report->data['modules']));
-        foreach ($report->data['projects'] as $project) {
-            $io->writeln($project['id'].': '.implode(', ', $project['hosts']).' ('.(null === $project['modules'] ? 'unknown' : \count($project['modules'])).' modules)');
-        }
+        (new ReportRenderer($report))->text(new SymfonyStyle($input, $output), $output->isVerbose());
 
         return $report->exitCode();
     }

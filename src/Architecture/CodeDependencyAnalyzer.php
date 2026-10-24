@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Architecture;
 
+use Composer\Autoload\ClassLoader;
 use Sillbeam\Core\Module\ModuleDefinition;
 
 final readonly class CodeDependencyAnalyzer
@@ -32,9 +33,13 @@ final readonly class CodeDependencyAnalyzer
         $files = $this->inspector->files($options);
         $owners = [];
         $symbols = [];
+        $knownClasses = [];
         $references = array_fill_keys(array_keys($discovery->modules), []);
         $active = array_fill_keys($architecture->usedModules(), true);
         foreach ($files as $file) {
+            foreach ($file->classes as $class) {
+                $knownClasses[strtolower($class)] = true;
+            }
             $owner = $this->owner($file->path, $discovery->modules);
             if (null === $owner) {
                 continue;
@@ -46,6 +51,40 @@ final readonly class CodeDependencyAnalyzer
                     throw ArchitectureValidationException::fatal('source.duplicate_class', 'Duplicate class in Sillbeam source index: '.$class, ['class' => $class, 'file' => $file->path, 'module' => $owner->class]);
                 }
                 $symbols[$key] = $owner;
+            }
+        }
+        $resolved = [];
+        foreach ($files as $file) {
+            $source = $owners[$file->path] ?? null;
+            $context = null === $source ? null : ['module' => $source->class, 'project' => $source->projectClass];
+            $directory = $source?->directory;
+            if (null === $context) {
+                foreach ($discovery->projects as $project) {
+                    if (str_starts_with($file->path, $project->directory.'/')) {
+                        $context = ['project' => $project->class];
+                        $directory = $project->directory;
+                        break;
+                    }
+                }
+            }
+            if (null === $context || null === $directory || PathMatcher::matches(substr($file->path, \strlen($directory) + 1), ['Tests/**', '**/Tests/**', 'Fixtures/**', '**/Fixtures/**'])) {
+                continue;
+            }
+            $missing = [];
+            foreach ($file->references as $reference) {
+                // PHP permits absent attribute classes until their metadata is instantiated.
+                if ('attribute' === ($reference['kind'] ?? null)) {
+                    continue;
+                }
+                $key = strtolower($reference['class']);
+                $resolved[$key] ??= isset($knownClasses[$key]) || $this->resolvesClass($reference['class']);
+                $locationKey = $key.':'.$reference['line'];
+                if (!$resolved[$key] && !isset($missing[$locationKey])) {
+                    $missing[$locationKey] = true;
+                    $findings->add(new ArchitectureFinding('code.unknown_class', 'Cannot resolve referenced class "'.$reference['class'].'".', [
+                        ...$context, 'class' => $reference['class'], 'file' => $file->path, 'line' => $reference['line'],
+                    ]));
+                }
             }
         }
         foreach ($files as $file) {
@@ -82,6 +121,24 @@ final readonly class CodeDependencyAnalyzer
         }
 
         return $references;
+    }
+
+    private function resolvesClass(string $class): bool
+    {
+        if (class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false)) {
+            return true;
+        }
+        // Resolve Composer paths without loading application/vendor code or booting services.
+        foreach (spl_autoload_functions() as $autoload) {
+            if (\is_array($autoload) && $autoload[0] instanceof ClassLoader) {
+                $file = $autoload[0]->findFile($class);
+                if (false !== $file && is_file($file)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     /** @param array<class-string, ModuleDefinition> $modules */

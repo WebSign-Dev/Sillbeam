@@ -4,6 +4,15 @@ This changelog records released versions and unreleased changes of Sillbeam.
 
 ## v0.2.0 — unreleased
 
+### Unresolved class references
+
+- Report `code.unknown_class` for unresolved static class/type references in Module and Project code, including descriptor constructors and inactive modules, with file/line evidence and remediation in all report formats. Resolve indexed/loaded types and Composer paths without executing target files.
+
+### CLI reporting and Markdown export
+
+- Make architecture text output compact with summary counts, findings grouped by module/Project, readable titles and deduplicated remediation hints; retain module directories with `-v` and the unchanged JSON schema.
+- Add `sillbeam:report` with project-relative or absolute output, version/time metadata and atomic Markdown replacement, including reporting before container compilation and existing 0/1/2 exit semantics.
+
 ### Minimal descriptor creation
 
 - Add `sillbeam:make:module`, `sillbeam:make:project` and private module creation with `--project`, using configured discovery roots and namespaces without generating application or configuration files.

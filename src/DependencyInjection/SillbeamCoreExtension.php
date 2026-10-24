@@ -10,6 +10,7 @@ use Sillbeam\Core\Architecture\CompiledArchitecture;
 use Sillbeam\Core\Architecture\Console\ArchitectureCommand;
 use Sillbeam\Core\Architecture\Console\MakeModuleCommand;
 use Sillbeam\Core\Architecture\Console\MakeProjectCommand;
+use Sillbeam\Core\Architecture\Console\ReportCommand;
 use Sillbeam\Core\Architecture\DescriptorCreator;
 use Sillbeam\Core\Architecture\DiscoveryOptions;
 use Sillbeam\Core\Architecture\DiscoveryOptionsResolver;
@@ -128,6 +129,7 @@ final class SillbeamCoreExtension extends Extension implements PrependExtensionI
         $container->setAlias(KernelInformationInterface::class, KernelInformation::class);
         $container->autowire(AboutCommand::class)->setAutoconfigured(true);
         $container->register(ArchitectureCommand::class)->setArguments([new Reference(ArchitectureReport::class)])->setAutoconfigured(true);
+        $container->register(ReportCommand::class)->setArguments([new Reference(ArchitectureReport::class), $projectDir])->setAutoconfigured(true);
         $options = $this->options ?? throw new \LogicException('Missing discovery options.');
         $rootDefinition = static fn (DiscoveryRoot $root): Definition => new Definition(DiscoveryRoot::class, [$root->path, $root->namespace, $root->excludes]);
         $container->register(DiscoveryOptions::class)->setArguments([

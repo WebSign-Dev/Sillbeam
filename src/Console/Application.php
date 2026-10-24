@@ -6,6 +6,7 @@ namespace Sillbeam\Core\Console;
 
 use Sillbeam\Core\Architecture\ArchitectureReport;
 use Sillbeam\Core\Architecture\Console\ArchitectureCommand;
+use Sillbeam\Core\Architecture\Console\ReportCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Command\Command;
@@ -20,13 +21,20 @@ final class Application extends SymfonyApplication
         $command = $this->architectureCommand();
         $definition = clone $this->getDefinition();
         $definition->addOption($command->getDefinition()->getOption('format'));
+        $definition->addOption($this->reportCommand()->getDefinition()->getOption('output'));
         try {
             $input->bind($definition);
         } catch (\Exception) {
             // The actual command validates usage and returns a structured error below.
         }
-        if ('sillbeam:architecture' !== $input->getFirstArgument()) {
+        $name = $input->getFirstArgument();
+        if (!\in_array($name, ['sillbeam:architecture', 'sillbeam:report'], true)) {
             return parent::doRun($input, $output);
+        }
+        $command = 'sillbeam:report' === $name ? $this->reportCommand() : $command;
+        $definition = clone $this->getDefinition();
+        foreach ($command->getDefinition()->getOptions() as $option) {
+            $definition->addOption($option);
         }
         $application = new ConsoleApplication('Sillbeam');
         $application->setDefinition($definition);
@@ -34,18 +42,34 @@ final class Application extends SymfonyApplication
         try {
             return $application->doRun($input, $output);
         } catch (\Throwable $error) {
-            return ArchitectureCommand::render(ArchitectureReport::unavailable($error), 'json' === $input->getParameterOption('--format') ? 'json' : 'text', $input, $output);
+            return ArchitectureCommand::render(ArchitectureReport::unavailable($error), 'sillbeam:architecture' === $name && 'json' === $input->getParameterOption('--format') ? 'json' : 'text', $input, $output);
         }
     }
 
     public function find(string $name): Command
     {
-        return 'sillbeam:architecture' === $name ? $this->architectureCommand() : parent::find($name);
+        return match ($name) {
+            'sillbeam:architecture' => $this->architectureCommand(),
+            'sillbeam:report' => $this->reportCommand(),
+            default => parent::find($name),
+        };
     }
 
     public function get(string $name): Command
     {
-        return 'sillbeam:architecture' === $name ? $this->architectureCommand() : parent::get($name);
+        return match ($name) {
+            'sillbeam:architecture' => $this->architectureCommand(),
+            'sillbeam:report' => $this->reportCommand(),
+            default => parent::get($name),
+        };
+    }
+
+    private function reportCommand(): ReportCommand
+    {
+        $command = new ReportCommand(fn (): ArchitectureReport => (new KernelArchitectureReporter())->report($this->getKernel()), $this->getKernel()->getProjectDir());
+        $command->setApplication($this);
+
+        return $command;
     }
 
     private function architectureCommand(): ArchitectureCommand
