@@ -11,6 +11,7 @@ final readonly class ArchitectureAnalysisResult
     public ?CompiledArchitecture $architecture;
 
     /** @param list<ArchitectureFinding> $findings
+     * @param array<class-string, list<array{class: string, file: string, line: int, target_file: string}>>  $applicationReferences
      * @param array<class-string, list<array{module: class-string, class: string, file: string, line: int}>> $references
      */
     public function __construct(
@@ -19,6 +20,7 @@ final readonly class ArchitectureAnalysisResult
         public array $references = [],
         private ?\Throwable $cause = null,
         public ?DiscoveryResult $discovery = null,
+        public array $applicationReferences = [],
     ) {
         $collection = new ArchitectureFindings();
         foreach ($findings as $finding) {

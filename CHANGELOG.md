@@ -4,6 +4,18 @@ This changelog records released versions and unreleased changes of Sillbeam.
 
 ## v0.2.0 — unreleased
 
+### Class-analysis consistency audit
+
+- Verify all existing code/declaration dependency rules with external PHP types; correct overlapping runtime PSR-4 classification so a more-specific local mapping is not hidden by a broader vendor prefix. Retain reporting schema, exit codes and production HTTP lifecycle.
+
+### Application-class false positives
+
+- Restrict `code.unknown_class` to application-owned Composer PSR-4/discovery namespaces and paths. External types remain outside this rule, including with wrapped Composer autoloaders; retain missing application constructor types, distinct locations, module checks and informational application coupling evidence.
+
+### Application coupling evidence
+
+- Record module references to indexed application classes outside modules as informational coupling evidence, using source-file ownership without scanning vendor code or changing dependency/Project/activation rules. Add optional module-level JSON fields and text/Markdown evidence while retaining existing fields and exit semantics.
+
 ### Unresolved class references
 
 - Report `code.unknown_class` for unresolved static class/type references in Module and Project code, including descriptor constructors and inactive modules, with file/line evidence and remediation in all report formats. Resolve indexed/loaded types and Composer paths without executing target files.

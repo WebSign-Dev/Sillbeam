@@ -19,13 +19,14 @@ final class ArchitectureAnalyzer
         $findings = new ArchitectureFindings();
         $architecture = null;
         $references = [];
+        $applicationReferences = [];
         $cause = null;
         $discovery = null;
         try {
             $discovery = (new ArchitectureDiscovery($inspector))->discover($options);
             $architecture = (new ArchitectureCompiler())->collect($discovery, $config, $findings);
             if (!$findings->hasFatal()) {
-                $references = (new CodeDependencyAnalyzer($inspector))->collect($discovery, $architecture, $options, $findings);
+                $references = (new CodeDependencyAnalyzer($inspector))->collect($discovery, $architecture, $options, $findings, $applicationReferences);
             }
         } catch (ArchitectureValidationException $error) {
             foreach ($error->result->findings as $finding) {
@@ -34,6 +35,6 @@ final class ArchitectureAnalyzer
             $cause = $error->getPrevious();
         }
 
-        return new ArchitectureAnalysisResult($findings->all(), $architecture, $references, $cause, $discovery);
+        return new ArchitectureAnalysisResult($findings->all(), $architecture, $references, $cause, $discovery, $applicationReferences);
     }
 }

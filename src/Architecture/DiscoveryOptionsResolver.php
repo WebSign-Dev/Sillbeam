@@ -68,7 +68,38 @@ final class DiscoveryOptionsResolver
             $integrations['controllers'] ?? ['Controller', '**/Controller'],
             $integrations['entities'] ?? ['Entity', '**/Entity'],
             $integrations['services']['exclude'] ?? ['Entity/**', '**/Entity/**', 'Dto/**', '**/Dto/**', 'Tests/**', '**/Tests/**', 'Fixtures/**', '**/Fixtures/**', 'Migrations/**', '**/Migrations/**'],
+            $this->applicationRoots($projectDir),
         );
+    }
+
+    /** @return list<DiscoveryRoot> */
+    private function applicationRoots(string $projectDir): array
+    {
+        $composerFile = $projectDir.'/composer.json';
+        if (!is_file($composerFile)) {
+            return [];
+        }
+        $composer = json_decode((string) file_get_contents($composerFile), true, flags: \JSON_THROW_ON_ERROR);
+        $vendor = new DiscoveryRoot($this->resolvePath($composer['config']['vendor-dir'] ?? 'vendor', $projectDir), '');
+        $roots = [];
+        foreach (['autoload', 'autoload-dev'] as $section) {
+            foreach ($composer[$section]['psr-4'] ?? [] as $namespace => $paths) {
+                // A fallback prefix cannot prove that a missing class is application-owned.
+                if ('' === $namespace) {
+                    continue;
+                }
+                $namespace = trim($namespace, '\\').'\\';
+                $this->validateNamespace($namespace);
+                foreach ((array) $paths as $path) {
+                    $path = $this->resolvePath($path, $projectDir);
+                    if (!$vendor->contains($path)) {
+                        $roots[] = new DiscoveryRoot($path, $namespace);
+                    }
+                }
+            }
+        }
+
+        return $roots;
     }
 
     private function resolvePath(string $path, string $projectDir): string

@@ -19,6 +19,7 @@ final readonly class DiscoveryOptions
      * @param list<string>             $excludes
      * @param list<string>             $controllerPatterns
      * @param list<string>             $entityPatterns
+     * @param list<DiscoveryRoot>      $applicationRoots
      * @param list<string>             $serviceExcludes
      */
     public function __construct(
@@ -30,6 +31,7 @@ final readonly class DiscoveryOptions
         public array $controllerPatterns = ['Controller', '**/Controller'],
         public array $entityPatterns = ['Entity', '**/Entity'],
         public array $serviceExcludes = ['Entity/**', '**/Entity/**', 'Dto/**', '**/Dto/**', 'Tests/**', '**/Tests/**', 'Fixtures/**', '**/Fixtures/**', 'Migrations/**', '**/Migrations/**'],
+        public array $applicationRoots = [],
     ) {
         $root = $this->root = FilesystemPath::normalize($root);
         $this->moduleRoots = $moduleRoots ?? [new DiscoveryRoot(FilesystemPath::directoryPrefix($root).'Module', $namespace.'Module\\')];

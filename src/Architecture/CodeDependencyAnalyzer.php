@@ -26,19 +26,24 @@ final readonly class CodeDependencyAnalyzer
     /**
      * @internal collect without publishing an invalid graph
      *
+     * @param array<class-string, list<array{class: string, file: string, line: int, target_file: string}>> $applicationReferences
+     *
      * @return array<class-string, list<array{module: class-string, class: string, file: string, line: int}>>
      */
-    public function collect(DiscoveryResult $discovery, CompiledArchitecture $architecture, DiscoveryOptions $options, ArchitectureFindings $findings): array
+    public function collect(DiscoveryResult $discovery, CompiledArchitecture $architecture, DiscoveryOptions $options, ArchitectureFindings $findings, array &$applicationReferences = []): array
     {
         $files = $this->inspector->files($options);
         $owners = [];
         $symbols = [];
         $knownClasses = [];
+        $classFiles = [];
+        $applicationReferences = array_fill_keys(array_keys($discovery->modules), []);
         $references = array_fill_keys(array_keys($discovery->modules), []);
         $active = array_fill_keys($architecture->usedModules(), true);
         foreach ($files as $file) {
             foreach ($file->classes as $class) {
                 $knownClasses[strtolower($class)] = true;
+                $classFiles[strtolower($class)] = ['class' => $class, 'file' => $file->path];
             }
             $owner = $this->owner($file->path, $discovery->modules);
             if (null === $owner) {
@@ -77,7 +82,7 @@ final readonly class CodeDependencyAnalyzer
                     continue;
                 }
                 $key = strtolower($reference['class']);
-                $resolved[$key] ??= isset($knownClasses[$key]) || $this->resolvesClass($reference['class']);
+                $resolved[$key] ??= isset($knownClasses[$key]) || !$this->applicationClass($reference['class'], $options) || $this->resolvesClass($reference['class'], $options);
                 $locationKey = $key.':'.$reference['line'];
                 if (!$resolved[$key] && !isset($missing[$locationKey])) {
                     $missing[$locationKey] = true;
@@ -95,6 +100,15 @@ final readonly class CodeDependencyAnalyzer
             $seen = [];
             foreach ($file->references as $reference) {
                 $target = $symbols[strtolower($reference['class'])] ?? null;
+                if (null === $target && isset($classFiles[strtolower($reference['class'])])) {
+                    $application = $classFiles[strtolower($reference['class'])];
+                    $evidence = ['class' => $application['class'], 'file' => $file->path, 'line' => $reference['line'], 'target_file' => $application['file']];
+                    $key = serialize($evidence);
+                    if (!isset($seen[$key])) {
+                        $applicationReferences[$source->class][] = $evidence;
+                        $seen[$key] = true;
+                    }
+                }
                 if (null === $target || $source->class === $target->class) {
                     continue;
                 }
@@ -123,10 +137,66 @@ final readonly class CodeDependencyAnalyzer
         return $references;
     }
 
-    private function resolvesClass(string $class): bool
+    private function applicationClass(string $class, DiscoveryOptions $options): bool
+    {
+        $roots = [...$options->roots(), ...$options->applicationRoots];
+        $specificity = 0;
+        foreach ($roots as $root) {
+            if (str_starts_with(strtolower($class), strtolower($root->namespace))) {
+                $specificity = max($specificity, \strlen($root->namespace));
+            }
+        }
+        if (0 === $specificity) {
+            return false;
+        }
+        // A package can own a more specific prefix below an application's broad prefix.
+        $runtimeSpecificity = $specificity;
+        $owned = true;
+        foreach (spl_autoload_functions() as $autoload) {
+            if (!\is_array($autoload) || !$autoload[0] instanceof ClassLoader) {
+                continue;
+            }
+            foreach ($autoload[0]->getPrefixesPsr4() as $prefix => $paths) {
+                if (\strlen($prefix) <= $specificity || \strlen($prefix) < $runtimeSpecificity || !str_starts_with(strtolower($class), strtolower($prefix))) {
+                    continue;
+                }
+                if (\strlen($prefix) > $runtimeSpecificity) {
+                    $runtimeSpecificity = \strlen($prefix);
+                    $owned = true;
+                }
+                foreach ($paths as $path) {
+                    $local = false;
+                    foreach ($roots as $root) {
+                        if (str_starts_with(strtolower($prefix), strtolower($root->namespace))) {
+                            $expected = $root->path.'/'.str_replace('\\', '/', substr($prefix, \strlen($root->namespace)));
+                            if (FilesystemPath::normalize(realpath($path) ?: $path) === FilesystemPath::normalize(realpath($expected) ?: $expected)) {
+                                $local = true;
+                                break;
+                            }
+                        }
+                    }
+                    if (!$local) {
+                        $owned = false;
+                    }
+                }
+            }
+        }
+
+        return $owned;
+    }
+
+    private function resolvesClass(string $class, DiscoveryOptions $options): bool
     {
         if (class_exists($class, false) || interface_exists($class, false) || trait_exists($class, false)) {
             return true;
+        }
+        foreach ([...$options->roots(), ...$options->applicationRoots] as $root) {
+            if (str_starts_with(strtolower($class), strtolower($root->namespace))) {
+                $file = $root->path.'/'.str_replace('\\', '/', substr($class, \strlen($root->namespace))).'.php';
+                if (is_file($file)) {
+                    return true;
+                }
+            }
         }
         // Resolve Composer paths without loading application/vendor code or booting services.
         foreach (spl_autoload_functions() as $autoload) {

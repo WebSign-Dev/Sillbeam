@@ -265,7 +265,8 @@ final class ArchitectureReportingTest extends TestCase
         self::assertSame($schema['required'], array_keys($data));
         foreach (['modules', 'projects', 'findings'] as $field) {
             foreach ($data[$field] as $item) {
-                self::assertEqualsCanonicalizing($schema['properties'][$field]['items']['required'], array_keys($item));
+                self::assertSame([], array_diff($schema['properties'][$field]['items']['required'], array_keys($item)));
+                self::assertSame([], array_diff(array_keys($item), array_keys($schema['properties'][$field]['items']['properties'])));
             }
         }
     }
@@ -344,12 +345,14 @@ final class ArchitectureReportingTest extends TestCase
 
     public function testMissingConstructorClassAppearsInTextJsonAndMarkdownWithoutContainer(): void
     {
-        $this->source->php('src/Module/Hello/HelloModule.php', <<<'CODE'
+        $this->source->php('src/Module/Hello/HelloModule.php', str_replace('__APP__', $this->source->namespace, <<<'CODE'
 #[\Sillbeam\Core\Module\Attribute\SillbeamModule(dependencies: [\Missing\UnknownModule::class])]
 final class HelloModule {
-    public function __construct(private \Missing\ConstructorType $missing) {}
+    public function __construct(private \__APP__\Missing\ConstructorType $missing) {}
+    public function response(): \Symfony\Component\HttpFoundation\Response { return new \Symfony\Component\HttpFoundation\Response(); }
+    public function other(): \Symfony\Component\HttpFoundation\Response { return new \Symfony\Component\HttpFoundation\Response(); }
 }
-CODE);
+CODE));
         [$code, $json] = $this->runReport('json');
         self::assertSame(1, $code);
         $data = json_decode($json, true, flags: \JSON_THROW_ON_ERROR);
@@ -369,6 +372,33 @@ CODE);
         self::assertStringContainsString('code.unknown\\_class', $markdown);
         self::assertStringContainsString('Violations: 2', $markdown);
         self::assertStringContainsString('HelloModule.php:3', $markdown);
+    }
+
+    public function testApplicationCouplingsAreInformationalInAllReportFormats(): void
+    {
+        $this->module('A');
+        $mail = $this->source->php('src/Service/MailService.php', 'class MailService {}');
+        $this->source->php('src/Module/A/Consumer.php', 'class Consumer { public function __construct(public \\'.$mail.' $mail, public \\Psr\\Log\\LoggerInterface $logger) {} }');
+        [$code, $json] = $this->runReport('json');
+        self::assertSame(0, $code);
+        $data = json_decode($json, true, flags: \JSON_THROW_ON_ERROR);
+        self::assertSame(1, $data['schema_version']);
+        self::assertSame([], $data['findings']);
+        self::assertSame([], $data['modules'][0]['observed_dependencies']);
+        self::assertSame([$mail], $data['modules'][0]['application_dependencies']);
+        self::assertStringEndsWith('/src/Service/MailService.php', $data['modules'][0]['application_references'][0]['target_file']);
+        $this->assertSchemaKeys($data);
+        [, $text] = $this->runReport('text');
+        self::assertStringContainsString('Application couplings (informational)', $text);
+        self::assertStringContainsString($mail, $text);
+        self::assertStringContainsString('Consumer.php:1', $text);
+        $application = new Application(new TestApplicationKernel($this->source));
+        $application->setAutoExit(false);
+        self::assertSame(0, (new ApplicationTester($application))->run(['command' => 'sillbeam:report']));
+        $markdown = (string) file_get_contents($this->source->directory.'/architecture-report.md');
+        self::assertStringContainsString('Application couplings', $markdown);
+        self::assertStringContainsString('MailService', $markdown);
+        self::assertStringContainsString('Consumer.php:1', $markdown);
     }
 
     private function module(string $name, string $dependencies = '[]'): void

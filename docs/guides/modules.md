@@ -31,9 +31,16 @@ An active module that requires a disabled module prevents the build. A disabled 
 IDs must match `[a-z][a-z0-9-]*`. Automatic derivation removes `Module` and splits CamelCase: `OrderHistoryModule` becomes `order-history`. An enabled shared module not assigned to any Project does not form an active graph; its disabled dependency alone does not prevent a build.
 
 Static class references in Module and Project code (including descriptor bodies)
-also produce `code.unknown_class` when the type cannot be resolved from discovery,
-loaded PHP types or Composer. This includes missing constructor types and applies
+produce `code.unknown_class` only when the type belongs to the application
+according to its Composer PSR-4/discovery mappings and cannot be resolved.
+Symfony, Doctrine, PSR and other external references do not produce this finding. This includes missing constructor types and applies
 to inactive modules too. Optional attribute names and development-only `Tests`/`Fixtures`
 directories are exempt from class resolution. Findings include file/line evidence and appear alongside
 other architecture errors in text, JSON and Markdown reports. See
 [class-resolution scope](../reference/architecture-analysis.md#existing-checks-and-identifiers).
+
+References from modules to indexed application classes outside all modules are
+reported as informational application couplings with source and target files.
+They do not replace declared module dependencies or activate modules. External
+Composer types outside discovery remain external. See
+[application coupling scope](../reference/architecture-analysis.md#informational-application-couplings).

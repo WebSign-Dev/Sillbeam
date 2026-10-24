@@ -37,33 +37,79 @@ Each `ArchitectureFinding` contains `rule`, `severity`, `message` and a scalar `
 | `dependency.unknown`, `dependency.private`, `dependency.cycle`, `dependency.disabled` | Declared targets, private boundaries, acyclic graphs, enabled activation closure |
 | `project.unknown_module`, `project.private_module` | Project activation must reference existing and permitted modules |
 | `project.host_invalid`, `project.host_required`, `project.host_duplicate` | Exact, required and unique Project hosts |
-| `code.unknown_class` | Statically referenced classes/types must be present in the source index, already loaded by PHP, or resolvable to an existing file by a registered Composer autoloader |
+| `code.unknown_class` | Unresolved application-owned static classes/types, classified through Composer PSR-4 and discovery namespace/path mappings; external types are outside this rule |
 | `code.private`, `code.inactive`, `code.undeclared_dependency` | Existing static cross-module access/dependency checks for active modules |
 | `discovery.module_boundary`, `discovery.project_boundary`, `discovery.owner_missing`, `discovery.project_inside_module`, `discovery.module_overlap`, `discovery.project_overlap` | Existing discovery and ownership boundaries |
 | `discovery.descriptor_class`, `discovery.descriptor_file`, `discovery.multiple_descriptors`, `discovery.multiple_attributes`, `discovery.descriptor_metadata`, `discovery.descriptor_id` | Usable, unambiguous PHP descriptors |
 | `source.parse`, `source.read`, `source.duplicate_class` | Readable PHP and an unambiguous source-symbol index |
 
-`code.unknown_class` also checks constructor/property/return types and other static
-class references in Module and Project areas, including descriptor bodies and
-inactive modules. Development-only `Tests` and `Fixtures` directories (also nested)
-are excluded from this resolution check so production installs do not require
-their development dependencies. Bare attribute names are not required to resolve:
-PHP permits optional metadata until an integration instantiates the attribute.
-Class references inside attribute arguments still undergo the check. It reports the class, owning module/Project, source file and
-line. Unresolved references are checked independently of declared-dependency
-errors, so both can appear in one report. This is a class-resolution check, not
-verification of method signatures, service availability or runtime behavior.
+`code.unknown_class` checks only statically referenced **application-owned** types
+in Module and Project areas, including descriptor constructors and inactive
+modules. Ownership comes from the application's Composer `autoload` and
+`autoload-dev` PSR-4 namespace/path mappings together with configured discovery
+roots. Empty fallback prefixes do not establish ownership. Composer's configured
+vendor directory is excluded from application mappings. More specific external
+Composer prefixes are not claimed by a broad application prefix. For overlapping runtime
+PSR-4 mappings, the longest matching prefix decides ownership; a broader vendor
+prefix cannot hide a more-specific mapping back into application source. There is no
+Framework/Symfony/Doctrine/PSR namespace blacklist. External references never
+produce this finding, even when a wrapped/custom autoloader cannot be inspected.
 
-Resolution uses the complete discovery source index, loaded PHP classes,
-interfaces/traits/enums, and registered Composer PSR-4/classmap loaders. Composer
-target files are located without loading/executing them; their declarations are
-not independently validated outside discovery. Custom non-Composer autoloaders
-are not executed: dynamically generated/aliased types must already be loaded or
-visible in discovery/Composer to be recognized. Dynamic names, PHPDoc, unused
-imports and descriptor attribute metadata retain their existing scope. An
-optional missing type in an actual static code reference is still reported.
+Known indexed types, already loaded types, existing files under the application's
+configured PSR-4/discovery mappings and registered Composer file/classmap lookup
+satisfy resolution. Target files are not executed, recursively scanned or
+validated for correct declarations. Custom non-Composer runtime aliases cannot
+be inferred from missing application names. This remains a bounded application
+classification/resolution check, not PHP or Symfony service/autowiring validation.
+Existing application targets outside modules retain their informational coupling
+evidence when visible in the source index.
+
+Development-only `Tests` and `Fixtures` directories (also nested) remain excluded,
+and bare optional attribute names are not required to resolve. Class references
+inside attribute arguments keep the same application-ownership boundary.
+Dynamic names, PHPDoc, unused imports and descriptor attribute metadata retain
+their existing scope. Unknown declared module dependencies still produce
+`dependency.unknown`, independently of namespace ownership.
+
+Findings retain class, source module/Project, file and line. Repeated uses on the
+same file/line are deduplicated case-insensitively; distinct locations are retained.
+The same classification applies to text, JSON and Markdown. No runtime hooks or
+checks were added to warm production HTTP.
 
 Other identifiers retain their existing checks and failure semantics.
+
+## Informational application couplings
+
+The existing parser and source index also identify module references to indexed
+classes outside every discovered module. `ArchitectureAnalysisResult::applicationReferences`
+contains evidence keyed by source module class: target `class`, source `file` and
+`line`, and `target_file`. It is separate from module-edge `references`, and never
+creates a declared dependency, activation edge, Project assignment or violation.
+
+Classification uses the actual indexed declaration file and module ownership,
+not a namespace prefix. Classes/interfaces in other modules remain subject to
+unchanged direct-dependency, activation and private-Project rules. Indexed classes
+in the classic application structure (including Project-owned code outside its
+private modules) are recorded as application coupling. This adds no new rule for
+Project-owned application code. Composer targets outside the configured source
+index are not scanned/classified; external libraries, Symfony and Doctrine are
+not recursively analyzed. A class with a vendor-like namespace in indexed
+application source is still classified by its file.
+
+Logical targets are unique per source module in reporting. Evidence is deduplicated
+case-insensitively per source file/line/target class; separate uses on separate
+lines retain their locations. Declared and observed module relationships remain
+separate views of the same existing graph, with unique observed target modules.
+Inactive modules retain observed evidence without being activated. All previously
+supported static-reference positions participate; dynamic names, PHPDoc and
+unused imports keep their existing limits. The preceding unresolved-class check
+is unchanged; this extension adds no class-existence or autowiring validation.
+
+Only files visible in configured discovery roots can supply application coupling
+targets. Excluded/generated code, runtime aliases and application code outside
+those roots may therefore have no coupling evidence. Reports with incomplete
+analysis retain their existing unavailable/unknown semantics. See the optional
+JSON fields and compatibility note in [CLI reporting](cli.md).
 
 ## Continuation and ordering
 

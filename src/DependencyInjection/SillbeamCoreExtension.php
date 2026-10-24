@@ -136,6 +136,7 @@ final class SillbeamCoreExtension extends Extension implements PrependExtensionI
             $options->root, $options->namespace,
             array_map($rootDefinition, $options->moduleRoots), array_map($rootDefinition, $options->projectRoots),
             $options->excludes, $options->controllerPatterns, $options->entityPatterns, $options->serviceExcludes,
+            array_map($rootDefinition, $options->applicationRoots),
         ]);
         $container->register(DescriptorCreator::class)->setArguments([new Reference(DiscoveryOptions::class)]);
         foreach ([MakeModuleCommand::class, MakeProjectCommand::class] as $command) {

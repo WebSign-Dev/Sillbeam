@@ -63,6 +63,22 @@ final readonly class ReportRenderer
                 OutputFormatter::escape($project['id']), OutputFormatter::escape(implode(', ', $project['hosts'])), null === $project['modules'] ? 'unknown' : (string) \count($project['modules']),
             ], $data['projects']));
         }
+        $couplings = $this->couplings();
+        if ([] !== $couplings) {
+            $io->section('Application couplings (informational)');
+            foreach ($couplings as $module => $targets) {
+                $io->writeln(OutputFormatter::escape($module));
+                foreach ($targets as $class => $references) {
+                    $io->text('  -> '.OutputFormatter::escape($class));
+                    foreach ($references as $reference) {
+                        $io->text('     At: '.OutputFormatter::escape($reference['file'].':'.$reference['line']));
+                    }
+                    if ($verbose) {
+                        $io->text('     Target: '.OutputFormatter::escape($references[0]['target_file']));
+                    }
+                }
+            }
+        }
         $io->text('Use -v for module directories; --format=json for the full report data.');
     }
 
@@ -103,10 +119,39 @@ final readonly class ReportRenderer
                 }
             }
         }
+        $couplings = $this->couplings();
+        if ([] !== $couplings) {
+            $lines[] = '## Application couplings (informational)';
+            $lines[] = '';
+            foreach ($couplings as $module => $targets) {
+                $lines[] = '### '.self::escape($module);
+                $lines[] = '';
+                foreach ($targets as $class => $references) {
+                    $lines[] = '- '.self::escape($class).' — target: '.self::escape($references[0]['target_file']);
+                    foreach ($references as $reference) {
+                        $lines[] = '  - At: '.self::escape($reference['file'].':'.$reference['line']);
+                    }
+                }
+                $lines[] = '';
+            }
+        }
         $lines[] = 'Only Sillbeam architecture rules were checked. This report does not assess overall code quality, security or Symfony service-container health.';
         $lines[] = '';
 
         return implode("\n", $lines);
+    }
+
+    /** @return array<string, array<string, list<array{class: string, file: string, line: int, target_file: string}>>> */
+    private function couplings(): array
+    {
+        $couplings = [];
+        foreach ($this->report->data['modules'] as $module) {
+            foreach ($module['application_references'] ?? [] as $reference) {
+                $couplings[$module['class']][$reference['class']][] = $reference;
+            }
+        }
+
+        return $couplings;
     }
 
     private function violations(): int

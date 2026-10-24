@@ -190,6 +190,41 @@
                                 }
                             }
                         }
+                    },
+                    "application_dependencies": {
+                        "type": "array",
+                        "uniqueItems": true,
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "application_references": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "additionalProperties": false,
+                            "required": [
+                                "class",
+                                "file",
+                                "line",
+                                "target_file"
+                            ],
+                            "properties": {
+                                "class": {
+                                    "type": "string"
+                                },
+                                "file": {
+                                    "type": "string"
+                                },
+                                "line": {
+                                    "type": "integer",
+                                    "minimum": 1
+                                },
+                                "target_file": {
+                                    "type": "string"
+                                }
+                            }
+                        }
                     }
                 }
             }

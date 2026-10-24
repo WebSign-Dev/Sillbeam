@@ -38,6 +38,12 @@ final readonly class ArchitectureReport
                 'activation_reasons' => $graph?->activationReasons($module->class) ?? [],
                 'controllers' => $module->controllerDirectories, 'entities' => $module->entityDirectories,
             ];
+            $applicationReferences = $analysis->applicationReferences[$module->class] ?? [];
+            if ([] !== $applicationReferences) {
+                $index = array_key_last($modules);
+                $modules[$index]['application_dependencies'] = array_values(array_unique(array_column($applicationReferences, 'class')));
+                $modules[$index]['application_references'] = $applicationReferences;
+            }
         }
         $projectData = [];
         foreach ($projects as $project) {
