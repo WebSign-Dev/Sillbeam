@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Architecture;
 
+use Sillbeam\Core\Architecture\Diagnostic\DiagnosticContext;
+
 /** Shared analysis entry point, independent of the container and console. */
 final class ArchitectureAnalyzer
 {
@@ -35,6 +37,8 @@ final class ArchitectureAnalyzer
             $cause = $error->getPrevious();
         }
 
-        return new ArchitectureAnalysisResult($findings->all(), $architecture, $references, $cause, $discovery, $applicationReferences);
+        $diagnosticContext = DiagnosticContext::fromEvidence($discovery, $architecture, !$findings->hasFatal(), $references, $applicationReferences);
+
+        return new ArchitectureAnalysisResult($findings->all(), $architecture, $references, $cause, $discovery, $applicationReferences, $diagnosticContext);
     }
 }

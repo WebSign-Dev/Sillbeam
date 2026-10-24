@@ -28,6 +28,26 @@ $architecture = $result->architecture;
 
 Each `ArchitectureFinding` contains `rule`, `severity`, `message` and a scalar `context` map. Available context includes descriptor/module/project class, file, dependency target, host, or source-reference line. Descriptor graph checks have no line in their existing discovery metadata; no line number is invented. File/line locations are present for parser errors and static code references when available. Configuration-only failures may have no file or module.
 
+## Internal diagnostic foundation
+
+`Sillbeam\Core\Architecture\Diagnostic` is internal and read-only:
+
+- `ArchitectureAnalyzer` runs existing discovery, compilation and reference collection. Before rejecting an invalid compiler candidate, it copies original Module/Project declarations, available references and configured activation states/membership into `DiagnosticContext`. The context retains **no `CompiledArchitecture` object**. Declaration objects remain discovery input; configured enabled/activation states are queried separately through `state()`.
+- `DiagnosticContext::fromAnalysis($result)` reads that snapshot without parsing, compiling, autoloading or writing files. Results constructed outside the analyzer use available discovery/approved architecture; absent activation evidence stays `unknown`.
+- `DiagnosticCollection::fromAnalysis($result)` attributes every original Finding position exactly once. `Diagnosis` contains an evidence basis, explanation, original entries, modules, descriptor paths and optional resolutions. The collection never rewrites/deduplicates Findings; existing analyzer deduplication is unchanged.
+
+Grouping requires an evidenced **directed** declared/observed module relationship or a verified declared cycle. Equal rules, filenames or unverified endpoint labels alone never establish a group. Other Findings remain individual diagnoses. IDs (`D1`, `D2`, …) and order are deterministic for the input/run, with no promise of persistent issue numbers across changed runs.
+
+`DeclaredDependencyGraph` uses **only declarations**. Sorted traversal gives shortest directed paths with lexical tie breaking and closed, ordered DFS cycle witnesses (`User → Catalog → User`). It does not enumerate every elementary cycle. Source descriptor paths prove outgoing declared edges; no line numbers are invented. Legacy cycle Findings and JSON output are unchanged.
+
+`assessDependency(source, target)` checks a hypothetical direct declaration for an existing return path, privacy boundaries, an existing declaration, global activation and target activation in each Project currently activating the source. States distinguish `active`, `disabled`, `unassigned` and `unknown`; global activation does not imply activation in every Project. Observed references never become declared/activation edges.
+
+After **any fatal failure**, including code-analysis failure after compilation, activation becomes `unknown`. Incomplete evidence retains positive path witnesses but cannot prove absent return paths/declarations or approve privacy/edits. Unknown endpoints or reachable unresolved declarations also prevent negative return-path claims and dependency options. A null path alone is not proof of absence.
+
+`Resolution` explicitly distinguishes evidence-backed `technical` steps from domain `option`s. This foundation emits only conditional dependency options when local checks are known and clear, never automatic edits or generic technical fixes. These options require a domain decision and fresh analysis; local checks do not certify the whole modified architecture or its changed activation.
+
+The context never feeds Runtime registries, service activation or routing. `ArchitectureAnalysisResult::architecture` remains `null` for any Finding. Existing CLI/renderers and JSON schema version 1 do not serialize diagnoses. No source analysis is added to warm production HTTP. The final rule-text catalog and productive CLI are outside this foundation.
+
 ## Existing checks and identifiers
 
 | Rule identifiers | Existing checks |

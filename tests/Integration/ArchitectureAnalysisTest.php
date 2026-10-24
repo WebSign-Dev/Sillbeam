@@ -44,11 +44,39 @@ final class ArchitectureAnalysisTest extends TestCase
         self::assertEquals($result->findings, $analyzer->analyze($this->options())->findings);
     }
 
+    public function testDiagnosticSnapshotRetainsStatesWithoutPublishingInvalidCandidateOrChangingJson(): void
+    {
+        $a = $this->source->php('src/Module/A/AModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class AModule {}');
+        $b = $this->source->php('src/Module/B/BModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class BModule {}');
+        $c = $this->source->php('src/Module/C/CModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class CModule {}');
+        $port = $this->source->php('src/Module/B/Port.php', 'interface Port {}');
+        $this->source->php('src/Module/A/Consumer.php', 'final class Consumer { public \\'.$port.' $port; }');
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject(modules: [\\'.$a.'::class])] final class ShopProject {}');
+        $config = ['modules' => ['b' => ['enabled' => false]]];
+        $result = (new ArchitectureAnalyzer())->analyze($this->options(), $config);
+        self::assertNull($result->architecture);
+        self::assertTrue($result->isComplete());
+        $context = \Sillbeam\Core\Architecture\Diagnostic\DiagnosticContext::fromAnalysis($result);
+        self::assertSame('active', $context->state($a));
+        self::assertSame('disabled', $context->state($b));
+        self::assertSame('unassigned', $context->state($c));
+        self::assertSame($result->references, $context->references);
+        self::assertSame($result->discovery?->modules[$a]->descriptorFile, $context->modules[$a]->descriptorFile);
+        $before = \Sillbeam\Core\Architecture\ArchitectureReport::fromAnalysis($result, $config)->toJson();
+        $collection = \Sillbeam\Core\Architecture\Diagnostic\DiagnosticCollection::fromAnalysis($result);
+        self::assertCount(\count($result->findings), $collection->assignments);
+        self::assertSame($before, \Sillbeam\Core\Architecture\ArchitectureReport::fromAnalysis($result, $config)->toJson());
+        $withoutSnapshot = new \Sillbeam\Core\Architecture\ArchitectureAnalysisResult($result->findings, references: $result->references, discovery: $result->discovery, applicationReferences: $result->applicationReferences);
+        self::assertSame($before, \Sillbeam\Core\Architecture\ArchitectureReport::fromAnalysis($withoutSnapshot, $config)->toJson());
+        self::assertSame(1, json_decode($before, true, flags: \JSON_THROW_ON_ERROR)['schema_version']);
+    }
+
     public function testSyntaxErrorIsAFatalAnalysisFailureWithOriginalCause(): void
     {
         $this->source->write('src/Module/Broken/Broken.php', "<?php\nclass {");
         $result = (new ArchitectureAnalyzer())->analyze($this->options());
         self::assertFalse($result->isComplete());
+        self::assertFalse(\Sillbeam\Core\Architecture\Diagnostic\DiagnosticContext::fromAnalysis($result)->complete);
         self::assertFalse($result->isValid());
         self::assertNull($result->architecture);
         self::assertCount(1, $result->findings);
@@ -128,8 +156,28 @@ final class ArchitectureAnalysisTest extends TestCase
         $result = (new ArchitectureAnalyzer())->analyze($this->options());
         self::assertFalse($result->isComplete());
         self::assertSame(['dependency.unknown', 'source.duplicate_class'], array_column($result->findings, 'rule'));
+        $context = \Sillbeam\Core\Architecture\Diagnostic\DiagnosticContext::fromAnalysis($result);
+        self::assertFalse($context->complete);
+        foreach (array_keys($context->modules) as $class) {
+            self::assertSame('unknown', $context->state($class));
+        }
         self::assertSame([], $result->references);
         self::assertNull($result->architecture);
+    }
+
+    public function testFatalIdentityAmbiguityDoesNotPublishDiagnosticActivation(): void
+    {
+        $a = $this->source->php('src/Module/A/AModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(id: "duplicate")] final class AModule {}');
+        $b = $this->source->php('src/Module/B/BModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(id: "duplicate")] final class BModule {}');
+        $result = (new ArchitectureAnalyzer())->analyze($this->options(), ['modules' => ['duplicate' => ['enabled' => false]]]);
+        self::assertFalse($result->isComplete());
+        self::assertNull($result->architecture);
+        $context = \Sillbeam\Core\Architecture\Diagnostic\DiagnosticContext::fromAnalysis($result);
+        self::assertFalse($context->complete);
+        self::assertSame('unknown', $context->state($a));
+        self::assertSame('unknown', $context->state($b));
+        self::assertNull($context->assessDependency($a, $b)->hasReturnPath);
+        self::assertNull($context->assessDependency($a, $b)->resolution());
     }
 
     public function testInvalidDescriptorMetadataIsFatalRatherThanAnEmptyArchitecture(): void

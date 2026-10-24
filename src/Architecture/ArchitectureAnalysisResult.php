@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Architecture;
 
+use Sillbeam\Core\Architecture\Diagnostic\DiagnosticContext;
+
 final readonly class ArchitectureAnalysisResult
 {
     /** @var list<ArchitectureFinding> */
@@ -21,6 +23,8 @@ final readonly class ArchitectureAnalysisResult
         private ?\Throwable $cause = null,
         public ?DiscoveryResult $discovery = null,
         public array $applicationReferences = [],
+        /** @internal Evidence only; never a runtime graph. */
+        public ?DiagnosticContext $diagnosticContext = null,
     ) {
         $collection = new ArchitectureFindings();
         foreach ($findings as $finding) {
