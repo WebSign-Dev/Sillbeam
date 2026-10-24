@@ -9,12 +9,13 @@ use Sillbeam\Core\Architecture\ArchitectureFinding;
 /** @internal An evidence-backed relationship, or an explicitly ungrouped original finding. */
 final readonly class Diagnosis
 {
-    /** @param 'finding'|'declared_cycle'|'declared_dependency'|'observed_reference' $basis
+    /** @param 'finding'|'declared_cycle'|'declared_dependency'|'observed_reference'|'disabled_module'|'duplicate_module_key'|'duplicate_project_id'|'host_assignment' $basis
      * @param list<int>                   $findingIndexes positions in DiagnosticCollection::findings
      * @param list<ArchitectureFinding>   $findings       original entries, without rewriting or deduplication
      * @param list<class-string>          $modules        directed endpoints or a closed, ordered cycle witness
      * @param array<class-string, string> $descriptors
      * @param list<Resolution>            $resolutions
+     * @param list<FindingExplanation>    $details
      */
     public function __construct(
         public string $id,
@@ -25,6 +26,7 @@ final readonly class Diagnosis
         public array $modules = [],
         public array $descriptors = [],
         public array $resolutions = [],
+        public array $details = [],
     ) {
     }
 }

@@ -74,7 +74,7 @@ final class DiagnosticCollectionTest extends TestCase
         self::assertSame('declared_cycle', $collection->diagnoses[0]->basis);
         self::assertSame([CollectionA::class, CollectionC::class, CollectionB::class, CollectionA::class], $collection->diagnoses[0]->modules);
         self::assertCount(3, $collection->diagnoses[0]->descriptors);
-        self::assertSame([], $collection->diagnoses[0]->resolutions);
+        self::assertSame('option', $collection->diagnoses[0]->resolutions[0]->kind);
     }
 
     public function testGroupingAndRunLocalIdentificationAreDeterministic(): void
@@ -87,7 +87,7 @@ final class DiagnosticCollectionTest extends TestCase
         $analysis = new ArchitectureAnalysisResult([new ArchitectureFinding('fatal.rule', 'No discovery', severity: 'fatal')]);
         $collection = DiagnosticCollection::fromAnalysis($analysis);
         self::assertCount(1, $collection->diagnoses);
-        self::assertSame([], $collection->diagnoses[0]->resolutions);
+        self::assertSame('technical', $collection->diagnoses[0]->resolutions[0]->kind);
         self::assertSame($analysis->findings, $collection->findings);
     }
 
@@ -99,7 +99,10 @@ final class DiagnosticCollectionTest extends TestCase
         self::assertSame('option', $collection->diagnoses[0]->resolutions[0]->kind);
         $fatal = DiagnosticCollection::fromContext([$finding, new ArchitectureFinding('source.read', 'Incomplete references', severity: 'fatal')], $this->context());
         foreach ($fatal->diagnoses as $diagnosis) {
-            self::assertSame([], $diagnosis->resolutions);
+            foreach ($diagnosis->resolutions as $resolution) {
+                self::assertSame('technical', $resolution->kind);
+                self::assertStringNotContainsString('::class', implode(' ', $resolution->steps));
+            }
         }
     }
 
@@ -109,7 +112,7 @@ final class DiagnosticCollectionTest extends TestCase
         $collection = DiagnosticCollection::fromContext([$finding], $this->context());
         self::assertSame('finding', $collection->diagnoses[0]->basis);
         self::assertSame([], $collection->diagnoses[0]->modules);
-        self::assertSame([], $collection->diagnoses[0]->descriptors);
+        self::assertSame([CollectionA::class => '/src/'.CollectionA::class.'/Descriptor.php'], $collection->diagnoses[0]->descriptors);
         $empty = DiagnosticCollection::fromContext([], $this->context());
         self::assertSame([], $empty->findings);
         self::assertSame([], $empty->assignments);

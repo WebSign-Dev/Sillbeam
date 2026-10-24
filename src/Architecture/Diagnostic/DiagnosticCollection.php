@@ -28,15 +28,17 @@ final readonly class DiagnosticCollection
     {
         $cycles = $context->graph()->cycles();
         $groups = [];
-        $canResolve = $context->complete;
         foreach ($findings as $index => $finding) {
-            $canResolve = $canResolve && 'fatal' !== $finding->severity;
             [$key, $basis, $modules] = self::relationship($finding, $index, $context, $cycles);
-            $groups[$key] ??= ['basis' => $basis, 'modules' => $modules, 'indexes' => [], 'findings' => []];
+            $groups[$key] ??= ['basis' => $basis, 'modules' => $modules, 'indexes' => [], 'findings' => [], 'fatal' => false];
             $groups[$key]['indexes'][] = $index;
             $groups[$key]['findings'][] = $finding;
+            $groups[$key]['fatal'] = $groups[$key]['fatal'] || 'fatal' === $finding->severity;
         }
         ksort($groups, \SORT_STRING);
+        // Fatal findings are actual prerequisites for reliable analysis, not a rule-code rank.
+        uasort($groups, static fn (array $left, array $right): int => $right['fatal'] <=> $left['fatal']);
+        $catalog = new DiagnosticRuleCatalog($context, !array_any($findings, static fn (ArchitectureFinding $finding): bool => 'fatal' === $finding->severity));
         $diagnoses = [];
         $assignments = [];
         foreach ($groups as $group) {
@@ -47,34 +49,85 @@ final readonly class DiagnosticCollection
                     $descriptors[$class] = $context->modules[$class]->descriptorFile;
                 }
             }
+            foreach ($group['findings'] as $finding) {
+                foreach (['module', 'target', 'project', 'class'] as $field) {
+                    $class = $finding->context[$field] ?? null;
+                    if (\is_string($class) && isset($context->modules[$class])) {
+                        $descriptors[$context->modules[$class]->class] = $context->modules[$class]->descriptorFile;
+                    } elseif (\is_string($class) && isset($context->projects[$class])) {
+                        $descriptors[$context->projects[$class]->class] = $context->projects[$class]->descriptorFile;
+                    }
+                }
+            }
+            $details = [];
             $resolutions = [];
-            if ($canResolve && \in_array($group['basis'], ['declared_dependency', 'observed_reference'], true)) {
-                $resolution = $context->assessDependency($group['modules'][0], $group['modules'][1])->resolution();
-                if (null !== $resolution) {
-                    $resolutions[] = $resolution;
+            $narrative = [];
+            foreach ($group['findings'] as $finding) {
+                $detail = $catalog->explain($finding, 'declared_cycle' === $group['basis'] ? $group['modules'] : []);
+                $details[] = $detail;
+                $location = $detail->location();
+                $paragraph = $detail->problem.(null === $location ? '' : ' Reported at '.$location.'.').' '.$detail->impact;
+                $narrative[$paragraph] = $paragraph;
+                foreach ($detail->resolutions as $resolution) {
+                    $configuration = $resolution->configuration;
+                    sort($configuration, \SORT_STRING);
+                    $key = serialize([$resolution->kind, $resolution->steps, $configuration]);
+                    $files = array_values(array_unique([...($resolutions[$key]->files ?? []), ...$resolution->files]));
+                    sort($files, \SORT_STRING);
+                    $resolutions[$key] = new Resolution($resolution->kind, $resolution->steps, $files, $configuration);
                 }
             }
             foreach ($group['indexes'] as $index) {
                 $assignments[$index] = $id;
             }
-            $explanation = match ($group['basis']) {
-                'declared_cycle' => 'Findings refer to a verified directed cycle in module declarations.',
-                'declared_dependency' => 'Findings refer to the same directed declared module dependency.',
-                'observed_reference' => 'Findings refer to the same directed module relationship evidenced by code references.',
-                default => 'Original finding retained individually; no shared cause or module relationship was established.',
-            };
-            $diagnoses[] = new Diagnosis($id, $group['basis'], $explanation, $group['indexes'], $group['findings'], $group['modules'], $descriptors, $resolutions);
+            $diagnoses[] = new Diagnosis($id, $group['basis'], implode("\n", $narrative), $group['indexes'], $group['findings'], $group['modules'], $descriptors, array_values($resolutions), $details);
         }
         ksort($assignments, \SORT_NUMERIC);
 
         return new self($findings, $diagnoses, $assignments);
     }
 
+    public function findingCount(): int
+    {
+        return \count($this->findings);
+    }
+
+    public function diagnosisCount(): int
+    {
+        return \count($this->diagnoses);
+    }
+
     /** @param list<list<class-string>> $cycles
-     * @return array{string, 'finding'|'declared_cycle'|'declared_dependency'|'observed_reference', list<class-string>}
+     * @return array{string, 'finding'|'declared_cycle'|'declared_dependency'|'observed_reference'|'disabled_module'|'duplicate_module_key'|'duplicate_project_id'|'host_assignment', list<class-string>}
      */
     private static function relationship(ArchitectureFinding $finding, int $index, DiagnosticContext $context, array $cycles): array
     {
+        $moduleClass = $finding->context['module'] ?? null;
+        $projectClass = $finding->context['project'] ?? null;
+        if (\in_array($finding->rule, ['dependency.disabled', 'code.inactive'], true)) {
+            $target = 'dependency.disabled' === $finding->rule ? $moduleClass : ($finding->context['target'] ?? null);
+            if (\is_string($target) && 'disabled' === $context->state($target) && isset($context->modules[$target])) {
+                return ['disabled:'.$target, 'disabled_module', [$context->modules[$target]->class]];
+            }
+        }
+        if ('module.duplicate_key' === $finding->rule && \is_string($moduleClass) && isset($context->modules[$moduleClass])) {
+            $module = $context->modules[$moduleClass];
+            $peers = array_filter($context->modules, static fn ($other): bool => $other->id === $module->id && $other->projectClass === $module->projectClass);
+            if (\count($peers) > 1) {
+                return ['module-key:'.serialize([$module->projectClass, $module->id]), 'duplicate_module_key', array_values(array_column($peers, 'class'))];
+            }
+        }
+        if ('project.duplicate_id' === $finding->rule && \is_string($projectClass) && isset($context->projects[$projectClass])) {
+            $project = $context->projects[$projectClass];
+            $peers = array_filter($context->projects, static fn ($other): bool => $other->id === $project->id);
+            if (\count($peers) > 1) {
+                return ['project-id:'.$project->id, 'duplicate_project_id', []];
+            }
+        }
+        $host = $finding->context['host'] ?? null;
+        if ('project.host_duplicate' === $finding->rule && \is_string($host) && \count($context->projectsForHost($host)) > 1) {
+            return ['host:'.$host, 'host_assignment', []];
+        }
         // Legacy Finding metadata lists sorted participants; verify a real ordered witness instead.
         if ('dependency.cycle' === $finding->rule && \is_string($finding->context['cycle'] ?? null)) {
             $participants = explode(', ', $finding->context['cycle']);

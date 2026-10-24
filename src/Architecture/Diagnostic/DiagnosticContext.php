@@ -16,6 +16,7 @@ final readonly class DiagnosticContext
     /** @param array<class-string, ModuleDefinition> $modules Original declarations, not enabled runtime modules
      * @param array<class-string, ProjectDefinition>                                                         $projects              original declarations, not compiled graphs
      * @param array<class-string, 'active'|'disabled'|'unassigned'|'unknown'>                                $states
+     * @param array<class-string, list<string>>                                                              $projectHosts
      * @param array<class-string, list<class-string>>                                                        $projectModules        diagnostic activation membership only
      * @param array<class-string, list<array{module: class-string, class: string, file: string, line: int}>> $references
      * @param array<class-string, list<array{class: string, file: string, line: int, target_file: string}>>  $applicationReferences
@@ -26,6 +27,7 @@ final readonly class DiagnosticContext
         public bool $complete,
         private array $states,
         private array $projectModules,
+        private array $projectHosts,
         public array $references,
         public array $applicationReferences,
     ) {
@@ -49,7 +51,14 @@ final readonly class DiagnosticContext
             $states[$class] = !$complete || null === $enabled ? 'unknown' : (!$enabled ? 'disabled' : (isset($active[$class]) ? 'active' : 'unassigned'));
         }
 
-        return new self($modules, $projects, $complete, $states, $complete ? ($candidate->projectModules ?? []) : [], $references, $applicationReferences);
+        $hosts = [];
+        if ($complete && null !== $candidate) {
+            foreach ($candidate->projects as $class => $project) {
+                $hosts[$class] = $project->hosts;
+            }
+        }
+
+        return new self($modules, $projects, $complete, $states, $complete ? ($candidate->projectModules ?? []) : [], $hosts, $references, $applicationReferences);
     }
 
     public static function fromAnalysis(ArchitectureAnalysisResult $analysis): self
@@ -69,6 +78,57 @@ final readonly class DiagnosticContext
         }
 
         return \in_array($module, $this->projectModules[$project], true) ? 'active' : 'unassigned';
+    }
+
+    /** Canonical override key only when both scope and logical identity are unambiguous. */
+    public function moduleConfigurationKey(string $class): ?string
+    {
+        $module = $this->modules[$class] ?? null;
+        if (null === $module) {
+            return null;
+        }
+        $projectId = null;
+        if (null !== $module->projectClass) {
+            $projectId = $this->projectConfigurationId($module->projectClass);
+            if (null === $projectId) {
+                return null;
+            }
+        }
+        foreach ($this->modules as $other) {
+            if ($other->class !== $class && $other->id === $module->id && $other->projectClass === $module->projectClass) {
+                return null;
+            }
+        }
+
+        return $module->key($projectId);
+    }
+
+    public function projectConfigurationId(string $class): ?string
+    {
+        $project = $this->projects[$class] ?? null;
+        if (null === $project) {
+            return null;
+        }
+        foreach ($this->projects as $other) {
+            if ($other->class !== $class && $other->id === $project->id) {
+                return null;
+            }
+        }
+
+        return $project->id;
+    }
+
+    /** @return list<ProjectDefinition> */
+    public function projectsForHost(string $host): array
+    {
+        $projects = [];
+        foreach ($this->projects as $class => $project) {
+            if (\in_array($host, $this->projectHosts[$class] ?? [], true)) {
+                $projects[] = $project;
+            }
+        }
+
+        return $projects;
     }
 
     public function graph(): DeclaredDependencyGraph
