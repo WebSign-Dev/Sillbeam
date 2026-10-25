@@ -33,6 +33,16 @@ composer require websign-dev/sillbeam-core:^0.2.0
 
 The constraint allows compatible 0.2 updates. Use `composer require websign-dev/sillbeam-core:0.2.0` to pin this exact version. See [Composer installation](../../README.md#install-with-composer). Flex recipe availability is independent of the package; if no recipe is installed, register the bundle and route import manually as shown in the README.
 
+Use `php bin/console sillbeam:doctor` to inspect static installation evidence.
+`verified` means file evidence, not certification of effective runtime behavior;
+dynamic or ambiguous configuration remains `not verified` and needs manual review.
+The [independent acceptance](../development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md)
+records standard Runtime/route-overlay cases that can remain unverified and mask
+concrete service-import advice. A nonzero Doctor result is not automatically an
+architecture violation. Use the [Console adapter](../reference/cli.md#enable-reporting-before-container-compilation)
+for inspection without kernel boot; normal Symfony boot can write cache files
+before Doctor starts. The recipe does not change that bootstrap or service imports.
+
 The application needs a Composer PSR-4 mapping such as `"App\\": "src/"`. All PHP files below begin with `<?php`. Keep the existing Symfony kernel. Optionally, `src/Kernel.php` can look like this:
 
 ```php

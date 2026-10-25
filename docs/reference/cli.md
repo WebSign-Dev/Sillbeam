@@ -29,13 +29,15 @@ return function (array $context) {
 };
 ```
 
-This adapter runs the full `sillbeam:architecture` and `sillbeam:report` commands before kernel boot; it also supports retrieving either exact command through `find()`/`get()`. Other commands, including `list`, delegate to Symfony and retain their normal boot behavior. Use the full command name when reporting a broken application. The package's test-app entry point demonstrates this import.
+This adapter runs the exact `sillbeam:architecture`, `sillbeam:report` and `sillbeam:doctor` commands before kernel boot; it also supports retrieving these exact commands through `find()`/`get()`. Other commands, including `list`, delegate to Symfony and retain their normal boot behavior. Use the full command name when reporting a broken application. The package's test-app entry point demonstrates this import.
 
 Without this import, the command remains available through the normal Symfony application when its container compiles. Symfony's normal console cannot discover container services when boot fails; the adapter is needed for that case. No additional executable, configuration file or dependency is required.
 
 ## Effective configuration
 
-Reporting prepares an uncompiled builder through the actual kernel's configuration hooks. Symfony's own loaders read its YAML/PHP/XML imports, environment-specific configuration and parameters. Composer PSR-4 mappings determine discovery namespaces through the same resolver used by validation. Bundle `prepend()` configuration is included, and Sillbeam's existing Doctrine/late-prepend consistency requirement is enforced.
+The two architecture reporting commands prepare an uncompiled builder through the actual kernel's configuration hooks. Symfony's own loaders read its YAML/PHP/XML imports, environment-specific configuration and parameters. Composer PSR-4 mappings determine discovery namespaces through the same resolver used by validation. Bundle `prepend()` configuration is included, and Sillbeam's existing Doctrine/late-prepend consistency requirement is enforced.
+
+Doctor instead uses the static file inspection described below.
 
 The analyzer and configuration processor are exactly those used by container validation. Reporting does not boot bundles, run service autowiring/optimization or require compiled registries. It can therefore report a valid architecture even when unrelated service definitions cannot compile. An unreadable/invalid configuration, missing bundle, unsupported kernel preparation, unexpected execution error or fatal analysis blocker returns code 2. An already broken configuration-loading hook cannot be bypassed by guessing its effective configuration.
 
@@ -268,8 +270,13 @@ checks do not analyze descriptors, activation graphs or architecture rules.
 | 1 | Checks completed; action required |
 | 2 | At least one check could not be verified, or command could not run |
 
-Exit 2 takes precedence over 1; established problems remain visible even when
-other checks require manual review. Symfony's normal verbosity, ANSI and quiet
+Exit 2 takes precedence over 1. The [independent acceptance](../development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md)
+records limits beyond individual dynamic files: a standard route `when@dev`
+overlay can make service-import/discovery checks unverified and hide a concrete
+service overlap; the normal Runtime callback can remain unverified after the
+correct adapter import change, and the stock Symfony-8.1 kernel can be classified
+as unknown loading hooks. Correct manual integration therefore need not yield
+exit 0. Do not treat generic manual-review output as proof that imports are safe. Symfony's normal verbosity, ANSI and quiet
 options apply. No repair or output-file option is provided.
 
 With the existing `Sillbeam\Core\Console\Application` adapter, Doctor and its help

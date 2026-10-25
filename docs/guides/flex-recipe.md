@@ -1,6 +1,6 @@
 # Symfony Flex
 
-The Contrib recipe source for v0.2.0 is in [flex-recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md). It registers SillbeamCoreBundle and imports `type: sillbeam` once for routing. Doctrine activates only when DoctrineBundle is installed and registered. The recipe does not install Foundation.
+The Contrib recipe source for v0.2.0 is in [flex-recipe](../../flex-recipe/README.md). It registers SillbeamCoreBundle and imports `type: sillbeam` once for routing. Doctrine activates only when DoctrineBundle is installed and registered. The recipe does not install Foundation.
 
 After publication, install v0.2.0 with `composer require websign-dev/sillbeam-core:^0.2.0`. Flex recipe availability depends on the configured Symfony Flex endpoint and is independent of package installation. If the recipe is not installed automatically, register the bundle and route import manually as shown in the [README](../../README.md). A local Composer/Flex installation test checks registration, files, symfony.lock, installation without a package configuration file, both kernels and subsequent removal: `composer test:flex-recipe`.
 
@@ -8,7 +8,7 @@ The recipe preserves existing `services.yaml` files. In a Symfony skeleton, keep
 
 The recipe does not create a semantically empty `config/packages/sillbeam.yaml`. Create that file yourself with the desired options if needed. Removal preserves native services and manually created Sillbeam configuration; the recipe removes only its route import and bundle registration.
 
-After uninstalling, remove manually created `sillbeam` options from Symfony package imports and, if necessary, switch an application kernel derived from `SillbeamKernel` back to the standard Symfony kernel. These are application settings; the recipe neither deletes nor overwrites them. The consumer test also checks native kernel boot after this explicit cleanup.
+After uninstalling, remove manually created `sillbeam` options from Symfony package imports, restore a manually selected Core Console adapter to Symfony, and, if necessary, switch an application kernel derived from `SillbeamKernel` back to the standard Symfony kernel. These are application settings; the recipe neither deletes nor overwrites them. The consumer test also checks native kernel boot after this explicit cleanup.
 
 After installation, first run `php bin/console sillbeam:doctor`. Review action
 items and checks marked `not verified`. If needed, manually change the Application
@@ -17,6 +17,13 @@ keeping the bootstrap and Kernel. This enables checks without container compilat
 Review broad service imports as described above, then run
 `php bin/console sillbeam:make:module Billing` and
 `php bin/console sillbeam:architecture`.
+
+Doctor is static and read-only in its implementation. Standard Runtime callbacks
+can remain `not verified` after a correct adapter import change, and an unrelated
+route overlay can prevent concrete service-import advice. Manual review is still
+required; see the [independent acceptance findings](../development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md).
+The regular Symfony entry point boots first and can write its ordinary cache;
+select the existing Core Console adapter for inspection without that boot.
 
 These steps are printed by Flex from the recipe's `post-install.txt`. The source
 manifest contains only `bundles` and `copy-from-recipe`; the endpoint generates

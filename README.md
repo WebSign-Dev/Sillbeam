@@ -46,7 +46,7 @@ Modules normally live in `src/Module`; Projects live in `src/Project`. These def
 - **Symfony 7.4 or 8.x** in the consuming application.
 - **DoctrineBundle**, only if you want automatic Doctrine entity mappings.
 
-PHP 8.4/8.5 with Symfony 7.4/8.0/8.1 has been checked through independent consumer installations. See the [tested versions and reproduction steps](docs/development/package-compatibility-2026-10-10.md).
+The current CI targets PHP 8.4/8.5 with Symfony 7.4/8.1. The [independent v0.2.0 acceptance](docs/development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md) records the exact tested versions and remaining Doctor limitations; it is not an unconditional release approval. Earlier compatibility snapshots describe their own historical scope.
 
 ### Install with Composer
 
@@ -148,7 +148,8 @@ Run these commands from your Symfony application's root:
 
 | Command | Purpose |
 | :--- | :--- |
-| `php bin/console sillbeam:architecture` | Inspect modules, Projects, dependencies and activation reasons. |
+| `php bin/console sillbeam:architecture` | Explain architecture findings and contextual next steps. |
+| `php bin/console sillbeam:doctor` | Inspect static installation evidence; review unverified checks manually. |
 | `php bin/console sillbeam:architecture --format=json` | Export the architecture catalog and dependency evidence. |
 | `php bin/console sillbeam:report` | Write a standalone Markdown architecture report. |
 | `php bin/console sillbeam:about` | Show application, runtime and module information. |
@@ -156,7 +157,7 @@ Run these commands from your Symfony application's root:
 | `php bin/console debug:router` | Inspect imported application routes. |
 | `php bin/console doctrine:mapping:info` | Inspect entity mappings when DoctrineBundle is installed. |
 
-Architecture errors prevent the container from building, so resolve their reported boundaries or dependencies before running diagnostics. See the [CLI reference](docs/reference/cli.md) and [troubleshooting guide](docs/operations/troubleshooting.md).
+Architecture errors block ordinary container-backed commands. With `Sillbeam\Core\Console\Application` selected in the existing bootstrap, the exact architecture, report and Doctor commands remain available before container compilation. Doctor performs static inspection; standard Runtime/configuration forms can remain `not verified` even after correct manual integration. The regular Symfony entry point can write cache files before Doctor runs. See the [CLI reference](docs/reference/cli.md) and [troubleshooting guide](docs/operations/troubleshooting.md).
 
 ## Documentation
 

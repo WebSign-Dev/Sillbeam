@@ -4,66 +4,43 @@ This changelog records released versions and unreleased changes of Sillbeam.
 
 ## v0.2.0 — unreleased
 
-### Class-analysis consistency audit
-
-- Verify all existing code/declaration dependency rules with external PHP types; correct overlapping runtime PSR-4 classification so a more-specific local mapping is not hidden by a broader vendor prefix. Retain reporting schema, exit codes and production HTTP lifecycle.
-
-### Application-class false positives
-
-- Restrict `code.unknown_class` to application-owned Composer PSR-4/discovery namespaces and paths. External types remain outside this rule, including with wrapped Composer autoloaders; retain missing application constructor types, distinct locations, module checks and informational application coupling evidence.
-
-### Application coupling evidence
-
-- Record module references to indexed application classes outside modules as informational coupling evidence, using source-file ownership without scanning vendor code or changing dependency/Project/activation rules. Add optional module-level JSON fields and text/Markdown evidence while retaining existing fields and exit semantics.
-
-### Unresolved class references
-
-- Report `code.unknown_class` for unresolved static class/type references in Module and Project code, including descriptor constructors and inactive modules, with file/line evidence and remediation in all report formats. Resolve indexed/loaded types and Composer paths without executing target files.
-
-### CLI reporting and Markdown export
-
-- Make architecture text output compact with summary counts, findings grouped by module/Project, readable titles and deduplicated remediation hints; retain module directories with `-v` and the unchanged JSON schema.
-- Add `sillbeam:report` with project-relative or absolute output, version/time metadata and atomic Markdown replacement, including reporting before container compilation and existing 0/1/2 exit semantics.
-
-### Minimal descriptor creation
-
-- Add `sillbeam:make:module`, `sillbeam:make:project` and private module creation with `--project`, using configured discovery roots and namespaces without generating application or configuration files.
-
-### RC verification and release preparation
-
-- Fix CVE-2026-108082 in development/reference-app lockfiles by updating HttpFoundation to 8.1.9/7.4.21; retain dependency constraints and audit both lockfiles in CI.
-
-- Verify the integrated candidate across PHP 8.4/8.5 and Symfony 7.4/8.1, isolated consumers, Flex and the real no-dev Composer ZIP; record observed results and remaining release gates.
-- Extend the benchmark with paired native Symfony applications, 10/50/100 modules, cold/cached builds, warm boot, HTTP p50/p95 and allocated peak memory; retain raw samples and measurement limits without performance claims.
-- Add benchmark smoke coverage and the ZIP installation check to CI; describe the lifecycle subprocess helper as impure for current static analysis.
-- Complete migration/release notes for aggregate findings, container-independent reports and production prebuild. See the [RC report](docs/development/core-rc-2026-10-23.md).
-
-### Architecture reporting
-
-- Extend `sillbeam:architecture` with one text/JSON report, schema version 1 and exit codes 0 (valid), 1 (violations), 2 (unavailable or invalid configuration/usage).
-- Add an opt-in Console Application adapter that uses the existing kernel/bootstrap and Symfony configuration loaders before container compilation, sharing the same analyzer and configuration processor.
-- Preserve module/Project catalogs and represent unavailable activation graphs explicitly as unknown. See [CLI setup and schema](docs/reference/cli.md).
-
-### Architecture validation
-
-- Follow Symfony debug mode: validate cold/rebuilt development containers and CLI builds; production HTTP uses prebuilt state and returns generic 503 when compilation would be required.
-- Validate current sources/configuration before cache clear/warmup, including warm caches and no-warmup/optional-warmer flags. Invalid builds fail before proceeding.
-- Include remediation hints and available locations in development diagnostics and the existing text/JSON reports. See [validation lifecycle](docs/reference/architecture-analysis.md#development-and-production-lifecycle).
-
-- Aggregate independently detectable existing Module, Project and dependency violations as structured findings with stable rule identifiers, severity and available context.
-- Add a reusable analysis result with deterministic ordering and deduplication; distinguish rule violations from fatal analysis blockers.
-- Keep strict container-build rejection through a `LogicException`-compatible aggregate exception; do not expose invalid runtime graphs.
-- Preserve existing rules, CLI output and runtime integrations. See [architecture analysis](docs/reference/architecture-analysis.md).
-
 ### Breaking changes
 
-- Rename the Composer package from `websign-dev/sillbeam` to `websign-dev/sillbeam-core` and prepare repository references for `WebSign-Dev/sillbeam-core`.
-- Move all PHP APIs from `Sillbeam\` to `Sillbeam\Core\`.
-- Replace `Sillbeam\SillbeamBundle` with `Sillbeam\Core\SillbeamCoreBundle` and `SillbeamExtension` with `Sillbeam\Core\DependencyInjection\SillbeamCoreExtension`.
-- Move the locally prepared Flex recipe to `websign-dev/sillbeam-core/0.2`.
-- Preserve `sillbeam` configuration, `sillbeam:*` commands, routing type `sillbeam`, named service IDs, and all Module, Project, service, routing and Doctrine behavior.
+- Rename the Composer package from `websign-dev/sillbeam` to `websign-dev/sillbeam-core`, move PHP APIs from `Sillbeam\` to `Sillbeam\Core\`, and replace `Sillbeam\SillbeamBundle` with `Sillbeam\Core\SillbeamCoreBundle`. The extension is now `Sillbeam\Core\DependencyInjection\SillbeamCoreExtension`; no compatibility aliases for the former PHP APIs are provided.
+- Retain the `sillbeam` configuration root/extension alias, existing `sillbeam:*` command names, route-loader type and named service IDs. Class-based service references must use the new namespace. Module/Project ownership, activation and dependency boundaries remain in place.
+- Require prebuilt containers for non-debug production HTTP: cold requests that would need compilation receive a generic 503. CLI builds remain strict and cache clear/warmup recheck current sources even when a previous container is cached.
+- Replace the earlier architecture text layout with CLI prototype 1.2 presentation. Scripts that consume human-readable output should use schema-version-1 JSON instead. Repository migration, package publication and release tagging remain separate steps. See the [upgrade guide](docs/migration/0.2.0.md).
 
-See the [migration guide](docs/migration/0.2.0.md). No compatibility aliases for the old PHP namespace are provided. Repository renaming, publication and release tagging are separate manual steps; this version is not published.
+### Architecture diagnostics and developer guidance
+
+- Collect independently detectable violations as structured findings with stable rule identifiers, severity, locations and context; distinguish architecture violations from fatal/incomplete analysis. Invalid architectures still block container builds through a `LogicException`-compatible `ArchitectureValidationException`.
+- Add a shared Diagnostic Engine that explains problems and their impact, groups related evidence into deterministic diagnoses, and provides contextual next steps for CLI and Markdown. It preserves original findings and separates technical corrections from decisions about application design.
+- Use declared dependency paths, privacy and activation evidence when explaining undeclared references. Warn about prospective cycles and disabled/unassigned targets; incomplete evidence does not justify unconditional dependency advice. No automatic repairs are applied.
+- Make error wording clearer and preserve fully qualified, executable PHP descriptor `::class` references in dependency and Project-selection advice. Distinguish descriptors from similarly named entities and services.
+- Add `code.unknown_class` for unresolved application-owned static references in Module/Project code, including descriptor constructors and inactive modules. Use indexed sources and Composer/discovery ownership without treating ordinary external types as missing application classes; retain file/line evidence and avoid executing referenced target files solely for classification.
+- Record Application Couplings to indexed application classes outside module areas as informational evidence. These observations neither create declared dependencies nor change activation or violation exit codes. Add optional JSON evidence fields while retaining schema version 1.
+
+### CLI and Markdown reports
+
+- Apply prototype 1.2 styling through the shared Symfony Console presentation layer: compact success output; a complete diagnosis index with the first diagnosis expanded when several exist; readable relative locations and separate finding/diagnosis counts. Technical rule codes and full paths are available with `-v`.
+- Add `--all`, `--issue=N` and opt-in `--couplings` to architecture text output. Issue numbers identify diagnosis groups only within the current run. JSON always contains the complete result and cannot be combined with these text selectors.
+- Add the opt-in `Sillbeam\Core\Console\Application` adapter for `sillbeam:architecture`, `sillbeam:report` and `sillbeam:doctor` before container boot, retaining the application's existing kernel/bootstrap. Architecture reporting uses the real Symfony configuration preparation and the same analyzer as container validation.
+- Add `sillbeam:report` with project-relative/absolute destinations and atomic Markdown replacement. The document contains version/time/status, a readable module/Project overview, shared diagnoses and next steps, and complete original Technical Evidence. Unknown activation stays unknown; `--couplings` adds a separate informational appendix.
+- Keep architecture/report exit codes 0 (valid), 1 (violations), 2 (incomplete/unavailable, invalid usage or report write failure). Markdown can be produced for invalid/incomplete analysis; JSON remains the machine interface, not a transcript of the new text presentation. See the [CLI reference](docs/reference/cli.md).
+
+### Installation and descriptor creation
+
+- Add minimal `sillbeam:make:module` and `sillbeam:make:project` generators, including private modules with `--project`. Resolve configured roots/namespaces and create only the descriptor directory/file; existing content and application configuration are not overwritten.
+- Normalize only an initial lowercase ASCII letter in generator names (`userProfile` → `UserProfile`), retaining remaining characters and rejecting invalid names, suffixes and normalized collisions.
+- Add `sillbeam:doctor`, a static, read-only installation inspector with `verified`, `action required` and `not verified` results. It does not boot the kernel or execute configuration itself; unsupported/dynamic configuration requires manual review. Exit 2 for unverified checks takes precedence over action-required exit 1.
+- Finalize local recipe source at `flex-recipe/websign-dev/sillbeam-core/0.2`: register the central bundle, copy the necessary route import and show separate `post-install.txt` instructions. Do not generate an empty package configuration, edit `bin/console` or change existing service imports. Local installation/output/removal tests do not establish public Recipes Contrib availability.
+
+### Development, production and verification
+
+- Follow Symfony debug/resource tracking for cold or rebuilt development containers. Non-debug production HTTP consumes prebuilt registries/services/routes/mappings without fresh source analysis. Validate immutable releases through CLI before activation; a successful `--no-warmup` is not sufficient for serving traffic.
+- Update the development/reference-app HttpFoundation locks to 8.1.9/7.4.21 for the recorded advisory, without changing dependency constraints. Target Symfony 7.4/8.1 in the current PHP 8.4/8.5 CI matrix and include lockfile audits and no-dev ZIP installation checks.
+- Record synthetic module/native-Symfony benchmarks with measurement limits, not a general performance claim. See the [RC report](docs/development/core-rc-2026-10-23.md).
+- Record the [independent installation acceptance](docs/development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md): 542 tests/6050 assertions in the isolated PHP-8.5 run, consumer checks on PHP 8.4/8.5 with Symfony 7.4/8.1, HTTP, reports, Doctrine and uninstall evidence. This is **not an unconditional release approval**: standard Runtime/configuration forms remain unverified by Doctor, a routing overlay can mask a known service-import conflict, and the ordinary Symfony entry point can write cache files before Doctor runs. Public package/recipe prerequisites remain outstanding in the dated report.
 
 ## v0.1.0
 
