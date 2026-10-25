@@ -2,7 +2,7 @@
 
 Sillbeam version: dev\-main
 
-Checked at: 2026-10-25T08:27:53+00:00
+Checked at: 2026-10-25T08:58:00+00:00
 
 Status: valid
 
@@ -50,48 +50,48 @@ These identities map the overview labels to original descriptor classes and file
 **Module: Admin**
 
 - Class: ExampleShopDuplicateNames\\Module\\Admin\\AdminModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/duplicate\-names/src/Module/Admin/AdminModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/duplicate\-names/src/Module/Admin/AdminModule.php
 
 **Module: AgeGroup**
 
 - Class: ExampleShopDuplicateNames\\Module\\AgeGroup\\AgeGroupModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/duplicate\-names/src/Module/AgeGroup/AgeGroupModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/duplicate\-names/src/Module/AgeGroup/AgeGroupModule.php
 
 **Module: Catalog**
 
 - Class: ExampleShopDuplicateNames\\Module\\Catalog\\CatalogModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/duplicate\-names/src/Module/Catalog/CatalogModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/duplicate\-names/src/Module/Catalog/CatalogModule.php
 
 **Module: Portrait**
 
 - Class: ExampleShopDuplicateNames\\Module\\Portrait\\PortraitModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/duplicate\-names/src/Module/Portrait/PortraitModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/duplicate\-names/src/Module/Portrait/PortraitModule.php
 
 **Module: Shop \[office\] / AgeGroup**
 
 - Class: ExampleShopDuplicateNames\\Project\\Office\\Module\\AgeGroup\\AgeGroupModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/duplicate\-names/src/Project/Office/Module/AgeGroup/AgeGroupModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/duplicate\-names/src/Project/Office/Module/AgeGroup/AgeGroupModule.php
 - Owning Project: ExampleShopDuplicateNames\\Project\\Office\\ShopProject
 
 **Module: Shop \[shop\] / AgeGroup**
 
 - Class: ExampleShopDuplicateNames\\Project\\Shop\\Module\\AgeGroup\\AgeGroupModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/duplicate\-names/src/Project/Shop/Module/AgeGroup/AgeGroupModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/duplicate\-names/src/Project/Shop/Module/AgeGroup/AgeGroupModule.php
 - Owning Project: ExampleShopDuplicateNames\\Project\\Shop\\ShopProject
 
 **Module: User**
 
 - Class: ExampleShopDuplicateNames\\Module\\User\\UserModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/duplicate\-names/src/Module/User/UserModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/duplicate\-names/src/Module/User/UserModule.php
 
 **Project: Shop \[office\]**
 
 - Class: ExampleShopDuplicateNames\\Project\\Office\\ShopProject
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/duplicate\-names/src/Project/Office/ShopProject.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/duplicate\-names/src/Project/Office/ShopProject.php
 
 **Project: Shop \[shop\]**
 
 - Class: ExampleShopDuplicateNames\\Project\\Shop\\ShopProject
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/duplicate\-names/src/Project/Shop/ShopProject.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/duplicate\-names/src/Project/Shop/ShopProject.php
 
 Only Sillbeam architecture rules were checked. This report does not assess overall code quality, security or Symfony service-container health.

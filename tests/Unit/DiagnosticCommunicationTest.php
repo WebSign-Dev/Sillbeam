@@ -9,9 +9,13 @@ use PHPUnit\Framework\TestCase;
 use Sillbeam\Core\Architecture\ArchitectureAnalysisResult;
 use Sillbeam\Core\Architecture\ArchitectureAnalyzer;
 use Sillbeam\Core\Architecture\ArchitectureReport;
+use Sillbeam\Core\Architecture\Console\ArchitectureRenderer;
+use Sillbeam\Core\Architecture\Console\ReportRenderer;
 use Sillbeam\Core\Architecture\Diagnostic\DiagnosticCollection;
 use Sillbeam\Core\Architecture\DiscoveryOptions;
 use Sillbeam\Core\Tests\Support\SourceWorkspace;
+use Symfony\Component\Console\Helper\Helper;
+use Symfony\Component\Console\Output\BufferedOutput;
 
 final class DiagnosticCommunicationTest extends TestCase
 {
@@ -55,6 +59,58 @@ final class DiagnosticCommunicationTest extends TestCase
         self::assertNotSame($catalog, $user);
     }
 
+    public function testPortraitAdminAdviceIsPlainConsistentAndLiterallyExecutable(): void
+    {
+        $admin = $this->module('Admin');
+        $this->module('Portrait');
+        $this->reference('src/Module/Portrait', 'src/Module/Admin');
+        $analysis = $this->analyze();
+        $report = ArchitectureReport::fromAnalysis($analysis);
+        $json = $report->toJson();
+        $issue = $report->presentation['issues'][0];
+        self::assertNull($issue['caution']);
+        self::assertStringContainsString('No conflicting dependency was detected', $issue['impact']);
+        $step = implode(' ', $issue['steps']);
+        self::assertStringContainsString('\\'.$admin.'::class', $step);
+        self::assertStringContainsString('Portrait/PortraitModule.php', $step);
+        foreach ([52, 60, 84, 90, 110] as $width) {
+            foreach ([false, true] as $ansi) {
+                $output = new BufferedOutput(decorated: $ansi);
+                (new ArchitectureRenderer($output, $width))->render($report->presentation);
+                $text = preg_replace('/\x1B\[[0-9;]*m/', '', $output->fetch()) ?? '';
+                self::assertStringNotContainsString('IMPORTANT CONTEXT', $text);
+                self::assertStringNotContainsString('witnessed', $text);
+                foreach (explode("\n", $text) as $line) {
+                    self::assertLessThanOrEqual(min($width, 90), Helper::width($line), $line);
+                }
+            }
+        }
+        $markdown = (new ReportRenderer($report))->markdown('test', new \DateTimeImmutable());
+        self::assertStringContainsString('No conflicting dependency was detected', $markdown);
+        self::assertStringContainsString(str_replace('\\', '\\\\', '\\'.$admin.'::class'), $markdown);
+        self::assertSame($json, $report->toJson());
+        if (1 !== preg_match('/(\\\\[A-Za-z_][A-Za-z0-9_\\\\]*::class)/', $step, $match)) {
+            self::fail($step);
+        }
+        $this->source->php('src/Module/Portrait/PortraitModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(dependencies: ['.$match[1].'])] final class PortraitModule {}');
+        self::assertSame([], $this->freshRules());
+    }
+
+    public function testActivationLimitsAreNotHiddenByTheSimpleDependencyMessage(): void
+    {
+        $admin = $this->module('Admin');
+        $portrait = $this->module('Portrait');
+        $this->reference('src/Module/Portrait', 'src/Module/Admin');
+        $this->project('Shop', [$portrait]);
+        $this->project('Other', [$admin]);
+        $analysis = $this->analyze(['projects' => ['shop' => ['hosts' => ['shop.test']], 'other' => ['hosts' => ['other.test']]]]);
+        $diagnosis = DiagnosticCollection::fromAnalysis($analysis)->diagnoses[0];
+        self::assertStringNotContainsString('No conflicting dependency was detected', $diagnosis->explanation);
+        self::assertStringContainsString('activate', strtolower($diagnosis->explanation));
+        $view = ArchitectureReport::fromAnalysis($analysis)->presentation;
+        self::assertNotNull($view['issues'][0]['caution']);
+    }
+
     public function testPotentialCycleShowsTheActualReturnChainAndAllDeclaringDescriptors(): void
     {
         $user = $this->module('User');
@@ -65,7 +121,7 @@ final class DiagnosticCommunicationTest extends TestCase
         self::assertStringContainsString(implode(' → ', [$user, $catalog, $bridge, $user]), $diagnosis->explanation);
         $steps = implode(' ', array_merge(...array_column($diagnosis->resolutions, 'steps')));
         self::assertStringNotContainsString($catalog.'::class', $steps);
-        self::assertStringContainsString('Choose the intended dependency direction', $steps);
+        self::assertStringContainsString('Decide which module should depend on the other', $steps);
         foreach (['User', 'Catalog', 'Bridge'] as $name) {
             self::assertContains($this->source->directory.'/src/Module/'.$name.'/'.$name.'Module.php', $diagnosis->resolutions[0]->files);
         }
@@ -81,7 +137,7 @@ final class DiagnosticCommunicationTest extends TestCase
         $diagnosis = DiagnosticCollection::fromAnalysis($analysis)->diagnoses[0];
         self::assertSame('declared_cycle', $diagnosis->basis);
         self::assertStringContainsString(implode(' → ', [$bridge, $user, $catalog, $bridge]), $diagnosis->explanation);
-        self::assertStringContainsString('cannot determine which edge is wrong', $diagnosis->explanation);
+        self::assertStringContainsString('cannot decide which dependency', $diagnosis->explanation);
         self::assertCount(3, $diagnosis->descriptors);
         self::assertSame('option', $diagnosis->resolutions[0]->kind);
         self::assertSame('dependency.cycle', $analysis->findings[0]->rule);
@@ -130,7 +186,7 @@ final class DiagnosticCommunicationTest extends TestCase
             self::assertStringContainsString($this->source->directory.'/src/Project/Shop/ShopProject.php', implode(' ', array_merge(...array_column($resolutions, 'steps'))));
             self::assertStringNotContainsString('.enabled to true', implode(' ', array_merge(...array_column($resolutions, 'steps'))));
         } else {
-            self::assertStringContainsString('disabled by its resolved module configuration', $text);
+            self::assertStringContainsString('disabled in the module configuration', $text);
             self::assertContains('sillbeam.modules["'.$key.'"].enabled', array_merge(...array_column($resolutions, 'configuration')));
             self::assertSame(2, $collection->findingCount());
             self::assertSame(1, $collection->diagnosisCount());
@@ -241,7 +297,7 @@ final class DiagnosticCommunicationTest extends TestCase
         self::assertSame(['code.unknown_class'], array_column($analysis->findings, 'rule'));
         $diagnosis = DiagnosticCollection::fromAnalysis($analysis)->diagnoses[0];
         self::assertStringContainsString($missing, $diagnosis->explanation);
-        self::assertStringContainsString('not a check of all PHP autoloading, external Composer types or Symfony autowiring', $diagnosis->explanation);
+        self::assertStringContainsString('does not validate all PHP autoloading, external Composer types or Symfony autowiring', $diagnosis->explanation);
         $this->source->php('src/Module/User/Missing.php', 'final class Missing {}');
         self::assertSame([], $this->freshRules());
     }

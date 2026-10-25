@@ -10,7 +10,7 @@ use Sillbeam\Core\Architecture\ArchitectureFinding;
 final readonly class FindingExplanation
 {
     /** @param list<Resolution> $resolutions */
-    public function __construct(public ArchitectureFinding $finding, public string $problem, public string $impact, public array $resolutions)
+    public function __construct(public ArchitectureFinding $finding, public string $problem, public string $impact, public array $resolutions, public bool $caution = false)
     {
     }
 

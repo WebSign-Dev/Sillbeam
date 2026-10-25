@@ -36,7 +36,10 @@ PDF typesetting; overview, diagnoses, duplicate identities and long-list layout
 were visually inspected. This is not a pixel-level test of GitHub or PhpStorm.
 See [verification and limitations](../../development/markdown-presentation-verification.md).
 
-These examples demonstrate presentation, not release readiness. The previously
-identified M1 shortening of executable descriptor expressions in shared resolution
-text remains outside this task; the captured recommendations are not a claim
-that this release issue has been fixed.
+These examples demonstrate presentation, not release readiness. The communication
+refinement preserves fully qualified executable descriptor expressions in shared
+resolution text. Regression tests apply the literal CLI suggestions in fresh PHP
+processes for both Project selection and direct dependencies. This corrects the
+previously identified M1 shortening issue for those flows; it does not replace a
+new independent release acceptance. See the
+[communication verification](../../development/cli-communication-verification.md).

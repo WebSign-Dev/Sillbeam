@@ -35,6 +35,6 @@ final readonly class DependencyAssessment
         }
 
         // Adding a dependency is always a domain decision, even if local checks pass.
-        return new Resolution('option', ['In '.$this->sourceDescriptor.', add '.$this->target.'::class to the SillbeamModule dependencies list if this coupling is intended. Rerun architecture analysis after the change; activation may change.'], [$this->sourceDescriptor]);
+        return new Resolution('option', ['In '.$this->sourceDescriptor.', add \\'.ltrim($this->target, '\\').'::class to the SillbeamModule dependencies list if this dependency is intended. Rerun architecture analysis after the change; check which modules are active.'], [$this->sourceDescriptor]);
     }
 }

@@ -2,7 +2,7 @@
 
 Sillbeam version: dev\-main
 
-Checked at: 2026-10-25T08:27:53+00:00
+Checked at: 2026-10-25T08:58:00+00:00
 
 Status: violations
 
@@ -49,15 +49,15 @@ User → MissingRenderer
 
 **Problem**
 
-A referenced application\-owned class cannot be resolved by the bounded source/Composer check. Reported class: MissingRenderer. Module: User.
+A referenced application class could not be found. Reported class: MissingRenderer. Module: User.
 
 **Why it matters**
 
-The reference cannot be matched to indexed, loaded or mapped application source. This is not a check of all PHP autoloading, external Composer types or Symfony autowiring.
+The class was not found in the application source or loaded/mapped classes available to this check. This does not validate all PHP autoloading, external Composer types or Symfony autowiring.
 
 **Next steps**
 
-- Check the reported class spelling/import, intended source file and application Composer PSR\-4 mapping; regenerate the autoloader if that mapping changed. Rerun architecture analysis after correcting the reported issue.
+- Check the class name/import and its source file. If its Composer PSR\-4 mapping changed, update it and regenerate the autoloader. Rerun architecture analysis.
 
 **Locations**
 
@@ -70,15 +70,15 @@ User → Catalog
 
 **Problem**
 
-Code crosses a module boundary without a declared direct dependency. Reported class: Item. Module: User. Target: Catalog.
+Code uses another module without declaring it as a direct dependency. Reported class: Item. Module: User. Target: Catalog.
 
 **Why it matters**
 
-A transitive dependency does not permit direct code access. Verify the declarations and reference evidence before changing the graph. The declared graph has no witnessed return path or private\-boundary blocker under complete evidence; this remains a domain choice.
+Each module must declare the modules its code uses directly. No conflicting dependency was detected for this change.
 
 **Next steps**
 
-- Domain option: In User/UserModule.php, add Catalog::class to the SillbeamModule dependencies list if this coupling is intended. Rerun architecture analysis after the change; activation may change.
+- Domain option: In User/UserModule.php, add \\ExampleShopMultipleErrors\\Module\\Catalog\\CatalogModule::class to the SillbeamModule dependencies list if this dependency is intended. Rerun architecture analysis after the change; check which modules are active.
 
 **Locations**
 
@@ -96,49 +96,49 @@ These identities map the overview labels to original descriptor classes and file
 **Module: Admin**
 
 - Class: ExampleShopMultipleErrors\\Module\\Admin\\AdminModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Module/Admin/AdminModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Module/Admin/AdminModule.php
 
 **Module: AgeGroup**
 
 - Class: ExampleShopMultipleErrors\\Module\\AgeGroup\\AgeGroupModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Module/AgeGroup/AgeGroupModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Module/AgeGroup/AgeGroupModule.php
 
 **Module: Catalog**
 
 - Class: ExampleShopMultipleErrors\\Module\\Catalog\\CatalogModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Module/Catalog/CatalogModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Module/Catalog/CatalogModule.php
 
 **Module: Office / AgeGroup**
 
 - Class: ExampleShopMultipleErrors\\Project\\Office\\Module\\AgeGroup\\AgeGroupModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Project/Office/Module/AgeGroup/AgeGroupModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Project/Office/Module/AgeGroup/AgeGroupModule.php
 - Owning Project: ExampleShopMultipleErrors\\Project\\Office\\OfficeProject
 
 **Module: Portrait**
 
 - Class: ExampleShopMultipleErrors\\Module\\Portrait\\PortraitModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Module/Portrait/PortraitModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Module/Portrait/PortraitModule.php
 
 **Module: Shop / AgeGroup**
 
 - Class: ExampleShopMultipleErrors\\Project\\Shop\\Module\\AgeGroup\\AgeGroupModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Project/Shop/Module/AgeGroup/AgeGroupModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Project/Shop/Module/AgeGroup/AgeGroupModule.php
 - Owning Project: ExampleShopMultipleErrors\\Project\\Shop\\ShopProject
 
 **Module: User**
 
 - Class: ExampleShopMultipleErrors\\Module\\User\\UserModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Module/User/UserModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Module/User/UserModule.php
 
 **Project: Office**
 
 - Class: ExampleShopMultipleErrors\\Project\\Office\\OfficeProject
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Project/Office/OfficeProject.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Project/Office/OfficeProject.php
 
 **Project: Shop**
 
 - Class: ExampleShopMultipleErrors\\Project\\Shop\\ShopProject
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Project/Shop/ShopProject.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Project/Shop/ShopProject.php
 
 **Referenced class: MissingRenderer**
 
@@ -157,7 +157,7 @@ Evidence: finding.
 Cannot resolve referenced class "ExampleShopMultipleErrors\\MissingRenderer".
 
 - class: ExampleShopMultipleErrors\\MissingRenderer
-- file: /tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Module/User/Second.php
+- file: /tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Module/User/Second.php
 - line: 1
 - module: ExampleShopMultipleErrors\\Module\\User\\UserModule
 - project: null
@@ -168,10 +168,10 @@ Evidence: observed\_reference.
 
 **Original finding 1** — Rule: code.undeclared\_dependency (error)
 
-/tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Module/User/Consumer.php:1: Module "user" uses "ExampleShopMultipleErrors\\Module\\Catalog\\Item" from module "catalog": does not declare a direct dependency.
+/tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Module/User/Consumer.php:1: Module "user" uses "ExampleShopMultipleErrors\\Module\\Catalog\\Item" from module "catalog": does not declare a direct dependency.
 
 - class: ExampleShopMultipleErrors\\Module\\Catalog\\Item
-- file: /tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Module/User/Consumer.php
+- file: /tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Module/User/Consumer.php
 - line: 1
 - module: ExampleShopMultipleErrors\\Module\\User\\UserModule
 - project: null
@@ -179,10 +179,10 @@ Evidence: observed\_reference.
 
 **Original finding 2** — Rule: code.undeclared\_dependency (error)
 
-/tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Module/User/Second.php:1: Module "user" uses "ExampleShopMultipleErrors\\Module\\Catalog\\Item" from module "catalog": does not declare a direct dependency.
+/tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Module/User/Second.php:1: Module "user" uses "ExampleShopMultipleErrors\\Module\\Catalog\\Item" from module "catalog": does not declare a direct dependency.
 
 - class: ExampleShopMultipleErrors\\Module\\Catalog\\Item
-- file: /tmp/sillbeam\-markdown\-examples\-b4544524/multiple\-errors/src/Module/User/Second.php
+- file: /tmp/sillbeam\-markdown\-examples\-97a002ae/multiple\-errors/src/Module/User/Second.php
 - line: 1
 - module: ExampleShopMultipleErrors\\Module\\User\\UserModule
 - project: null

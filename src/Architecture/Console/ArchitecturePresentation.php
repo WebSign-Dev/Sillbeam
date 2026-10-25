@@ -59,7 +59,7 @@ final class ArchitecturePresentation
                 $summary[] = $readable($detail->problem);
                 $impacts[] = $readable($detail->impact);
                 $rules[] = $finding->rule;
-                $caution = $caution || 'fatal' === $finding->severity || \in_array($finding->rule, ['dependency.cycle', 'dependency.private', 'code.private', 'project.private_module', 'code.undeclared_dependency'], true);
+                $caution = $caution || $detail->caution;
                 $file = $finding->context['file'] ?? null;
                 $line = $finding->context['line'] ?? null;
                 if (\is_string($file)) {
@@ -181,7 +181,7 @@ final class ArchitecturePresentation
             return $text;
         }
         uksort($labels, static fn (string $a, string $b): int => \strlen($b) <=> \strlen($a));
-        $pattern = '~(?<![a-zA-Z0-9_\\\\])(?:'.implode('|', array_map(static fn (string $key): string => preg_quote($key, '~'), array_keys($labels))).')(?![a-zA-Z0-9_\\\\])~';
+        $pattern = '~(?<![a-zA-Z0-9_\\\\])(?:'.implode('|', array_map(static fn (string $key): string => preg_quote($key, '~'), array_keys($labels))).')(?![a-zA-Z0-9_\\\\]|::class)~';
 
         return preg_replace_callback($pattern, static fn (array $match): string => $labels[$match[0]], $text) ?? $text;
     }

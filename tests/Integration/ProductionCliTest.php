@@ -165,6 +165,40 @@ PHP);
         self::assertStringContainsString('source.parse', $markdown);
     }
 
+    public function testLiteralProjectSelectionAndDependencyAdviceWorkInFreshConsumerProcesses(): void
+    {
+        $this->modules(false);
+        $prefix = $this->source->namespace;
+        $catalog = $prefix.'\\Module\\Catalog\\CatalogModule';
+        $user = $prefix.'\\Module\\User\\UserModule';
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject(modules: [\\'.$user.'::class])] final class ShopProject {}');
+        $this->source->php('src/Module/Catalog/Item.php', 'final class Item {}');
+        $this->source->php('src/Module/User/Consumer.php', 'final class Consumer { public \\'.$prefix.'\\Module\\Catalog\\Item $item; }');
+        [$code, $text, $stderr] = $this->runConsole(['sillbeam:architecture', '--all', '--no-ansi']);
+        self::assertSame(1, $code, $stderr);
+        self::assertStringContainsString('no direct dependency declaration', $text);
+        $unwrapped = preg_replace('/\s+/', '', $text) ?? '';
+        if (1 !== preg_match('/'.preg_quote('\\'.$catalog.'::class', '/').'/', $unwrapped, $match)) {
+            self::fail($text);
+        }
+        $this->source->php('src/Project/Shop/ShopProject.php', '#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject(modules: [\\'.$user.'::class, '.$match[0].'])] final class ShopProject {}');
+        [$code, $json, $stderr] = $this->runConsole(['sillbeam:architecture', '--format=json']);
+        self::assertSame(1, $code, $stderr);
+        self::assertSame(['code.undeclared_dependency'], array_column(json_decode($json, true, flags: \JSON_THROW_ON_ERROR)['findings'], 'rule'));
+        [$code, $text] = $this->runConsole(['sillbeam:architecture', '--no-ansi']);
+        self::assertSame(1, $code);
+        self::assertStringNotContainsString('IMPORTANT CONTEXT', $text);
+        self::assertStringContainsString('No conflicting dependency was detected', $text);
+        $unwrapped = preg_replace('/\s+/', '', $text) ?? '';
+        if (1 !== preg_match('/'.preg_quote('\\'.$catalog.'::class', '/').'/', $unwrapped, $match)) {
+            self::fail($text);
+        }
+        $this->source->php('src/Module/User/UserModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(dependencies: ['.$match[0].'])] final class UserModule {}');
+        [$code, $json, $stderr] = $this->runConsole(['sillbeam:architecture', '--format=json']);
+        self::assertSame(0, $code, $stderr);
+        self::assertSame([], json_decode($json, true, flags: \JSON_THROW_ON_ERROR)['findings']);
+    }
+
     public function testRelatedCommandsUseTheSameStyleAndPreserveTheirActualEffects(): void
     {
         $this->modules(false);

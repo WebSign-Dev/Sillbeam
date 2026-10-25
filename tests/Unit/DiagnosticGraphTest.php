@@ -11,6 +11,7 @@ use Sillbeam\Core\Architecture\ArchitectureFinding;
 use Sillbeam\Core\Architecture\ArchitectureFindings;
 use Sillbeam\Core\Architecture\Diagnostic\DeclaredDependencyGraph;
 use Sillbeam\Core\Architecture\Diagnostic\DiagnosticContext;
+use Sillbeam\Core\Architecture\Diagnostic\DiagnosticRuleCatalog;
 use Sillbeam\Core\Architecture\Diagnostic\Resolution;
 use Sillbeam\Core\Architecture\DiscoveryResult;
 use Sillbeam\Core\Module\ModuleDefinition;
@@ -151,6 +152,38 @@ final class DiagnosticGraphTest extends TestCase
         self::assertFalse($context->assessDependency(DiagnosticA::class, DiagnosticB::class)->alreadyDeclared);
         self::assertSame($references, $context->references);
         self::assertSame([], $discovery->modules[DiagnosticA::class]->dependencies);
+    }
+
+    public function testPlainPositiveAdviceRequiresKnownModuleAndActivationFacts(): void
+    {
+        $base = [$this->module(DiagnosticA::class), $this->module(DiagnosticB::class)];
+        $cases = [
+            'active' => [$base, [], [], true, false, false],
+            'disabled' => [$base, [], ['modules' => ['DiagnosticB' => ['enabled' => false]]], true, false, true],
+            'unassigned' => [$base, [$this->project(DiagnosticShop::class, [DiagnosticA::class])], [], true, false, true],
+            'unknown activation' => [$base, [], [], true, true, true],
+            'incomplete' => [$base, [], [], false, false, true],
+            'unresolved' => [[$base[0], $this->module(DiagnosticB::class, [DiagnosticMissing::class])], [], [], true, false, true],
+            'return chain' => [[$base[0], $this->module(DiagnosticB::class, [DiagnosticA::class])], [], [], true, false, true],
+            'private' => [[$base[0], $this->module(DiagnosticB::class, project: DiagnosticShop::class)], [$this->project(DiagnosticShop::class, [DiagnosticA::class])], [], true, false, true],
+            'already declared' => [[$this->module(DiagnosticA::class, [DiagnosticB::class]), $base[1]], [], [], true, false, true],
+            'other Project only' => [$base, [$this->project(DiagnosticShop::class, [DiagnosticA::class]), $this->project(DiagnosticOther::class, [DiagnosticB::class])], [], true, false, true],
+        ];
+        foreach ($cases as $name => [$modules, $projects, $config, $complete, $unknown, $warning]) {
+            $discovery = $this->discovery($modules, $projects);
+            $findings = new ArchitectureFindings();
+            $candidate = (new ArchitectureCompiler())->collect($discovery, $config, $findings);
+            $references = [DiagnosticA::class => [['module' => DiagnosticB::class, 'class' => 'Port', 'file' => '/src/Consumer.php', 'line' => 7]]];
+            $context = DiagnosticContext::fromEvidence($discovery, $unknown ? null : $candidate, $complete, $references);
+            $finding = new ArchitectureFinding('code.undeclared_dependency', 'Original reference.', ['module' => DiagnosticA::class, 'target' => DiagnosticB::class]);
+            $detail = (new DiagnosticRuleCatalog($context, true))->explain($finding);
+            self::assertSame($warning, $detail->caution, $name);
+            self::assertSame(!$warning, str_contains($detail->impact, 'No conflicting dependency was detected'), $name);
+            self::assertStringNotContainsString('witnessed', $detail->impact, $name);
+            if (\in_array($name, ['disabled', 'unknown activation', 'incomplete', 'unresolved', 'private', 'return chain'], true)) {
+                self::assertStringNotContainsString('::class', implode(' ', array_merge(...array_column($detail->resolutions, 'steps'))), $name);
+            }
+        }
     }
 
     /** @param list<ModuleDefinition> $modules

@@ -17,12 +17,12 @@ final class DiagnosticRuleCatalogTest extends TestCase
     {
         yield 'dependency.unknown' => ['dependency.unknown', 'not discovered', 'descriptor'];
         yield 'dependency.private' => ['dependency.private', 'private', 'Declaring'];
-        yield 'dependency.cycle' => ['dependency.cycle', 'cycle', 'direction'];
+        yield 'dependency.cycle' => ['dependency.cycle', 'cycle', 'depend'];
         yield 'dependency.disabled' => ['dependency.disabled', 'disabled', 'unknown'];
-        yield 'code.undeclared_dependency' => ['code.undeclared_dependency', 'direct dependency', 'Verify'];
+        yield 'code.undeclared_dependency' => ['code.undeclared_dependency', 'direct dependency', 'Check'];
         yield 'code.inactive' => ['code.inactive', 'inactive', 'unknown'];
         yield 'code.private' => ['code.private', 'private', 'Declaring'];
-        yield 'code.unknown_class' => ['code.unknown_class', 'application-owned', 'autowiring'];
+        yield 'code.unknown_class' => ['code.unknown_class', 'application class', 'autowiring'];
         yield 'project.unknown_module' => ['project.unknown_module', 'not discovered', 'descriptor'];
         yield 'project.private_module' => ['project.private_module', 'private', 'Declaring'];
         yield 'project.unknown_configuration' => ['project.unknown_configuration', 'configuration', 'ID'];

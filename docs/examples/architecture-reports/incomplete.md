@@ -2,7 +2,7 @@
 
 Sillbeam version: dev\-main
 
-Checked at: 2026-10-25T08:27:53+00:00
+Checked at: 2026-10-25T08:58:00+00:00
 
 Status: unavailable
 
@@ -38,11 +38,11 @@ A source file contains a PHP syntax error. Reported error: Cannot parse Sillbeam
 
 **Why it matters**
 
-The parser cannot provide reliable declarations or references for this file. Analysis incomplete: resolve the fatal blocker and rerun before relying on graph or activation conclusions.
+Sillbeam cannot reliably read the classes and references in this file. Analysis incomplete: fix the blocking error and rerun before relying on dependencies or activation.
 
 **Next steps**
 
-- Fix the syntax error at the reported file/line using the original parser message. Rerun architecture analysis after correcting the reported issue.
+- Fix the syntax error at the reported file/line using the original parser message. Rerun architecture analysis.
 
 **Locations**
 
@@ -56,9 +56,9 @@ Evidence: finding.
 
 **Original finding 1** — Rule: source.parse (fatal)
 
-Cannot parse Sillbeam source "/tmp/sillbeam\-markdown\-examples\-b4544524/incomplete/src/Broken.php": Syntax error, unexpected '\{', expecting T\_STRING on line 1
+Cannot parse Sillbeam source "/tmp/sillbeam\-markdown\-examples\-97a002ae/incomplete/src/Broken.php": Syntax error, unexpected '\{', expecting T\_STRING on line 1
 
-- file: /tmp/sillbeam\-markdown\-examples\-b4544524/incomplete/src/Broken.php
+- file: /tmp/sillbeam\-markdown\-examples\-97a002ae/incomplete/src/Broken.php
 - line: 1
 
 Only Sillbeam architecture rules were checked. This report does not assess overall code quality, security or Symfony service-container health.

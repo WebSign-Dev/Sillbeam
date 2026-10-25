@@ -18,7 +18,8 @@ final readonly class DiagnosticRuleCatalog
     {
         [$problem, $impact, $step] = $this->wording($finding->rule);
         $files = $this->files($finding);
-        $resolutions = [new Resolution('technical', [$step.' Rerun architecture analysis after correcting the reported issue.'], $files)];
+        $caution = 'fatal' === $finding->severity || \in_array($finding->rule, ['dependency.cycle', 'dependency.private', 'code.private', 'project.private_module'], true);
+        $resolutions = [new Resolution('technical', [$step.' Rerun architecture analysis.'], $files)];
         if ('Unknown rule.' === $problem) {
             $problem = $finding->message;
         }
@@ -41,15 +42,15 @@ final readonly class DiagnosticRuleCatalog
 
         switch ($finding->rule) {
             case 'code.undeclared_dependency':
-                [$impact, $resolutions] = $this->undeclared($finding, $impact, $resolutions);
+                [$impact, $resolutions, $caution] = $this->undeclared($finding, $impact, $resolutions);
                 break;
             case 'dependency.cycle':
                 if ([] !== $cycle) {
                     $problem = 'Declared dependencies form a cycle: '.implode(' → ', $cycle).'.';
                     $files = array_values($this->context->graph()->sourceDescriptors($cycle));
                 }
-                $impact = 'The declared graph must be acyclic. Sillbeam cannot determine which edge is wrong for your domain.';
-                $resolutions = [new Resolution('option', ['Review the involved descriptors'.([] === $files ? '' : ': '.implode(', ', $files)).'. Choose the intended dependency direction; remove or redirect a coupling, or extract shared contracts. Rerun architecture analysis.'], $files)];
+                $impact = 'Modules cannot depend on each other in a loop. Sillbeam cannot decide which dependency your application should remove.';
+                $resolutions = [new Resolution('option', ['Review the involved descriptors'.([] === $files ? '' : ': '.implode(', ', $files)).'. Decide which module should depend on the other. Remove or redirect a dependency, or move shared contracts into a separate module. Rerun architecture analysis.'], $files)];
                 break;
             case 'dependency.private':
             case 'code.private':
@@ -63,7 +64,7 @@ final readonly class DiagnosticRuleCatalog
             case 'dependency.unknown':
             case 'project.unknown_module':
                 $descriptor = 'dependency.unknown' === $finding->rule ? ($this->context->modules[$module ?? '']->descriptorFile ?? null) : ($this->context->projects[$project ?? '']->descriptorFile ?? null);
-                $resolutions = [new Resolution('technical', ['Verify '.($target ?? 'the reported target class').' in '.($descriptor ?? 'the reported descriptor').' against the intended descriptor and configured discovery roots/excludes. Correct the declaration or restore the intended descriptor, then rerun architecture analysis.'], $files)];
+                $resolutions = [new Resolution('technical', ['Check '.($target ?? 'the reported target class').' in '.($descriptor ?? 'the reported descriptor').'. Make sure the descriptor is in a configured discovery directory and is not excluded. Correct the declaration or restore the descriptor, then rerun architecture analysis.'], $files)];
                 break;
             case 'module.unknown_override':
                 $key = $this->text($finding, 'override');
@@ -94,87 +95,118 @@ final readonly class DiagnosticRuleCatalog
             $problem .= ' Reported error: '.$finding->message;
         }
         if (!$this->analysisComplete) {
-            $impact .= ' Analysis incomplete: resolve the fatal blocker and rerun before relying on graph or activation conclusions.';
+            $impact .= ' Analysis incomplete: fix the blocking error and rerun before relying on dependencies or activation.';
             if ('fatal' !== $finding->severity) {
-                $resolutions = [new Resolution('technical', ['Resolve the fatal analysis blockers first, then rerun architecture analysis to reassess this finding.'], $files)];
+                $resolutions = [new Resolution('technical', ['Fix the errors that stopped the analysis first. Then rerun to check this finding again.'], $files)];
             }
         }
 
-        return new FindingExplanation($finding, $problem, $impact, $resolutions);
+        return new FindingExplanation($finding, $problem, $impact, $resolutions, $caution);
     }
 
     /** @return array{string, string, string} */
     private function wording(string $rule): array
     {
         return match ($rule) {
-            'dependency.unknown' => ['A declared dependency target was not discovered.', 'Without a discovered module descriptor, its identity and activation cannot be validated.', 'Verify the target class and descriptor against configured discovery roots and excludes.'],
-            'project.unknown_module' => ['A module required by a Project activation graph was not discovered.', 'The required module has no discovered descriptor to validate or activate.', 'Verify the referenced module class in the relevant descriptor and discovery configuration.'],
-            'code.undeclared_dependency' => ['Code crosses a module boundary without a declared direct dependency.', 'A transitive dependency does not permit direct code access. Verify the declarations and reference evidence before changing the graph.', 'Verify the source and target descriptors and the reported reference.'],
+            'dependency.unknown' => ['A declared module dependency was not discovered.', 'Sillbeam needs the module descriptor to check this dependency and activate the module.', 'Check the target class and its descriptor. Make sure its directory is included by discovery and is not excluded.'],
+            'project.unknown_module' => ['A module required by a Project was not discovered.', 'Sillbeam cannot check or activate the module without its descriptor.', 'Check the module class in the Project descriptor and the configured discovery directories.'],
+            'code.undeclared_dependency' => ['Code uses another module without declaring it as a direct dependency.', 'Each module must declare the modules its code uses directly.', 'Check the reported reference and both module descriptors before changing dependencies.'],
             'dependency.private', 'code.private', 'project.private_module' => ['Access crosses a private Project boundary.', 'Declaring a dependency does not grant access to another Project\'s private module.', 'Keep private implementation within its owning Project or deliberately move reusable contracts into a shared module.'],
-            'dependency.cycle' => ['Declared module dependencies contain a cycle.', 'The declared graph must be acyclic; a valid dependency direction requires a domain decision.', 'Review the involved descriptor declarations and choose the intended dependency direction.'],
-            'dependency.disabled' => ['An active graph requires a disabled module.', 'A required module cannot be activated while disabled; its current configuration address is unknown without identity evidence.', 'Verify the module identity and enabled override before deciding whether to enable it or remove the requirement.'],
-            'code.inactive' => ['Code references an inactive module.', 'The target is outside the analyzed active graph; whether it is disabled or unassigned is unknown without activation evidence.', 'Verify the target enabled state and Project assignment before changing activation or references.'],
-            'code.unknown_class' => ['A referenced application-owned class cannot be resolved by the bounded source/Composer check.', 'The reference cannot be matched to indexed, loaded or mapped application source. This is not a check of all PHP autoloading, external Composer types or Symfony autowiring.', 'Check the reported class spelling/import, intended source file and application Composer PSR-4 mapping; regenerate the autoloader if that mapping changed.'],
-            'module.unknown_override' => ['A module configuration override matches no discovered module.', 'The configured key cannot select a module in its declared scope.', 'Compare the override key with discovered shared:<id> and project:<project-id>:<module-id> keys; correct it or remove the stale override.'],
+            'dependency.cycle' => ['Declared module dependencies contain a cycle.', 'Modules cannot depend on each other in a loop. Decide which module should depend on the other.', 'Review the involved descriptor declarations and choose the intended dependency direction.'],
+            'dependency.disabled' => ['A required module is disabled.', 'Sillbeam cannot activate a disabled module. Its configuration key is unknown from the available information.', 'Check which module is required and whether its configuration disables it. Decide whether to enable it or remove the requirement.'],
+            'code.inactive' => ['Code references an inactive module.', 'The target module is not active. The available information does not show whether it is disabled or unassigned.', 'Check whether the target is enabled and selected by a Project before changing the reference.'],
+            'code.unknown_class' => ['A referenced application class could not be found.', 'The class was not found in the application source or loaded/mapped classes available to this check. This does not validate all PHP autoloading, external Composer types or Symfony autowiring.', 'Check the class name/import and its source file. If its Composer PSR-4 mapping changed, update it and regenerate the autoloader.'],
+            'module.unknown_override' => ['A module configuration override matches no discovered module.', 'The key does not identify a module in this shared or private Project scope.', 'Compare the override key with discovered shared:<id> and project:<project-id>:<module-id> keys; correct it or remove the stale override.'],
             'project.unknown_configuration' => ['Project configuration matches no discovered Project.', 'The configured Project ID cannot select a discovered Project.', 'Compare the configured ID with discovered Project IDs; correct it or remove stale configuration.'],
             'project.host_invalid' => ['A configured Project host is not an exact hostname.', 'Project host routing requires an exact hostname without a scheme, port, path or wildcard.', 'Replace the invalid value with the intended exact hostname, without a scheme, port, path or wildcard.'],
             'project.host_required' => ['A Project has no configured host in a multi-Project application.', 'Every Project needs at least one exact host so request selection is defined.', 'Choose an exact host for this Project and configure its hosts list.'],
             'project.host_duplicate' => ['An exact host is assigned to more than one Project.', 'Host-based Project selection is ambiguous.', 'Decide which Project should own the host and remove that host from the other Project configurations.'],
-            'module.duplicate_key' => ['Multiple modules have the same logical key.', 'Module IDs must be unique within their shared or private Project scope; overrides and activation are ambiguous.', 'Choose unique IDs within the affected scope and update the affected configuration keys.'],
-            'project.duplicate_id' => ['Multiple Projects have the same ID.', 'Project configuration cannot unambiguously select one of these Projects.', 'Choose unique Project IDs and update affected Project configuration and private module keys.'],
-            'module.owner_missing' => ['A private module has no discovered owning Project.', 'The declared Project ownership cannot be resolved, so scope and activation are unknown.', 'Correct the module ownership/layout so its owning Project is discoverable, or deliberately place it in a configured shared module root.'],
-            'discovery.owner_missing' => ['A module in a Project discovery root has no owning Project.', 'Its directory is not inside a discovered Project, so private ownership cannot be established.', 'Restore a discoverable owning Project or deliberately move the module into a configured shared root; verify ownership and discovery boundaries.'],
-            'discovery.module_boundary' => ['A descriptor lies outside allowed module discovery boundaries.', 'Discovery cannot assign this descriptor to an allowed shared module or private Project area.', 'Move the descriptor into the intended configured module root or owning Project area, or correct the discovery root configuration.'],
-            'discovery.project_boundary' => ['A descriptor lies outside allowed Project discovery boundaries.', 'Discovery cannot establish a permitted Project area.', 'Move the descriptor into the intended configured Project root or correct that discovery root configuration.'],
-            'discovery.module_overlap' => ['Module areas overlap.', 'Nested or equal module areas make source ownership ambiguous.', 'Separate the reported module areas so no module contains another module descriptor.'],
-            'discovery.project_overlap' => ['Project areas overlap.', 'Nested or equal Project areas make ownership ambiguous.', 'Separate the reported Project areas so no Project contains another Project descriptor.'],
+            'module.duplicate_key' => ['Multiple modules have the same logical key.', 'Module IDs must be unique in the shared scope or within their owning Project. Otherwise configuration and activation cannot select the right module.', 'Choose unique IDs within the affected scope and update the affected configuration keys.'],
+            'project.duplicate_id' => ['Multiple Projects have the same ID.', 'The same ID cannot select two different Projects.', 'Choose unique Project IDs and update affected Project configuration and private module keys.'],
+            'module.owner_missing' => ['A private module has no discovered owning Project.', 'Sillbeam cannot find the owning Project, so the module scope and activation are unknown.', 'Correct the module ownership/layout so its owning Project is discoverable, or deliberately place it in a configured shared module root.'],
+            'discovery.owner_missing' => ['A module in a Project discovery root has no owning Project.', 'Its directory is not inside a discovered Project. Sillbeam cannot identify its owning Project.', 'Restore a discoverable owning Project or deliberately move the module into a configured shared root; verify ownership and discovery boundaries.'],
+            'discovery.module_boundary' => ['A descriptor lies outside allowed module discovery boundaries.', 'Sillbeam cannot assign this descriptor to a configured shared module directory or an owning Project.', 'Move the descriptor into the intended configured module root or owning Project area, or correct the discovery root configuration.'],
+            'discovery.project_boundary' => ['A descriptor lies outside allowed Project discovery boundaries.', 'Sillbeam cannot assign this descriptor to a configured Project directory.', 'Move the descriptor into the intended configured Project root or correct that discovery root configuration.'],
+            'discovery.module_overlap' => ['Module areas overlap.', 'A source file must belong to one module. Overlapping module directories make that assignment unclear.', 'Separate the reported module areas so no module contains another module descriptor.'],
+            'discovery.project_overlap' => ['Project areas overlap.', 'Overlapping Project directories make it unclear which Project owns their code.', 'Separate the reported Project areas so no Project contains another Project descriptor.'],
             'discovery.project_inside_module' => ['A Project area is inside a module area.', 'A module cannot contain a Project; these ownership areas conflict.', 'Separate the reported Project and module areas and verify their configured roots.'],
-            'discovery.descriptor_class' => ['A descriptor class does not match its expected PSR-4 class.', 'Discovery requires the declared class to match the filename and configured namespace for its directory.', 'Align the descriptor namespace, short class name, filename and configured Composer/discovery mapping with the expected class in the original finding.'],
-            'discovery.descriptor_file' => ['A descriptor class resolves to a different file.', 'The loaded declaration does not belong to the reported descriptor file; its metadata cannot be trusted for that file.', 'Inspect the class declaration and Composer mappings, remove unintended duplicate mappings/declarations and ensure the reported class belongs to the intended descriptor file.'],
-            'discovery.descriptor_metadata' => ['The Sillbeam descriptor attribute cannot be instantiated or read.', 'A missing attribute or invalid constructor arguments prevent reliable descriptor metadata.', 'Check the reported attribute and its constructor arguments, types and explicit ID; use the original error to identify the invalid value.'],
+            'discovery.descriptor_class' => ['A descriptor class does not match its expected PSR-4 location.', 'The namespace and class name must match the filename and configured namespace for that directory.', 'Align the descriptor namespace, short class name, filename and configured Composer/discovery mapping with the expected class in the original finding.'],
+            'discovery.descriptor_file' => ['A descriptor class resolves to a different file.', 'The loaded class comes from another file. Its metadata cannot be used for this descriptor.', 'Inspect the class declaration and Composer mappings, remove unintended duplicate mappings/declarations and ensure the reported class belongs to the intended descriptor file.'],
+            'discovery.descriptor_metadata' => ['The Sillbeam descriptor attribute cannot be instantiated or read.', 'A missing attribute or invalid arguments prevent Sillbeam from reading the descriptor settings.', 'Check the reported attribute and its constructor arguments, types and explicit ID; use the original error to identify the invalid value.'],
             'discovery.descriptor_id' => ['Discovery cannot derive a valid ID from the descriptor class.', 'The default class-derived identifier is not a valid lowercase Sillbeam ID.', 'Set an explicit attribute id matching [a-z][a-z0-9-]*, or rename the descriptor so a valid ID can be derived.'],
-            'discovery.multiple_descriptors' => ['A file contains multiple descriptors of the requested type.', 'Discovery cannot select one unambiguous descriptor for this file.', 'Keep one descriptor of the requested type per file and align each class with its PSR-4 filename.'],
-            'discovery.multiple_attributes' => ['A class has multiple Sillbeam descriptor attributes.', 'The class cannot unambiguously represent a single Module or Project descriptor.', 'Keep exactly one intended Sillbeam descriptor attribute on the reported class.'],
-            'source.parse' => ['A source file contains a PHP syntax error.', 'The parser cannot provide reliable declarations or references for this file.', 'Fix the syntax error at the reported file/line using the original parser message.'],
-            'source.read' => ['A source file could not be read.', 'Unreadable source is not evidence of an empty or valid architecture.', 'Check the reported file exists and the analysis process has read permissions; restore the file or access.'],
-            'source.duplicate_class' => ['A class is declared more than once in the module source index.', 'Case-insensitive class ownership is ambiguous; reference analysis cannot continue reliably.', 'Locate the competing declarations of the reported class and remove or rename the unintended declaration; update affected references.'],
-            'report.execution' => ['Architecture report execution failed.', 'The execution failure does not establish architecture validity.', 'Inspect the original exception and correct the reported execution/configuration failure, then rerun the report.'],
-            default => ['Unknown rule.', 'No rule-specific explanation is available; inspect the original message and context.', 'Inspect the original finding and available source evidence before choosing a correction.'],
+            'discovery.multiple_descriptors' => ['A file contains multiple descriptors of the requested type.', 'Sillbeam needs one descriptor of this type per file.', 'Keep one descriptor of the requested type per file and align each class with its PSR-4 filename.'],
+            'discovery.multiple_attributes' => ['A class has multiple Sillbeam descriptor attributes.', 'Sillbeam needs one Module or Project descriptor attribute on this class.', 'Keep exactly one intended Sillbeam descriptor attribute on the reported class.'],
+            'source.parse' => ['A source file contains a PHP syntax error.', 'Sillbeam cannot reliably read the classes and references in this file.', 'Fix the syntax error at the reported file/line using the original parser message.'],
+            'source.read' => ['A source file could not be read.', 'An unreadable file cannot be treated as empty or valid.', 'Check the reported file exists and the analysis process has read permissions; restore the file or access.'],
+            'source.duplicate_class' => ['A class is declared more than once in the checked source.', 'Class names are case-insensitive. Sillbeam cannot reliably assign references to one declaration.', 'Locate the competing declarations of the reported class and remove or rename the unintended declaration; update affected references.'],
+            'report.execution' => ['Architecture report execution failed.', 'The check itself failed; this does not establish an architecture violation or a valid result.', 'Read the original exception and fix the reported execution or configuration error.'],
+            default => ['Unknown rule.', 'No rule-specific explanation is available. Check the original message and context.', 'Inspect the original finding and available source evidence before choosing a correction.'],
         };
     }
 
     /** @param list<Resolution> $fallback
-     * @return array{string, list<Resolution>}
+     * @return array{string, list<Resolution>, bool}
      */
     private function undeclared(ArchitectureFinding $finding, string $impact, array $fallback): array
     {
         $source = $this->text($finding, 'module');
         $target = $this->text($finding, 'target');
         if (!$this->analysisComplete || !$this->context->complete || null === $source || null === $target || null === $this->context->relationship($source, $target)) {
-            return [$impact.' Diagnostic evidence is incomplete; no dependency edit is established.', $fallback];
+            return [$impact.' There is not enough information to recommend adding this dependency. Complete the analysis first.', $fallback, true];
         }
         $assessment = $this->context->assessDependency($source, $target);
+        $activation = $this->activationNotice($assessment);
         if (false === $assessment->privacyAllowed) {
-            return $this->privateAccess($finding, $this->files($finding));
+            [$impact, $resolutions] = $this->privateAccess($finding, $this->files($finding));
+
+            return [$impact.('' === $activation ? '' : ' '.$activation), $resolutions, true];
         }
         if (null !== $assessment->returnPath) {
             $chain = [$source, ...$assessment->returnPath];
             $files = array_values(array_unique([...$this->files($finding), ...array_values($this->context->graph()->sourceDescriptors($assessment->returnPath))]));
 
-            return ['Declaring this direct dependency would close a cycle: '.implode(' → ', $chain).'. Existing return path: '.implode(' → ', $assessment->returnPath).'.', [new Resolution('option', ['Choose the intended dependency direction; remove or redirect the reported code reference or extract a shared contract. Do not add the edge that closes this cycle. Review '.implode(', ', $files).' and rerun architecture analysis.'], $files)]];
+            return ['Adding this dependency would create a cycle: '.implode(' → ', $chain).'. Existing dependency chain: '.implode(' → ', $assessment->returnPath).'.'.('' === $activation ? '' : ' '.$activation), [new Resolution('option', ['Decide which module should depend on the other. Remove or redirect the code reference, or move shared contracts into a separate module. Do not add a dependency that creates this cycle. Review '.implode(', ', $files).' and rerun architecture analysis.'], $files)], true];
         }
         $resolution = $assessment->resolution();
         if (null !== $resolution) {
-            return [$impact.' The declared graph has no witnessed return path or private-boundary blocker under complete evidence; this remains a domain choice.', [$resolution]];
+            return [$impact.('' === $activation ? ' No conflicting dependency was detected for this change.' : ' '.$activation), [$resolution], '' !== $activation];
         }
 
         $reason = true === $assessment->alreadyDeclared
-            ? 'The available descriptor already declares this dependency; rerun analysis before editing it.'
+            ? 'The descriptor already declares this dependency. Rerun the check before editing it.'
             : (\in_array('unresolved_dependencies', $assessment->blockers, true)
-                ? 'Some declared targets are unresolved, so a return path cannot be ruled out.'
-                : 'Activation or endpoint evidence does not establish a dependency edit; verify the target state first.');
+                ? 'Some declared modules could not be found, so Sillbeam cannot rule out a cycle.'
+                : 'The available module or activation information is not enough to recommend this change. Check the target state first.');
 
-        return [$impact.' '.$reason, $fallback];
+        return [$impact.' '.$reason.('' === $activation ? '' : ' '.$activation), $fallback, true];
+    }
+
+    private function activationNotice(DependencyAssessment $assessment): string
+    {
+        $notes = [];
+        if ('active' !== $assessment->sourceState) {
+            $notes[] = match ($assessment->sourceState) {
+                'disabled' => 'The source module is disabled.',
+                'unassigned' => 'The source module is enabled but unassigned to a Project.',
+                default => 'The source module activation state is unknown.',
+            };
+        }
+        if ('active' !== $assessment->targetState) {
+            $notes[] = match ($assessment->targetState) {
+                'disabled' => 'The target module is disabled. Check its enabled setting before changing dependencies.',
+                'unassigned' => 'The target module is enabled but unassigned to a Project. Adding a dependency may activate it; check which Projects should use it.',
+                default => 'The target module activation state is unknown. Check its configuration and Project assignment first.',
+            };
+        }
+        $unassigned = array_keys(array_filter($assessment->targetProjectStates, static fn (string $state): bool => 'unassigned' === $state));
+        if ('active' === $assessment->targetState && [] !== $unassigned) {
+            $notes[] = 'The target is not active in these Projects that use the source: '.implode(', ', $unassigned).'. Adding this dependency may activate it there.';
+        }
+        if (\in_array('unknown', $assessment->targetProjectStates, true)) {
+            $notes[] = 'Target activation is unknown in some Projects that use the source. Check their module selection first.';
+        }
+
+        return implode(' ', $notes);
     }
 
     /** @param list<string> $files
@@ -186,7 +218,7 @@ final readonly class DiagnosticRuleCatalog
         $owner = null === $target ? null : ($this->context->modules[$target]->projectClass ?? null);
         $impact = (null === $owner ? 'The target is private to its owning Project.' : $target.' is private to Project '.$owner.'.').' Declaring a dependency does not grant access across this boundary.';
 
-        return [$impact, [new Resolution('option', ['Keep the implementation within its owning Project, or deliberately move reusable contracts into a shared module and update the reported reference/requirement. Rerun architecture analysis.'], $files)]];
+        return [$impact, [new Resolution('option', ['Keep the implementation in its owning Project, or move reusable contracts into a shared module and update the reference or dependency. Rerun architecture analysis.'], $files)]];
     }
 
     /** @param list<string> $files
@@ -216,7 +248,7 @@ final readonly class DiagnosticRuleCatalog
             $address = null === $key ? null : 'sillbeam.modules["'.$key.'"].enabled';
             $step = null === $address ? 'Verify the target module override and decide whether it should be enabled.' : 'If this module is required, set '.$address.' to true; otherwise remove the requirement/reference.';
 
-            return [$problem, $target.' is disabled by its resolved module configuration. Selecting it in a Project or declaring a dependency does not enable it.', [new Resolution('option', [$step.' Rerun architecture analysis and review the resulting activation.'], $files, null === $address ? [] : [$address])]];
+            return [$problem, $target.' is disabled in the module configuration. Selecting it in a Project or declaring a dependency does not enable it.', [new Resolution('option', [$step.' Rerun architecture analysis and check which modules are active.'], $files, null === $address ? [] : [$address])]];
         }
         if ('unassigned' === $state && null !== $target) {
             $source = $this->text($finding, 'module');
@@ -225,12 +257,17 @@ final readonly class DiagnosticRuleCatalog
             foreach ($projects as $project) {
                 $projectFiles[] = $this->context->projects[$project]->descriptorFile;
             }
-            $step = [] === $projectFiles ? 'Choose which Project should activate '.$target.' and update that Project descriptor\'s modules list.' : 'If the feature belongs in the source Project graph, select '.$target.'::class in the SillbeamProject modules list of '.implode(' or ', $projectFiles).'.';
+            $step = [] === $projectFiles ? 'Choose which Project should use '.$target.' and update that Project descriptor\'s modules list.' : 'If this Project should use the module, select \\'.ltrim($target, '\\').'::class in the SillbeamProject modules list of '.implode(' or ', $projectFiles).'.';
 
-            return [$problem, $target.' is enabled but unassigned to the analyzed Project graphs; it is not disabled.', [new Resolution('option', [$step.' Otherwise remove or restructure the reference. Rerun architecture analysis and review activation.'], array_values(array_unique([...$files, ...$projectFiles])))]];
+            $impact = $target.' is enabled but unassigned to the checked Projects; it is not disabled.';
+            if (null !== $source && false === $this->context->assessDependency($source, $target)->alreadyDeclared) {
+                $impact .= ' The source also has no direct dependency declaration for this module. After selecting it, rerun the check before adding that declaration.';
+            }
+
+            return [$problem, $impact, [new Resolution('option', [$step.' Otherwise remove or restructure the reference. Rerun architecture analysis and check which modules are active.'], array_values(array_unique([...$files, ...$projectFiles])))]];
         }
 
-        return [$problem, 'The finding reports inactive/disabled graph use, but the current activation state is unknown or unavailable. Do not assume the module is unassigned or change an enabled override without verification.', [new Resolution('technical', ['Verify the target identity, enabled configuration and Project assignment; rerun complete architecture analysis before changing activation.'], $files)]];
+        return [$problem, 'The module is reported as inactive, but its activation state is unknown. Do not assume it is disabled or unassigned. Check its configuration before changing it.', [new Resolution('technical', ['Check the target module, its enabled setting and Project assignment. Rerun a complete analysis before changing activation.'], $files)]];
     }
 
     /** @param list<string> $files

@@ -2,7 +2,7 @@
 
 Sillbeam version: dev\-main
 
-Checked at: 2026-10-25T08:27:53+00:00
+Checked at: 2026-10-25T08:58:00+00:00
 
 Status: violations
 
@@ -49,15 +49,15 @@ User → Catalog
 
 **Problem**
 
-Code crosses a module boundary without a declared direct dependency. Reported class: Item. Module: User. Target: Catalog.
+Code uses another module without declaring it as a direct dependency. Reported class: Item. Module: User. Target: Catalog.
 
 **Why it matters**
 
-A transitive dependency does not permit direct code access. Verify the declarations and reference evidence before changing the graph. The declared graph has no witnessed return path or private\-boundary blocker under complete evidence; this remains a domain choice.
+Each module must declare the modules its code uses directly. No conflicting dependency was detected for this change.
 
 **Next steps**
 
-- Domain option: In User/UserModule.php, add Catalog::class to the SillbeamModule dependencies list if this coupling is intended. Rerun architecture analysis after the change; activation may change.
+- Domain option: In User/UserModule.php, add \\ExampleShopSingleError\\Module\\Catalog\\CatalogModule::class to the SillbeamModule dependencies list if this dependency is intended. Rerun architecture analysis after the change; check which modules are active.
 
 **Locations**
 
@@ -74,49 +74,49 @@ These identities map the overview labels to original descriptor classes and file
 **Module: Admin**
 
 - Class: ExampleShopSingleError\\Module\\Admin\\AdminModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/single\-error/src/Module/Admin/AdminModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/single\-error/src/Module/Admin/AdminModule.php
 
 **Module: AgeGroup**
 
 - Class: ExampleShopSingleError\\Module\\AgeGroup\\AgeGroupModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/single\-error/src/Module/AgeGroup/AgeGroupModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/single\-error/src/Module/AgeGroup/AgeGroupModule.php
 
 **Module: Catalog**
 
 - Class: ExampleShopSingleError\\Module\\Catalog\\CatalogModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/single\-error/src/Module/Catalog/CatalogModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/single\-error/src/Module/Catalog/CatalogModule.php
 
 **Module: Office / AgeGroup**
 
 - Class: ExampleShopSingleError\\Project\\Office\\Module\\AgeGroup\\AgeGroupModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/single\-error/src/Project/Office/Module/AgeGroup/AgeGroupModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/single\-error/src/Project/Office/Module/AgeGroup/AgeGroupModule.php
 - Owning Project: ExampleShopSingleError\\Project\\Office\\OfficeProject
 
 **Module: Portrait**
 
 - Class: ExampleShopSingleError\\Module\\Portrait\\PortraitModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/single\-error/src/Module/Portrait/PortraitModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/single\-error/src/Module/Portrait/PortraitModule.php
 
 **Module: Shop / AgeGroup**
 
 - Class: ExampleShopSingleError\\Project\\Shop\\Module\\AgeGroup\\AgeGroupModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/single\-error/src/Project/Shop/Module/AgeGroup/AgeGroupModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/single\-error/src/Project/Shop/Module/AgeGroup/AgeGroupModule.php
 - Owning Project: ExampleShopSingleError\\Project\\Shop\\ShopProject
 
 **Module: User**
 
 - Class: ExampleShopSingleError\\Module\\User\\UserModule
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/single\-error/src/Module/User/UserModule.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/single\-error/src/Module/User/UserModule.php
 
 **Project: Office**
 
 - Class: ExampleShopSingleError\\Project\\Office\\OfficeProject
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/single\-error/src/Project/Office/OfficeProject.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/single\-error/src/Project/Office/OfficeProject.php
 
 **Project: Shop**
 
 - Class: ExampleShopSingleError\\Project\\Shop\\ShopProject
-- Descriptor: /tmp/sillbeam\-markdown\-examples\-b4544524/single\-error/src/Project/Shop/ShopProject.php
+- Descriptor: /tmp/sillbeam\-markdown\-examples\-97a002ae/single\-error/src/Project/Shop/ShopProject.php
 
 **Referenced class: Item**
 
@@ -128,10 +128,10 @@ Evidence: observed\_reference.
 
 **Original finding 1** — Rule: code.undeclared\_dependency (error)
 
-/tmp/sillbeam\-markdown\-examples\-b4544524/single\-error/src/Module/User/Consumer.php:1: Module "user" uses "ExampleShopSingleError\\Module\\Catalog\\Item" from module "catalog": does not declare a direct dependency.
+/tmp/sillbeam\-markdown\-examples\-97a002ae/single\-error/src/Module/User/Consumer.php:1: Module "user" uses "ExampleShopSingleError\\Module\\Catalog\\Item" from module "catalog": does not declare a direct dependency.
 
 - class: ExampleShopSingleError\\Module\\Catalog\\Item
-- file: /tmp/sillbeam\-markdown\-examples\-b4544524/single\-error/src/Module/User/Consumer.php
+- file: /tmp/sillbeam\-markdown\-examples\-97a002ae/single\-error/src/Module/User/Consumer.php
 - line: 1
 - module: ExampleShopSingleError\\Module\\User\\UserModule
 - project: null
