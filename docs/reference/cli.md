@@ -258,8 +258,12 @@ resource overlap with discovery areas, and discovery option/Composer namespace
 consistency using Core's existing resolver. Service imports must exclude complete
 module/Project areas so they cannot bypass Sillbeam activation. Globs, explicit
 service definitions, imported configuration, environment overlays, PHP/XML
-configuration, custom Kernel methods and Runtime callback bootstraps may require
-manual review. Comments and unused imports do not establish adapter use. A valid
+configuration, custom Kernel hooks and ambiguous Runtime callbacks require
+manual review. Conventional Symfony Runtime callbacks are inspected through their
+returned Application, resolving imports, aliases and fully qualified names.
+Standard Symfony 7.4/8.1 MicroKernelTrait kernels (including a literal private
+`getAllowedEnvs()`) and unmodified `SillbeamKernel` subclasses are supported. Comments and unused imports do not establish adapter
+use. A valid
 route import uses `resource: .` and `type: sillbeam`; options whose consequences
 cannot be established statically require manual review. Discovery consistency
 checks do not analyze descriptors, activation graphs or architecture rules.
@@ -270,14 +274,20 @@ checks do not analyze descriptors, activation graphs or architecture rules.
 | 1 | Checks completed; action required |
 | 2 | At least one check could not be verified, or command could not run |
 
-Exit 2 takes precedence over 1. The [independent acceptance](../development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md)
-records limits beyond individual dynamic files: a standard route `when@dev`
-overlay can make service-import/discovery checks unverified and hide a concrete
-service overlap; the normal Runtime callback can remain unverified after the
-correct adapter import change, and the stock Symfony-8.1 kernel can be classified
-as unknown loading hooks. Correct manual integration therefore need not yield
-exit 0. Do not treat generic manual-review output as proof that imports are safe. Symfony's normal verbosity, ANSI and quiet
-options apply. No repair or output-file option is provided.
+Exit 2 takes precedence over 1. Routing uncertainty is evaluated separately from
+Discovery and service configuration: an unknown routing overlay does not hide a
+proven service-import overlap. If a service check has both a literal conflict and
+independent unresolved details, it emits both `action required` with the affected
+file/next step and `not verified`; the summary counts both results. Dynamic
+container imports can affect Discovery as well as services, so those checks remain
+unverified together. Duplicate service IDs and unknown exclusions require manual
+review rather than a claimed definitive overlap.
+
+The [F01/F02 follow-up](../development/doctor-f01-f02-verification-2026-10-25/README.md) records the corrected Runtime/kernel detection and
+routing/service separation against the original independent acceptance. Standard
+route overlays can still leave **routing itself** unverified; this does not certify
+their effective configuration. Symfony's normal verbosity, ANSI and quiet options
+apply. No repair or output-file option is provided.
 
 With the existing `Sillbeam\Core\Console\Application` adapter, Doctor and its help
 are available before container compilation, including with invalid architecture.

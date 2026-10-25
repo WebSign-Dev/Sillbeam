@@ -85,9 +85,9 @@ final class DoctorTest extends TestCase
         self::assertStringContainsString('No files are written', $output->fetch());
     }
 
-    public function testCommentsAndRuntimeCallbacksDoNotProveAdapter(): void
+    public function testCommentsDoNotProveAdapterInDynamicCallback(): void
     {
-        $this->source->write('bin/console', '<?php /* new \\Sillbeam\\Core\\Console\\Application($kernel); */ return function () { return new \\Sillbeam\\Core\\Console\\Application($kernel); };');
+        $this->source->write('bin/console', '<?php /* new \\Sillbeam\\Core\\Console\\Application($kernel); */ return function () { if (getenv("OTHER")) { return getOtherApplication(); } return new \\Sillbeam\\Core\\Console\\Application($kernel); };');
         self::assertSame(2, $this->runDoctor()->getStatusCode());
     }
 
@@ -200,6 +200,124 @@ PHP);
         $this->source->write('config/services.yaml', "sillbeam:\n    discovery:\n        modules: [{path: '%kernel.project_dir%/src/Custom'}]\nservices:\n    App\\:\n        resource: '../src/'\n        exclude: ['../src/Module/', '../src/Project/']\n");
         $tester = $this->runDoctor();
         self::assertSame(1, $tester->getStatusCode(), $tester->getDisplay());
+    }
+
+    public function testRuntimeBootstrapResolvesReturnedApplicationOnly(): void
+    {
+        $cases = [
+            ['use Sillbeam\\Core\\Console\\Application;', 'return new Application($kernel);', 0],
+            ['use Sillbeam\\Core\\Console\\Application as Cli;', 'return new Cli($kernel);', 0],
+            ['', 'return new \\Sillbeam\\Core\\Console\\Application($kernel);', 0],
+            ['use Symfony\\Bundle\\FrameworkBundle\\Console\\Application;', 'return new Application($kernel);', 1],
+            ['use Symfony\\Bundle\\FrameworkBundle\\Console\\Application as Cli;', 'return new Cli($kernel);', 1],
+            ['', 'return new \\Symfony\\Bundle\\FrameworkBundle\\Console\\Application($kernel);', 1],
+            ['use Sillbeam\\Core\\Console\\Application;', '$app = new Application($kernel); return $app;', 0],
+            ['use Sillbeam\\Core\\Console\\Application;', '$app = new Application($kernel); $app = new \\Symfony\\Bundle\\FrameworkBundle\\Console\\Application($kernel); return $app;', 1],
+            ['use Sillbeam\\Core\\Console\\Application;', '$app = new Application($kernel); $app = getOtherApplication(); return $app;', 2],
+            ['use Sillbeam\\Core\\Console\\Application;', '$unused = new Application($kernel); return getOtherApplication();', 2],
+            ['use Sillbeam\\Core\\Console\\Application;', '$app = new Application($kernel); $unused = new Other($app = new \\Symfony\\Bundle\\FrameworkBundle\\Console\\Application($kernel)); return $app;', 2],
+            ['use Sillbeam\\Core\\Console\\Application;', '$app = new Application($kernel); $unused = new Other($app); return $app;', 2],
+            ['use Sillbeam\\Core\\Console\\Application;', '/* return new Application($kernel); */ return getOtherApplication();', 2],
+            ['use Sillbeam\\Core\\Console\\Application;', 'if ($context["OTHER"]) { return getOtherApplication(); } return new Application($kernel);', 2],
+        ];
+        foreach ($cases as [$imports, $body, $exit]) {
+            $this->source->write('bin/console', "#!/usr/bin/env php\n<?php ".$imports.' if (!is_dir(dirname(__DIR__)."/vendor")) { throw new LogicException("Dependencies missing"); } if (!is_file(dirname(__DIR__)."/vendor/autoload_runtime.php")) { throw new LogicException("Runtime missing"); } require_once dirname(__DIR__)."/vendor/autoload_runtime.php"; return function (array $context) { $kernel = new App\\Kernel($context["APP_ENV"], (bool) $context["APP_DEBUG"]); '.$body.' };');
+            $before = $this->snapshot();
+            $tester = $this->runDoctor();
+            self::assertSame($exit, $tester->getStatusCode(), $tester->getDisplay().$body);
+            self::assertSame($before, $this->snapshot());
+            if (1 === $exit) {
+                self::assertStringContainsString('Console adapter: action required', $tester->getDisplay());
+                self::assertStringContainsString('bin/console', $tester->getDisplay());
+                self::assertStringContainsString('use Sillbeam\\Core\\Console\\Application;', $tester->getDisplay());
+                self::assertStringContainsString('existing bootstrap', $tester->getDisplay());
+                self::assertStringContainsString('and Kernel', $tester->getDisplay());
+            }
+        }
+    }
+
+    public function testRuntimeGuardCannotHideAnotherApplication(): void
+    {
+        $this->source->write('bin/console', '<?php if (getenv("OTHER")) { return new \\Symfony\\Bundle\\FrameworkBundle\\Console\\Application($kernel); } return function (array $context) { return new \\Sillbeam\\Core\\Console\\Application($kernel); };');
+        self::assertSame(2, $this->runDoctor()->getStatusCode());
+    }
+
+    public function testStandardAndCustomKernelConventions(): void
+    {
+        $cases = [
+            ['\\Symfony\\Component\\HttpKernel\\Kernel', 'use \\Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait;', 0],
+            ['\\Symfony\\Component\\HttpKernel\\Kernel', 'use \\Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait; private function getAllowedEnvs(): array { return ["prod", "dev", "test"]; }', 0],
+            ['\\Sillbeam\\Core\\Kernel\\SillbeamKernel', '', 0],
+            ['\\Symfony\\Component\\HttpKernel\\Kernel', 'use \\Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait; private function getAllowedEnvs(): array { return loadEnvs(); }', 2],
+            ['\\Symfony\\Component\\HttpKernel\\Kernel', 'use \\Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait; protected function configureContainer($container): void {}', 2],
+            ['\\Sillbeam\\Core\\Kernel\\SillbeamKernel', 'protected function configureRoutes($routes): void {}', 2],
+            ['\\App\\CustomKernel', '', 2],
+        ];
+        foreach ($cases as [$base, $body, $exit]) {
+            $this->source->write('src/Kernel.php', '<?php namespace App; final class Kernel extends '.$base.' { '.$body.' }');
+            $tester = $this->runDoctor();
+            self::assertSame($exit, $tester->getStatusCode(), $tester->getDisplay().$body);
+            if (2 === $exit) {
+                self::assertStringContainsString('Discovery configuration: not verified', $tester->getDisplay());
+                self::assertStringContainsString('Service imports: not verified', $tester->getDisplay());
+            }
+        }
+    }
+
+    public function testRoutingUncertaintyCannotHideServiceConflict(): void
+    {
+        $this->source->write('config/services.yaml', "services:\n    App\\: {resource: '../src/'}\n");
+        foreach ([
+            "when@test:\n    _errors: {resource: '@FrameworkBundle/Resources/config/routing/errors.php', prefix: /_error}\n",
+            "custom: {resource: external.yaml}\n",
+            "broken: [\n",
+        ] as $routing) {
+            $this->source->write('config/routes/framework.yaml', $routing);
+            $tester = $this->runDoctor();
+            self::assertSame(2, $tester->getStatusCode());
+            self::assertStringContainsString('Route import: not verified', $tester->getDisplay());
+            self::assertStringContainsString('Discovery configuration: verified', $tester->getDisplay());
+            self::assertStringContainsString('Service imports: action required', $tester->getDisplay());
+            self::assertStringContainsString('config/services.yaml: App\\', $tester->getDisplay());
+            self::assertStringContainsString('Exclude complete module', $tester->getDisplay());
+        }
+    }
+
+    public function testServiceConflictAndUnknownServiceDetailsAreBothVisible(): void
+    {
+        $this->source->write('config/services.yaml', "services:\n    App\\: {resource: '../src/'}\n    Other\\: {resource: '%unknown%'}\n");
+        $tester = $this->runDoctor();
+        self::assertSame(2, $tester->getStatusCode());
+        self::assertStringContainsString('Service imports: action required', $tester->getDisplay());
+        self::assertStringContainsString('Service imports: not verified', $tester->getDisplay());
+        self::assertStringContainsString('config/services.yaml: App\\', $tester->getDisplay());
+    }
+
+    public function testContainerImportsMayAlsoChangeDiscovery(): void
+    {
+        $this->source->write('config/services.yaml', "imports: [{resource: dynamic.php}]\nservices:\n    App\\: {resource: '../src/'}\n");
+        $tester = $this->runDoctor();
+        self::assertSame(2, $tester->getStatusCode());
+        self::assertStringContainsString('Discovery configuration: not verified', $tester->getDisplay());
+        self::assertStringContainsString('Service imports: not verified', $tester->getDisplay());
+        self::assertStringNotContainsString('Service imports: action required', $tester->getDisplay());
+    }
+
+    public function testDuplicateServiceIdsRequireOverrideReview(): void
+    {
+        $this->source->write('config/services.yaml', "services:\n    App\\: {resource: '../src/'}\n");
+        $this->source->write('config/services_test.yaml', "services:\n    App\\: {resource: '../src/', exclude: ['../src/Module/', '../src/Project/']}\n");
+        $tester = $this->runDoctor();
+        self::assertSame(2, $tester->getStatusCode());
+        self::assertStringNotContainsString('Service imports: action required', $tester->getDisplay());
+    }
+
+    public function testUnknownExclusionCannotProveServiceConflict(): void
+    {
+        $this->source->write('config/services.yaml', "services:\n    App\\: {resource: '../src/', exclude: '%custom_exclude%'}\n");
+        $tester = $this->runDoctor();
+        self::assertSame(2, $tester->getStatusCode());
+        self::assertStringNotContainsString('Service imports: action required', $tester->getDisplay());
     }
 
     private function runDoctor(): CommandTester

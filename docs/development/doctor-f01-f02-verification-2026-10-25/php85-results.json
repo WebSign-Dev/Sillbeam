@@ -1,0 +1,426 @@
+[
+  {
+    "consumer": "sf74",
+    "label": "missing-adapter",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 2,
+    "exit": 2,
+    "passed": true,
+    "changed_files": [],
+    "readonly": false
+  },
+  {
+    "consumer": "sf74",
+    "label": "stock-runtime-correct-adapter",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 2,
+    "exit": 2,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf74",
+    "label": "F02-overlay-overlap",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 2,
+    "exit": 2,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf74",
+    "label": "F02-without-overlay",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 1,
+    "exit": 1,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf74",
+    "label": "literal-success",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf74",
+    "label": "unknown-services",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 2,
+    "exit": 2,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf74",
+    "label": "unknown-discovery",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 2,
+    "exit": 2,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf74",
+    "label": "architecture-invalid",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:architecture",
+      "--no-ansi"
+    ],
+    "expected_exit": 1,
+    "exit": 1,
+    "passed": true,
+    "changed_files": [],
+    "readonly": false
+  },
+  {
+    "consumer": "sf74",
+    "label": "doctor-invalid-architecture",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf74",
+    "label": "doctor-help",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--help",
+      "--no-ansi"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf74",
+    "label": "doctor-quiet",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--quiet",
+      "--no-ansi"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf74",
+    "label": "report-invalid",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:report",
+      "--no-ansi"
+    ],
+    "expected_exit": 1,
+    "exit": 1,
+    "passed": true,
+    "changed_files": [],
+    "readonly": false
+  },
+  {
+    "consumer": "sf74",
+    "label": "architecture-repaired",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:architecture",
+      "--no-ansi"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "changed_files": [],
+    "readonly": false
+  },
+  {
+    "consumer": "sf74",
+    "label": "doctor-repaired",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf81",
+    "label": "missing-adapter",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 2,
+    "exit": 2,
+    "passed": true,
+    "changed_files": [],
+    "readonly": false
+  },
+  {
+    "consumer": "sf81",
+    "label": "stock-runtime-correct-adapter",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 2,
+    "exit": 2,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf81",
+    "label": "F02-overlay-overlap",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 2,
+    "exit": 2,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf81",
+    "label": "F02-without-overlay",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 1,
+    "exit": 1,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf81",
+    "label": "literal-success",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf81",
+    "label": "unknown-services",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 2,
+    "exit": 2,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf81",
+    "label": "unknown-discovery",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 2,
+    "exit": 2,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf81",
+    "label": "architecture-invalid",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:architecture",
+      "--no-ansi"
+    ],
+    "expected_exit": 1,
+    "exit": 1,
+    "passed": true,
+    "changed_files": [],
+    "readonly": false
+  },
+  {
+    "consumer": "sf81",
+    "label": "doctor-invalid-architecture",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf81",
+    "label": "doctor-help",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--help",
+      "--no-ansi"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf81",
+    "label": "doctor-quiet",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--quiet",
+      "--no-ansi"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  },
+  {
+    "consumer": "sf81",
+    "label": "report-invalid",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:report",
+      "--no-ansi"
+    ],
+    "expected_exit": 1,
+    "exit": 1,
+    "passed": true,
+    "changed_files": [],
+    "readonly": false
+  },
+  {
+    "consumer": "sf81",
+    "label": "architecture-repaired",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:architecture",
+      "--no-ansi"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "changed_files": [],
+    "readonly": false
+  },
+  {
+    "consumer": "sf81",
+    "label": "doctor-repaired",
+    "command": [
+      "php",
+      "bin/console",
+      "sillbeam:doctor",
+      "--no-ansi"
+    ],
+    "expected_exit": 0,
+    "exit": 0,
+    "passed": true,
+    "changed_files": [],
+    "readonly": true
+  }
+]

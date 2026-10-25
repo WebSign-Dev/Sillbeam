@@ -1,0 +1,27 @@
+
+  SILLBEAM CORE  / Architecture
+  ────────────────────────────────────────────────────────────────────────────
+  ✕ Architecture violations found
+  1 finding · 1 diagnosis · 1 modules · 0 projects
+
+  ────────────────────────────────────────────────────────────────────────────
+  01 Unknown module dependency
+  1 finding · Dependency declaration
+
+    Broken → Missing\AbsentModule
+    Broken/BrokenModule.php
+
+    WHAT IS WRONG
+      A declared module dependency was not discovered. Module: Broken. Target:
+      Missing\AbsentModule. Sillbeam needs the module descriptor to check this
+      dependency and activate the module.
+
+    POSSIBLE NEXT STEPS
+      1. Check Missing\AbsentModule in Broken/BrokenModule.php. Make sure the
+      descriptor is in a configured discovery directory and is not excluded.
+      Correct the declaration or restore the descriptor, then rerun
+      architecture analysis.
+
+  ────────────────────────────────────────────────────────────────────────────
+  Technical context: -v · No source files were changed.
+

@@ -1,0 +1,15 @@
+
+  SILLBEAM CORE  / Installation
+  ────────────────────────────────────────────────────────────────────────────
+  5 verified · 1 action required · 0 not verified
+  Static file evidence only; effective runtime configuration is not certified.
+  ✓ Bundle registration: verified
+  ✓ Console adapter: verified
+  ✓ Configuration loading convention: verified
+  ✓ Route import: verified
+  ✓ Discovery configuration: verified
+  ✕ Service imports: action required
+     config/services.yaml: App\ declares imports overlapping discovery areas
+     and can bypass activation. Exclude complete module and Project discovery
+     areas from Symfony resource imports; let Sillbeam register their
+     services.

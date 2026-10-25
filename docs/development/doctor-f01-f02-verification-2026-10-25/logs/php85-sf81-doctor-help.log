@@ -1,0 +1,20 @@
+Description:
+  Check static Symfony installation evidence without changing files.
+
+Usage:
+  sillbeam:doctor
+
+Options:
+  -h, --help            Display help for the given command. When no command is given display help for the list command
+      --silent          Do not output any message
+  -q, --quiet           Only errors are displayed. All other output is suppressed
+  -V, --version         Display this application version
+      --ansi|--no-ansi  Force (or disable --no-ansi) ANSI output
+  -n, --no-interaction  Do not ask any interactive question
+  -e, --env=ENV         The Environment name. [default: "dev"]
+      --no-debug        Switch off debug mode.
+      --profile         Enables profiling (requires debug).
+  -v|vv|vvv, --verbose  Increase the verbosity of messages: 1 for normal output, 2 for more verbose output and 3 for debug
+
+Help:
+  Reads installation files only; never boots the Kernel or executes application configuration. Checks bundle declarations, route imports, Console adapter, service import overlap and discovery consistency. Unknown PHP/XML, imports, custom Kernel hooks and dynamic settings require manual verification. Verified means static file evidence, not effective runtime configuration. Does not replace sillbeam:architecture, PHPStan or Symfony configuration checks. Exit 0: all static checks verified; 1: action required; 2: incomplete/unexecutable (takes precedence). No files are written.

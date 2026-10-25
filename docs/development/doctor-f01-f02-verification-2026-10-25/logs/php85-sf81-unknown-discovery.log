@@ -1,0 +1,15 @@
+
+  SILLBEAM CORE  / Installation
+  ────────────────────────────────────────────────────────────────────────────
+  4 verified · 0 action required · 2 not verified
+  Static file evidence only; effective runtime configuration is not certified.
+  ✓ Bundle registration: verified
+  ✓ Console adapter: verified
+  ✓ Configuration loading convention: verified
+  ✓ Route import: verified
+  ! Discovery configuration: not verified
+     Dynamic files, imports or environment overlays may change discovery.
+     Manually check discovery roots, namespaces and Composer mappings.
+  ! Service imports: not verified
+     Manually check unresolved service resources, excludes, imports and
+     overrides against module/Project areas.

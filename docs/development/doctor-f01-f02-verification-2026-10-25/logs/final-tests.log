@@ -1,0 +1,20 @@
+PHPUnit 12.5.35 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.4
+Configuration: /home/oeffe/PhpstormProjects/websign/Sillbeam/phpunit.xml.dist
+
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "GET http://localhost/archived"" at RouterListener.php line 156
+....[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "GET https://public.hybrid.test/backoffice"" at RouterListener.php line 156
+...........................................................  63 / 550 ( 11%)
+............................................................... 126 / 550 ( 22%)
+............................................................... 189 / 550 ( 34%)
+............................................................... 252 / 550 ( 45%)
+............................................................... 315 / 550 ( 57%)
+............................................................... 378 / 550 ( 68%)
+............................................................... 441 / 550 ( 80%)
+............................................................... 504 / 550 ( 91%)
+..............................................                  550 / 550 (100%)
+
+Time: 00:38.236, Memory: 82.50 MB
+
+[30;42mOK (550 tests, 6352 assertions)[0m

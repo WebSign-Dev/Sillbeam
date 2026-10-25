@@ -1,0 +1,307 @@
+PHPUnit 12.5.35 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.26
+Configuration: /tmp/sillbeam-doctor-recheck-20261025/matrix-sf81/phpunit.xml.dist
+
+[info] Matched route "inventory_index".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "GET http://localhost/archived"" at RouterListener.php line 156
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::logKernelException".
+[debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelException".
+[debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onKernelException".
+[debug] Listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onKernelException" stopped propagation of the event "kernel.exception".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.[info] Matched route "symfony_home".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.[info] Matched route "portal.home".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.[info] Matched route "portal.profile".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[info] Matched route "portal.dashboard".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.[info] Matched route "hybrid_health".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[info] Matched route "public.common".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "GET https://public.hybrid.test/backoffice"" at RouterListener.php line 156
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::logKernelException".
+[debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelException".
+[debug] Notified event "kernel.exception" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onKernelException".
+[debug] Listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onKernelException" stopped propagation of the event "kernel.exception".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[info] Matched route "admin.backoffice".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+...........................................................  63 / 550 ( 11%)
+.........[info] Connecting with parameters [array]
+[debug] Executing statement: CREATE TABLE Invoice (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name VARCHAR(120) NOT NULL)
+[debug] Executing statement: CREATE TABLE LegacyWidget (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name VARCHAR(120) NOT NULL)
+[debug] Beginning transaction
+[debug] Executing statement: INSERT INTO Invoice (name) VALUES (?) (parameters: [array], types: [array])
+[debug] Executing statement: INSERT INTO LegacyWidget (name) VALUES (?) (parameters: [array], types: [array])
+[debug] Committing transaction
+[debug] Executing statement: SELECT t0.id AS id_1, t0.name AS name_2 FROM Invoice t0 WHERE t0.id = ? (parameters: [array], types: [array])
+[debug] Executing statement: SELECT t0.id AS id_1, t0.name AS name_2 FROM LegacyWidget t0 WHERE t0.id = ? (parameters: [array], types: [array])
+[info] Disconnecting
+......[info] Matched route "hello".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.[info] Matched route "health".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[info] Matched route "health".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+............................................... 126 / 550 ( 22%)
+..................................[info] Matched route "shop.runtime0".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[info] Matched route "shop.runtime1".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[debug] Notified event "kernel.controller" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::beforeController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\ControllerAttributesListener::afterController".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+.[info] Matched route "shop.runtime0".
+[info] Matched route "shop.runtime1".
+............................ 189 / 550 ( 34%)
+........................[debug] Warning: file_get_contents(/sillbeam-nonexistent-source.php): Failed to open stream: No such file or directory
+....................................... 252 / 550 ( 45%)
+............................................................... 315 / 550 ( 57%)
+............................................................... 378 / 550 ( 68%)
+............................................................... 441 / 550 ( 80%)
+............................................................... 504 / 550 ( 91%)
+.............................[debug] Warning: rename(/tmp/sillbeam-source-4f779bc15b43/.sillbeam-report-acjshssopia4eIBWrjg,/tmp/sillbeam-source-4f779bc15b43/existing.md): Is a directory
+.[debug] Notice: tempnam(): file created in the system's temporary directory
+...[debug] Warning: rmdir(/tmp/sillbeam-doctor-recheck-20261025/matrix-sf81/docs/superpowers): Directory not empty
+.............                  550 / 550 (100%)
+
+Time: 00:37.997, Memory: 84.50 MB
+
+[30;42mOK (550 tests, 6352 assertions)[0m

@@ -36,10 +36,10 @@ The constraint allows compatible 0.2 updates. Use `composer require websign-dev/
 Use `php bin/console sillbeam:doctor` to inspect static installation evidence.
 `verified` means file evidence, not certification of effective runtime behavior;
 dynamic or ambiguous configuration remains `not verified` and needs manual review.
-The [independent acceptance](../development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md)
-records standard Runtime/route-overlay cases that can remain unverified and mask
-concrete service-import advice. A nonzero Doctor result is not automatically an
-architecture violation. Use the [Console adapter](../reference/cli.md#enable-reporting-before-container-compilation)
+Conventional Symfony Runtime callbacks and standard 7.4/8.1 kernels are supported.
+Unknown route overlays remain unverified without hiding independently proven
+service-import conflicts; see the [F01/F02 follow-up](../development/doctor-f01-f02-verification-2026-10-25/README.md).
+A nonzero Doctor result is not automatically an architecture violation. Use the [Console adapter](../reference/cli.md#enable-reporting-before-container-compilation)
 for inspection without kernel boot; normal Symfony boot can write cache files
 before Doctor starts. The recipe does not change that bootstrap or service imports.
 

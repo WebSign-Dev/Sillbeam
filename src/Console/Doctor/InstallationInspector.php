@@ -56,30 +56,26 @@ final class InstallationInspector
                     } elseif ('Symfony\\Bundle\\FrameworkBundle\\Console\\Application' === $adapter) {
                         $add($label, 'action required', 'In bin/console use Sillbeam\\Core\\Console\\Application; to keep doctor available before container compilation. Preserve the existing bootstrap and Kernel.');
                     } else {
-                        throw new \RuntimeException('bin/console uses a dynamic or Runtime callback bootstrap. Manually verify use Sillbeam\\Core\\Console\\Application; and its construction.');
+                        throw new \RuntimeException('bin/console uses an ambiguous or unsupported bootstrap. Manually verify use Sillbeam\\Core\\Console\\Application; and its construction.');
                     }
                 }
             } catch (\Throwable $error) {
                 $add($label, 'not verified', $error->getMessage().' Review this file manually.');
             }
         }
+        $kernelKnown = false;
         try {
             $nodes = $this->php($kernelFile ?? $directory.'/src/Kernel.php');
-            $classes = (new NodeFinder())->findInstanceOf($nodes, Node\Stmt\Class_::class);
-            $class = $classes[0] ?? null;
-            if (1 !== \count($classes) || null === $class?->extends || 'Symfony\\Component\\HttpKernel\\Kernel' !== $class->extends->toString() || [] !== $class->getMethods()) {
+            if (!$this->standardKernel($nodes)) {
                 throw new \RuntimeException('Custom or unavailable Kernel loading hooks.');
             }
-            $traits = (new NodeFinder())->findInstanceOf($class->stmts, Node\Stmt\TraitUse::class);
-            if (1 !== \count($traits) || 1 !== \count($traits[0]->traits) || 'Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait' !== $traits[0]->traits[0]->toString() || [] !== $traits[0]->adaptations) {
-                throw new \RuntimeException('Unknown Kernel configuration loading.');
-            }
+            $kernelKnown = true;
             $add('Configuration loading convention', 'verified');
         } catch (\Throwable $error) {
             $add('Configuration loading convention', 'not verified', $error->getMessage().' Manually verify which bundle, route, service and discovery files the selected Kernel loads.');
         }
         $documents = [];
-        $unknown = false;
+        $unknown = ['route' => !$kernelKnown, 'discovery' => !$kernelKnown, 'service' => !$kernelKnown];
         try {
             $configDir = $directory.'/config';
             if (!is_dir($configDir)) {
@@ -89,7 +85,11 @@ final class InstallationInspector
                 $path = $file->getPathname();
                 $relative = substr($path, \strlen($configDir) + 1);
                 if ($file->isLink() && $file->isDir() && preg_match('~^(?:packages|routes)(?:/'.preg_quote($environment, '~').')?$~D', $relative)) {
-                    $unknown = true;
+                    if (str_starts_with($relative, 'routes')) {
+                        $unknown['route'] = true;
+                    } else {
+                        $unknown['discovery'] = $unknown['service'] = true;
+                    }
                 }
                 $serviceExtension = is_file($configDir.'/services.yaml') ? 'yaml' : 'php';
                 $routeExtension = is_file($configDir.'/routes.yaml') ? 'yaml' : 'php';
@@ -98,44 +98,50 @@ final class InstallationInspector
                 if (!$selected) {
                     continue;
                 }
+                $routing = str_starts_with($relative, 'routes/') || str_starts_with($relative, 'routes.');
                 if ($file->isLink() || !$file->isFile()) {
-                    $unknown = true;
+                    $this->markUnknown($unknown, $routing);
                     continue;
                 }
                 if (!\in_array($file->getExtension(), ['yaml', 'yml'], true)) {
-                    $unknown = true;
+                    $this->markUnknown($unknown, $routing);
                     continue;
                 }
-                $data = Yaml::parse($this->read($path));
-                if (null === $data) {
-                    $data = [];
-                }
-                if (!\is_array($data)) {
-                    throw new \RuntimeException('Expected YAML mapping in '.$relative);
-                }
-                foreach ($data as $key => $overlay) {
-                    if (\is_string($key) && str_starts_with($key, 'when@')) {
-                        unset($data[$key]);
-                        if ('when@'.$environment === $key) {
-                            // Avoid guessing Symfony merge/override order.
-                            $unknown = true;
+                try {
+                    $data = Yaml::parse($this->read($path));
+                    if (null === $data) {
+                        $data = [];
+                    }
+                    if (!\is_array($data)) {
+                        throw new \RuntimeException('Expected YAML mapping in '.$relative);
+                    }
+                    foreach ($data as $key => $overlay) {
+                        if (\is_string($key) && str_starts_with($key, 'when@')) {
+                            unset($data[$key]);
+                            if ('when@'.$environment === $key) {
+                                // Avoid guessing Symfony merge/override order.
+                                $this->markUnknown($unknown, $routing);
+                            }
                         }
                     }
+                    if (isset($data['services']) && !\is_array($data['services'])) {
+                        throw new \RuntimeException('Invalid services mapping in '.$relative);
+                    }
+                    if (isset($data['imports'])) {
+                        $this->markUnknown($unknown, $routing);
+                    }
+                    $documents[$path] = $data;
+                } catch (\Throwable $error) {
+                    $this->markUnknown($unknown, $routing);
+                    $add('Configuration files', 'not verified', $relative.': '.$error->getMessage().' Review configuration manually.');
                 }
-                if (isset($data['services']) && !\is_array($data['services'])) {
-                    throw new \RuntimeException('Invalid services mapping in '.$relative);
-                }
-                if (isset($data['imports'])) {
-                    $unknown = true;
-                }
-                $documents[$path] = $data;
             }
         } catch (\Throwable $error) {
-            $unknown = true;
+            $unknown = ['route' => true, 'discovery' => true, 'service' => true];
             $add('Configuration files', 'not verified', $error->getMessage().' Review configuration manually.');
         }
         $route = false;
-        $routeUnknown = $unknown;
+        $routeUnknown = $unknown['route'];
         $routeNames = [];
         foreach ($documents as $path => $data) {
             if (!preg_match('~/config/routes(?:/|\.ya?ml$)~', $path)) {
@@ -163,7 +169,7 @@ final class InstallationInspector
         $add('Route import', $routeUnknown ? 'not verified' : ($route ? 'verified' : 'action required'), $routeUnknown ? 'Review route imports and options manually; dynamic/imported configuration is unresolved.' : ($route ? '' : 'Add a Sillbeam import in config/routes.yaml: resource: . and type: sillbeam.'));
         $options = null;
         try {
-            if ($unknown) {
+            if ($unknown['discovery']) {
                 throw new \RuntimeException('Dynamic files, imports or environment overlays may change discovery.');
             }
             $configs = [];
@@ -187,15 +193,26 @@ final class InstallationInspector
         } catch (\Throwable $error) {
             $add('Discovery configuration', 'not verified', $error->getMessage().' Manually check discovery roots, namespaces and Composer mappings.');
         }
-        $serviceUnknown = $unknown || null === $options;
+        $serviceUnknown = $unknown['service'] || null === $options;
         $overlaps = [];
         $serviceIds = [];
         foreach ($documents as $path => $data) {
+            if (preg_match('~/config/routes(?:/|\.yaml$)~', $path)) {
+                continue;
+            }
+            foreach (array_keys($data['services'] ?? []) as $id) {
+                $serviceIds[$id] = ($serviceIds[$id] ?? 0) + 1;
+            }
+        }
+        foreach ($documents as $path => $data) {
+            if (preg_match('~/config/routes(?:/|\.yaml$)~', $path)) {
+                continue;
+            }
             foreach ($data['services'] ?? [] as $id => $service) {
-                if (isset($serviceIds[$id]) && !str_starts_with((string) $id, '_')) {
+                if ($serviceIds[$id] > 1 && !str_starts_with((string) $id, '_')) {
                     $serviceUnknown = true;
+                    continue;
                 }
-                $serviceIds[$id] = true;
                 if (!\is_array($service) || !isset($service['resource'])) {
                     if (!str_starts_with((string) $id, '_')) {
                         $serviceUnknown = true;
@@ -207,26 +224,40 @@ final class InstallationInspector
                     $serviceUnknown = true;
                     continue;
                 }
+                $excludes = [];
+                $excludeUnknown = false;
+                foreach ((array) ($service['exclude'] ?? []) as $exclude) {
+                    $excludePath = $this->directory($exclude, \dirname($path), $directory);
+                    if (null === $excludePath) {
+                        $excludeUnknown = $serviceUnknown = true;
+                    } else {
+                        $excludes[] = $excludePath;
+                    }
+                }
                 foreach (null === $options ? [] : [...$options->moduleRoots, ...$options->projectRoots] as $root) {
                     if (!str_starts_with($root->path.'/', rtrim($resource, '/').'/') && !str_starts_with(rtrim($resource, '/').'/', $root->path.'/')) {
                         continue;
                     }
                     $excluded = false;
-                    foreach ((array) ($service['exclude'] ?? []) as $exclude) {
-                        $excludePath = $this->directory($exclude, \dirname($path), $directory);
-                        if (null === $excludePath) {
-                            $serviceUnknown = true;
-                        } elseif (str_starts_with($root->path.'/', rtrim($excludePath, '/').'/') || str_starts_with(rtrim($resource, '/').'/', rtrim($excludePath, '/').'/')) {
+                    foreach ($excludes as $excludePath) {
+                        if (str_starts_with($root->path.'/', rtrim($excludePath, '/').'/') || str_starts_with(rtrim($resource, '/').'/', rtrim($excludePath, '/').'/')) {
                             $excluded = true;
                         }
                     }
-                    if (!$excluded) {
+                    if (!$excluded && !$excludeUnknown) {
                         $overlaps[] = substr($path, \strlen($directory) + 1).': '.$id;
                     }
                 }
             }
         }
-        $add('Service imports', $serviceUnknown ? 'not verified' : ([] === $overlaps ? 'verified' : 'action required'), [] !== $overlaps ? implode(', ', array_unique($overlaps)).($serviceUnknown ? ' may bypass activation; verify imports and overrides manually. Exclude' : ' can bypass activation. Exclude').' complete module and Project discovery areas from Symfony resource imports; let Sillbeam register their services.' : ($serviceUnknown ? 'Manually check service resources, excludes and explicit definitions against module/Project areas.' : ''));
+        if ([] !== $overlaps) {
+            $add('Service imports', 'action required', implode(', ', array_unique($overlaps)).' declares imports overlapping discovery areas and can bypass activation. Exclude complete module and Project discovery areas from Symfony resource imports; let Sillbeam register their services.'.($serviceUnknown ? ' Additional unresolved configuration may override these declarations; verify effective imports manually.' : ''));
+        }
+        if ($serviceUnknown) {
+            $add('Service imports', 'not verified', 'Manually check unresolved service resources, excludes, imports and overrides against module/Project areas.');
+        } elseif ([] === $overlaps) {
+            $add('Service imports', 'verified');
+        }
 
         return $checks;
     }
@@ -234,24 +265,124 @@ final class InstallationInspector
     /** @param array<Node> $nodes */
     private function consoleAdapter(array $nodes): ?string
     {
-        // Accept the conventional final assignment/run pair only. No data-flow guessing.
-        $run = array_pop($nodes);
+        $last = array_pop($nodes);
+        if ($last instanceof Node\Stmt\Return_ && $last->expr instanceof Node\Expr\Closure && !$last->expr->byRef && [] === $last->expr->uses) {
+            foreach ($nodes as $node) {
+                if (!$this->bootstrapStatement($node)) {
+                    return null;
+                }
+            }
+            $body = $last->expr->stmts;
+            $return = array_pop($body);
+            if (!$return instanceof Node\Stmt\Return_) {
+                return null;
+            }
+            $assignment = null;
+            foreach ($body as $node) {
+                if ($node instanceof Node\Stmt\Nop) {
+                    continue;
+                }
+                if (!$node instanceof Node\Stmt\Expression || !$node->expr instanceof Node\Expr\Assign || !$node->expr->var instanceof Node\Expr\Variable || !\is_string($node->expr->var->name) || !$node->expr->expr instanceof Node\Expr\New_ || !$node->expr->expr->class instanceof Node\Name) {
+                    return null;
+                }
+                $assignment = $node->expr;
+            }
+            $application = $return->expr;
+            if ($application instanceof Node\Expr\Variable && \is_string($application->name)) {
+                // Only a final assignment proves the returned variable: later
+                // constructors could overwrite it, including via reference arguments.
+                $application = null !== $assignment && $assignment->var instanceof Node\Expr\Variable && $application->name === $assignment->var->name ? $assignment->expr : null;
+            }
+
+            return $application instanceof Node\Expr\New_ && $application->class instanceof Node\Name ? $application->class->toString() : null;
+        }
+        // The conventional final assignment/run pair remains supported.
         $assignment = array_pop($nodes);
-        if (!$run instanceof Node\Stmt\Expression || !$run->expr instanceof Node\Expr\MethodCall || !$run->expr->name instanceof Node\Identifier || 'run' !== $run->expr->name->toString() || !$run->expr->var instanceof Node\Expr\Variable
+        if (!$last instanceof Node\Stmt\Expression || !$last->expr instanceof Node\Expr\MethodCall || !$last->expr->name instanceof Node\Identifier || 'run' !== $last->expr->name->toString() || !$last->expr->var instanceof Node\Expr\Variable
             || !$assignment instanceof Node\Stmt\Expression || !$assignment->expr instanceof Node\Expr\Assign || !$assignment->expr->var instanceof Node\Expr\Variable || !$assignment->expr->expr instanceof Node\Expr\New_ || !$assignment->expr->expr->class instanceof Node\Name
-            || !\is_string($run->expr->var->name) || $run->expr->var->name !== $assignment->expr->var->name) {
+            || !\is_string($last->expr->var->name) || $last->expr->var->name !== $assignment->expr->var->name) {
             return null;
         }
         foreach ($nodes as $node) {
-            if ($node instanceof Node\Stmt\Use_ || $node instanceof Node\Stmt\GroupUse || $node instanceof Node\Stmt\Declare_ || $node instanceof Node\Stmt\Nop) {
-                continue;
-            }
-            if (!$node instanceof Node\Stmt\Expression || !($node->expr instanceof Node\Expr\Assign || $node->expr instanceof Node\Expr\Include_)) {
+            if (!$this->bootstrapStatement($node) && !($node instanceof Node\Stmt\Expression && $node->expr instanceof Node\Expr\Assign)) {
                 return null;
             }
         }
 
         return $assignment->expr->expr->class->toString();
+    }
+
+    private function bootstrapStatement(Node $node): bool
+    {
+        if ($node instanceof Node\Stmt\If_ && null === $node->else && [] === $node->elseifs && 1 === \count($node->stmts)
+            && $node->stmts[0] instanceof Node\Stmt\Expression && $node->stmts[0]->expr instanceof Node\Expr\Throw_
+            && $node->stmts[0]->expr->expr instanceof Node\Expr\New_ && $node->stmts[0]->expr->expr->class instanceof Node\Name
+            && 'LogicException' === $node->stmts[0]->expr->expr->class->toString()
+            && $node->cond instanceof Node\Expr\BooleanNot && $node->cond->expr instanceof Node\Expr\FuncCall
+            && $node->cond->expr->name instanceof Node\Name && \in_array($node->cond->expr->name->toString(), ['is_dir', 'is_file'], true)
+            && 1 === \count($node->cond->expr->args)) {
+            $argument = $node->cond->expr->args[0];
+            if (!$argument instanceof Node\Arg || !$argument->value instanceof Node\Expr\BinaryOp\Concat) {
+                return false;
+            }
+            $path = $argument->value;
+
+            return $path->left instanceof Node\Expr\FuncCall && $path->left->name instanceof Node\Name && 'dirname' === $path->left->name->toString()
+                && 1 === \count($path->left->args) && $path->left->args[0] instanceof Node\Arg && $path->left->args[0]->value instanceof Node\Scalar\MagicConst\Dir
+                && $path->right instanceof Node\Scalar\String_ && \in_array($path->right->value, ['/vendor', '/vendor/autoload_runtime.php'], true);
+        }
+
+        return ($node instanceof Node\Stmt\InlineHTML && 0 === $node->getStartFilePos() && 1 === preg_match('/^#![^\r\n]+\r?\n$/D', $node->value))
+            || $node instanceof Node\Stmt\Use_ || $node instanceof Node\Stmt\GroupUse || $node instanceof Node\Stmt\Declare_ || $node instanceof Node\Stmt\Nop
+            || ($node instanceof Node\Stmt\Expression && $node->expr instanceof Node\Expr\Include_);
+    }
+
+    /** @param array<Node> $nodes */
+    private function standardKernel(array $nodes): bool
+    {
+        $classes = (new NodeFinder())->findInstanceOf($nodes, Node\Stmt\Class_::class);
+        if (1 !== \count($classes)) {
+            return false;
+        }
+        $class = $classes[0];
+        $base = $class->extends;
+        if (null === $base) {
+            return false;
+        }
+        $sillbeam = 'Sillbeam\\Core\\Kernel\\SillbeamKernel' === $base->toString();
+        if (!$sillbeam && 'Symfony\\Component\\HttpKernel\\Kernel' !== $base->toString()) {
+            return false;
+        }
+        $traits = 0;
+        foreach ($class->stmts as $statement) {
+            if ($statement instanceof Node\Stmt\TraitUse && !$sillbeam && 1 === \count($statement->traits) && 'Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait' === $statement->traits[0]->toString() && [] === $statement->adaptations) {
+                ++$traits;
+                continue;
+            }
+            if ($statement instanceof Node\Stmt\ClassMethod && 'getAllowedEnvs' === $statement->name->toString() && $statement->isPrivate() && !$statement->isStatic() && !$statement->byRef && [] === $statement->params && $statement->returnType instanceof Node\Identifier && 'array' === $statement->returnType->toString() && 1 === \count($statement->stmts ?? []) && $statement->stmts[0] instanceof Node\Stmt\Return_ && $statement->stmts[0]->expr instanceof Node\Expr\Array_) {
+                foreach ($statement->stmts[0]->expr->items as $item) {
+                    if (null === $item || null !== $item->key || $item->unpack || $item->byRef || !$item->value instanceof Node\Scalar\String_) {
+                        return false;
+                    }
+                }
+                continue;
+            }
+
+            return false;
+        }
+
+        return $sillbeam || 1 === $traits;
+    }
+
+    /** @param array{route: bool, discovery: bool, service: bool} $unknown */
+    private function markUnknown(array &$unknown, bool $routing): void
+    {
+        if ($routing) {
+            $unknown['route'] = true;
+        } else {
+            // Container imports may contain both service and discovery declarations.
+            $unknown['discovery'] = $unknown['service'] = true;
+        }
     }
 
     private function read(string $path): string

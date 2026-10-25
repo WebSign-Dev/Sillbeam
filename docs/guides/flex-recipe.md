@@ -18,10 +18,11 @@ Review broad service imports as described above, then run
 `php bin/console sillbeam:make:module Billing` and
 `php bin/console sillbeam:architecture`.
 
-Doctor is static and read-only in its implementation. Standard Runtime callbacks
-can remain `not verified` after a correct adapter import change, and an unrelated
-route overlay can prevent concrete service-import advice. Manual review is still
-required; see the [independent acceptance findings](../development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md).
+Doctor is static and read-only in its implementation. Conventional Runtime
+callbacks and standard Symfony 7.4/8.1 kernels are supported; unknown route overlays
+no longer hide independently proven service-import conflicts. Dynamic or ambiguous
+configuration still needs manual review; see the
+[F01/F02 follow-up](../development/doctor-f01-f02-verification-2026-10-25/README.md).
 The regular Symfony entry point boots first and can write its ordinary cache;
 select the existing Core Console adapter for inspection without that boot.
 

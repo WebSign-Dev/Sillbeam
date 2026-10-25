@@ -1,0 +1,70 @@
+{
+  "source_base": "07be0c734886aa87ec06af2b0af83ae1af7cce0e",
+  "php85": "8.5.4",
+  "consumer_root": "/tmp/sillbeam-doctor-final-consumers-20261025",
+  "matrix": {
+    "matrix-sf74": {
+      "symfony/cache": "v7.4.21",
+      "symfony/cache-contracts": "v3.7.1",
+      "symfony/config": "v7.4.17",
+      "symfony/console": "v7.4.21",
+      "symfony/dependency-injection": "v7.4.21",
+      "symfony/deprecation-contracts": "v3.7.1",
+      "symfony/error-handler": "v7.4.20",
+      "symfony/event-dispatcher": "v7.4.17",
+      "symfony/event-dispatcher-contracts": "v3.7.1",
+      "symfony/filesystem": "v7.4.21",
+      "symfony/finder": "v7.4.20",
+      "symfony/framework-bundle": "v7.4.21",
+      "symfony/http-foundation": "v7.4.21",
+      "symfony/http-kernel": "v7.4.21",
+      "symfony/polyfill-ctype": "v1.37.0",
+      "symfony/polyfill-intl-grapheme": "v1.43.0",
+      "symfony/polyfill-intl-normalizer": "v1.43.0",
+      "symfony/polyfill-mbstring": "v1.43.0",
+      "symfony/polyfill-php85": "v1.43.0",
+      "symfony/routing": "v7.4.21",
+      "symfony/service-contracts": "v3.7.3",
+      "symfony/string": "v7.4.21",
+      "symfony/var-dumper": "v7.4.21",
+      "symfony/var-exporter": "v7.4.18",
+      "symfony/yaml": "v7.4.21"
+    },
+    "matrix-sf81": {
+      "symfony/cache": "v8.1.6",
+      "symfony/cache-contracts": "v3.7.1",
+      "symfony/config": "v8.1.5",
+      "symfony/console": "v8.1.6",
+      "symfony/dependency-injection": "v8.1.5",
+      "symfony/deprecation-contracts": "v3.7.1",
+      "symfony/error-handler": "v8.1.5",
+      "symfony/event-dispatcher": "v8.1.5",
+      "symfony/event-dispatcher-contracts": "v3.7.1",
+      "symfony/filesystem": "v8.1.6",
+      "symfony/finder": "v8.1.5",
+      "symfony/framework-bundle": "v8.1.6",
+      "symfony/http-foundation": "v8.1.9",
+      "symfony/http-kernel": "v8.1.6",
+      "symfony/polyfill-ctype": "v1.37.0",
+      "symfony/polyfill-deepclone": "v1.42.0",
+      "symfony/polyfill-intl-grapheme": "v1.41.0",
+      "symfony/polyfill-intl-normalizer": "v1.42.0",
+      "symfony/polyfill-mbstring": "v1.38.2",
+      "symfony/polyfill-php85": "v1.41.0",
+      "symfony/routing": "v8.1.6",
+      "symfony/service-contracts": "v3.7.3",
+      "symfony/string": "v8.1.2",
+      "symfony/var-dumper": "v8.1.6",
+      "symfony/var-exporter": "v8.1.6",
+      "symfony/yaml": "v8.1.6"
+    }
+  },
+  "source_sha256": {
+    "src/Console/Doctor/InstallationInspector.php": "e2fec2b9df6109b1a5f8826f9807fa28124aad88c73adbcb53008a61c7dc8a48",
+    "tests/Integration/DoctorTest.php": "9001d1d1ac485bc55bde07d3226e7f75dbb84f1abdea39aab4a6107b8a14eb90"
+  },
+  "consumer_inspector_sha256": {
+    "sf74": "e2fec2b9df6109b1a5f8826f9807fa28124aad88c73adbcb53008a61c7dc8a48",
+    "sf81": "e2fec2b9df6109b1a5f8826f9807fa28124aad88c73adbcb53008a61c7dc8a48"
+  }
+}

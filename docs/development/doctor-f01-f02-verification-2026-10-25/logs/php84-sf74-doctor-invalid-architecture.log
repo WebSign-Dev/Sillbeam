@@ -1,0 +1,11 @@
+
+  SILLBEAM CORE  / Installation
+  ────────────────────────────────────────────────────────────────────────────
+  6 verified · 0 action required · 0 not verified
+  Static file evidence only; effective runtime configuration is not certified.
+  ✓ Bundle registration: verified
+  ✓ Console adapter: verified
+  ✓ Configuration loading convention: verified
+  ✓ Route import: verified
+  ✓ Discovery configuration: verified
+  ✓ Service imports: verified

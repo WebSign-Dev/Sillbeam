@@ -1,0 +1,49 @@
+Loading composer repositories with package information
+https://repo.packagist.org could not be fully loaded (Network disabled, request canceled: https://repo.packagist.org/p2/websign-dev/sillbeam-core.json), package information was loaded from the local cache and may be out of date
+Updating dependencies
+Lock file operations: 0 installs, 1 update, 0 removals
+  - Upgrading websign-dev/sillbeam-core (0.2.0 335b6b9 => 0.2.0)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 33 installs, 0 updates, 0 removals
+  - Installing symfony/flex (v2.11.0): Extracting archive
+The "symfony/flex" plugin was not loaded as plugins are disabled.
+  - Installing symfony/runtime (v7.4.21): Extracting archive
+The "symfony/runtime" plugin was not loaded as plugins are disabled.
+  - Installing symfony/deprecation-contracts (v3.7.1): Extracting archive
+  - Installing symfony/var-exporter (v7.4.18): Extracting archive
+  - Installing psr/container (2.0.2): Extracting archive
+  - Installing symfony/service-contracts (v3.7.3): Extracting archive
+  - Installing psr/cache (3.0.0): Extracting archive
+  - Installing symfony/cache-contracts (v3.7.1): Extracting archive
+  - Installing psr/log (3.0.2): Extracting archive
+  - Installing symfony/cache (v7.4.21): Extracting archive
+  - Installing symfony/dotenv (v7.4.18): Extracting archive
+  - Installing symfony/polyfill-mbstring (v1.43.0): Extracting archive
+  - Installing symfony/var-dumper (v7.4.21): Extracting archive
+  - Installing symfony/polyfill-php85 (v1.43.0): Extracting archive
+  - Installing symfony/error-handler (v7.4.20): Extracting archive
+  - Installing psr/event-dispatcher (1.0.0): Extracting archive
+  - Installing symfony/event-dispatcher-contracts (v3.7.1): Extracting archive
+  - Installing symfony/event-dispatcher (v7.4.17): Extracting archive
+  - Installing symfony/filesystem (v7.4.21): Extracting archive
+  - Installing symfony/finder (v7.4.20): Extracting archive
+  - Installing symfony/polyfill-intl-normalizer (v1.43.0): Extracting archive
+  - Installing symfony/polyfill-intl-grapheme (v1.43.0): Extracting archive
+  - Installing symfony/string (v7.4.21): Extracting archive
+  - Installing symfony/yaml (v7.4.21): Extracting archive
+  - Installing symfony/routing (v7.4.21): Extracting archive
+  - Installing symfony/http-foundation (v7.4.21): Extracting archive
+  - Installing symfony/http-kernel (v7.4.21): Extracting archive
+  - Installing symfony/dependency-injection (v7.4.21): Extracting archive
+  - Installing symfony/config (v7.4.17): Extracting archive
+  - Installing symfony/framework-bundle (v7.4.21): Extracting archive
+  - Installing symfony/console (v7.4.21): Extracting archive
+  - Installing nikic/php-parser (v5.9.0): Extracting archive
+  - Installing websign-dev/sillbeam-core (0.2.0): Mirroring from /tmp/sillbeam-doctor-final-consumers-20261025/package
+Generating autoload files
+27 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+Failed to audit installed packages.
+Bumping dependencies
+No requirements to update in ./composer.json.
