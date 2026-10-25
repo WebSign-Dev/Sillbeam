@@ -1,0 +1,52 @@
+[
+  {
+    "consumer": "consumers/sf81-BC-r2",
+    "files_checked": 68,
+    "differences": []
+  },
+  {
+    "consumer": "consumers/sf74-BC",
+    "files_checked": 68,
+    "differences": []
+  },
+  {
+    "consumer": "consumers/sf81-BC",
+    "files_checked": 68,
+    "differences": []
+  },
+  {
+    "consumer": "consumers/sf74-BC-r2",
+    "files_checked": 68,
+    "differences": []
+  },
+  {
+    "consumer": "matrix/php84-sf81",
+    "files_checked": 68,
+    "differences": []
+  },
+  {
+    "consumer": "matrix/php84-sf74",
+    "files_checked": 68,
+    "differences": []
+  },
+  {
+    "consumer": "matrix/php84-sf74-r2",
+    "files_checked": 68,
+    "differences": []
+  },
+  {
+    "consumer": "matrix/php84-sf81-r2",
+    "files_checked": 68,
+    "differences": []
+  },
+  {
+    "consumer": "controls/doctrine-74",
+    "files_checked": 68,
+    "differences": []
+  },
+  {
+    "consumer": "controls/doctor-74",
+    "files_checked": 68,
+    "differences": []
+  }
+]

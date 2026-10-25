@@ -1,0 +1,92 @@
+[
+  {
+    "check": "real-http-7.4-native-after-uninstall-built",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "real-http-7.4-native-after-uninstall-no-source-config-writes",
+    "passed": true,
+    "detail": "[]"
+  },
+  {
+    "check": "real-http-7.4-native-after-uninstall-native-response",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}"
+  },
+  {
+    "check": "real-http-7.4-native-after-uninstall-production-errors",
+    "passed": true,
+    "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"robots\" content=\"noindex,nofollow,n"
+  },
+  {
+    "check": "real-http-7.4-core-installed-built",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "real-http-7.4-core-installed-no-source-config-writes",
+    "passed": true,
+    "detail": "[]"
+  },
+  {
+    "check": "real-http-7.4-core-installed-native-response",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}"
+  },
+  {
+    "check": "real-http-7.4-core-installed-production-errors",
+    "passed": true,
+    "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"robots\" content=\"noindex,nofollow,n"
+  },
+  {
+    "check": "real-http-7.4-native-equivalent",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "real-http-8.1-native-after-uninstall-built",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "real-http-8.1-native-after-uninstall-no-source-config-writes",
+    "passed": true,
+    "detail": "[]"
+  },
+  {
+    "check": "real-http-8.1-native-after-uninstall-native-response",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}"
+  },
+  {
+    "check": "real-http-8.1-native-after-uninstall-production-errors",
+    "passed": true,
+    "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"robots\" content=\"noindex,nofollow,n"
+  },
+  {
+    "check": "real-http-8.1-core-installed-built",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "real-http-8.1-core-installed-no-source-config-writes",
+    "passed": true,
+    "detail": "[]"
+  },
+  {
+    "check": "real-http-8.1-core-installed-native-response",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}"
+  },
+  {
+    "check": "real-http-8.1-core-installed-production-errors",
+    "passed": true,
+    "detail": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"robots\" content=\"noindex,nofollow,n"
+  },
+  {
+    "check": "real-http-8.1-native-equivalent",
+    "passed": true,
+    "detail": ""
+  }
+]

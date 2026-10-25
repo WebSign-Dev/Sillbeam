@@ -1,0 +1,9 @@
+{
+  "source": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "commit": "d01099c2d9511b1c372331b75f8a46ffa19ed07b",
+  "existing_test_directories": [
+    "sillbeam-core-v020-diagnostics-e2e",
+    "sillbeam-core-v020-e2e"
+  ],
+  "root": "/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb"
+}

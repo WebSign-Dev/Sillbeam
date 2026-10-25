@@ -1,0 +1,292 @@
+[
+  {
+    "check": "sf81-A-r2-skeleton-created",
+    "passed": true,
+    "detail": "nce-20261025-10834dcb/consumers/sf81-A-r2\"\nInstalling symfony/skeleton (v8.1.99)\nPlugins have been disabled.\n  - Installing symfony/skeleton (v8.1.99): Extracting archive\nCreated project in /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2\n"
+  },
+  {
+    "check": "sf81-A-r2-installed",
+    "passed": true,
+    "detail": "php bin/console sillbeam:doctor and review any action required or not verified checks.\n  2. If needed, manually use Sillbeam\\Core\\Console\\Application; in bin/console.\n     Keep the existing bootstrap and Kernel; this adapter allows checks before container compilation.\n  3. Review broad services.yaml imports; exclude Module and Project areas (including custom roots)\n     when Sillbeam should control activation. Preserve existing exclusions and explicit services.\n  4. Create the first descriptor: php bin/console sillbeam:make:module Billing\n     Then run php bin/console sillbeam:architecture.\n\n\n"
+  },
+  {
+    "check": "A-real-instructions",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-recipe-ownership",
+    "passed": true,
+    "detail": "{\"version\": \"0.2\", \"recipe\": {\"repo\": \"local/acceptance\", \"branch\": \"main\", \"version\": \"0.2\", \"ref\": \"b3d1c0dbd14907424dd38661d6c0539bf867b3f2\"}, \"files\": [\"config/routes/sillbeam.yaml\"]}"
+  },
+  {
+    "check": "A-no-empty-config",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-before-adapter-read-only",
+    "passed": true,
+    "detail": "2182 files, 0 changes; exit 2"
+  },
+  {
+    "check": "A-after-import-only-adapter-read-only",
+    "passed": true,
+    "detail": "2182 files, 0 changes; exit 2"
+  },
+  {
+    "check": "A-adapter-static-recognition",
+    "passed": false,
+    "detail": "\n  SILLBEAM CORE  / Installation\n  \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  1 verified \u00b7 0 action required \u00b7 5 not verified\n  Static file evidence only; effective runtime configuration is not certified.\n  \u2713 Bundle registration: verified\n  ! Console adapter: not verified\n     bin/console uses a dynamic or Runtime callback bootstrap. Manually verify\n     use Sillbeam\\Core\\Console\\Application; and its construction. Review this\n     file manually.\n  ! Configuration loading convention: not verified\n     Custom or unavailable Kernel loading hooks. Manually verify which bundle,\n     route, service and discovery files the selected Kernel loads.\n  ! Route import: not verified\n     Review route imports and options manually; dynamic/imported configuration\n     is unresolved.\n  ! Discovery configuration: not verified\n     Dynamic files, imports or environment overlays may change discovery.\n     Manually check discovery roots, namespaces and Composer mappings.\n  ! Service imports: not verified\n     Manually check service resources, excludes and explicit definitions\n     against module/Project areas.\n"
+  },
+  {
+    "check": "A-module-command",
+    "passed": true,
+    "detail": "  \u2713 Created\n  /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-2026\n  1025-10834dcb/consumers/sf81-A-r2/src/Module/Billing/BillingModule.php\n"
+  },
+  {
+    "check": "A-architecture",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-json",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-json-valid",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-report",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-help",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-module-http-production-build",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-module-http",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'module-ok', 'content_type': 'text/html; charset=UTF-8'}"
+  },
+  {
+    "check": "D-violation-written",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "D-invalid-exit",
+    "passed": true,
+    "detail": "issingModule\",\n                \"suggestion\": \"Correct the referenced module class or add its descriptor inside the configured discovery roots.\"\n            },\n            \"severity\": \"error\"\n        }\n    ],\n    \"modules\": [\n        {\n            \"id\": \"billing\",\n            \"class\": \"App\\\\Module\\\\Billing\\\\BillingModule\",\n            \"scope\": \"shared\",\n            \"project\": null,\n            \"enabled\": true,\n            \"active\": null,\n            \"inactive_reason\": \"unknown\",\n            \"directory\": \"/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/src/Module/Billing\",\n            \"descriptor\": \"/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/src/Module/Billing/BillingModule.php\",\n            \"declared_dependencies\": [\n                \"App\\\\Module\\\\Missing\\\\MissingModule\"\n            ],\n            \"observed_dependencies\": [],\n            \"references\": [],\n            \"activation_reasons\": [],\n            \"controllers\": [\n                \"/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/src/Module/Billing/Controller\"\n            ],\n            \"entities\": []\n        }\n    ],\n    \"projects\": []\n}\n"
+  },
+  {
+    "check": "D-invalid-rule",
+    "passed": true,
+    "detail": "[{'rule': 'dependency.unknown', 'message': 'Module \"App\\\\Module\\\\Billing\\\\BillingModule\" depends on unknown module class \"App\\\\Module\\\\Missing\\\\MissingModule\".', 'context': {'file': '/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/src/Module/Billing/BillingModule.php', 'module': 'App\\\\Module\\\\Billing\\\\BillingModule', 'project': None, 'target': 'App\\\\Module\\\\Missing\\\\MissingModule', 'suggestion': 'Correct the referenced module class or add its descriptor inside the configured discovery roots.'}, 'severity': 'error'}]"
+  },
+  {
+    "check": "D-doctor-invalid-read-only",
+    "passed": true,
+    "detail": "2322 files, 0 changes; exit 2"
+  },
+  {
+    "check": "D-invalid-report",
+    "passed": true,
+    "detail": "  \u2713 Architecture report written to\n  /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-2026\n  1025-10834dcb/consumers/sf81-A-r2/invalid-report.md (violations).\n"
+  },
+  {
+    "check": "D-repaired",
+    "passed": true,
+    "detail": "    \"application\"\n            ],\n            \"controllers\": [\n                \"/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/src/Module/Billing/Controller\"\n            ],\n            \"entities\": []\n        }\n    ],\n    \"projects\": []\n}\n"
+  },
+  {
+    "check": "D-doctor-repaired-read-only",
+    "passed": true,
+    "detail": "2323 files, 0 changes; exit 2"
+  },
+  {
+    "check": "A-disabled-module-http-production-build",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-disabled-module-http",
+    "passed": true,
+    "detail": "{'status': 404, 'body': 'Symfony\\\\Component\\\\HttpKernel\\\\Exception\\\\NotFoundHttpException {#100\\n  #message: \"No route found for \"GET http://localhost/billing\"\"\\n  #code: 0\\n  #file: \"/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/http-kernel/EventListener/RouterListener.php\"\\n  #line: 156\\n  -previous: Symfony\\\\Component\\\\Routing\\\\Exception\\\\ResourceNotFoundException {#101\\n    #message: \"No routes found for \"/billing/\".\"\\n    #code: 0\\n    #file: \"/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/routing/Matcher/Dumper/CompiledUrlMatcherTrait.php\"\\n    #line: 70\\n    trace: {\\n      /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/routing/Matcher/Dumper/CompiledUrlMatcherTrait.php:70 { \u2026}\\n      /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/routing/Matcher/UrlMatcher.php:93 { \u2026}\\n      /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/routing/Router.php:188 { \u2026}\\n      /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/http-kernel/EventListener/RouterListener.php:101 { \u2026}\\n      /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/event-dispatcher/EventDispatcher.php:254 { \u2026}\\n      /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/event-dispatcher/EventDispatcher.php:206 { \u2026}\\n      /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/event-dispatcher/EventDispatcher.php:56 { \u2026}\\n      /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/http-kernel/HttpKernel.php:164 { \u2026}\\n      /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/http-kernel/HttpKernel.php:79 { \u2026}\\n      /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/http-kernel/Kernel.php:143 { \u2026}\\n      /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/probes/http.php:9 {\\n        \u203a try {\\n        \u203a     $response = $kernel->handle($request);\\n        \u203a     echo \\'ACCEPTANCE_HTTP=\\'.json_encode([\\'status\\'=>$response->getStatusCode(),\\'body\\'=>$response->getContent(),\\'content_type\\'=>$response->headers->get(\\'content-type\\')], JSON_THROW_ON_ERROR).\"\\\\n\";\\n      }\\n    }\\n  }\\n  -statusCode: 404\\n  -headers: []\\n  trace: {\\n    /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/http-kernel/EventListener/RouterListener.php:156 { \u2026}\\n    /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/event-dispatcher/EventDispatcher.php:254 { \u2026}\\n    /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/event-dispatcher/EventDispatcher.php:206 { \u2026}\\n    /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/event-dispatcher/EventDispatcher.php:56 { \u2026}\\n    /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/http-kernel/HttpKernel.php:164 { \u2026}\\n    /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/http-kernel/HttpKernel.php:79 { \u2026}\\n    /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/vendor/symfony/http-kernel/Kernel.php:143 { \u2026}\\n    /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/probes/http.php:9 {\\n      \u203a try {\\n      \u203a     $response = $kernel->handle($request);\\n      \u203a     echo \\'ACCEPTANCE_HTTP=\\'.json_encode([\\'status\\'=>$response->getStatusCode(),\\'body\\'=>$response->getContent(),\\'content_type\\'=>$response->headers->get(\\'content-type\\')], JSON_THROW_ON_ERROR).\"\\\\n\";\\n    }\\n  }\\n}\\n', 'content_type': 'text/html; charset=UTF-8'}"
+  },
+  {
+    "check": "A-native-http-production-build",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-native-http",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}"
+  },
+  {
+    "check": "A-uninstall",
+    "passed": true,
+    "detail": "alls, 0 updates, 2 removals\n  - Removing websign-dev/sillbeam-core (0.2.0)\n  - Removing nikic/php-parser (v5.9.0)\nGenerating autoload files\n28 packages you are using are looking for funding.\nUse the `composer fund` command to find out more!\nWarning: Accessing 127.0.0.1 over http which is an insecure protocol.\n\nSymfony operations: 1 recipe (72fe60320109000ac7d8b75854cfed24)\n  - Unconfiguring websign-dev/sillbeam-core (>=0.2): From local/acceptance:main\nNo security vulnerability advisories found.\n"
+  },
+  {
+    "check": "A-uninstall-preserves-manual",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-uninstall-clears-lock",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-native-http-after-uninstall-production-build",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "A-native-http-after-uninstall",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}"
+  },
+  {
+    "check": "sf81-BC-r2-skeleton-created",
+    "passed": true,
+    "detail": "e-20261025-10834dcb/consumers/sf81-BC-r2\"\nInstalling symfony/skeleton (v8.1.99)\nPlugins have been disabled.\n  - Installing symfony/skeleton (v8.1.99): Extracting archive\nCreated project in /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-BC-r2\n"
+  },
+  {
+    "check": "sf81-BC-r2-installed",
+    "passed": true,
+    "detail": "fony/recipes:main\nExecuting script cache:clear [OK]\nExecuting script assets:install public [OK]\n              \n What's next? \n              \n\nSome files have been created and/or updated to configure your new packages.\nPlease review, edit and commit them: these files are yours.\n\n symfony/framework-bundle  instructions:\n\n  * Run your application:\n    1. Go to the project directory\n    2. Create your code repository with the git init command\n    3. Download the Symfony CLI at https://symfony.com/download to install a development web server\n\n  * Read the documentation at https://symfony.com/doc\n\n\n"
+  },
+  {
+    "check": "C-http-baseline-production-build",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "C-http-baseline",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}"
+  },
+  {
+    "check": "BC-install-core",
+    "passed": true,
+    "detail": "c137bdb807fe2)\n  - Configuring websign-dev/sillbeam-core (>=0.2.0): From auto-generated recipe\nExecuting script cache:clear [OK]\nExecuting script assets:install public [OK]\n              \n What's next? \n              \n\nSome files have been created and/or updated to configure your new packages.\nPlease review, edit and commit them: these files are yours.\n\nNo security vulnerability advisories found.\n"
+  },
+  {
+    "check": "C-services-unchanged-at-install",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "C-console-unchanged-at-install",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "B-no-public-route-recipe",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "C-missing-adapter-and-overlap-read-only",
+    "passed": false,
+    "detail": "2411 files, 137 changes; exit 2"
+  },
+  {
+    "check": "C-overlap-recognized",
+    "passed": false,
+    "detail": "\n  SILLBEAM CORE  / Installation\n  \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  1 verified \u00b7 0 action required \u00b7 5 not verified\n  Static file evidence only; effective runtime configuration is not certified.\n  \u2713 Bundle registration: verified\n  ! Console adapter: not verified\n     bin/console uses a dynamic or Runtime callback bootstrap. Manually verify\n     use Sillbeam\\Core\\Console\\Application; and its construction. Review this\n     file manually.\n  ! Configuration loading convention: not verified\n     Custom or unavailable Kernel loading hooks. Manually verify which bundle,\n     route, service and discovery files the selected Kernel loads.\n  ! Route import: not verified\n     Review route imports and options manually; dynamic/imported configuration\n     is unresolved.\n  ! Discovery configuration: not verified\n     Dynamic files, imports or environment overlays may change discovery.\n     Manually check discovery roots, namespaces and Composer mappings.\n  ! Service imports: not verified\n     Manually check service resources, excludes and explicit definitions\n     against module/Project areas.\n"
+  },
+  {
+    "check": "C-missing-adapter-recognized",
+    "passed": false,
+    "detail": "\n  SILLBEAM CORE  / Installation\n  \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  1 verified \u00b7 0 action required \u00b7 5 not verified\n  Static file evidence only; effective runtime configuration is not certified.\n  \u2713 Bundle registration: verified\n  ! Console adapter: not verified\n     bin/console uses a dynamic or Runtime callback bootstrap. Manually verify\n     use Sillbeam\\Core\\Console\\Application; and its construction. Review this\n     file manually.\n  ! Configuration loading convention: not verified\n     Custom or unavailable Kernel loading hooks. Manually verify which bundle,\n     route, service and discovery files the selected Kernel loads.\n  ! Route import: not verified\n     Review route imports and options manually; dynamic/imported configuration\n     is unresolved.\n  ! Discovery configuration: not verified\n     Dynamic files, imports or environment overlays may change discovery.\n     Manually check discovery roots, namespaces and Composer mappings.\n  ! Service imports: not verified\n     Manually check service resources, excludes and explicit definitions\n     against module/Project areas.\n"
+  },
+  {
+    "check": "BC-after-manual-correction-read-only",
+    "passed": true,
+    "detail": "2411 files, 0 changes; exit 2"
+  },
+  {
+    "check": "BC-doctor-fully-verified",
+    "passed": false,
+    "detail": "\n  SILLBEAM CORE  / Installation\n  \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  1 verified \u00b7 0 action required \u00b7 5 not verified\n  Static file evidence only; effective runtime configuration is not certified.\n  \u2713 Bundle registration: verified\n  ! Console adapter: not verified\n     bin/console uses a dynamic or Runtime callback bootstrap. Manually verify\n     use Sillbeam\\Core\\Console\\Application; and its construction. Review this\n     file manually.\n  ! Configuration loading convention: not verified\n     Custom or unavailable Kernel loading hooks. Manually verify which bundle,\n     route, service and discovery files the selected Kernel loads.\n  ! Route import: not verified\n     Review route imports and options manually; dynamic/imported configuration\n     is unresolved.\n  ! Discovery configuration: not verified\n     Dynamic files, imports or environment overlays may change discovery.\n     Manually check discovery roots, namespaces and Composer mappings.\n  ! Service imports: not verified\n     Manually check service resources, excludes and explicit definitions\n     against module/Project areas.\n"
+  },
+  {
+    "check": "B-architecture",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "B-json",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "B-json-valid",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "B-report",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "B-help",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "C-http-after-core-production-build",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "C-production-http-unchanged",
+    "passed": true,
+    "detail": "{'before': {'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}, 'after': {'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}}"
+  },
+  {
+    "check": "C-direct-entry-missing-adapter-control-read-only",
+    "passed": false,
+    "detail": "2178 files, 137 changes; exit 2"
+  },
+  {
+    "check": "C-direct-entry-detects-missing-adapter",
+    "passed": true,
+    "detail": "required \u00b7 4 not verified\n  Static file evidence only; effective runtime configuration is not certified.\n  \u2713 Bundle registration: verified\n  \u2715 Console adapter: action required\n     In bin/console use Sillbeam\\Core\\Console\\Application; to keep doctor\n     available before container compilation. Preserve the existing bootstrap\n     and Kernel.\n  ! Configuration loading convention: not verified\n     Custom or unavailable Kernel loading hooks. Manually verify which bundle,\n     route, service and discovery files the selected Kernel loads.\n  ! Route import: not verified\n     Review route imports and options manually; dynamic/imported configuration\n     is unresolved.\n  ! Discovery configuration: not verified\n     Dynamic files, imports or environment overlays may change discovery.\n     Manually check discovery roots, namespaces and Composer mappings.\n  ! Service imports: not verified\n     Manually check service resources, excludes and explicit definitions\n     against module/Project areas.\n"
+  },
+  {
+    "check": "probe-nonexistent-discovery-root-read-only",
+    "passed": true,
+    "detail": "2316 files, 0 changes; exit 2"
+  },
+  {
+    "check": "probe-missing-root-not-verified",
+    "passed": true,
+    "detail": "\n  SILLBEAM CORE  / Installation\n  \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  1 verified \u00b7 0 action required \u00b7 5 not verified\n  Static file evidence only; effective runtime configuration is not certified.\n  \u2713 Bundle registration: verified\n  ! Console adapter: not verified\n     bin/console uses a dynamic or Runtime callback bootstrap. Manually verify\n     use Sillbeam\\Core\\Console\\Application; and its construction. Review this\n     file manually.\n  ! Configuration loading convention: not verified\n     Custom or unavailable Kernel loading hooks. Manually verify which bundle,\n     route, service and discovery files the selected Kernel loads.\n  ! Route import: not verified\n     Review route imports and options manually; dynamic/imported configuration\n     is unresolved.\n  ! Discovery configuration: not verified\n     Dynamic files, imports or environment overlays may change discovery.\n     Manually check discovery roots, namespaces and Composer mappings.\n  ! Service imports: not verified\n     Manually check service resources, excludes and explicit definitions\n     against module/Project areas.\n"
+  },
+  {
+    "check": "probe-documentation-brace-excludes-read-only",
+    "passed": true,
+    "detail": "2315 files, 0 changes; exit 2"
+  },
+  {
+    "check": "probe-brace-excludes-not-guessed",
+    "passed": true,
+    "detail": "\n  SILLBEAM CORE  / Installation\n  \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  1 verified \u00b7 0 action required \u00b7 5 not verified\n  Static file evidence only; effective runtime configuration is not certified.\n  \u2713 Bundle registration: verified\n  ! Console adapter: not verified\n     bin/console uses a dynamic or Runtime callback bootstrap. Manually verify\n     use Sillbeam\\Core\\Console\\Application; and its construction. Review this\n     file manually.\n  ! Configuration loading convention: not verified\n     Custom or unavailable Kernel loading hooks. Manually verify which bundle,\n     route, service and discovery files the selected Kernel loads.\n  ! Route import: not verified\n     Review route imports and options manually; dynamic/imported configuration\n     is unresolved.\n  ! Discovery configuration: not verified\n     Dynamic files, imports or environment overlays may change discovery.\n     Manually check discovery roots, namespaces and Composer mappings.\n  ! Service imports: not verified\n     Manually check service resources, excludes and explicit definitions\n     against module/Project areas.\n"
+  }
+]

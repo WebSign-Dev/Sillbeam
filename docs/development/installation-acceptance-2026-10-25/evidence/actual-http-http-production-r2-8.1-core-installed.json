@@ -1,0 +1,31 @@
+{
+  "command": [
+    "php",
+    "-d",
+    "variables_order=EGPCS",
+    "-d",
+    "display_errors=0",
+    "-S",
+    "127.0.0.1:34843",
+    "-t",
+    "/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-BC-r2/public",
+    "/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-BC-r2/public/index.php"
+  ],
+  "env": {
+    "APP_ENV": "prod",
+    "APP_DEBUG": "0"
+  },
+  "responses": {
+    "/legacy": {
+      "status": 200,
+      "body": "legacy-ok",
+      "content_type": "text/plain; charset=UTF-8"
+    },
+    "/not-a-route": {
+      "status": 404,
+      "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\" />\n    <meta name=\"robots\" content=\"noindex,nofollow,noarchive\" />\n    <title>An Error Occurred: Not Found</title>\n    <link rel=\"icon\" href=\"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>\u274c</text></svg>\" />\n    <style>body { background-color: #fff; color: #222; font: 16px/1.5 -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif; margin: 0; }\n.container { margin: 30px; max-width: 600px; }\nh1 { color: #dc3545; font-size: 24px; }\nh2 { font-size: 18px; }</style>\n</head>\n<body>\n<div class=\"container\">\n    <h1>Oops! An Error Occurred</h1>\n    <h2>The server returned a \"404 Not Found\".</h2>\n\n    <p>\n        Something is broken. Please let us know what you were doing when this error occurred.\n        We will fix it as soon as possible. Sorry for any inconvenience caused.\n    </p>\n</div>\n</body>\n</html>",
+      "content_type": "text/html; charset=UTF-8"
+    }
+  },
+  "changed_files": []
+}

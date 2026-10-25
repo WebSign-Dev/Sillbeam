@@ -1,0 +1,52 @@
+[
+  {
+    "check": "doctrine-installed",
+    "passed": true,
+    "detail": "ndle (3.3.3): Extracting archive\n  - Installing symfony/polyfill-php86 (v1.43.0): Extracting archive\n  - Installing doctrine/lexer (3.0.3): Extracting archive\n  - Installing doctrine/instantiator (2.1.0): Extracting archive\n  - Installing doctrine/inflector (2.1.0): Extracting archive\n  - Installing doctrine/collections (3.1.0): Extracting archive\n  - Installing doctrine/orm (3.7.5): Extracting archive\nGenerating autoload files\n37 packages you are using are looking for funding.\nUse the `composer fund` command to find out more!\n\nSymfony operations: 2 recipes (fd3393e4e0d050769a104e90b3562c6a)\n  - Configuring doctrine/deprecations (>=1.0): From github.com/symfony/recipes:main\n  - Configuring doctrine/doctrine-bundle (>=3.0): From github.com/symfony/recipes:main\n  -  IGNORING  doctrine/doctrine-bundle (>=3.0): From github.com/symfony/recipes:main\nNo security vulnerability advisories found.\n"
+  },
+  {
+    "check": "doctrine-create-billing",
+    "passed": true,
+    "detail": "  \u2713 Created\n  /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-2026\n  1025-10834dcb/controls/doctrine-74/src/Module/Billing/BillingModule.php\n"
+  },
+  {
+    "check": "doctrine-architecture",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "doctrine-json",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "doctrine-json-valid",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "doctrine-report",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "doctrine-help",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "doctrine-doctor-read-only",
+    "passed": true,
+    "detail": "3494 files, 0 changes; exit 2"
+  },
+  {
+    "check": "doctrine-roundtrip-host85",
+    "passed": true,
+    "detail": "DOCTRINE_ROUNDTRIP_OK\n"
+  },
+  {
+    "check": "doctrine-roundtrip-docker84",
+    "passed": true,
+    "detail": "[info] Connecting with parameters [array]\n[debug] Executing statement: CREATE TABLE record (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, name VARCHAR(40) NOT NULL)\n[debug] Beginning transaction\n[debug] Executing statement: INSERT INTO record (name) VALUES (?) (parameters: [array], types: [array])\n[debug] Committing transaction\n[debug] Executing statement: SELECT t0.id AS id_1, t0.name AS name_2 FROM record t0 WHERE t0.id = ? (parameters: [array], types: [array])\nDOCTRINE_ROUNDTRIP_OK\n[info] Disconnecting\n"
+  }
+]

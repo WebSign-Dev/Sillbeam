@@ -1,0 +1,12 @@
+[
+  {
+    "check": "public-packagist",
+    "passed": false,
+    "detail": "HTTP 404 https://repo.packagist.org/p2/websign-dev/sillbeam-core.json"
+  },
+  {
+    "check": "public-contrib-recipe",
+    "passed": false,
+    "detail": "HTTP 404 https://raw.githubusercontent.com/symfony/recipes-contrib/flex/main/websign-dev.sillbeam-core.0.2.json"
+  }
+]

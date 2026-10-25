@@ -1,0 +1,24 @@
+{
+  "sf81-BC-r2": {
+    "symfony/console": "v8.1.9",
+    "symfony/flex": "v2.11.0",
+    "symfony/framework-bundle": "v8.1.9",
+    "websign-dev/sillbeam-core": "0.2.0"
+  },
+  "sf74-BC-r2": {
+    "symfony/console": "v7.4.21",
+    "symfony/flex": "v2.11.0",
+    "symfony/framework-bundle": "v7.4.21",
+    "websign-dev/sillbeam-core": "0.2.0"
+  },
+  "sf81-A-r2": {
+    "symfony/console": "v8.1.9",
+    "symfony/flex": "v2.11.0",
+    "symfony/framework-bundle": "v8.1.9"
+  },
+  "sf74-A-r2": {
+    "symfony/console": "v7.4.21",
+    "symfony/flex": "v2.11.0",
+    "symfony/framework-bundle": "v7.4.21"
+  }
+}

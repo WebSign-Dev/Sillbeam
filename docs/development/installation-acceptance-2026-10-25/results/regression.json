@@ -1,0 +1,7 @@
+[
+  {
+    "check": "full-suite",
+    "passed": true,
+    "detail": "guration: /home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/source/phpunit.xml.dist\n\n[error] Uncaught PHP Exception Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException: \"No route found for \"GET http://localhost/archived\"\" at RouterListener.php line 156\n....[error] Uncaught PHP Exception Symfony\\Component\\HttpKernel\\Exception\\NotFoundHttpException: \"No route found for \"GET https://public.hybrid.test/backoffice\"\" at RouterListener.php line 156\n...........................................................  63 / 542 ( 11%)\n............................................................... 126 / 542 ( 23%)\n............................................................... 189 / 542 ( 34%)\n............................................................... 252 / 542 ( 46%)\n............................................................... 315 / 542 ( 58%)\n............................................................... 378 / 542 ( 69%)\n............................................................... 441 / 542 ( 81%)\n............................................................... 504 / 542 ( 92%)\n......................................                          542 / 542 (100%)\n\nTime: 00:35.515, Memory: 82.50 MB\n\n\u001b[30;42mOK (542 tests, 6050 assertions)\u001b[0m\n"
+  }
+]

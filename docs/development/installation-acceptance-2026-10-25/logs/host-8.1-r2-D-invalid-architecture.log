@@ -1,0 +1,44 @@
+{
+    "schema_version": 1,
+    "status": "violations",
+    "valid": false,
+    "complete": true,
+    "findings": [
+        {
+            "rule": "dependency.unknown",
+            "message": "Module \"App\\Module\\Billing\\BillingModule\" depends on unknown module class \"App\\Module\\Missing\\MissingModule\".",
+            "context": {
+                "file": "/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/src/Module/Billing/BillingModule.php",
+                "module": "App\\Module\\Billing\\BillingModule",
+                "project": null,
+                "target": "App\\Module\\Missing\\MissingModule",
+                "suggestion": "Correct the referenced module class or add its descriptor inside the configured discovery roots."
+            },
+            "severity": "error"
+        }
+    ],
+    "modules": [
+        {
+            "id": "billing",
+            "class": "App\\Module\\Billing\\BillingModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": null,
+            "inactive_reason": "unknown",
+            "directory": "/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/src/Module/Billing",
+            "descriptor": "/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/src/Module/Billing/BillingModule.php",
+            "declared_dependencies": [
+                "App\\Module\\Missing\\MissingModule"
+            ],
+            "observed_dependencies": [],
+            "references": [],
+            "activation_reasons": [],
+            "controllers": [
+                "/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/src/Module/Billing/Controller"
+            ],
+            "entities": []
+        }
+    ],
+    "projects": []
+}

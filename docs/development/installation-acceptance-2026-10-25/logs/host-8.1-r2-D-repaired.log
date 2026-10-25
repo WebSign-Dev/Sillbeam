@@ -1,0 +1,31 @@
+{
+    "schema_version": 1,
+    "status": "valid",
+    "valid": true,
+    "complete": true,
+    "findings": [],
+    "modules": [
+        {
+            "id": "billing",
+            "class": "App\\Module\\Billing\\BillingModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/src/Module/Billing",
+            "descriptor": "/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/src/Module/Billing/BillingModule.php",
+            "declared_dependencies": [],
+            "observed_dependencies": [],
+            "references": [],
+            "activation_reasons": [
+                "application"
+            ],
+            "controllers": [
+                "/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/consumers/sf81-A-r2/src/Module/Billing/Controller"
+            ],
+            "entities": []
+        }
+    ],
+    "projects": []
+}

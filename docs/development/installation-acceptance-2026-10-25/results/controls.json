@@ -1,0 +1,127 @@
+[
+  {
+    "check": "literal-supported-success-read-only",
+    "passed": true,
+    "detail": "1982 files, 0 changes; exit 0"
+  },
+  {
+    "check": "literal-supported-doctor-exit-0",
+    "passed": true,
+    "detail": "\n  SILLBEAM CORE  / Installation\n  \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  6 verified \u00b7 0 action required \u00b7 0 not verified\n  Static file evidence only; effective runtime configuration is not certified.\n  \u2713 Bundle registration: verified\n  \u2713 Console adapter: verified\n  \u2713 Configuration loading convention: verified\n  \u2713 Route import: verified\n  \u2713 Discovery configuration: verified\n  \u2713 Service imports: verified\n"
+  },
+  {
+    "check": "control-broad-import-created",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "literal-known-overlap-read-only",
+    "passed": true,
+    "detail": "1982 files, 0 changes; exit 1"
+  },
+  {
+    "check": "literal-overlap-exit-1",
+    "passed": true,
+    "detail": "\n  SILLBEAM CORE  / Installation\n  \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  5 verified \u00b7 1 action required \u00b7 0 not verified\n  Static file evidence only; effective runtime configuration is not certified.\n  \u2713 Bundle registration: verified\n  \u2713 Console adapter: verified\n  \u2713 Configuration loading convention: verified\n  \u2713 Route import: verified\n  \u2713 Discovery configuration: verified\n  \u2715 Service imports: action required\n     config/services.yaml: App\\ can bypass activation. Exclude complete module\n     and Project discovery areas from Symfony resource imports; let Sillbeam\n     register their services.\n"
+  },
+  {
+    "check": "same-overlap-with-native-routing-overlay-read-only",
+    "passed": true,
+    "detail": "1982 files, 0 changes; exit 2"
+  },
+  {
+    "check": "routing-overlay-does-not-hide-known-service-overlap",
+    "passed": false,
+    "detail": "\n  SILLBEAM CORE  / Installation\n  \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n  3 verified \u00b7 0 action required \u00b7 3 not verified\n  Static file evidence only; effective runtime configuration is not certified.\n  \u2713 Bundle registration: verified\n  \u2713 Console adapter: verified\n  \u2713 Configuration loading convention: verified\n  ! Route import: not verified\n     Review route imports and options manually; dynamic/imported configuration\n     is unresolved.\n  ! Discovery configuration: not verified\n     Dynamic files, imports or environment overlays may change discovery.\n     Manually check discovery roots, namespaces and Composer mappings.\n  ! Service imports: not verified\n     Manually check service resources, excludes and explicit definitions\n     against module/Project areas.\n"
+  },
+  {
+    "check": "real-http-7.4-native-after-uninstall-built",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "real-http-7.4-native-after-uninstall-no-source-config-writes",
+    "passed": false,
+    "detail": "['config/reference.php']"
+  },
+  {
+    "check": "real-http-7.4-native-after-uninstall-native-response",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}"
+  },
+  {
+    "check": "real-http-7.4-native-after-uninstall-production-errors",
+    "passed": false,
+    "detail": "<!-- No route found for &quot;GET http://127.0.0.1:53933/not-a-route&quot; (404 Not Found) -->\n<!DOCTYPE html>\n<html lan"
+  },
+  {
+    "check": "real-http-7.4-core-installed-built",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "real-http-7.4-core-installed-no-source-config-writes",
+    "passed": true,
+    "detail": "[]"
+  },
+  {
+    "check": "real-http-7.4-core-installed-native-response",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}"
+  },
+  {
+    "check": "real-http-7.4-core-installed-production-errors",
+    "passed": false,
+    "detail": "<!-- No route found for &quot;GET http://127.0.0.1:47705/not-a-route&quot; (404 Not Found) -->\n<!DOCTYPE html>\n<html lan"
+  },
+  {
+    "check": "real-http-7.4-native-equivalent",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "real-http-8.1-native-after-uninstall-built",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "real-http-8.1-native-after-uninstall-no-source-config-writes",
+    "passed": false,
+    "detail": "['config/reference.php']"
+  },
+  {
+    "check": "real-http-8.1-native-after-uninstall-native-response",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}"
+  },
+  {
+    "check": "real-http-8.1-native-after-uninstall-production-errors",
+    "passed": false,
+    "detail": "<!-- No route found for &quot;GET http://127.0.0.1:37931/not-a-route&quot; (404 Not Found) -->\n<!DOCTYPE html>\n<html lan"
+  },
+  {
+    "check": "real-http-8.1-core-installed-built",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "real-http-8.1-core-installed-no-source-config-writes",
+    "passed": true,
+    "detail": "[]"
+  },
+  {
+    "check": "real-http-8.1-core-installed-native-response",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'legacy-ok', 'content_type': 'text/plain; charset=UTF-8'}"
+  },
+  {
+    "check": "real-http-8.1-core-installed-production-errors",
+    "passed": false,
+    "detail": "<!-- No route found for &quot;GET http://127.0.0.1:50829/not-a-route&quot; (404 Not Found) -->\n<!DOCTYPE html>\n<html lan"
+  },
+  {
+    "check": "real-http-8.1-native-equivalent",
+    "passed": true,
+    "detail": ""
+  }
+]

@@ -1,0 +1,20 @@
+
+  SILLBEAM CORE  / Installation
+  ────────────────────────────────────────────────────────────────────────────
+  2 verified · 1 action required · 3 not verified
+  Static file evidence only; effective runtime configuration is not certified.
+  ✓ Bundle registration: verified
+  ✕ Console adapter: action required
+     In bin/console use Sillbeam\Core\Console\Application; to keep doctor
+     available before container compilation. Preserve the existing bootstrap
+     and Kernel.
+  ✓ Configuration loading convention: verified
+  ! Route import: not verified
+     Review route imports and options manually; dynamic/imported configuration
+     is unresolved.
+  ! Discovery configuration: not verified
+     Dynamic files, imports or environment overlays may change discovery.
+     Manually check discovery roots, namespaces and Composer mappings.
+  ! Service imports: not verified
+     Manually check service resources, excludes and explicit definitions
+     against module/Project areas.

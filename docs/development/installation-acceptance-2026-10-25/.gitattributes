@@ -1,0 +1,3 @@
+# Preserve original Console output and generated evidence, including whitespace.
+logs/*.log whitespace=-blank-at-eol,-blank-at-eof
+reports/*.md whitespace=-blank-at-eol,-blank-at-eof

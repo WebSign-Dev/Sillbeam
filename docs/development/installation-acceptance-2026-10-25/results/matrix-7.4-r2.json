@@ -1,0 +1,57 @@
+[
+  {
+    "check": "matrix-doctor-read-only",
+    "passed": true,
+    "detail": "1985 files, 0 changes; exit 2"
+  },
+  {
+    "check": "matrix-architecture",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "matrix-json",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "matrix-json-valid",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "matrix-report",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "matrix-help",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "matrix-http-production-build",
+    "passed": true,
+    "detail": ""
+  },
+  {
+    "check": "matrix-module-http",
+    "passed": true,
+    "detail": "{'status': 200, 'body': 'module-ok', 'content_type': 'text/html; charset=UTF-8'}"
+  },
+  {
+    "check": "matrix-invalid-architecture",
+    "passed": true,
+    "detail": "ngModule.php\",\n            \"declared_dependencies\": [\n                \"App\\\\Module\\\\Missing\\\\MissingModule\"\n            ],\n            \"observed_dependencies\": [],\n            \"references\": [],\n            \"activation_reasons\": [],\n            \"controllers\": [\n                \"/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/matrix/php84-sf74-r2/src/Module/Billing/Controller\"\n            ],\n            \"entities\": []\n        }\n    ],\n    \"projects\": []\n}\n"
+  },
+  {
+    "check": "matrix-doctor-invalid-read-only",
+    "passed": true,
+    "detail": "2203 files, 0 changes; exit 2"
+  },
+  {
+    "check": "matrix-repaired",
+    "passed": true,
+    "detail": "   \"application\"\n            ],\n            \"controllers\": [\n                \"/home/oeffe/PhpstormProjects/websign/test/sillbeam-core-v020-acceptance-20261025-10834dcb/matrix/php84-sf74-r2/src/Module/Billing/Controller\"\n            ],\n            \"entities\": []\n        }\n    ],\n    \"projects\": []\n}\n"
+  }
+]
