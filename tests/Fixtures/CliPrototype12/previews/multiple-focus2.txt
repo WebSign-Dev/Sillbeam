@@ -1,0 +1,46 @@
+
+  SILLBEAM CORE  / Architecture
+  ────────────────────────────────────────────────────────────────────────────────
+  ✕ Architecture violations found
+  11 findings · 5 diagnoses · 12 modules · 2 projects
+
+  DIAGNOSIS OVERVIEW
+  In recommended review order. Select a number for its full explanation.
+
+    01  Circular module dependency (1)
+      User → Catalog → Admin → User
+    02  Module accesses are not declared (3)
+      Billing → Catalog
+    03  Application classes cannot be resolved (3)
+      Billing → App\Missing\InvoiceClient
+    04  A required module is disabled (2)
+      Admin → Notification
+    05  Private module used outside its Project (2)
+      Shop → Admin / Reports
+
+  ────────────────────────────────────────────────────────────────────────────────
+  02 Module accesses are not declared
+  3 findings · Missing declarations
+
+    Billing → Catalog
+    Billing/Service/InvoiceSender.php:24
+    +2 related locations (see -v)
+
+    WHAT IS WRONG
+      Billing references classes owned by Catalog without declaring Catalog as a
+      direct dependency.
+
+    ! IMPORTANT CONTEXT
+      Catalog already depends on Billing. Declaring this edge would create another
+      cycle.
+
+    POSSIBLE NEXT STEPS
+      1. Move the cross-module operation to its owning module.
+      2. Review the existing reverse dependency before changing the descriptor.
+      3. Extract a shared contract only if both interactions are genuinely
+      required.
+
+  ────────────────────────────────────────────────────────────────────────────────
+  View another: --issue=N · Expand all: --all
+  Technical context: -v · No source files were changed.
+

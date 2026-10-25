@@ -2,7 +2,7 @@
 
 The internal `Architecture\Diagnostic` layer explains the existing analyzer's
 Findings. It adds no rules and does not change `ArchitectureFinding::suggestion()`,
-existing console/Markdown output, exit codes or JSON schema version 1.
+existing architecture rules, exit codes or JSON schema version 1. The console renderer consumes this layer; Markdown retains its existing format.
 
 ```php
 $diagnostics = DiagnosticCollection::fromAnalysis($analysis);

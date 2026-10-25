@@ -42,8 +42,10 @@ final class ArchitectureReportTest extends TestCase
         $tester = new CommandTester(new ArchitectureCommand($report));
         self::assertSame(1, $tester->execute([]));
         self::assertStringContainsString('App\\HelloModule', $tester->getDisplay());
+        self::assertStringContainsString('src/HelloModule.php:12', $tester->getDisplay());
+        self::assertStringContainsString('POSSIBLE NEXT STEPS', $tester->getDisplay());
+        self::assertSame(1, $tester->execute([], ['verbosity' => \Symfony\Component\Console\Output\OutputInterface::VERBOSITY_VERBOSE]));
         self::assertStringContainsString('/app/src/HelloModule.php:12', $tester->getDisplay());
-        self::assertStringContainsString((string) $finding->suggestion(), $tester->getDisplay());
         self::assertStringContainsString('module=App\\HelloModule', $finding->describe());
         self::assertStringContainsString('line=12', $finding->describe());
         self::assertNull((new ArchitectureFinding('custom.rule', 'Custom finding.'))->suggestion());
@@ -60,14 +62,18 @@ final class ArchitectureReportTest extends TestCase
         $tester = new CommandTester(new ArchitectureCommand($report));
         self::assertSame(1, $tester->execute([]));
         $text = $tester->getDisplay();
-        self::assertStringContainsString('Violations: 4', $text);
-        self::assertLessThan(strpos($text, 'First unknown module.'), strpos($text, 'Violations: 4'));
-        self::assertLessThan(strpos($text, 'Other unknown module.'), strpos($text, 'Second unknown module.'));
-        self::assertSame(1, substr_count($text, 'Module App\\A'));
-        self::assertStringContainsString('Project App\\Shop', $text);
+        self::assertStringContainsString('4 findings · 4 diagnoses', $text);
+        self::assertLessThan(strpos($text, 'WHAT IS WRONG'), strpos($text, '4 findings'));
+        self::assertSame(1, substr_count($text, 'WHAT IS WRONG'));
         self::assertStringContainsString('Unknown module dependency', $text);
-        self::assertStringContainsString('/app/A.php:3', $text);
-        self::assertStringContainsString('How to fix', $text);
+        self::assertSame(1, $tester->execute(['--all' => true]));
+        $text = $tester->getDisplay();
+        foreach (['First unknown module.', 'Second unknown module.', 'Other unknown module.', 'Project needs a host.'] as $message) {
+            self::assertStringContainsString($message, $text);
+        }
+        self::assertSame(4, substr_count($text, 'ORIGINAL FINDINGS'));
+        self::assertStringContainsString('app/A.php:3', $text);
+        self::assertStringContainsString('POSSIBLE NEXT STEPS', $text);
     }
 
     public function testProviderFailuresUseCleanJsonAndExitTwo(): void

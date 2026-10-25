@@ -54,7 +54,7 @@ final class KernelArchitectureReporter
             }
         }
 
-        return ArchitectureReport::fromAnalysis((new ArchitectureAnalyzer())->analyze($options, $config), $config);
+        return ArchitectureReport::fromAnalysis((new ArchitectureAnalyzer())->analyze($options, $config), $config, $kernel->getProjectDir());
     }
 
     private function initializeFreshBundles(KernelInterface $kernel): void

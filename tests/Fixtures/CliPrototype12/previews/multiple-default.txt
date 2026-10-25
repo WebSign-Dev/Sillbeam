@@ -1,0 +1,44 @@
+
+  SILLBEAM CORE  / Architecture
+  ────────────────────────────────────────────────────────────────────────────────
+  ✕ Architecture violations found
+  11 findings · 5 diagnoses · 12 modules · 2 projects
+
+  DIAGNOSIS OVERVIEW
+  In recommended review order. Select a number for its full explanation.
+
+    01  Circular module dependency (1)
+      User → Catalog → Admin → User
+    02  Module accesses are not declared (3)
+      Billing → Catalog
+    03  Application classes cannot be resolved (3)
+      Billing → App\Missing\InvoiceClient
+    04  A required module is disabled (2)
+      Admin → Notification
+    05  Private module used outside its Project (2)
+      Shop → Admin / Reports
+
+  ────────────────────────────────────────────────────────────────────────────────
+  01 Circular module dependency
+  1 finding · Dependency graph
+
+    User → Catalog → Admin → User
+    User/UserModule.php:12
+    +2 related locations (see -v)
+
+    WHAT IS WRONG
+      These modules form a dependency cycle. Each module in this chain relies on
+      the next.
+
+    ! IMPORTANT CONTEXT
+      Adding more dependencies will not remove the cycle.
+
+    POSSIBLE NEXT STEPS
+      1. Remove the dependency edge that is not required.
+      2. If responsibilities overlap, move the shared behavior into the
+      appropriate module.
+
+  ────────────────────────────────────────────────────────────────────────────────
+  View another: --issue=N · Expand all: --all
+  Technical context: -v · No source files were changed.
+

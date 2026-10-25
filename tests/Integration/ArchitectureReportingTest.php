@@ -69,7 +69,7 @@ final class ArchitectureReportingTest extends TestCase
         self::assertSame('unknown', $data['modules'][0]['inactive_reason']);
         [$code, $text] = $this->runReport('text');
         self::assertSame(1, $code);
-        self::assertStringContainsString('dependency.unknown', $text);
+        self::assertStringContainsString('2 findings · 2 diagnoses', $text);
         self::assertStringContainsString('Missing\\One', $text);
         self::assertStringContainsString('Missing\\Two', $text);
     }
@@ -241,21 +241,26 @@ final class ArchitectureReportingTest extends TestCase
         self::assertSame(0, $application->run($input, $output));
         $json = $output->fetch();
         self::assertStringNotContainsString("\033", $json);
-        self::assertSame('valid', json_decode($json, true, flags: \JSON_THROW_ON_ERROR)['status']);
+        self::assertSame('', $json);
+        $input = new \Symfony\Component\Console\Input\ArgvInput(['console', '--env', 'test', '--format', 'json', 'sillbeam:architecture', '--ansi']);
+        $output = new \Symfony\Component\Console\Output\BufferedOutput();
+        self::assertSame(0, $application->run($input, $output));
+        self::assertSame('valid', json_decode($output->fetch(), true, flags: \JSON_THROW_ON_ERROR)['status']);
     }
 
-    public function testValidTextReportShowsTheExistingModuleCatalog(): void
+    public function testValidTextReportIsCompactWithoutAnUnrequestedModuleCatalog(): void
     {
         $this->module('A');
         [$code, $text, $stderr] = $this->runReport('text');
         self::assertSame(0, $code);
         self::assertSame('', $stderr);
-        self::assertStringContainsString('Sillbeam architecture: valid', $text);
-        self::assertStringContainsString('shared', $text);
-        self::assertStringContainsString('active', $text);
-        self::assertStringContainsString('Modules: 1', $text);
+        self::assertStringContainsString('Architecture valid', $text);
+        self::assertStringContainsString('1 modules · 0 projects · 0 violations', $text);
+        self::assertStringNotContainsString('DIAGNOSIS OVERVIEW', $text);
+        self::assertStringNotContainsString('APPLICATION COUPLINGS', $text);
         [, $verbose] = $this->runReport('text', ['--verbose' => true]);
-        self::assertStringContainsString($this->source->directory.'/src/Module/A', $verbose);
+        self::assertStringContainsString('Architecture valid', $verbose);
+        self::assertStringNotContainsString($this->source->directory, $verbose);
     }
 
     /** @param array<string, mixed> $data */
@@ -361,8 +366,8 @@ CODE));
         self::assertStringContainsString('Correct the class name', $data['findings'][0]['context']['suggestion']);
         [$code, $text] = $this->runReport('text');
         self::assertSame(1, $code);
-        self::assertStringContainsString('Violations: 2', $text);
-        self::assertStringContainsString('Referenced class cannot be resolved', $text);
+        self::assertStringContainsString('2 findings · 2 diagnoses', $text);
+        self::assertStringContainsString('Application class cannot be resolved', $text);
         self::assertStringContainsString('Missing\\ConstructorType', $text);
         self::assertStringContainsString('HelloModule.php:3', $text);
         $application = new Application(new TestApplicationKernel($this->source));
@@ -389,7 +394,9 @@ CODE));
         self::assertStringEndsWith('/src/Service/MailService.php', $data['modules'][0]['application_references'][0]['target_file']);
         $this->assertSchemaKeys($data);
         [, $text] = $this->runReport('text');
-        self::assertStringContainsString('Application couplings (informational)', $text);
+        self::assertStringNotContainsString('APPLICATION COUPLINGS', $text);
+        [, $text] = $this->runReport('text', ['--couplings' => true, '-v' => true]);
+        self::assertStringContainsString('APPLICATION COUPLINGS', $text);
         self::assertStringContainsString($mail, $text);
         self::assertStringContainsString('Consumer.php:1', $text);
         $application = new Application(new TestApplicationKernel($this->source));

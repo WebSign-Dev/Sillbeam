@@ -5,81 +5,12 @@ declare(strict_types=1);
 namespace Sillbeam\Core\Architecture\Console;
 
 use Sillbeam\Core\Architecture\ArchitectureReport;
-use Symfony\Component\Console\Formatter\OutputFormatter;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 /** @internal Human-readable views of the existing report data. */
 final readonly class ReportRenderer
 {
     public function __construct(private ArchitectureReport $report)
     {
-    }
-
-    public function text(SymfonyStyle $io, bool $verbose): void
-    {
-        $data = $this->report->data;
-        $io->title('Sillbeam architecture: '.$data['status']);
-        $io->text(\sprintf('Violations: %d | Blockers: %d | Modules: %d | Projects: %d', $this->violations(), $this->blockers(), \count($data['modules']), \count($data['projects'])));
-        if (!$data['complete']) {
-            $io->note('Analysis incomplete. Counts reflect available findings and catalog entries only.');
-        }
-        foreach ($this->groups() as $group => $findings) {
-            $io->section(OutputFormatter::escape($group));
-            $hints = [];
-            foreach ($findings as $finding) {
-                $io->writeln('<comment>'.OutputFormatter::escape(self::title($finding['rule'])).'</comment> ['.OutputFormatter::escape($finding['rule']).']'.('fatal' === $finding['severity'] ? ' (fatal)' : ''));
-                $io->text(OutputFormatter::escape($finding['message']));
-                if ('' !== ($location = self::location($finding['context']))) {
-                    $io->text('At: '.OutputFormatter::escape($location));
-                }
-                if (\is_string($finding['context']['suggestion'] ?? null)) {
-                    $hints[] = $finding['context']['suggestion'];
-                }
-            }
-            if ([] !== $hints) {
-                $io->writeln('<info>How to fix</info>');
-                $io->listing(array_map(OutputFormatter::escape(...), array_unique($hints)));
-            }
-        }
-        if ([] !== $data['modules']) {
-            $headers = ['Module', 'Scope', 'State', 'Dependencies: declared / observed'];
-            if ($verbose) {
-                $headers[] = 'Directory';
-            }
-            $rows = [];
-            foreach ($data['modules'] as $module) {
-                $row = [$module['id'], $module['scope'], $module['active'] ? 'active' : $module['inactive_reason'], \count($module['declared_dependencies']).' / '.\count($module['observed_dependencies'])];
-                if ($verbose) {
-                    $row[] = $module['directory'];
-                }
-                $rows[] = array_map(static fn ($value): string => OutputFormatter::escape((string) $value), $row);
-            }
-            $io->section('Modules');
-            $io->table($headers, $rows);
-        }
-        if ([] !== $data['projects']) {
-            $io->section('Projects');
-            $io->table(['Project', 'Hosts', 'Modules'], array_map(static fn (array $project): array => [
-                OutputFormatter::escape($project['id']), OutputFormatter::escape(implode(', ', $project['hosts'])), null === $project['modules'] ? 'unknown' : (string) \count($project['modules']),
-            ], $data['projects']));
-        }
-        $couplings = $this->couplings();
-        if ([] !== $couplings) {
-            $io->section('Application couplings (informational)');
-            foreach ($couplings as $module => $targets) {
-                $io->writeln(OutputFormatter::escape($module));
-                foreach ($targets as $class => $references) {
-                    $io->text('  -> '.OutputFormatter::escape($class));
-                    foreach ($references as $reference) {
-                        $io->text('     At: '.OutputFormatter::escape($reference['file'].':'.$reference['line']));
-                    }
-                    if ($verbose) {
-                        $io->text('     Target: '.OutputFormatter::escape($references[0]['target_file']));
-                    }
-                }
-            }
-        }
-        $io->text('Use -v for module directories; --format=json for the full report data.');
     }
 
     public function markdown(string $version, \DateTimeImmutable $checkedAt): string

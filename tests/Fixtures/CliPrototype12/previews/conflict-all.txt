@@ -1,0 +1,29 @@
+
+  SILLBEAM CORE  / Architecture
+  ────────────────────────────────────────────────────────────────────────────────
+  ✕ Architecture violations found
+  1 finding · 1 diagnosis · 5 modules · 0 projects
+
+  ────────────────────────────────────────────────────────────────────────────────
+  01 Undeclared module access
+  1 finding · Dependency declaration
+
+    User → Catalog
+    User/Command/ImportLegacyUserCommand.php:18
+
+    WHAT IS WRONG
+      User uses CatalogStore from Catalog, but User does not declare Catalog as a
+      direct dependency.
+
+    ! IMPORTANT CONTEXT
+      Catalog already depends on User. Adding User → Catalog would close a
+      dependency cycle.
+
+    POSSIBLE NEXT STEPS
+      1. Move the import workflow to the module that owns this responsibility.
+      2. Remove the reverse dependency if Catalog does not actually need User.
+      3. Extract a shared contract if both directions are genuinely required.
+
+  ────────────────────────────────────────────────────────────────────────────────
+  Technical context: -v · No source files were changed.
+

@@ -12,7 +12,7 @@ $result = (new ArchitectureAnalyzer())->analyze(
 );
 
 foreach ($result->findings as $finding) {
-    // Scalar data suitable for a future CLI or report serializer.
+    // Scalar schema-version-1 report data.
     $data = [
         'rule' => $finding->rule,
         'severity' => $finding->severity,
@@ -46,7 +46,7 @@ After **any fatal failure**, including code-analysis failure after compilation, 
 
 `Resolution` explicitly distinguishes technical recovery/investigation steps from domain `option`s. The [diagnostic rule catalog](diagnostics.md) supplies problem, impact and next steps for every existing rule. Conditional dependency options require clear local checks, a domain decision and fresh analysis; local checks do not certify the whole modified architecture or its changed activation. No edits are automatic.
 
-The context never feeds Runtime registries, service activation or routing. `ArchitectureAnalysisResult::architecture` remains `null` for any Finding. Existing CLI/renderers and JSON schema version 1 do not serialize diagnoses. No source analysis is added to warm production HTTP. Productive CLI integration remains outside this layer.
+The context never feeds Runtime registries, service activation or routing. `ArchitectureAnalysisResult::architecture` remains `null` for any Finding. The console presentation adapter consumes diagnoses as scalar presentation data, separately from schema-version-1 JSON and the existing Markdown renderer. No source analysis is added to warm production HTTP.
 
 ## Existing checks and identifiers
 

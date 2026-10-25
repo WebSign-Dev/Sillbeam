@@ -12,6 +12,7 @@ $finder = PhpCsFixer\Finder::create()
     ->append([__DIR__.'/tools/test-consumer.php', __DIR__.'/tools/consumer-smoke.php', __DIR__.'/tools/prepare-compatibility.php', __DIR__.'/tools/test-flex-recipe.php', __DIR__.'/tools/benchmark-architecture.php', __DIR__.'/tools/test-release-package.php'])
     ->exclude('Fixtures/Application/var')
     ->notPath([
+        'Fixtures/CliPrototype12/',
         'config/reference.php',
         'Fixtures/Application/config/reference.php',
     ]);

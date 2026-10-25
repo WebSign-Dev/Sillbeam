@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Kernel\Command;
 
+use Sillbeam\Core\Console\Style\ConsoleStyle;
 use Sillbeam\Core\Kernel\Runtime\KernelInformationInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(name: 'sillbeam:about', description: 'Display the important Sillbeam runtime and module information.')]
 final class AboutCommand extends Command
@@ -21,13 +21,11 @@ final class AboutCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
-        $io->title('Sillbeam');
-        $io->definitionList(...array_map(
-            static fn (string|int $value, string $key): array => [ucwords(str_replace('_', ' ', $key)) => (string) $value],
-            $this->information->all(),
-            array_keys($this->information->all()),
-        ));
+        $io = new ConsoleStyle($output);
+        $io->heading('About');
+        foreach ($this->information->all() as $key => $value) {
+            $io->text(ucwords(str_replace('_', ' ', $key)).': '.$value);
+        }
 
         return self::SUCCESS;
     }

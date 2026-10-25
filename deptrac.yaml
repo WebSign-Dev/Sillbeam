@@ -13,16 +13,18 @@ deptrac:
           collectors: [{ type: directory, value: 'src/Routing/.*' }]
         - name: DependencyInjection
           collectors: [{ type: directory, value: 'src/DependencyInjection/.*' }]
+        - name: Presentation
+          collectors: [{ type: directory, value: 'src/Console/Style/.*' }]
         - name: Console
-          collectors: [{ type: directory, value: 'src/Console/.*' }]
+          collectors: [{ type: directory, value: 'src/Console/(?!Style/).*' }]
         - name: Bundle
           collectors: [{ type: classNameRegex, value: '#^Sillbeam\\Core\\SillbeamCoreBundle$#' }]
     ruleset:
-        Architecture: [Module, Project]
+        Architecture: [Module, Project, Presentation]
         Module: [Architecture, Project]
         Project: [Architecture, Module]
-        Kernel: [Module]
+        Kernel: [Module, Presentation]
         Routing: [Module, Project]
         DependencyInjection: [Architecture, Module, Project, Kernel, Routing, Console]
-        Console: [Architecture, DependencyInjection]
+        Console: [Architecture, DependencyInjection, Presentation]
         Bundle: [DependencyInjection]

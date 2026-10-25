@@ -10,6 +10,7 @@ use Symfony\Component\Console\ConsoleEvents;
 use Symfony\Component\Console\Event\ConsoleCommandEvent;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -31,8 +32,8 @@ final readonly class ArchitectureBuildSubscriber implements EventSubscriberInter
             return;
         }
         $command = new ArchitectureCommand(fn (): ArchitectureReport => (new KernelArchitectureReporter())->report($this->kernel));
-        $output = new BufferedOutput();
-        $code = $command->run(new ArrayInput([]), $output);
+        $output = new BufferedOutput(OutputInterface::VERBOSITY_VERBOSE);
+        $code = $command->run(new ArrayInput(['--all' => true]), $output);
         if (0 !== $code) {
             throw new \RuntimeException($output->fetch(), $code);
         }

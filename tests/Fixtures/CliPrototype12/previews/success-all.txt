@@ -1,0 +1,6 @@
+
+  SILLBEAM CORE  / Architecture
+  ────────────────────────────────────────────────────────────────────────────────
+  ✓ Architecture valid
+  8 modules · 2 projects · 0 violations
+

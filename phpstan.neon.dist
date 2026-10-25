@@ -13,6 +13,7 @@ parameters:
     treatPhpDocTypesAsCertain: false
     excludePaths:
         analyse:
+            - tests/Fixtures/CliPrototype12
             - tests/Fixtures/Application/var (?)
             - tests/Fixtures/*/config/reference.php (?)
             - apps/*/config/reference.php (?)

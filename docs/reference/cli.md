@@ -49,7 +49,38 @@ The existing bootstrap selects the kernel, environment and debug mode as usual, 
 | 1 | Analysis completed and found architecture violations |
 | 2 | Analysis incomplete/unexecutable, configuration or command usage invalid, or report file could not be written |
 
-Text output starts with status and counts of violations, fatal blockers, modules and Projects. Findings are grouped by affected module or Project, with readable titles, rule IDs, explanations and available file/line locations. Remediation hints are collected under **How to fix** and shown once per group. The compact module catalog shows scope, activation state and declared/observed dependency counts; `-v` also shows module directories. Project hosts and activation counts remain visible. All existing report data remains available in JSON. `--format=json` writes exactly one raw JSON document, with no ANSI escapes, banners, stack traces or progress output from Sillbeam. JSON remains available with `--ansi`, verbose or quiet console settings. Buffered configuration output and PHP notices/deprecations are suppressed during analysis; execution failures become structured fatal findings. The application bootstrap itself should not print output before returning the Console Application.
+Text output follows the Core CLI prototype 1.2. A valid architecture gets a short
+success status. One diagnosis is explained fully; multiple diagnoses show the
+complete compact index and the first diagnosis in full. Findings and diagnoses
+are counted separately. Group numbers identify only this check run.
+
+```bash
+php bin/console sillbeam:architecture --all
+php bin/console sillbeam:architecture --issue=2
+php bin/console sillbeam:architecture --issue=2 -v
+php bin/console sillbeam:architecture --couplings
+```
+
+`--all` explains every group. `--issue=N` selects one group and includes all its
+original findings. `-v` adds rule codes, original messages, context and full source
+paths. Default locations are readable relative paths. No module table or
+Application couplings appear by default; `--couplings` explicitly includes the
+informational observations separately from violations.
+
+Terminal width is detected automatically and the visual width is clamped to
+52–90 columns. Long text wraps by Unicode display width. Source and exception
+text is formatter-escaped and terminal control sequences are removed. ANSI is
+controlled by Symfony's usual options; pipes and redirects support plain text.
+`--quiet` suppresses output, including JSON, while retaining the exit code.
+
+`--format=json` writes exactly the existing schema-version-1 JSON document without
+ANSI, headers or debug output. It accepts verbosity and ANSI settings, but cannot
+be combined with `--all`, `--issue` or `--couplings`. `--all` and `--issue` are also
+mutually exclusive. Invalid options return exit 2 before analysis; they do not
+change architecture findings. `--help` works without booting the container.
+Buffered configuration output and PHP notices/deprecations are suppressed during
+analysis; execution failures become structured fatal findings. The application
+bootstrap itself should not print output before returning the Console Application.
 
 JSON uses [schema version 1](architecture-report.schema.json):
 
@@ -68,7 +99,7 @@ JSON uses [schema version 1](architecture-report.schema.json):
 - `status`: `valid`, `violations` or `unavailable`; `complete` means analysis was not blocked, independently of validity.
 - `findings`: ordered/deduplicated objects with `rule`, `severity` (`error`/`fatal`), `message` and `context` (always a JSON object). Context includes available module/project/target, file and numeric line. `report.execution` records configuration/CLI execution failures; analyzer rule identifiers are unchanged.
 - `modules`: the existing ID/class, scope/owner, enabled/active, inactive reason, paths, declared/observed dependencies, source-reference evidence, activation reasons and controller/entity directories.
-- Module objects may additionally contain `application_dependencies` (unique observed application class names) and `application_references` (class, source file/line and `target_file`). These optional fields are emitted only for nonempty coupling evidence. They do not enter `observed_dependencies`, `references`, activation or findings. Application coupling is informational, including for inactive modules and reports with architecture violations. Text and Markdown include an **Application couplings (informational)** section with evidence; text `-v` also shows target files. This is an additive schema-version-1 extension: all previous fields/types/required keys are retained and the updated schema accepts previous reports. Consumers pinning the old schema with `additionalProperties: false` must update their schema to accept the optional fields.
+- Module objects may additionally contain `application_dependencies` (unique observed application class names) and `application_references` (class, source file/line and `target_file`). These optional fields are emitted only for nonempty coupling evidence. They do not enter `observed_dependencies`, `references`, activation or findings. Application coupling is informational, including for inactive modules and reports with architecture violations. Markdown includes an **Application couplings (informational)** section with evidence; console text includes it only with `--couplings`. This is an additive schema-version-1 extension: all previous fields/types/required keys are retained and the updated schema accepts previous reports. Consumers pinning the old schema with `additionalProperties: false` must update their schema to accept the optional fields.
 - `projects`: the existing Project fields, configured hosts and compiled module graph.
 
 Invalid analysis retains discovered catalog information and available references. `active` is `null`, `inactive_reason` is `unknown`, Project `modules` is `null`, and activation reasons are empty when no valid compiled graph exists. Enabled state is retained from resolved configuration for complete analysis; identity/discovery blockers may make it `null`. A fatal discovery failure can leave both catalogs empty. These unknown values never claim a partial graph is valid.
@@ -93,7 +124,7 @@ must already exist. The command does not create directories or other files.
 The report includes the installed Sillbeam version from Composer (or `source` when
 not installed), the check time in UTC, architecture status, module/Project counts,
 violation and blocker counts, and relevant findings with locations and remediation
-hints. Findings are grouped as in the console view. Only Sillbeam architecture
+hints. Markdown retains its existing finding grouping and remediation format. Only Sillbeam architecture
 rules are checked; the report makes no general code-quality, security or
 service-container health assessment. No HTML, diagrams or other export formats
 are generated.

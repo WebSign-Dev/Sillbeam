@@ -158,7 +158,12 @@ final class SillbeamCoreExtension extends Extension implements PrependExtensionI
         $this->discovery = $analysis->discovery;
         $architecture = $analysis->architecture ?? throw new \LogicException('Sillbeam architecture was not compiled.');
         $references = $analysis->references;
-        $container->register(ArchitectureReport::class)->setArguments([ArchitectureReport::fromAnalysis($analysis, $config)->data]);
+        $projectDir = $container->getParameter('kernel.project_dir');
+        if (!\is_string($projectDir)) {
+            throw new \LogicException('kernel.project_dir must be a string.');
+        }
+        $report = ArchitectureReport::fromAnalysis($analysis, $config, $projectDir);
+        $container->register(ArchitectureReport::class)->setArguments([$report->data, $report->presentation]);
         $modules = [];
         foreach ($architecture->modules as $class => $module) {
             $data = get_object_vars($module);

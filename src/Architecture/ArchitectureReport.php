@@ -4,15 +4,19 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Architecture;
 
+use Sillbeam\Core\Architecture\Console\ArchitecturePresentation;
+
 final readonly class ArchitectureReport
 {
-    /** @param array<string, mixed> $data */
-    public function __construct(public array $data)
+    /** @param array<string, mixed> $data
+     * @param array<string, mixed> $presentation internal scalar view, never serialized to JSON
+     */
+    public function __construct(public array $data, public array $presentation = [])
     {
     }
 
     /** @param array<string, mixed> $config */
-    public static function fromAnalysis(ArchitectureAnalysisResult $analysis, array $config = []): self
+    public static function fromAnalysis(ArchitectureAnalysisResult $analysis, array $config = [], ?string $projectDir = null): self
     {
         $graph = $analysis->architecture;
         $catalog = $graph->modules ?? $analysis->discovery->modules ?? [];
@@ -68,7 +72,7 @@ final readonly class ArchitectureReport
                 return $data;
             }, $analysis->findings),
             'modules' => $modules, 'projects' => $projectData,
-        ]);
+        ], ArchitecturePresentation::fromAnalysis($analysis, $projectDir));
     }
 
     public static function unavailable(\Throwable $error): self

@@ -7,13 +7,12 @@ namespace Sillbeam\Core\Architecture\Console;
 use Composer\InstalledVersions;
 use Sillbeam\Core\Architecture\ArchitectureReport;
 use Sillbeam\Core\Architecture\FilesystemPath;
+use Sillbeam\Core\Console\Style\ConsoleStyle;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(name: 'sillbeam:report', description: 'Write a standalone Markdown architecture report.')]
 final class ReportCommand extends Command
@@ -31,7 +30,7 @@ final class ReportCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
+        $io = new ConsoleStyle($output);
         $report = ArchitectureReport::collect($this->report);
         $temporary = null;
         try {
@@ -59,11 +58,11 @@ final class ReportCommand extends Command
             if (!@rename($temporary, $path)) {
                 throw new \RuntimeException('Cannot replace output file: '.$path);
             }
-            $io->success(OutputFormatter::escape('Architecture report written to '.$path.' ('.$report->data['status'].').'));
+            $io->success('Architecture report written to '.$path.' ('.$report->data['status'].').');
 
             return $report->exitCode();
         } catch (\Throwable $error) {
-            $io->error(OutputFormatter::escape('Cannot write architecture report: '.$error->getMessage()));
+            $io->error('Cannot write architecture report: '.$error->getMessage());
 
             return 2;
         } finally {

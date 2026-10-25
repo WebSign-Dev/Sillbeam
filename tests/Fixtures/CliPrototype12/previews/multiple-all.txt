@@ -1,0 +1,109 @@
+
+  SILLBEAM CORE  / Architecture
+  ────────────────────────────────────────────────────────────────────────────────
+  ✕ Architecture violations found
+  11 findings · 5 diagnoses · 12 modules · 2 projects
+
+  DIAGNOSIS OVERVIEW
+  In recommended review order. Select a number for its full explanation.
+
+    01  Circular module dependency (1)
+      User → Catalog → Admin → User
+    02  Module accesses are not declared (3)
+      Billing → Catalog
+    03  Application classes cannot be resolved (3)
+      Billing → App\Missing\InvoiceClient
+    04  A required module is disabled (2)
+      Admin → Notification
+    05  Private module used outside its Project (2)
+      Shop → Admin / Reports
+
+  ────────────────────────────────────────────────────────────────────────────────
+  01 Circular module dependency
+  1 finding · Dependency graph
+
+    User → Catalog → Admin → User
+    User/UserModule.php:12
+    +2 related locations (see -v)
+
+    WHAT IS WRONG
+      These modules form a dependency cycle. Each module in this chain relies on
+      the next.
+
+    ! IMPORTANT CONTEXT
+      Adding more dependencies will not remove the cycle.
+
+    POSSIBLE NEXT STEPS
+      1. Remove the dependency edge that is not required.
+      2. If responsibilities overlap, move the shared behavior into the
+      appropriate module.
+  ────────────────────────────────────────────────────────────────────────────────
+  02 Module accesses are not declared
+  3 findings · Missing declarations
+
+    Billing → Catalog
+    Billing/Service/InvoiceSender.php:24
+    +2 related locations (see -v)
+
+    WHAT IS WRONG
+      Billing references classes owned by Catalog without declaring Catalog as a
+      direct dependency.
+
+    ! IMPORTANT CONTEXT
+      Catalog already depends on Billing. Declaring this edge would create another
+      cycle.
+
+    POSSIBLE NEXT STEPS
+      1. Move the cross-module operation to its owning module.
+      2. Review the existing reverse dependency before changing the descriptor.
+      3. Extract a shared contract only if both interactions are genuinely
+      required.
+  ────────────────────────────────────────────────────────────────────────────────
+  03 Application classes cannot be resolved
+  3 findings · Unresolved source
+
+    Billing → App\Missing\InvoiceClient
+    Billing/Service/InvoiceGateway.php:14
+    +2 related locations (see -v)
+
+    WHAT IS WRONG
+      Three references point to application classes that cannot be resolved
+      through the configured autoload mappings.
+
+    POSSIBLE NEXT STEPS
+      1. Check spelling, namespaces and use statements at each location.
+      2. Restore missing files or correct Composer PSR-4 mappings.
+  ────────────────────────────────────────────────────────────────────────────────
+  04 A required module is disabled
+  2 findings · Activation
+
+    Admin → Notification
+    Admin/Service/AlertPublisher.php:27
+    +1 related location (see -v)
+
+    WHAT IS WRONG
+      Admin uses Notification although Notification is disabled in the current
+      architecture.
+
+    POSSIBLE NEXT STEPS
+      1. Enable Notification if Admin needs this feature.
+      2. Otherwise remove or relocate the access to the inactive module.
+  ────────────────────────────────────────────────────────────────────────────────
+  05 Private module used outside its Project
+  2 findings · Project boundary
+
+    Shop → Admin / Reports
+    src/Project/Shop/Controller/ExportController.php:32
+    +1 related location (see -v)
+
+    WHAT IS WRONG
+      Code in Shop references a private module that belongs to the Admin Project.
+
+    POSSIBLE NEXT STEPS
+      1. Keep Reports inside its owning Admin Project.
+      2. Move reusable contracts or behavior into a shared module if cross-Project
+      access is required.
+
+  ────────────────────────────────────────────────────────────────────────────────
+  Technical context: -v · No source files were changed.
+
