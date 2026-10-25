@@ -56,7 +56,7 @@ Install Sillbeam in your Symfony application's root directory:
 composer require websign-dev/sillbeam-core:^0.2.0
 ```
 
-The target version is **v0.2.0 (unreleased)**. After publication, the constraint `^0.2.0` allows compatible updates within the 0.2 release line. To install exactly this version, use `composer require websign-dev/sillbeam-core:0.2.0`.
+The current Core version is **v0.2.0**. The package is [registered on Packagist][composer-url]. The constraint `^0.2.0` allows compatible updates within the 0.2 release line; it requires the stable `0.2.0` version to be listed by Packagist. Package registration alone does not provide that version. To pin it exactly, use `composer require websign-dev/sillbeam-core:0.2.0`. See [release status](#release-status) for the tag check.
 
 ### Register Sillbeam
 
@@ -82,7 +82,7 @@ sillbeam:
 <details>
 <summary><strong>Install through Symfony Flex</strong></summary>
 
-The [Flex recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md) registers the bundle and creates the route import above when available through your Symfony Flex endpoint. Recipe availability is independent of Composer package installation. Publishing the v0.2.0 tag does not activate the recipe: Packagist availability, a matching released version, Contrib review/acceptance and a populated Flex endpoint are separate prerequisites. Consumers must allow Contrib recipes (`composer config extra.symfony.allow-contrib true`). If Composer/Flex does not install the recipe, register the bundle and route import manually as shown above.
+The [Flex recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md) registers the bundle and creates the route import above when available through your Symfony Flex endpoint. Recipe availability is independent of Composer package installation. The recipe is technically complete and locally tested, but public Recipes Contrib approval is outstanding. The package is already registered on Packagist. A matching stable package version, Contrib acceptance and endpoint availability are required for automatic recipe installation; the v0.2.0 tag alone does not activate it. Consumers must allow Contrib recipes (`composer config extra.symfony.allow-contrib true`). If Composer/Flex does not install the recipe, register the bundle and route import manually as shown above.
 
 </details>
 
@@ -177,7 +177,11 @@ Architecture errors block ordinary container-backed commands. With `Sillbeam\Cor
 
 ## Release status
 
-Sillbeam Core **v0.2.0** is being prepared as `websign-dev/sillbeam-core`; it has not been published. The [changelog](CHANGELOG.md) and [release notes](docs/releases/0.2.0.md) describe its scope and limitations. Composer derives the package version from the Git tag; `0.2.x-dev` is the development branch alias.
+Sillbeam Core **v0.2.0** is the finished, feature-frozen Core version, distributed as [`websign-dev/sillbeam-core`][composer-url]. The [changelog](CHANGELOG.md) and [release notes](docs/releases/0.2.0.md) describe its features, breaking changes and known limits, including the completed Doctor F01/F02 corrections.
+
+The package is registered on Packagist. At the public metadata check on **2026-10-25**, the [GitHub tag list](https://github.com/WebSign-Dev/sillbeam-core/tags) contained `v0.1.0` and no `v0.2.0`; Packagist listed no package versions. Stable installation therefore depends on making the corresponding Git tag available to Packagist. Composer derives the version from that tag; no fixed `version` field is needed, and `0.2.x-dev` remains the development branch alias.
+
+The only outstanding external integration is public approval of the locally tested [Symfony Recipes Contrib recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md). Manual integration works independently of that approval. Finalizing this repository does not create a tag, publish a package version or submit the recipe.
 
 See the [v0.2 migration guide](docs/migration/0.2.0.md) for the breaking package, namespace and bundle changes.
 
@@ -234,5 +238,5 @@ Sillbeam is licensed under the [MIT License](LICENSE).
 [ci-shield]: https://github.com/WebSign-Dev/sillbeam-core/actions/workflows/ci.yml/badge.svg
 [php-shield]: https://img.shields.io/badge/PHP-%E2%89%A5%208.4-777bb4?logo=php&logoColor=white
 [symfony-shield]: https://img.shields.io/badge/Symfony-7.4%20%7C%208.x-000000?logo=symfony&logoColor=white
-[status-shield]: https://img.shields.io/badge/status-v0.2.0%20unreleased-57606a
+[status-shield]: https://img.shields.io/badge/status-v0.2.0-57606a
 [license-shield]: https://img.shields.io/badge/license-MIT-57606a

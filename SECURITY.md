@@ -3,12 +3,12 @@
 
 ## Supported Versions
 
-Sillbeam provides security fixes for the latest published release on a best-effort basis.
+Sillbeam Core provides security fixes for the current Core release line on a best-effort basis. See [release status](README.md#release-status) for stable package-version availability.
 
 | Version | Supported |
 |---------|-----------|
-| v0.1.0 (latest published release) | ✅ |
-| Older versions | ❌ |
+| v0.2.x (current Core release line) | ✅ |
+| v0.1.x and older | ❌ |
 
 No long-term security support or guaranteed maintenance period is provided.
 

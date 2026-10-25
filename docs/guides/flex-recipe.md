@@ -2,7 +2,7 @@
 
 The Contrib recipe source for v0.2.0 is in [flex-recipe](../../flex-recipe/README.md). It registers SillbeamCoreBundle and imports `type: sillbeam` once for routing. Doctrine activates only when DoctrineBundle is installed and registered. The recipe does not install Foundation.
 
-After publication, install v0.2.0 with `composer require websign-dev/sillbeam-core:^0.2.0`. Flex recipe availability depends on the configured Symfony Flex endpoint and is independent of package installation. If the recipe is not installed automatically, register the bundle and route import manually as shown in the [README](../../README.md). A local Composer/Flex installation test checks registration, files, symfony.lock, installation without a package configuration file, both kernels and subsequent removal: `composer test:flex-recipe`.
+Install Sillbeam Core v0.2.0 with `composer require websign-dev/sillbeam-core:^0.2.0`. The package is registered on Packagist; this command requires its stable `0.2.0` version to be available (see [release status](../../README.md#release-status)). The recipe is technically complete and locally tested, but public Recipes Contrib approval is outstanding. Flex recipe availability depends on the configured Symfony Flex endpoint and is independent of package installation. If the recipe is not installed automatically, register the bundle and route import manually as shown in the [README](../../README.md). A local Composer/Flex installation test checks registration, files, symfony.lock, installation without a package configuration file, both kernels and subsequent removal: `composer test:flex-recipe`.
 
 The recipe preserves existing `services.yaml` files. In a Symfony skeleton, keep the active `App\:` import and add `Module`/`Project` or custom discovery areas to its exclusions when Sillbeam should control automatic activation. See the [integration rules](getting-started.md#preserve-symfony-integration). The local Flex test uses this normal import, checks a native service and a disabled module, and boots both kernels in development/production with cold and warm caches.
 
@@ -31,8 +31,9 @@ manifest contains only `bundles` and `copy-from-recipe`; the endpoint generates
 its post-install output metadata. Neither the source text file nor an empty
 package configuration is copied into your application.
 
-For public installation, the package must exist on Packagist with a matching
-released version, the separate Recipes Contrib review must be completed, and
+The package already exists on Packagist. For public automatic recipe installation,
+a matching stable package version must be available, the separate Recipes Contrib
+review must be completed, and
 the accepted recipe must be available through the configured endpoint. Publishing
 the v0.2.0 tag alone does not activate it. Enable Contrib recipes with
 `composer config extra.symfony.allow-contrib true` and allow the Flex plugin.

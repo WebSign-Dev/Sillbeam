@@ -1,15 +1,15 @@
 # Changelog
 
-This changelog records released versions and unreleased changes of Sillbeam.
+This changelog records the version history of Sillbeam Core.
 
-## v0.2.0 — unreleased
+## v0.2.0
 
 ### Breaking changes
 
 - Rename the Composer package from `websign-dev/sillbeam` to `websign-dev/sillbeam-core`, move PHP APIs from `Sillbeam\` to `Sillbeam\Core\`, and replace `Sillbeam\SillbeamBundle` with `Sillbeam\Core\SillbeamCoreBundle`. The extension is now `Sillbeam\Core\DependencyInjection\SillbeamCoreExtension`; no compatibility aliases for the former PHP APIs are provided.
 - Retain the `sillbeam` configuration root/extension alias, existing `sillbeam:*` command names, route-loader type and named service IDs. Class-based service references must use the new namespace. Module/Project ownership, activation and dependency boundaries remain in place.
 - Require prebuilt containers for non-debug production HTTP: cold requests that would need compilation receive a generic 503. CLI builds remain strict and cache clear/warmup recheck current sources even when a previous container is cached.
-- Replace the earlier architecture text layout with CLI prototype 1.2 presentation. Scripts that consume human-readable output should use schema-version-1 JSON instead. Repository migration, package publication and release tagging remain separate steps. See the [upgrade guide](docs/migration/0.2.0.md).
+- Replace the earlier architecture text layout with CLI prototype 1.2 presentation. Scripts that consume human-readable output should use schema-version-1 JSON instead. See the [upgrade guide](docs/migration/0.2.0.md).
 
 ### Architecture diagnostics and developer guidance
 
@@ -41,7 +41,7 @@ This changelog records released versions and unreleased changes of Sillbeam.
 - Follow Symfony debug/resource tracking for cold or rebuilt development containers. Non-debug production HTTP consumes prebuilt registries/services/routes/mappings without fresh source analysis. Validate immutable releases through CLI before activation; a successful `--no-warmup` is not sufficient for serving traffic.
 - Update the development/reference-app HttpFoundation locks to 8.1.9/7.4.21 for the recorded advisory, without changing dependency constraints. Target Symfony 7.4/8.1 in the current PHP 8.4/8.5 CI matrix and include lockfile audits and no-dev ZIP installation checks.
 - Record synthetic module/native-Symfony benchmarks with measurement limits, not a general performance claim. See the [RC report](docs/development/core-rc-2026-10-23.md).
-- Record the [independent installation acceptance](docs/development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md): 542 tests/6050 assertions in the isolated PHP-8.5 run, consumer checks on PHP 8.4/8.5 with Symfony 7.4/8.1, HTTP, reports, Doctrine and uninstall evidence. Its historical verdict is **not an unconditional release approval**. The follow-up verifies the F01/F02 corrections; unknown configuration still needs manual review, and the ordinary Symfony entry point can write cache files before Doctor runs (F03). Public package/recipe prerequisites remain outstanding in the dated report.
+- Record the [independent installation acceptance](docs/development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md): 542 tests/6050 assertions in the isolated PHP-8.5 run, consumer checks on PHP 8.4/8.5 with Symfony 7.4/8.1, HTTP, reports, Doctrine and uninstall evidence. Preserve its historical findings and verdict. The [completed follow-up](docs/development/doctor-f01-f02-verification-2026-10-25/README.md) verifies both Doctor corrections with four full PHP/Symfony suite runs (550 tests each), 56 passing consumer scenarios and 40 unchanged read-only snapshots. Unknown configuration still needs manual review; ordinary Symfony boot can write cache files before Doctor runs (F03). Package registration is complete; public Recipes Contrib approval remains a separate external integration.
 
 ## v0.1.0
 

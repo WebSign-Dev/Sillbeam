@@ -4,9 +4,13 @@
 
 # Sillbeam Symfony Flex Recipe
 
-This directory contains the publishable Symfony Recipes Contrib source for
+This directory contains the technically complete, locally tested Symfony Recipes
+Contrib source for
 `websign-dev/sillbeam-core`. Its directory layout can be copied directly into a
-fork of `symfony/recipes-contrib`:
+fork of `symfony/recipes-contrib`. Public Contrib approval remains outstanding;
+the Composer package is already registered on Packagist.
+
+Recipe layout:
 
 ```text
 websign-dev/sillbeam-core/0.2/
@@ -44,7 +48,7 @@ The PHP package cannot load its own recipe. Until the recipe is merged into
 Symfony Recipes Contrib, consumers either register the bundle and route import manually or use
 their own Flex endpoint containing this recipe.
 
-After publication, install v0.2.0 with `composer require websign-dev/sillbeam-core:^0.2.0`. The `0.2/` recipe applies to v0.2.0 and later compatible 0.2 versions. Recipe availability is independent of Composer package installation. Manual setup remains supported.
+Install Sillbeam Core v0.2.0 with `composer require websign-dev/sillbeam-core:^0.2.0`. The command requires the stable `0.2.0` package version to be listed on Packagist; existing registration alone does not provide a version. See [release status](../README.md#release-status). The `0.2/` recipe applies to v0.2.0 and later compatible 0.2 versions. Recipe availability is independent of Composer package installation. Manual setup remains supported.
 
 The package declares `type: symfony-bundle`, following [Symfony bundle installation guidance](https://symfony.com/doc/current/bundles/best_practices.html#installation). No semantically empty file is created under `config/packages`, as required by the [recipe checklist](https://github.com/symfony/recipes/blob/main/README.rst#recipe-checklist).
 
@@ -59,8 +63,9 @@ The recipe never edits `bin/console` or `services.yaml`.
 
 ## Submit to symfony/recipes-contrib
 
-1. Ensure `websign-dev/sillbeam-core` exists on Packagist and a matching released
-   package version (at least 0.2.0) is available. The package must retain its MIT
+1. `websign-dev/sillbeam-core` is already registered on Packagist. Once the stable
+   Core tag is available, verify that Packagist lists a matching released version
+   (at least 0.2.0) before submitting the recipe. The package must retain its MIT
    license and `symfony-bundle` type. A local path repository does not prove this.
 2. Copy only `websign-dev/sillbeam-core/0.2/` from this directory into a checkout
    of `symfony/recipes-contrib`, preserving that directory structure. Do not copy
@@ -77,10 +82,10 @@ The recipe never edits `bin/console` or `services.yaml`.
    Flex endpoint. Consumers must allow Contrib recipes, for example with
    `composer config extra.symfony.allow-contrib true`, and allow the Flex plugin.
 
-Publishing the v0.2.0 package tag alone does **not** activate this recipe. Public
-package availability, recipe acceptance and endpoint availability are separate
-steps. Until then, use manual installation or an explicitly configured private
-endpoint. The `0.2` directory describes the minimum recipe version; Flex chooses
+Publishing the v0.2.0 package tag alone does **not** activate this recipe. Stable
+package-version availability, recipe acceptance and endpoint availability are
+separate steps. Package registration is complete. Until recipe approval, use
+manual installation or an explicitly configured private endpoint. The `0.2` directory describes the minimum recipe version; Flex chooses
 an eligible recipe independently of the package's own release archive.
 
 ## Source format and ownership

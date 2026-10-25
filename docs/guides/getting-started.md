@@ -25,13 +25,13 @@ DoctrineBundle activates mapping integration automatically. `sillbeam: { doctrin
 
 ## Installation and autoloading
 
-After publication, install v0.2.0 through Composer from your Symfony application's root directory:
+Install Sillbeam Core v0.2.0 through Composer from your Symfony application's root directory:
 
 ```bash
 composer require websign-dev/sillbeam-core:^0.2.0
 ```
 
-The constraint allows compatible 0.2 updates. Use `composer require websign-dev/sillbeam-core:0.2.0` to pin this exact version. See [Composer installation](../../README.md#install-with-composer). Flex recipe availability is independent of the package; if no recipe is installed, register the bundle and route import manually as shown in the README.
+The package is already registered on Packagist. This command requires the stable `0.2.0` version to be listed there; registration alone does not supply a version. See [release status](../../README.md#release-status). The constraint allows compatible 0.2 updates. Use `composer require websign-dev/sillbeam-core:0.2.0` to pin this exact version. See [Composer installation](../../README.md#install-with-composer). The locally tested recipe awaits public Recipes Contrib approval; if no recipe is installed, register the bundle and route import manually as shown in the README.
 
 Use `php bin/console sillbeam:doctor` to inspect static installation evidence.
 `verified` means file evidence, not certification of effective runtime behavior;
