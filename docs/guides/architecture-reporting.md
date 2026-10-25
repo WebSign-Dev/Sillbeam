@@ -56,6 +56,20 @@ The document includes version, UTC check time, status, completeness, separate
 finding/diagnosis counts, catalog overview and every complete diagnosis. Original
 findings retain their rule, severity, message, context and locations. Recommendations
 come from the same engine as the CLI, with domain choices labeled explicitly.
+The document separates **Architecture Summary**, **Architecture Overview**,
+**Diagnoses & Resolutions** and **Technical Evidence**. Overview tables contain
+readable module/Project labels, not absolute paths or FQCNs. Private modules include
+their owning Project; name collisions receive IDs and, when needed for invalid
+duplicates, local ordinals. Those labels are not PHP class expressions. Long
+lists remain complete below the tables; unusually long names get their own list
+entry. Technical evidence maps labels to full original identities and files.
+Diagnosis locations use the known readable relative paths; original full paths
+remain in the evidence section. Each diagnosis keeps the engine's reason and
+next steps without repeating the explanation in the technical section.
+
+See the [generated example reports](../examples/architecture-reports/README.md)
+for small, large, incomplete and colliding-name catalogs.
+
 The optional `--couplings` appendix uses the same source/target evidence as CLI
 couplings. Without it the document contains no coupling appendix.
 

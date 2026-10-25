@@ -88,6 +88,10 @@ final class ArchitecturePresentation
             $issues[] = [
                 'title' => $title, 'category' => $category, 'relation' => $relation,
                 'problem' => implode(' ', array_unique($summary)), 'impact' => $impact,
+                // Markdown may need different identity labels without reversing already-shortened CLI text.
+                'original_problem' => implode(' ', array_unique(array_map(static fn ($detail): string => $detail->problem, $diagnosis->details))),
+                'original_impact' => implode(' ', array_unique(array_map(static fn ($detail): string => $detail->impact, $diagnosis->details))),
+                'relation_modules' => 'declared_cycle' === $diagnosis->basis ? $diagnosis->modules : [],
                 'summary' => implode(' ', array_unique($summary)).($caution ? '' : ' '.$impact),
                 'caution' => $caution ? $impact : null,
                 'steps' => array_values(array_unique($steps)), 'findings' => \count($diagnosis->findings),
@@ -105,7 +109,7 @@ final class ArchitecturePresentation
             ksort($targets);
             foreach ($targets as $class => $evidence) {
                 $name = $labels[$source] ?? self::shortClass($source, 'Module');
-                $couplings[] = ['relation' => $name.' → '.$class, 'summary' => $name.' references application code outside its module.', 'references' => $evidence];
+                $couplings[] = ['source' => $source, 'relation' => $name.' → '.$class, 'summary' => $name.' references application code outside its module.', 'references' => $evidence];
             }
         }
 
@@ -138,7 +142,7 @@ final class ArchitecturePresentation
                 $targets[$reference['class']][] = $reference;
             }
             foreach ($targets as $class => $references) {
-                $view['couplings'][] = ['relation' => $module['id'].' → '.$class, 'summary' => $module['id'].' references application code outside its module.', 'references' => $references];
+                $view['couplings'][] = ['source' => $module['class'], 'relation' => $module['id'].' → '.$class, 'summary' => $module['id'].' references application code outside its module.', 'references' => $references];
             }
         }
 

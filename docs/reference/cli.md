@@ -126,14 +126,25 @@ The report is a standalone document, not a terminal transcript. It includes:
 
 1. Installed Sillbeam version, UTC check time, status and analysis completeness.
 2. Separate finding/diagnosis counts, violations/blockers and module/Project counts.
-3. A compact catalog of descriptors, scope/ownership, declared dependencies and
-   Project hosts. Invalid analysis identifies these as declarations only; unknown
+3. A compact overview with module names, scope, state, named dependencies and
+   Project hosts. Descriptor classes and absolute paths are kept in technical
+   evidence. Invalid analysis identifies these as declarations only; unknown
    activation or graph validity is never presented as approved.
 4. Every diagnosis, with the shared engine's problem, reason, next steps and
    locations. Domain options remain explicitly identified.
-5. All assigned original findings with rule, severity, original message and
+5. A separate **Technical Evidence** section with catalog identity mappings and
+   all assigned original findings, rule codes, severity, original messages and
    complete context, including original paths and line numbers.
 6. An optional informative coupling appendix, enabled only by `--couplings`.
+
+The overview distinguishes private modules with their owning Project. Duplicate
+names gain their actual IDs; invalid duplicate IDs additionally get deterministic
+local ordinals. These labels are display names, never executable PHP references.
+Unresolved targets stay explicitly marked and retain their reported class in
+technical evidence. Referenced classes that collide with a module/Project label
+are marked “(class)”. Long lists are expanded below tables rather than truncated;
+individual very long names use list entries while ordinary rows remain compact.
+See the [analyzer-backed example reports](../examples/architecture-reports/README.md).
 
 `php bin/console sillbeam:report` excludes Application couplings by default.
 `--couplings` uses the same observed classes, source locations and target paths
