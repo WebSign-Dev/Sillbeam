@@ -199,6 +199,58 @@ PHP);
         self::assertSame([], json_decode($json, true, flags: \JSON_THROW_ON_ERROR)['findings']);
     }
 
+    public function testDescriptorAdviceCannotResolveToTheImportedUserEntity(): void
+    {
+        // Use the exact application names in fresh CLI processes to avoid App fixture collisions.
+        $console = file_get_contents($this->source->directory.'/bin/console');
+        self::assertIsString($console);
+        $this->source->write('bin/console', str_replace('$loader->register(true);', '$loader->addPsr4("App\\\\", \\dirname(__DIR__)."/src"); $loader->register(true);', $console));
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    discovery:\n        namespace: 'App\\'\n");
+        $this->source->write('src/Module/User/UserModule.php', '<?php namespace App\\Module\\User; #[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class UserModule {}');
+        $this->source->write('src/Module/User/Entity/User.php', '<?php namespace App\\Module\\User\\Entity; final class User {}');
+        $this->source->write('src/Module/User/Service/User.php', '<?php namespace App\\Module\\User\\Service; final class User {}');
+        $descriptor = '<?php namespace App\\Module\\Portrait; use App\\Module\\User\\Entity\\User; #[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(dependencies: [%s])] final class PortraitModule {}';
+        $this->source->write('src/Module/Portrait/PortraitModule.php', \sprintf($descriptor, ''));
+        $this->source->write('src/Module/Portrait/Consumer.php', '<?php namespace App\\Module\\Portrait; use App\\Module\\User\\Entity\\User; final class Consumer { public User $user; }');
+        $expression = '\\App\\Module\\User\\UserModule::class';
+        foreach ([[], ['--all'], ['--issue=1'], ['-v']] as $options) {
+            [$code, $text, $stderr] = $this->runConsole(['sillbeam:architecture', ...$options, '--no-ansi']);
+            self::assertSame(1, $code, $stderr);
+            $unwrapped = preg_replace('/\s+/', '', $text) ?? '';
+            self::assertStringContainsString('Portrait→User', $unwrapped);
+            self::assertStringContainsString('add'.$expression.'totheSillbeamModuledependencieslist', $unwrapped);
+            self::assertStringNotContainsString('addUser::class', $unwrapped);
+            self::assertStringNotContainsString('add\\App\\Module\\User\\Entity\\User::class', $unwrapped);
+            self::assertStringNotContainsString('add\\App\\Module\\User\\Service\\User::class', $unwrapped);
+        }
+        [$code, $text, $stderr] = $this->runConsole(['sillbeam:report', '--no-ansi']);
+        self::assertSame(1, $code, $stderr);
+        $markdown = file_get_contents($this->source->directory.'/architecture-report.md');
+        self::assertIsString($markdown);
+        self::assertStringContainsString('add '.str_replace('\\', '\\\\', $expression).' to the SillbeamModule dependencies list', $markdown);
+        self::assertStringNotContainsString('add User::class', $markdown);
+
+        // Copy the actual displayed PHP token, retaining the conflicting Entity import.
+        [$code, $text] = $this->runConsole(['sillbeam:architecture', '--no-ansi']);
+        self::assertSame(1, $code);
+        $unwrapped = preg_replace('/\s+/', '', $text) ?? '';
+        if (1 !== preg_match('/add(\\\\[A-Za-z_][A-Za-z0-9_\\\\]*::class)totheSillbeamModule/', $unwrapped, $match)) {
+            self::fail($text);
+        }
+        self::assertSame($expression, $match[1]);
+        $this->source->write('src/Module/Portrait/PortraitModule.php', \sprintf($descriptor, $match[1]));
+        [$code, $json, $stderr] = $this->runConsole(['sillbeam:architecture', '--format=json']);
+        self::assertSame(0, $code, $stderr);
+        self::assertSame([], json_decode($json, true, flags: \JSON_THROW_ON_ERROR)['findings']);
+
+        // Demonstrate why the old short token is unsafe with this real PHP import.
+        $this->source->write('src/Module/Portrait/PortraitModule.php', \sprintf($descriptor, 'User::class'));
+        [$code, $json, $stderr] = $this->runConsole(['sillbeam:architecture', '--format=json']);
+        self::assertSame(1, $code, $stderr);
+        $findings = json_decode($json, true, flags: \JSON_THROW_ON_ERROR)['findings'];
+        self::assertContains('dependency.unknown', array_column($findings, 'rule'));
+    }
+
     public function testRelatedCommandsUseTheSameStyleAndPreserveTheirActualEffects(): void
     {
         $this->modules(false);

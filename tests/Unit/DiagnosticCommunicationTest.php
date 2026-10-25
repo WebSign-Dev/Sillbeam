@@ -158,6 +158,38 @@ final class DiagnosticCommunicationTest extends TestCase
         self::assertStringNotContainsString($secret.'::class', implode(' ', $diagnosis->resolutions[0]->steps));
     }
 
+    public function testSameNamedPrivateDescriptorsKeepDistinctExecutableRecommendations(): void
+    {
+        $targets = [];
+        foreach (['Shop', 'Office'] as $project) {
+            $targets[$project] = $this->module('User', project: $project);
+            $portrait = $this->module('Portrait', project: $project);
+            $entity = $this->source->php('src/Project/'.$project.'/Module/User/Entity/User.php', 'final class User {}');
+            $this->source->php('src/Project/'.$project.'/Module/Portrait/Consumer.php', 'final class Consumer { public \\'.$entity.' $user; }');
+            $this->project($project, [$portrait, $targets[$project]]);
+        }
+        $config = ['projects' => ['shop' => ['hosts' => ['shop.test']], 'office' => ['hosts' => ['office.test']]]];
+        $analysis = $this->analyze($config);
+        self::assertSame(['code.undeclared_dependency', 'code.undeclared_dependency'], array_column($analysis->findings, 'rule'));
+        $report = ArchitectureReport::fromAnalysis($analysis);
+        $output = new BufferedOutput();
+        (new ArchitectureRenderer($output, 90, all: true))->render($report->presentation);
+        $text = preg_replace('/\s+/', '', $output->fetch()) ?? '';
+        $markdown = (new ReportRenderer($report))->markdown('test', new \DateTimeImmutable());
+        foreach ($targets as $project => $target) {
+            self::assertStringContainsString('add\\'.$target.'::classtotheSillbeamModule', $text);
+            self::assertStringContainsString('add '.str_replace('\\', '\\\\', '\\'.$target).'::class', $markdown);
+            $this->module('Portrait', [$target], $project);
+        }
+        self::assertStringNotContainsString('addUser::class', $text);
+        self::assertSame([], $this->freshRules($config));
+
+        // The other Project's same-named User remains private, even with a familiar label.
+        $other = $this->source->namespace.'\\Project\\Office\\Module\\User\\Entity\\User';
+        $this->source->php('src/Project/Shop/Module/Portrait/CrossProject.php', 'final class CrossProject { public \\'.$other.' $user; }');
+        self::assertSame(['code.private'], $this->freshRules($config));
+    }
+
     /** @return iterable<string, array{string}> */
     public static function activationModes(): iterable
     {
