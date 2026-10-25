@@ -9,6 +9,7 @@ use Sillbeam\Core\Architecture\ArchitectureAnalysisResult;
 use Sillbeam\Core\Architecture\ArchitectureFinding;
 use Sillbeam\Core\Architecture\ArchitectureReport;
 use Sillbeam\Core\Architecture\Console\ReportCommand;
+use Sillbeam\Core\Architecture\Console\ReportRenderer;
 use Sillbeam\Core\Tests\Support\SourceWorkspace;
 use Symfony\Component\Console\Tester\CommandTester;
 
@@ -46,8 +47,82 @@ final class MarkdownReportTest extends TestCase
             if (1 === $report->exitCode()) {
                 self::assertStringContainsString('Violations: 1', $markdown);
                 self::assertStringContainsString('/app/User.php:12', $markdown);
-                self::assertStringContainsString('Correct the referenced module class', $markdown);
+                self::assertStringContainsString('**Next steps**', $markdown);
             }
+        }
+    }
+
+    public function testAllDiagnosesRetainStructuredOriginalEvidenceAndJson(): void
+    {
+        $report = ArchitectureReport::fromAnalysis(new ArchitectureAnalysisResult([
+            new ArchitectureFinding('code.unknown_class', 'Missing Café type <unsafe> | value.', ['module' => 'App\\UserModule', 'class' => 'App\\Missing', 'file' => '/app/日本/Café|[x].php', 'line' => 17]),
+            new ArchitectureFinding('dependency.unknown', 'Unknown target.', ['module' => 'App\\CatalogModule', 'target' => 'App\\Absent', 'file' => '/app/CatalogModule.php']),
+        ]));
+        $before = $report->toJson();
+        $text = (new ReportRenderer($report))->markdown('test', new \DateTimeImmutable('2026-10-25T10:00:00+02:00'));
+        self::assertStringContainsString('Checked at: 2026-10-25T08:00:00+00:00', $text);
+        foreach (['Analysis complete: yes', 'Findings: 2', 'Diagnoses: 2', '## Architecture overview', '## Diagnoses', '### 1.', '### 2.', '**Problem**', '**Why it matters**', '**Next steps**', '**Technical evidence**', 'code.unknown\\_class', 'dependency.unknown', 'Café', '日本', '17', 'App\\\\Absent'] as $expected) {
+            self::assertStringContainsString($expected, $text);
+        }
+        self::assertStringNotContainsString('<unsafe>', $text);
+        self::assertStringNotContainsString("\033", $text);
+        self::assertSame($before, $report->toJson());
+        self::assertSame(2, substr_count($text, '**Original finding '));
+    }
+
+    public function testManyFindingsUseTheSharedGroupsWithoutLosingLocations(): void
+    {
+        $findings = [];
+        for ($line = 1; $line <= 20; ++$line) {
+            $findings[] = new ArchitectureFinding('code.unknown_class', 'Unresolved type '.$line, ['module' => 'App\\UserModule', 'class' => 'App\\Missing', 'file' => '/app/User.php', 'line' => $line]);
+        }
+        $report = ArchitectureReport::fromAnalysis(new ArchitectureAnalysisResult($findings));
+        $text = (new ReportRenderer($report))->markdown('source', new \DateTimeImmutable());
+        self::assertStringContainsString('Findings: 20 · Diagnoses: '.\count($report->presentation['issues']), $text);
+        self::assertSame(20, substr_count($text, '**Original finding '));
+        foreach ($report->presentation['issues'] as $issue) {
+            self::assertStringContainsString(str_replace(['\\', '-'], ['\\\\', '\\-'], $issue['problem']), $text);
+            self::assertStringContainsString(str_replace(['\\', '-'], ['\\\\', '\\-'], $issue['impact']), $text);
+        }
+        foreach (range(1, 20) as $line) {
+            self::assertStringContainsString('/app/User.php:'.$line, $text);
+        }
+    }
+
+    public function testCustomProviderRetainsEveryOriginalContextIncludingSuggestions(): void
+    {
+        $data = ArchitectureReport::fromAnalysis(new ArchitectureAnalysisResult([
+            new ArchitectureFinding('custom.rule', 'Original message', ['suggestion' => 'PRESERVE_FIRST', 'file' => '/app/Original.php', 'line' => 3]),
+            new ArchitectureFinding('custom.rule', 'Original message', ['suggestion' => 'PRESERVE_SECOND', 'file' => '/app/Original.php', 'line' => 3]),
+        ]))->data;
+        $text = (new ReportRenderer(new ArchitectureReport($data)))->markdown('source', new \DateTimeImmutable());
+        self::assertSame(2, substr_count($text, '**Original finding '));
+        self::assertStringContainsString('suggestion: PRESERVE\\_FIRST', $text);
+        self::assertStringContainsString('suggestion: PRESERVE\\_SECOND', $text);
+    }
+
+    public function testIncompleteReportDoesNotClaimAnApprovedGraph(): void
+    {
+        $report = ArchitectureReport::unavailable(new \RuntimeException('Broken <config>.'));
+        $text = (new ReportRenderer($report))->markdown('source', new \DateTimeImmutable());
+        foreach (['Status: unavailable', 'Analysis complete: no', 'Analysis incomplete', 'activation and graph validity are unknown', 'report.execution', 'Broken'] as $expected) {
+            self::assertStringContainsString($expected, $text);
+        }
+    }
+
+    public function testCouplingsAreOptInAndUseTheSharedPresentation(): void
+    {
+        $report = new ArchitectureReport([
+            'schema_version' => 1, 'status' => 'valid', 'valid' => true, 'complete' => true, 'findings' => [], 'projects' => [],
+            'modules' => [['id' => 'user', 'class' => 'App\\UserModule', 'scope' => 'shared', 'project' => null, 'enabled' => true, 'active' => true, 'descriptor' => '/app/UserModule.php', 'declared_dependencies' => [], 'application_references' => [['class' => 'App\\Mail', 'file' => '/app/Consumer.php', 'line' => 9, 'target_file' => '/app/Mail.php']]]],
+        ]);
+        $tester = new CommandTester(new ReportCommand($report, $this->source->directory));
+        self::assertSame(0, $tester->execute([]));
+        self::assertStringNotContainsString('Application couplings', (string) file_get_contents($this->source->directory.'/architecture-report.md'));
+        self::assertSame(0, $tester->execute(['--couplings' => true]));
+        $text = (string) file_get_contents($this->source->directory.'/architecture-report.md');
+        foreach (['Application couplings (informational)', 'not architecture violations', 'Mail.php', 'Consumer.php:9', 'App\\\\Mail'] as $expected) {
+            self::assertStringContainsString($expected, $text);
         }
     }
 
@@ -97,14 +172,17 @@ final class MarkdownReportTest extends TestCase
     public function testMarkdownEscapesSourceContentInsteadOfEmbeddingHtmlOrFormatting(): void
     {
         $report = ArchitectureReport::fromAnalysis(new ArchitectureAnalysisResult([
-            new ArchitectureFinding('custom.rule', '<script>bad</script> [link](https://example.test) **bold**'),
+            new ArchitectureFinding('custom.rule', '1. <script>bad</script> [link](https://example.test) **bold** &lt;img&gt; Café | 日本'),
         ]));
         $tester = new CommandTester(new ReportCommand($report, $this->source->directory));
         self::assertSame(1, $tester->execute([]));
         $markdown = (string) file_get_contents($this->source->directory.'/architecture-report.md');
+        self::assertStringContainsString('1\\. \\<script', $markdown);
         self::assertStringNotContainsString('<script>', $markdown);
         self::assertStringNotContainsString('**bold**', $markdown);
         self::assertStringContainsString('\\<script\\>', $markdown);
+        self::assertStringContainsString('&amp;lt;img&amp;gt;', $markdown);
+        self::assertStringContainsString('Café \\| 日本', $markdown);
     }
 
     public function testProviderFailureStillWritesUnavailableReportWithoutLeakingOutput(): void

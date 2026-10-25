@@ -25,6 +25,24 @@ final class ReportCommand extends Command
 
     protected function configure(): void
     {
+        $this->addOption('couplings', null, InputOption::VALUE_NONE, 'Include the informational Application coupling appendix.');
+        $this->setHelp(<<<'HELP'
+Write a standalone Markdown document with every diagnosis, next steps and original
+finding. Application couplings are informational, not architecture violations,
+and are included only with --couplings.
+
+  php bin/console sillbeam:report
+  php bin/console sillbeam:report --output=docs/architecture-report.md
+  php bin/console sillbeam:report --couplings --output=architecture-report.md
+
+The default is architecture-report.md in the project root. Relative --output paths
+use that root; absolute local paths are accepted. The parent directory must exist.
+Replacement is atomic. Violations and unavailable analysis still produce a report
+when writing is possible. Exit codes: 0 valid, 1 violations, 2 unavailable, invalid
+usage or write failure. --quiet suppresses status output, not file writing.
+Use Sillbeam\Core\Console\Application in bin/console to report without a compiled
+container. No source files or architecture configuration are changed.
+HELP);
         $this->addOption('output', null, InputOption::VALUE_REQUIRED, 'Report path, relative to the project root or absolute.', 'architecture-report.md');
     }
 
@@ -47,7 +65,7 @@ final class ReportCommand extends Command
                 throw new \RuntimeException('Output directory does not exist: '.$directory);
             }
             $version = InstalledVersions::isInstalled('websign-dev/sillbeam-core') ? (InstalledVersions::getPrettyVersion('websign-dev/sillbeam-core') ?? 'unknown') : 'source';
-            $markdown = (new ReportRenderer($report))->markdown($version, new \DateTimeImmutable());
+            $markdown = (new ReportRenderer($report))->markdown($version, new \DateTimeImmutable(), (bool) $input->getOption('couplings'));
             $temporary = @tempnam($directory, '.sillbeam-report-');
             if (false === $temporary || realpath(\dirname($temporary)) !== realpath($directory)) {
                 throw new \RuntimeException('Cannot create a temporary report in '.$directory);

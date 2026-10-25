@@ -6,62 +6,112 @@ namespace Sillbeam\Core\Architecture\Console;
 
 use Sillbeam\Core\Architecture\ArchitectureReport;
 
-/** @internal Human-readable views of the existing report data. */
+/** @internal Standalone Markdown using the same diagnostic recommendations as the CLI. */
 final readonly class ReportRenderer
 {
     public function __construct(private ArchitectureReport $report)
     {
     }
 
-    public function markdown(string $version, \DateTimeImmutable $checkedAt): string
+    public function markdown(string $version, \DateTimeImmutable $checkedAt, bool $includeCouplings = false): string
     {
         $data = $this->report->data;
+        $view = [] === $this->report->presentation ? ArchitecturePresentation::fromData($data) : $this->report->presentation;
+        $errors = \count(array_filter($data['findings'], static fn (array $finding): bool => 'error' === $finding['severity']));
         $lines = [
             '# Sillbeam architecture report', '',
             'Sillbeam version: '.self::escape($version), '',
             'Checked at: '.$checkedAt->setTimezone(new \DateTimeZone('UTC'))->format(\DateTimeInterface::ATOM), '',
-            'Status: '.$data['status'], '',
-            'Modules checked: '.\count($data['modules']), '',
-            'Projects checked: '.\count($data['projects']), '',
-            'Violations: '.$this->violations(), '',
-            'Blockers: '.$this->blockers(), '',
+            'Status: '.self::escape($data['status']), '',
+            'Analysis complete: '.($data['complete'] ? 'yes' : 'no'), '',
+            '## Summary', '',
+            'Findings: '.\count($data['findings']).' · Diagnoses: '.\count($view['issues']), '',
+            'Violations: '.$errors.' · Blockers: '.(\count($data['findings']) - $errors), '',
+            'Modules checked: '.\count($data['modules']).' · Projects checked: '.\count($data['projects']), '',
         ];
         if (!$data['complete']) {
-            $lines[] = 'Analysis incomplete. Counts reflect available findings and catalog entries only.';
+            $lines[] = '**Analysis incomplete.** Counts reflect available findings and catalog entries only; undiscovered problems may remain.';
             $lines[] = '';
         }
-        foreach ($this->groups() as $group => $findings) {
-            $lines[] = '## '.self::escape($group);
+        $lines[] = '## Architecture overview';
+        $lines[] = '';
+        if (!$data['valid']) {
+            $lines[] = 'Available declarations only: activation and graph validity are unknown. Declared edges below are evidence, not an approved runtime graph.';
             $lines[] = '';
-            foreach ($findings as $finding) {
-                $lines[] = '### '.self::escape(self::title($finding['rule']));
+        }
+        if ([] === $data['modules'] && [] === $data['projects']) {
+            $lines[] = $data['complete'] ? 'No module or Project catalog entries are available.' : 'No reliable catalog is available from this incomplete analysis.';
+            $lines[] = '';
+        }
+        if ([] !== $data['modules']) {
+            $lines = [...$lines, '### Modules', '', '| Module / descriptor | Scope / owner | State | Declared dependencies |', '| --- | --- | --- | --- |'];
+            foreach ($data['modules'] as $module) {
+                $state = !$data['valid'] ? 'unknown' : (true === ($module['active'] ?? null) ? 'active' : ($module['inactive_reason'] ?? 'unknown'));
+                $lines[] = '| '.self::escape($module['class']).'<br>'.self::escape($module['descriptor']).' | '.self::escape($module['scope'].(null !== ($module['project'] ?? null) ? ' / '.$module['project'] : '')).' | '.self::escape($state).' | '.self::escape(implode(', ', $module['declared_dependencies'])).' |';
+            }
+            $lines[] = '';
+        }
+        if ([] !== $data['projects']) {
+            $lines = [...$lines, '### Projects', '', '| Project / descriptor | Configured hosts | Declared modules |', '| --- | --- | --- |'];
+            foreach ($data['projects'] as $project) {
+                $lines[] = '| '.self::escape($project['class']).'<br>'.self::escape($project['descriptorFile']).' | '.self::escape(implode(', ', $project['hosts'])).' | '.self::escape(implode(', ', $project['declaredModules'])).' |';
+            }
+            $lines[] = '';
+        }
+        $lines[] = '## Diagnoses';
+        $lines[] = '';
+        if ([] === $view['issues']) {
+            $lines[] = 'No architecture findings.';
+            $lines[] = '';
+        } else {
+            $lines[] = 'Numbers identify groups in this check run only. Every original finding belongs to one diagnosis below.';
+            $lines[] = '';
+        }
+        foreach ($view['issues'] as $index => $issue) {
+            $lines = [...$lines, '### '.($index + 1).'. '.self::escape($issue['title']), '', self::escape($issue['relation']), '', '**Problem**', '', self::escape($issue['problem']), ''];
+            $lines[] = '**Why it matters**';
+            $lines[] = '';
+            $lines[] = self::escape($issue['impact']);
+            $lines[] = '';
+            $lines[] = '**Next steps**';
+            $lines[] = '';
+            foreach (array_unique($issue['steps']) as $step) {
+                $lines[] = '- '.self::escape($step);
+            }
+            $lines[] = '';
+            if ([] !== $issue['references']) {
+                $lines[] = '**Locations**';
                 $lines[] = '';
-                $lines[] = 'Rule: '.self::escape($finding['rule']).' ('.$finding['severity'].')';
+                foreach ($issue['references'] as $reference) {
+                    $lines[] = '- '.self::escape($reference['file'].(\is_int($reference['line']) ? ':'.$reference['line'] : ''));
+                }
+                $lines[] = '';
+            }
+            $lines[] = '**Technical evidence**';
+            $lines[] = '';
+            $lines[] = self::escape($issue['detail']);
+            $lines[] = '';
+            foreach ($issue['originals'] as $number => $original) {
+                $finding = $original['finding'];
+                $lines[] = '**Original finding '.($number + 1).'** — Rule: '.self::escape($finding['rule']).' ('.self::escape($finding['severity']).')';
                 $lines[] = '';
                 $lines[] = self::escape($finding['message']);
                 $lines[] = '';
-                if ('' !== ($location = self::location($finding['context']))) {
-                    $lines[] = 'At: '.self::escape($location);
-                    $lines[] = '';
+                foreach ($finding['context'] as $key => $value) {
+                    $lines[] = '- '.self::escape((string) $key).': '.self::escape(null === $value ? 'null' : (string) $value);
                 }
-                if (\is_string($finding['context']['suggestion'] ?? null)) {
-                    $lines[] = '**How to fix:** '.self::escape($finding['context']['suggestion']);
+                if ([] !== $finding['context']) {
                     $lines[] = '';
                 }
             }
         }
-        $couplings = $this->couplings();
-        if ([] !== $couplings) {
-            $lines[] = '## Application couplings (informational)';
-            $lines[] = '';
-            foreach ($couplings as $module => $targets) {
-                $lines[] = '### '.self::escape($module);
+        if ($includeCouplings && [] !== $view['couplings']) {
+            $lines = [...$lines, '## Application couplings (informational)', '', 'Observed references to application code outside modules; these are not architecture violations and do not change the exit code.', ''];
+            foreach ($view['couplings'] as $coupling) {
+                $lines[] = '### '.self::escape($coupling['relation']);
                 $lines[] = '';
-                foreach ($targets as $class => $references) {
-                    $lines[] = '- '.self::escape($class).' — target: '.self::escape($references[0]['target_file']);
-                    foreach ($references as $reference) {
-                        $lines[] = '  - At: '.self::escape($reference['file'].':'.$reference['line']);
-                    }
+                foreach ($coupling['references'] as $reference) {
+                    $lines[] = '- '.self::escape($reference['class']).' — At: '.self::escape($reference['file'].':'.$reference['line']).'; target: '.self::escape($reference['target_file']);
                 }
                 $lines[] = '';
             }
@@ -72,80 +122,18 @@ final readonly class ReportRenderer
         return implode("\n", $lines);
     }
 
-    /** @return array<string, array<string, list<array{class: string, file: string, line: int, target_file: string}>>> */
-    private function couplings(): array
-    {
-        $couplings = [];
-        foreach ($this->report->data['modules'] as $module) {
-            foreach ($module['application_references'] ?? [] as $reference) {
-                $couplings[$module['class']][$reference['class']][] = $reference;
-            }
-        }
-
-        return $couplings;
-    }
-
-    private function violations(): int
-    {
-        return \count(array_filter($this->report->data['findings'], static fn (array $finding): bool => 'error' === $finding['severity']));
-    }
-
-    private function blockers(): int
-    {
-        return \count($this->report->data['findings']) - $this->violations();
-    }
-
-    /** @return array<string, list<array{rule: string, message: string, severity: string, context: array<string, string|int|null>}>> */
-    private function groups(): array
-    {
-        $groups = [];
-        foreach ($this->report->data['findings'] as $finding) {
-            $context = $finding['context'];
-            $group = isset($context['module']) ? 'Module '.$context['module'] : (isset($context['project']) ? 'Project '.$context['project'] : 'Application');
-            $groups[$group][] = $finding;
-        }
-        ksort($groups);
-
-        return $groups;
-    }
-
-    /** @param array<string, string|int|null> $context */
-    private static function location(array $context): string
-    {
-        return isset($context['file']) ? $context['file'].(isset($context['line']) ? ':'.$context['line'] : '') : '';
-    }
-
     private static function escape(string $text): string
     {
-        return str_replace(["\r", "\n"], [' ', ' '], (string) preg_replace('/([\\\\`*_{}\[\]()<>#+|])/', '\\\\$1', $text));
-    }
+        if (1 !== preg_match('//u', $text)) {
+            $text = mb_convert_encoding($text, 'UTF-8', 'UTF-8');
+        }
+        $text = str_replace(["\r", "\n", "\t"], ' ', $text);
+        $text = preg_replace('/[\p{Cc}]|(?:(?!\x{200D})\p{Cf})/u', '', $text) ?? '';
+        // Escape ampersands first so source entities cannot become active Markdown/HTML.
+        $text = str_replace('&', '&amp;', $text);
 
-    private static function title(string $rule): string
-    {
-        return match ($rule) {
-            'dependency.unknown' => 'Unknown module dependency',
-            'dependency.cycle' => 'Circular module dependencies',
-            'dependency.disabled', 'code.inactive' => 'Required module is inactive',
-            'dependency.private', 'code.private', 'project.private_module' => 'Private module used outside its Project',
-            'code.unknown_class' => 'Referenced class cannot be resolved',
-            'code.undeclared_dependency' => 'Missing direct module dependency',
-            'module.unknown_override', 'project.unknown_configuration' => 'Configuration refers to an unknown area',
-            'module.duplicate_key', 'project.duplicate_id' => 'Duplicate architecture ID',
-            'project.unknown_module' => 'Project refers to an unknown module',
-            'project.host_required' => 'Project needs a host',
-            'project.host_invalid' => 'Invalid Project host',
-            'project.host_duplicate' => 'Host assigned to multiple Projects',
-            'module.owner_missing', 'discovery.owner_missing' => 'Module has no owning Project',
-            'source.parse' => 'PHP source cannot be parsed',
-            'source.read' => 'PHP source cannot be read',
-            'source.duplicate_class' => 'Duplicate PHP class',
-            'discovery.descriptor_class', 'discovery.descriptor_file' => 'Descriptor does not match its PSR-4 location',
-            'discovery.descriptor_metadata', 'discovery.descriptor_id' => 'Invalid descriptor metadata',
-            'discovery.module_overlap', 'discovery.project_overlap', 'discovery.project_inside_module' => 'Architecture areas overlap',
-            'discovery.module_boundary', 'discovery.project_boundary' => 'Descriptor outside its discovery root',
-            'discovery.multiple_descriptors', 'discovery.multiple_attributes' => 'Ambiguous descriptor',
-            'report.execution' => 'Architecture check could not run',
-            default => ucfirst(str_replace(['.', '_'], ' ', $rule)),
-        };
+        $escaped = (string) preg_replace('/([\\\\`*_{}\[\]()<>#+|!~-])/', '\\\\$1', $text);
+
+        return preg_replace_callback('/^([0-9]{1,9})\\.(?= )/', static fn (array $match): string => $match[1].'\\.', $escaped) ?? '';
     }
 }

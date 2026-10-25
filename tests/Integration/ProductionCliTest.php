@@ -102,6 +102,12 @@ PHP);
         foreach (['--all', '--issue', '--couplings', '--format=json', 'current analysis run'] as $text) {
             self::assertStringContainsString($text, $help);
         }
+        [$code, $reportHelp, $stderr] = $this->runConsole(['sillbeam:report', '--help']);
+        self::assertSame(0, $code, $stderr);
+        foreach (['--couplings', '--output', 'atomic', 'Exit codes:', 'parent directory must exist'] as $text) {
+            self::assertStringContainsString($text, $reportHelp);
+        }
+        self::assertFileDoesNotExist($this->source->directory.'/architecture-report.md');
         foreach ([['--all', '--issue=1'], ['--issue=0'], ['--format=json', '--couplings'], ['--format=json', '--unknown'], ['--ansi', '--no-ansi']] as $args) {
             [$code, $stdout, $stderr] = $this->runConsole(['sillbeam:architecture', ...$args]);
             self::assertSame(2, $code, $stderr);
@@ -132,6 +138,15 @@ PHP);
         self::assertStringContainsString('APPLICATION COUPLINGS', $stdout);
         self::assertStringContainsString('ActualMail', $stdout);
         self::assertStringContainsString('Informational only', $stdout);
+        [$code, , $stderr] = $this->runConsole(['sillbeam:report']);
+        self::assertSame(0, $code, $stderr);
+        self::assertStringNotContainsString('Application couplings', (string) file_get_contents($this->source->directory.'/architecture-report.md'));
+        [$code, , $stderr] = $this->runConsole(['--couplings', 'sillbeam:report', '--output=with-couplings.md']);
+        self::assertSame(0, $code, $stderr);
+        $markdown = (string) file_get_contents($this->source->directory.'/with-couplings.md');
+        foreach (['Application couplings', 'ActualMail', 'Consumer.php:1', 'ActualMail.php', 'not architecture violations'] as $text) {
+            self::assertStringContainsString($text, $markdown);
+        }
         foreach ([[], ['--format=json']] as $args) {
             [$code, $stdout, $stderr] = $this->runConsole(['sillbeam:architecture', '-q', ...$args]);
             self::assertSame(0, $code);
@@ -142,6 +157,12 @@ PHP);
         [$code, $stdout] = $this->runConsole(['sillbeam:architecture', '-q']);
         self::assertSame(2, $code);
         self::assertSame('', $stdout);
+        [$code, , $stderr] = $this->runConsole(['sillbeam:report', '--output=fatal.md']);
+        self::assertSame(2, $code, $stderr);
+        $markdown = (string) file_get_contents($this->source->directory.'/fatal.md');
+        self::assertStringContainsString('Status: unavailable', $markdown);
+        self::assertStringContainsString('Analysis complete: no', $markdown);
+        self::assertStringContainsString('source.parse', $markdown);
     }
 
     public function testRelatedCommandsUseTheSameStyleAndPreserveTheirActualEffects(): void

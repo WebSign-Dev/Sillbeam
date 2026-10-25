@@ -101,3 +101,34 @@ Within active areas, Sillbeam uses the Symfony service loader. `#[Exclude]`, `#[
 For native Doctrine mappings, prefer the actual native entity directories and namespace prefixes; a broad mapping of `src/` can include inactive module entities. Explicit overrides of generated mappings remain authoritative. Without a registered DoctrineBundle, no automatic mappings are created; `sillbeam.doctrine: true` without the bundle is a configuration error.
 
 Development caches monitor source, configuration and routing resources. Production caches are rebuilt during deployments that change code, routing, Composer mappings or activation; they are not a live discovery mechanism. Changes to build environment values also require a rebuild.
+
+## Check and share the architecture
+
+Run a check explicitly after changing descriptors or module references:
+
+```bash
+php bin/console sillbeam:architecture
+php bin/console sillbeam:architecture --all
+php bin/console sillbeam:architecture --issue=1 -v
+php bin/console sillbeam:architecture --format=json
+php bin/console sillbeam:report
+```
+
+The default view explains one diagnosis; with several diagnoses it first shows
+all groups in a compact index. `--all` explains all groups, `--issue=N` selects
+one, and `-v` adds technical details. Issue numbers apply only to the current
+run. `sillbeam:report` writes `architecture-report.md` in your project root.
+Use `--output=docs/architecture-report.md` when the `docs` directory exists.
+Both commands accept `--couplings` to include informative references to
+application code outside modules; these are not architecture violations.
+JSON always contains the complete schema-version-1 result and is separate from
+text selectors. Exit codes are 0 (valid), 1 (violations), and 2 (unavailable,
+invalid usage, or report write failure). `unavailable` means analysis is incomplete;
+correct the blocker and check again.
+
+To use reporting even when invalid architecture prevents container compilation,
+replace the Console Application import in your existing `bin/console` with
+`use Sillbeam\Core\Console\Application;`, preserving the bootstrap and kernel.
+The adapter runs these exact reporting commands without booting the container.
+See [architecture checking and reports](architecture-reporting.md) for the full
+adapter example, option combinations and failure boundaries.

@@ -68,6 +68,7 @@ final class ArchitecturePresentation
                     $references[serialize([$file, $line])] = $reference;
                 }
                 $originals[] = [
+                    'finding' => get_object_vars($finding),
                     'readable' => $readable($finding->message).(\is_string($file) ? ' At: '.self::relative($file, $root, $context).(\is_int($line) ? ':'.$line : '') : ''),
                     'technical' => '['.$finding->rule.'] '.$finding->severity.': '.$finding->message.' Context: '.json_encode($finding->context, \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_SLASHES | \JSON_INVALID_UTF8_SUBSTITUTE),
                 ];
@@ -86,6 +87,7 @@ final class ArchitecturePresentation
             $impact = implode(' ', array_unique($impacts));
             $issues[] = [
                 'title' => $title, 'category' => $category, 'relation' => $relation,
+                'problem' => implode(' ', array_unique($summary)), 'impact' => $impact,
                 'summary' => implode(' ', array_unique($summary)).($caution ? '' : ' '.$impact),
                 'caution' => $caution ? $impact : null,
                 'steps' => array_values(array_unique($steps)), 'findings' => \count($diagnosis->findings),
@@ -124,7 +126,6 @@ final class ArchitecturePresentation
         $findings = [];
         foreach ($data['findings'] as $finding) {
             $context = $finding['context'];
-            unset($context['suggestion']);
             $findings[] = new ArchitectureFinding($finding['rule'], $finding['message'], $context, $finding['severity']);
         }
         $view = self::fromAnalysis(new ArchitectureAnalysisResult($findings));

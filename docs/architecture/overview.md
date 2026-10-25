@@ -9,3 +9,9 @@ This result feeds registries, native service imports, routing and optional Doctr
 Directory, File and FileExistence resources monitor source boundaries, including default directories that do not yet exist. As with Symfony, production caches are rebuilt during deployment. Activation values from environment variables are resolved at build time; changes require a cache rebuild.
 
 A Project is an application surface: host routing and request context, with a shared container, event system and EntityManager. It provides neither isolation of global handlers nor a security boundary.
+
+Explicit CLI checks and standalone Markdown reports use the same findings and
+evidence-based diagnoses. Invalid candidates remain outside runtime registries.
+See [architecture checking and reports](../guides/architecture-reporting.md) for
+container-independent reporting, incomplete results and the optional informative
+coupling appendix.

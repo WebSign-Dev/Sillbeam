@@ -99,7 +99,7 @@ JSON uses [schema version 1](architecture-report.schema.json):
 - `status`: `valid`, `violations` or `unavailable`; `complete` means analysis was not blocked, independently of validity.
 - `findings`: ordered/deduplicated objects with `rule`, `severity` (`error`/`fatal`), `message` and `context` (always a JSON object). Context includes available module/project/target, file and numeric line. `report.execution` records configuration/CLI execution failures; analyzer rule identifiers are unchanged.
 - `modules`: the existing ID/class, scope/owner, enabled/active, inactive reason, paths, declared/observed dependencies, source-reference evidence, activation reasons and controller/entity directories.
-- Module objects may additionally contain `application_dependencies` (unique observed application class names) and `application_references` (class, source file/line and `target_file`). These optional fields are emitted only for nonempty coupling evidence. They do not enter `observed_dependencies`, `references`, activation or findings. Application coupling is informational, including for inactive modules and reports with architecture violations. Markdown includes an **Application couplings (informational)** section with evidence; console text includes it only with `--couplings`. This is an additive schema-version-1 extension: all previous fields/types/required keys are retained and the updated schema accepts previous reports. Consumers pinning the old schema with `additionalProperties: false` must update their schema to accept the optional fields.
+- Module objects may additionally contain `application_dependencies` (unique observed application class names) and `application_references` (class, source file/line and `target_file`). These optional fields are emitted only for nonempty coupling evidence. They do not enter `observed_dependencies`, `references`, activation or findings. Application coupling is informational, including for inactive modules and reports with architecture violations. Both Markdown and console text include an **Application couplings (informational)** section only with `--couplings`, using the same observed reference evidence. This is an additive schema-version-1 extension: all previous fields/types/required keys are retained and the updated schema accepts previous reports. Consumers pinning the old schema with `additionalProperties: false` must update their schema to accept the optional fields.
 - `projects`: the existing Project fields, configured hosts and compiled module graph.
 
 Invalid analysis retains discovered catalog information and available references. `active` is `null`, `inactive_reason` is `unknown`, Project `modules` is `null`, and activation reasons are empty when no valid compiled graph exists. Enabled state is retained from resolved configuration for complete analysis; identity/discovery blockers may make it `null`. A fatal discovery failure can leave both catalogs empty. These unknown values never claim a partial graph is valid.
@@ -114,6 +114,7 @@ Symfony's regular `debug:container`, `debug:router` and optional `doctrine:mappi
 php bin/console sillbeam:report
 php bin/console sillbeam:report --output=docs/architecture-report.md
 php bin/console sillbeam:report --env=prod --no-debug
+php bin/console sillbeam:report --couplings --output=architecture-report.md
 ```
 
 The default file is `<project-root>/architecture-report.md`. Relative output paths
@@ -121,20 +122,36 @@ are resolved against the kernel's project root, independently of the current
 working directory; absolute local paths are also accepted. The parent directory
 must already exist. The command does not create directories or other files.
 
-The report includes the installed Sillbeam version from Composer (or `source` when
-not installed), the check time in UTC, architecture status, module/Project counts,
-violation and blocker counts, and relevant findings with locations and remediation
-hints. Markdown retains its existing finding grouping and remediation format. Only Sillbeam architecture
-rules are checked; the report makes no general code-quality, security or
-service-container health assessment. No HTML, diagrams or other export formats
-are generated.
+The report is a standalone document, not a terminal transcript. It includes:
+
+1. Installed Sillbeam version, UTC check time, status and analysis completeness.
+2. Separate finding/diagnosis counts, violations/blockers and module/Project counts.
+3. A compact catalog of descriptors, scope/ownership, declared dependencies and
+   Project hosts. Invalid analysis identifies these as declarations only; unknown
+   activation or graph validity is never presented as approved.
+4. Every diagnosis, with the shared engine's problem, reason, next steps and
+   locations. Domain options remain explicitly identified.
+5. All assigned original findings with rule, severity, original message and
+   complete context, including original paths and line numbers.
+6. An optional informative coupling appendix, enabled only by `--couplings`.
+
+`php bin/console sillbeam:report` excludes Application couplings by default.
+`--couplings` uses the same observed classes, source locations and target paths
+as `sillbeam:architecture --couplings`, formatted for Markdown. These observations
+are information, not architecture errors, and do not change validity or exit codes.
+Markdown escapes source text, paths, backslashes and table pipes. Only Sillbeam
+architecture rules are checked; the report makes no general code-quality,
+security or service-container health assessment. No HTML or diagram export is
+provided. See the [reporting guide](../guides/architecture-reporting.md) for a
+complete workflow.
 
 The Markdown command uses the same analysis and report data as
 `sillbeam:architecture`, including the same effective configuration. It writes the
 file even when violations are found (exit 1), or the analysis is unavailable (exit
 2). For incomplete analysis, counts represent only available catalog entries and
-findings, not an assurance that all sources were checked. Fatal blockers are
-counted separately from architecture violations. The JSON schema is unchanged.
+findings, not an assurance that all sources were checked. Status `unavailable` means that the analysis could not establish a complete result,
+not that every module is invalid. Correct the reported blockers and rerun. Fatal
+blockers are counted separately from architecture violations. The JSON schema is unchanged.
 
 An existing report is replaced only after the complete new content has been
 written to a temporary file in the same directory. Write/replacement failures
