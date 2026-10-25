@@ -232,3 +232,52 @@ Projects exist, configure `sillbeam.projects.<id>.hosts` for every Project befor
 the next application boot; the Project command prints this reminder and never
 creates configuration on your behalf. An application with invalid existing
 architecture/configuration must be corrected before Symfony can run these commands.
+
+## Installation doctor
+
+```bash
+php bin/console sillbeam:doctor
+php bin/console sillbeam:doctor --env=prod --no-debug
+php bin/console sillbeam:doctor --help
+```
+
+Doctor reads installation files without writing files, booting a Kernel or
+executing application configuration. It uses the shared Core CLI prototype 1.2
+presentation and distinguishes `verified`, `action required` and `not verified`.
+The summary counts all three; only problems and manual checks receive next steps.
+`verified` describes static file evidence, not certification of effective runtime
+configuration. Doctor does not replace `sillbeam:architecture`, PHPStan or Symfony
+configuration/container checks.
+
+Checks cover literal `config/bundles.php` environment declarations, a statically
+recognizable Console adapter construction in `bin/console`, conventional
+MicroKernel configuration loading, YAML Sillbeam route imports, Symfony service
+resource overlap with discovery areas, and discovery option/Composer namespace
+consistency using Core's existing resolver. Service imports must exclude complete
+module/Project areas so they cannot bypass Sillbeam activation. Globs, explicit
+service definitions, imported configuration, environment overlays, PHP/XML
+configuration, custom Kernel methods and Runtime callback bootstraps may require
+manual review. Comments and unused imports do not establish adapter use. A valid
+route import uses `resource: .` and `type: sillbeam`; options whose consequences
+cannot be established statically require manual review. Discovery consistency
+checks do not analyze descriptors, activation graphs or architecture rules.
+
+| Exit | Meaning |
+| --- | --- |
+| 0 | All supported static installation checks verified |
+| 1 | Checks completed; action required |
+| 2 | At least one check could not be verified, or command could not run |
+
+Exit 2 takes precedence over 1; established problems remain visible even when
+other checks require manual review. Symfony's normal verbosity, ANSI and quiet
+options apply. No repair or output-file option is provided.
+
+With the existing `Sillbeam\Core\Console\Application` adapter, Doctor and its help
+are available before container compilation, including with invalid architecture.
+Keep the consuming application's bootstrap and Kernel when selecting that adapter.
+The regular Symfony entry point also registers Doctor, but Symfony itself must
+boot first and may write its ordinary cache files before the command starts.
+The Doctor implementation never performs those writes. For inspection without
+that boot, use the existing adapter. Doctor never edits `bin/console`, services,
+routes, configuration or application sources, and does not execute discovered PHP
+configuration to obtain a more optimistic result.

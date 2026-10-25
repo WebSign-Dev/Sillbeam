@@ -7,6 +7,7 @@ namespace Sillbeam\Core\Console;
 use Sillbeam\Core\Architecture\ArchitectureReport;
 use Sillbeam\Core\Architecture\Console\ArchitectureCommand;
 use Sillbeam\Core\Architecture\Console\ReportCommand;
+use Sillbeam\Core\Console\Doctor\DoctorCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Application as ConsoleApplication;
 use Symfony\Component\Console\Command\Command;
@@ -31,10 +32,14 @@ final class Application extends SymfonyApplication
             // The actual command validates usage and returns a structured error below.
         }
         $name = $input->getFirstArgument();
-        if (!\in_array($name, ['sillbeam:architecture', 'sillbeam:report'], true)) {
+        if (!\in_array($name, ['sillbeam:architecture', 'sillbeam:report', 'sillbeam:doctor'], true)) {
             return parent::doRun($input, $output);
         }
-        $command = 'sillbeam:report' === $name ? $this->reportCommand() : $command;
+        $command = match ($name) {
+            'sillbeam:doctor' => $this->doctorCommand(),
+            'sillbeam:report' => $this->reportCommand(),
+            default => $command,
+        };
         if ($input->hasParameterOption(['--help', '-h'], true)) {
             // HelpCommand has its own --format option: avoid merging report options into it.
             (new DescriptorHelper())->describe($output, $command, ['format' => 'txt']);
@@ -60,6 +65,7 @@ final class Application extends SymfonyApplication
         return match ($name) {
             'sillbeam:architecture' => $this->architectureCommand(),
             'sillbeam:report' => $this->reportCommand(),
+            'sillbeam:doctor' => $this->doctorCommand(),
             default => parent::find($name),
         };
     }
@@ -69,8 +75,17 @@ final class Application extends SymfonyApplication
         return match ($name) {
             'sillbeam:architecture' => $this->architectureCommand(),
             'sillbeam:report' => $this->reportCommand(),
+            'sillbeam:doctor' => $this->doctorCommand(),
             default => parent::get($name),
         };
+    }
+
+    private function doctorCommand(): DoctorCommand
+    {
+        $command = new DoctorCommand($this->getKernel()->getProjectDir(), $this->getKernel()->getEnvironment(), $this->getKernel());
+        $command->setApplication($this);
+
+        return $command;
     }
 
     private function reportCommand(): ReportCommand

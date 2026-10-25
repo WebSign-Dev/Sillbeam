@@ -20,6 +20,7 @@ use Sillbeam\Core\Architecture\FilesystemPath;
 use Sillbeam\Core\Architecture\PathMatcher;
 use Sillbeam\Core\Architecture\SourceInspector;
 use Sillbeam\Core\Console\ArchitectureBuildSubscriber;
+use Sillbeam\Core\Console\Doctor\DoctorCommand;
 use Sillbeam\Core\Kernel\Command\AboutCommand;
 use Sillbeam\Core\Kernel\Runtime\KernelInformation;
 use Sillbeam\Core\Kernel\Runtime\KernelInformationInterface;
@@ -127,6 +128,7 @@ final class SillbeamCoreExtension extends Extension implements PrependExtensionI
         $this->loadServices($container, $architecture);
         $container->autowire(KernelInformation::class)->setArguments([new Reference('kernel'), new Reference(ModuleRegistryInterface::class)]);
         $container->setAlias(KernelInformationInterface::class, KernelInformation::class);
+        $container->register(DoctorCommand::class)->setArguments([$projectDir, '%kernel.environment%', new Reference('kernel')])->setAutoconfigured(true);
         $container->autowire(AboutCommand::class)->setAutoconfigured(true);
         $container->register(ArchitectureCommand::class)->setArguments([new Reference(ArchitectureReport::class)])->setAutoconfigured(true);
         $container->register(ReportCommand::class)->setArguments([new Reference(ArchitectureReport::class), $projectDir])->setAutoconfigured(true);
