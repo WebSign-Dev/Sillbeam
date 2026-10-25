@@ -11,6 +11,7 @@ composer audit --locked
 composer audit --locked --working-dir=apps/test-app/app
 composer test:flex-recipe
 SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
+SILLBEAM_TEST_EXISTING_ROUTE=1 composer test:flex-recipe
 composer test:consumer
 composer test:release-package
 ```
@@ -30,3 +31,10 @@ Reproducible performance comparison: `php tools/benchmark-architecture.php > ben
 Use `COMPOSER_PROCESS_TIMEOUT=900` (or 0 for an intentionally unbounded local run) for slower consumer installations. `COMPOSER_DISABLE_NETWORK=1 COMPOSER_CACHE_DIR=/path/to/populated/cache` supports offline consumers/archive tests, but cannot be used for Flex because it also blocks the local recipe HTTP endpoint. CI now includes the real release ZIP/no-dev test and explicit audits of both lockfiles. A remote workflow run is separate from local execution of its commands; the workflow currently runs on main/dev pushes or manual dispatch, not pull requests.
 
 For the technical v0.2.0 migration, see the [Core rename verification](core-rename-2026-10-23.md) for its historical checks. The integrated RC report supersedes those counts for the current candidate.
+
+The Flex test now runs controlled auto-scripts to assert the actual instructions
+compiled from `post-install.txt`, and compares pre-existing services, console,
+routing and package files after install/removal. `SILLBEAM_TEST_EXISTING_ROUTE=1`
+also checks non-overwrite of an existing recipe destination and the standard Flex
+ownership boundary at uninstall. See the [recipe verification record](flex-recipe-verification.md)
+for official checker results and the outstanding Packagist prerequisite.

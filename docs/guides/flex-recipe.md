@@ -9,3 +9,29 @@ The recipe preserves existing `services.yaml` files. In a Symfony skeleton, keep
 The recipe does not create a semantically empty `config/packages/sillbeam.yaml`. Create that file yourself with the desired options if needed. Removal preserves native services and manually created Sillbeam configuration; the recipe removes only its route import and bundle registration.
 
 After uninstalling, remove manually created `sillbeam` options from Symfony package imports and, if necessary, switch an application kernel derived from `SillbeamKernel` back to the standard Symfony kernel. These are application settings; the recipe neither deletes nor overwrites them. The consumer test also checks native kernel boot after this explicit cleanup.
+
+After installation, first run `php bin/console sillbeam:doctor`. Review action
+items and checks marked `not verified`. If needed, manually change the Application
+import in the existing `bin/console` to `use Sillbeam\Core\Console\Application;`,
+keeping the bootstrap and Kernel. This enables checks without container compilation.
+Review broad service imports as described above, then run
+`php bin/console sillbeam:make:module Billing` and
+`php bin/console sillbeam:architecture`.
+
+These steps are printed by Flex from the recipe's `post-install.txt`. The source
+manifest contains only `bundles` and `copy-from-recipe`; the endpoint generates
+its post-install output metadata. Neither the source text file nor an empty
+package configuration is copied into your application.
+
+For public installation, the package must exist on Packagist with a matching
+released version, the separate Recipes Contrib review must be completed, and
+the accepted recipe must be available through the configured endpoint. Publishing
+the v0.2.0 tag alone does not activate it. Enable Contrib recipes with
+`composer config extra.symfony.allow-contrib true` and allow the Flex plugin.
+See the [submission instructions](../../flex-recipe/README.md#submit-to-symfonyrecipes-contrib)
+and [verification record](../development/flex-recipe-verification.md).
+
+Before uninstalling, preserve application-specific edits to the recipe-managed
+`config/routes/sillbeam.yaml`: Flex tracks that filename even if it existed
+before installation. Other manually created configuration, including package
+options and native service imports, is retained.

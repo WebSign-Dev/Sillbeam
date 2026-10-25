@@ -82,11 +82,17 @@ sillbeam:
 <details>
 <summary><strong>Install through Symfony Flex</strong></summary>
 
-The [Flex recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md) registers the bundle and creates the route import above when available through your Symfony Flex endpoint. Recipe availability is independent of Composer package installation. If Composer/Flex does not install the recipe, register the bundle and route import manually as shown above.
+The [Flex recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md) registers the bundle and creates the route import above when available through your Symfony Flex endpoint. Recipe availability is independent of Composer package installation. Publishing the v0.2.0 tag does not activate the recipe: Packagist availability, a matching released version, Contrib review/acceptance and a populated Flex endpoint are separate prerequisites. Consumers must allow Contrib recipes (`composer config extra.symfony.allow-contrib true`). If Composer/Flex does not install the recipe, register the bundle and route import manually as shown above.
 
 </details>
 
 With the usual `App\:` import of `src/`, exclude `Module` and `Project` from that native service import when Sillbeam should control their automatic activation. Keep existing exclusions and explicit services. The Flex recipe preserves your service configuration; it does not add these exclusions. See the [Symfony integration rules](docs/guides/getting-started.md#preserve-symfony-integration), including custom discovery roots and native routing/Doctrine imports.
+
+Run `php bin/console sillbeam:doctor` after integration and review its action items
+and `not verified` checks. If needed, manually select
+`use Sillbeam\Core\Console\Application;` in the existing `bin/console`, preserving
+the bootstrap and Kernel. The recipe never edits that file. After reviewing service
+imports, create the first descriptor below and run `php bin/console sillbeam:architecture`.
 
 ### Create your first module
 

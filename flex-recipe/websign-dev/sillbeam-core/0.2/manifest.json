@@ -6,12 +6,5 @@
     },
     "copy-from-recipe": {
         "config/": "%CONFIG_DIR%/"
-    },
-    "post-install-output": [
-        "  * Sillbeam module architecture is installed.",
-        "  * Exclude Module and Project (or custom architecture areas) from broad native service imports.",
-        "  * Add module descriptors and inspect them with <fg=green>sillbeam:architecture</>.",
-        "  * For reports before container compilation, use Sillbeam\\Core\\Console\\Application in bin/console.",
-        "  * Doctrine mappings activate automatically when DoctrineBundle is registered."
-    ]
+    }
 }

@@ -11,6 +11,7 @@ fork of `symfony/recipes-contrib`:
 ```text
 websign-dev/sillbeam-core/0.2/
 ├── manifest.json
+├── post-install.txt
 └── config/
     └── routes/sillbeam.yaml
 ```
@@ -36,7 +37,7 @@ SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 
 The check builds a local Flex endpoint from this source, installs Sillbeam into a
 temporary Symfony consumer through Composer and verifies the generated bundle,
-route and `symfony.lock` entries, then boots without package configuration, exercises both kernels and removes the package again. Removal must preserve native services and user-authored package configuration. The normal PHPUnit suite also
+route and `symfony.lock` entries, actual Flex output from `post-install.txt`, and unchanged existing services, routing and console files, then boots without package configuration, exercises both kernels and removes the package again. Removal must preserve native services and user-authored package configuration. The normal PHPUnit suite also
 guards the recipe structure and its safe defaults.
 
 The PHP package cannot load its own recipe. Until the recipe is merged into
@@ -47,4 +48,60 @@ After publication, install v0.2.0 with `composer require websign-dev/sillbeam-co
 
 The package declares `type: symfony-bundle`, following [Symfony bundle installation guidance](https://symfony.com/doc/current/bundles/best_practices.html#installation). No semantically empty file is created under `config/packages`, as required by the [recipe checklist](https://github.com/symfony/recipes/blob/main/README.rst#recipe-checklist).
 
-For architecture reports when container compilation fails, change the existing `bin/console` Application import to `Sillbeam\Core\Console\Application`; see [CLI setup](../docs/reference/cli.md). The recipe prints this hint and leaves your existing console bootstrap intact.
+After installation, run `php bin/console sillbeam:doctor`. If needed, manually
+select `use Sillbeam\Core\Console\Application;` in the existing `bin/console`;
+retain its bootstrap and Kernel. This keeps checks available before container
+compilation. Review broad service imports and exclude module/Project discovery
+areas where Sillbeam should control activation. Then create the first descriptor
+with `php bin/console sillbeam:make:module Billing` and run
+`php bin/console sillbeam:architecture`. See [CLI setup](../docs/reference/cli.md).
+The recipe never edits `bin/console` or `services.yaml`.
+
+## Submit to symfony/recipes-contrib
+
+1. Ensure `websign-dev/sillbeam-core` exists on Packagist and a matching released
+   package version (at least 0.2.0) is available. The package must retain its MIT
+   license and `symfony-bundle` type. A local path repository does not prove this.
+2. Copy only `websign-dev/sillbeam-core/0.2/` from this directory into a checkout
+   of `symfony/recipes-contrib`, preserving that directory structure. Do not copy
+   this README, tests, endpoint fixtures or the PHP package source.
+3. Run the current official `symfony-tools/recipes-checker` from that checkout:
+   `run lint:manifests --contrib`, `run lint:yaml` with YAML paths on stdin, and
+   `run lint:packages`. Follow the current upstream QA workflow for text/layout
+   and consumer checks. See [the local verification record](../docs/development/flex-recipe-verification.md).
+4. A maintainer must separately submit and complete the external review process.
+   Current Contrib rules require successful Symfony Bot validation and an
+   independent approval, with a Symfony Core Merger involved as author/reviewer.
+   No external submission or publication is performed by this repository's tests.
+5. After acceptance, check that the recipe is present in the generated default
+   Flex endpoint. Consumers must allow Contrib recipes, for example with
+   `composer config extra.symfony.allow-contrib true`, and allow the Flex plugin.
+
+Publishing the v0.2.0 package tag alone does **not** activate this recipe. Public
+package availability, recipe acceptance and endpoint availability are separate
+steps. Until then, use manual installation or an explicitly configured private
+endpoint. The `0.2` directory describes the minimum recipe version; Flex chooses
+an eligible recipe independently of the package's own release archive.
+
+## Source format and ownership
+
+`post-install.txt` is a special recipe source file, displayed rather than copied.
+Do not add `post-install-output` to the source `manifest.json`; the endpoint
+builder derives that generated field from the text file. The local test mirrors
+that conversion and invokes Flex's real auto-scripts to verify the printed lines.
+
+The manifest registers the central bundle for `all` and copies only `config/`,
+which currently contains the necessary route import. This is more than bundle
+registration alone, so a recipe is justified. No aliases, copy-from-package,
+service edits, bootstrap edits or empty package configuration are needed.
+Ordinary Flex installation preserves existing destination files; do not use
+`--force` without reviewing the consequences. Flex tracks the route filename in
+`symfony.lock`, including a pre-existing file at that destination: back up any
+application-specific edits to that recipe-managed filename before removal.
+Application-owned configuration under other filenames is preserved by the tests.
+
+Sources checked on 2026-10-25:
+[recipe format and validation](https://github.com/symfony/recipes/blob/main/README.rst),
+[Contrib rules](https://github.com/symfony/recipes-contrib/blob/main/README.rst),
+[upstream QA workflow](https://github.com/symfony/recipes/blob/main/.github/workflows/callable-qa.yml),
+[official checker](https://github.com/symfony-tools/recipes-checker).

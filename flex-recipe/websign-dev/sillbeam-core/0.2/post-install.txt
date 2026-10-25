@@ -1,0 +1,7 @@
+  1. Run php bin/console sillbeam:doctor and review any action required or not verified checks.
+  2. If needed, manually use Sillbeam\Core\Console\Application; in bin/console.
+     Keep the existing bootstrap and Kernel; this adapter allows checks before container compilation.
+  3. Review broad services.yaml imports; exclude Module and Project areas (including custom roots)
+     when Sillbeam should control activation. Preserve existing exclusions and explicit services.
+  4. Create the first descriptor: php bin/console sillbeam:make:module Billing
+     Then run php bin/console sillbeam:architecture.

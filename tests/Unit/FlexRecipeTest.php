@@ -48,6 +48,39 @@ final class FlexRecipeTest extends TestCase
         self::assertSame('symfony-bundle', $package['type']);
     }
 
+    public function testSourceManifestContainsOnlySupportedConfiguratorsAndSeparateInstructions(): void
+    {
+        $manifest = json_decode($this->read('manifest.json'), true, flags: \JSON_THROW_ON_ERROR);
+        self::assertSame(['bundles', 'copy-from-recipe'], array_keys($manifest));
+        $instructions = $this->read('post-install.txt');
+        foreach (['php bin/console sillbeam:doctor', 'use Sillbeam\\Core\\Console\\Application;', 'bin/console', 'bootstrap and Kernel', 'services.yaml', 'Module', 'Project', 'php bin/console sillbeam:make:module Billing', 'php bin/console sillbeam:architecture'] as $text) {
+            self::assertStringContainsString($text, $instructions);
+        }
+        self::assertLessThan(strpos($instructions, 'sillbeam:architecture'), strpos($instructions, 'sillbeam:doctor'));
+        self::assertStringEndsWith("\n", $instructions);
+        self::assertFileDoesNotExist(self::RECIPE_DIRECTORY.'/bin/console');
+        self::assertFileDoesNotExist(self::RECIPE_DIRECTORY.'/config/services.yaml');
+    }
+
+    public function testRecipeTextAndConfigurationFollowApplicableSymfonyChecks(): void
+    {
+        foreach (['manifest.json', 'post-install.txt', 'config/routes/sillbeam.yaml'] as $file) {
+            $contents = $this->read($file);
+            self::assertStringEndsWith("\n", $contents);
+            self::assertStringNotContainsString("\t", $contents);
+            self::assertFalse(is_link(self::RECIPE_DIRECTORY.'/'.$file));
+            if (!str_ends_with($file, '.txt')) {
+                foreach (explode("\n", $contents) as $line) {
+                    self::assertMatchesRegularExpression('/^(?:(?: {4})*[^ \t]|$)/', $line);
+                }
+            }
+        }
+        $package = json_decode((string) file_get_contents(__DIR__.'/../../composer.json'), true, flags: \JSON_THROW_ON_ERROR);
+        self::assertSame('MIT', $package['license']);
+        self::assertArrayNotHasKey('symfony/symfony', $package['require']);
+        self::assertArrayNotHasKey('symfony/security', $package['require']);
+    }
+
     private function read(string $path): string
     {
         $contents = file_get_contents(self::RECIPE_DIRECTORY.'/'.$path);

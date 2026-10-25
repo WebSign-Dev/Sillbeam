@@ -45,6 +45,12 @@ mkdir($applicationDirectory, 0777, true);
 
 try {
     $manifest = decodeJson($recipeDirectory.'/manifest.json');
+    // The published endpoint embeds post-install.txt; it is not a source manifest key.
+    $instructions = file($recipeDirectory.'/post-install.txt', \FILE_IGNORE_NEW_LINES);
+    if (false === $instructions) {
+        throw new RuntimeException('Unable to read post-install.txt.');
+    }
+    $manifest['post-install-output'] = $instructions;
     $files = [];
 
     foreach (recipeFiles($recipeDirectory.'/config') as $file) {
@@ -110,6 +116,11 @@ try {
         ]],
         'require' => $requirements,
         'conflict' => (object) $conflicts,
+        'scripts' => [
+            'auto-scripts' => (object) [],
+            'post-install-cmd' => ['@auto-scripts'],
+            'post-update-cmd' => ['@auto-scripts'],
+        ],
         'autoload' => ['psr-4' => ['App\\' => 'src/']],
         'config' => [
             'allow-plugins' => ['symfony/flex' => true],
@@ -125,7 +136,40 @@ try {
         'prefer-stable' => true,
     ]);
 
-    runComposer($applicationDirectory);
+    // Seed application-owned files before Flex runs, including a normal broad import.
+    mkdir($applicationDirectory.'/config/routes', 0777, true);
+    mkdir($applicationDirectory.'/bin', 0777, true);
+    mkdir($applicationDirectory.'/config/packages', 0777, true);
+    $applicationFiles = [
+        'config/services.yaml' => <<<'YAML'
+# Application-owned service configuration; preserve this comment and all imports.
+services:
+    _defaults: { autowire: true, autoconfigure: true }
+    App\:
+        resource: '../src/'
+        exclude: '../src/{DependencyInjection,Entity,Kernel.php,Module,Project}'
+YAML,
+        'config/packages/application.yaml' => "parameters: { application_marker: preserved }\n",
+        'config/routes/application.yaml' => "application_status: { path: /application-status }\n",
+        'config/routes.yaml' => "# Application-owned routing entry point.\n{}\n",
+        'bin/console' => '<?php // Application-owned Console bootstrap. No recipe edits. '."\n",
+    ];
+    if ('1' === getenv('SILLBEAM_TEST_EXISTING_ROUTE')) {
+        $applicationFiles['config/routes/sillbeam.yaml'] = "# Existing application-authored import must not be overwritten.\n".file_get_contents($recipeDirectory.'/config/routes/sillbeam.yaml');
+    }
+    foreach ($applicationFiles as $file => $contents) {
+        file_put_contents($applicationDirectory.'/'.$file, $contents);
+    }
+    $output = runComposer($applicationDirectory);
+    foreach ($instructions as $line) {
+        if ('' !== trim($line) && !str_contains($output, $line)) {
+            throw new RuntimeException('Flex did not print post-install.txt line: '.$line);
+        }
+    }
+    foreach ($applicationFiles as $file => $contents) {
+        assertSame($contents, file_get_contents($applicationDirectory.'/'.$file), 'Recipe installation changed '.$file);
+    }
+    assertSame(false, is_file($applicationDirectory.'/post-install.txt'), 'Installation instructions must be displayed, not copied into the application.');
 
     $bundles = require $applicationDirectory.'/config/bundles.php';
     assertSame(['all' => true], $bundles['Sillbeam\\Core\\SillbeamCoreBundle'] ?? null, 'SillbeamCoreBundle was not registered.');
@@ -138,7 +182,7 @@ try {
     assertSame(false, is_file($applicationDirectory.'/config/packages/sillbeam.yaml'), 'The recipe must not install an empty package configuration.');
 
     $routes = Yaml::parseFile($applicationDirectory.'/config/routes/sillbeam.yaml');
-    assertSame('sillbeam', $routes['sillbeam']['type'] ?? null, 'The Sillbeam route loader was not installed.');
+    assertSame(['sillbeam' => ['resource' => '.', 'type' => 'sillbeam']], $routes, 'The Sillbeam route loader was not installed.');
 
     $lock = decodeJson($applicationDirectory.'/symfony.lock');
     assertSame('0.2', $lock['websign-dev/sillbeam-core']['recipe']['version'] ?? null, 'The recipe is missing from symfony.lock.');
@@ -150,6 +194,11 @@ try {
 
     bootConsumer($applicationDirectory, $withDoctrine);
     uninstallRecipe($applicationDirectory);
+    // Flex owns the recipe destination even if it existed; document and test this boundary.
+    unset($applicationFiles['config/routes/sillbeam.yaml']);
+    foreach ($applicationFiles as $file => $contents) {
+        assertSame($contents, file_get_contents($applicationDirectory.'/'.$file), 'Recipe removal changed '.$file);
+    }
     fwrite(\STDOUT, 'Sillbeam Flex recipe installation, both consumer kernels and removal passed ('.($withDoctrine ? 'with Doctrine' : 'without Doctrine').").\n");
 } finally {
     if (is_resource($endpointServer)) {
@@ -215,26 +264,38 @@ function hashDirectory(string $directory): string
     return hash_final($hash);
 }
 
-function runComposer(string $workingDirectory): void
+function runComposer(string $workingDirectory): string
 {
+    $output = tmpfile();
+    if (false === $output) {
+        throw new RuntimeException('Unable to capture Composer output.');
+    }
     $process = proc_open([
         'composer',
         'install',
         '--no-interaction',
         '--no-progress',
-        '--no-scripts',
         '--prefer-dist',
-    ], [\STDIN, \STDOUT, \STDERR], $pipes, $workingDirectory);
+    ], [\STDIN, $output, $output], $pipes, $workingDirectory);
 
     if (!is_resource($process)) {
         throw new RuntimeException('Unable to start Composer.');
     }
 
     $exitCode = proc_close($process);
+    rewind($output);
+    $contents = stream_get_contents($output);
+    fclose($output);
+    if (false === $contents) {
+        throw new RuntimeException('Unable to read Composer output.');
+    }
+    fwrite(\STDOUT, $contents);
 
     if (0 !== $exitCode) {
         throw new RuntimeException(sprintf('Composer exited with status %d.', $exitCode));
     }
+
+    return $contents;
 }
 
 /** Boots the installed consumer in another process without the repository development autoloader. */
@@ -251,13 +312,6 @@ function bootConsumer(string $directory, bool $withDoctrine): void
     }
     file_put_contents($directory.'/config/bundles.php', '<?php return '.var_export($bundles, true).';');
     file_put_contents($directory.'/config/packages/framework.yaml', "framework:\n    secret: smoke\n    router: { utf8: true }\n");
-    file_put_contents($directory.'/config/services.yaml', <<<'YAML'
-services:
-    _defaults: { autowire: true, autoconfigure: true }
-    App\:
-        resource: '../src/'
-        exclude: '../src/{DependencyInjection,Entity,Kernel.php,Module,Project}'
-YAML);
     mkdir($directory.'/src/Module/Off', 0777, true);
     file_put_contents($directory.'/src/Module/Off/OffModule.php', '<?php namespace App\Module\Off; #[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class OffModule {}');
     file_put_contents($directory.'/src/Module/Off/Leak.php', '<?php namespace App\Module\Off; #[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "off.leak", public: true)] final class Leak {}');
