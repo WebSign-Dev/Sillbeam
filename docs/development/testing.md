@@ -63,3 +63,9 @@ module-only/shared/private/Multi-Project coverage, ambiguity, disabled/unassigne
 modules, cycles and partial analyses, plus real CLI and compiled-consumer checks.
 The [reference](../reference/module-inspection.md) defines selection and state
 semantics; inspection uses existing analysis/report evidence only.
+
+## Mermaid graph export
+
+The [graph verification report](mermaid-graph-2026-10-29.md) records deterministic
+source, evidence/state boundaries, label escaping and both CLI entry points.
+The [graph reference](../reference/mermaid-graph.md) defines the export contract.

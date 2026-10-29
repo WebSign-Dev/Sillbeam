@@ -8,6 +8,7 @@ use Sillbeam\Core\Architecture\ArchitectureAnalyzer;
 use Sillbeam\Core\Architecture\ArchitectureReport;
 use Sillbeam\Core\Architecture\CompiledArchitecture;
 use Sillbeam\Core\Architecture\Console\ArchitectureCommand;
+use Sillbeam\Core\Architecture\Console\GraphCommand;
 use Sillbeam\Core\Architecture\Console\InspectModuleCommand;
 use Sillbeam\Core\Architecture\Console\MakeModuleCommand;
 use Sillbeam\Core\Architecture\Console\MakeProjectCommand;
@@ -153,6 +154,7 @@ final class SillbeamCoreExtension extends Extension implements PrependExtensionI
         $container->setAlias(KernelInformationInterface::class, KernelInformation::class);
         $container->register(DoctorCommand::class)->setArguments([$projectDir, '%kernel.environment%', new Reference('kernel')])->setAutoconfigured(true);
         $container->autowire(AboutCommand::class)->setAutoconfigured(true);
+        $container->register(GraphCommand::class)->setArguments([new Reference(ArchitectureReport::class)])->setAutoconfigured(true);
         $container->register(InspectModuleCommand::class)->setArguments([new Reference(ArchitectureReport::class)])->setAutoconfigured(true);
         $container->register(ArchitectureCommand::class)->setArguments([new Reference(ArchitectureReport::class)])->setAutoconfigured(true);
         $container->register(ReportCommand::class)->setArguments([new Reference(ArchitectureReport::class), $projectDir])->setAutoconfigured(true);

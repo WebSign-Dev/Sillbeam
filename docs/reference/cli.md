@@ -4,6 +4,7 @@
 php bin/console sillbeam:architecture
 php bin/console sillbeam:architecture --format=json
 php bin/console sillbeam:architecture -v
+php bin/console sillbeam:graph --format=mermaid > architecture.mmd
 php bin/console sillbeam:report
 php bin/console sillbeam:report --output=docs/architecture-report.md
 php bin/console sillbeam:architecture --env=prod --no-debug --format=json
@@ -29,13 +30,13 @@ return function (array $context) {
 };
 ```
 
-This adapter runs the exact `sillbeam:architecture`, `sillbeam:report` and `sillbeam:doctor` commands before kernel boot; it also supports retrieving these exact commands through `find()`/`get()`. Other commands, including `list`, delegate to Symfony and retain their normal boot behavior. Use the full command name when reporting a broken application. The package's test-app entry point demonstrates this import.
+This adapter runs the exact `sillbeam:architecture`, `sillbeam:report`, `sillbeam:inspect:module`, `sillbeam:graph` and `sillbeam:doctor` commands before kernel boot; it also supports retrieving these exact commands through `find()`/`get()`. Other commands, including `list`, delegate to Symfony and retain their normal boot behavior. Use the full command name when reporting a broken application. The package's test-app entry point demonstrates this import.
 
 Without this import, the command remains available through the normal Symfony application when its container compiles. Symfony's normal console cannot discover container services when boot fails; the adapter is needed for that case. No additional executable, configuration file or dependency is required.
 
 ## Effective configuration
 
-The two architecture reporting commands prepare an uncompiled builder through the actual kernel's configuration hooks. Symfony's own loaders read its YAML/PHP/XML imports, environment-specific configuration and parameters. Composer PSR-4 mappings determine discovery namespaces through the same resolver used by validation. Bundle `prepend()` configuration is included, and Sillbeam's existing Doctrine/late-prepend consistency requirement is enforced.
+Architecture reporting, module inspection and graph export prepare an uncompiled builder through the actual kernel's configuration hooks. Symfony's own loaders read its YAML/PHP/XML imports, environment-specific configuration and parameters. Composer PSR-4 mappings determine discovery namespaces through the same resolver used by validation. Bundle `prepend()` configuration is included, and Sillbeam's existing Doctrine/late-prepend consistency requirement is enforced.
 
 Doctor instead uses the static file inspection described below.
 
@@ -328,3 +329,12 @@ container compilation. Text only in 0.3.0; no `--format`/JSON mode. Exit codes a
 0 valid, 1 architecture violations, 2 usage/selection failure or unavailable analysis.
 See [module inspection](module-inspection.md) for selection, state definitions,
 partial-evidence limits and native-container versus fresh-adapter snapshots.
+
+## Mermaid graph export
+
+`php bin/console sillbeam:graph --format=mermaid` exports raw Mermaid source for
+redirection. It distinguishes direct declarations, observed undeclared references,
+private ownership, validated Project membership, disabled configuration and recorded
+cycle participants. Invalid or incomplete analysis remains explicitly diagnostic,
+with unknown activation and evidence warnings. See the [graph reference](mermaid-graph.md)
+for identity, escaping, determinism and exit semantics.

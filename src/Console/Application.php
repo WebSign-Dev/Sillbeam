@@ -6,6 +6,7 @@ namespace Sillbeam\Core\Console;
 
 use Sillbeam\Core\Architecture\ArchitectureReport;
 use Sillbeam\Core\Architecture\Console\ArchitectureCommand;
+use Sillbeam\Core\Architecture\Console\GraphCommand;
 use Sillbeam\Core\Architecture\Console\InspectModuleCommand;
 use Sillbeam\Core\Architecture\Console\ReportCommand;
 use Sillbeam\Core\Console\Doctor\DoctorCommand;
@@ -17,7 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Symfony console adapter that provides architecture, module inspection, report and doctor commands before container boot.
+ * Symfony console adapter that provides architecture, module inspection, graph, report and doctor commands before container boot.
  *
  * Other commands retain Symfony dispatch. Use this class in the existing console bootstrap
  * to obtain diagnostics even when container compilation fails.
@@ -47,7 +48,7 @@ final class Application extends SymfonyApplication
             // The actual command validates usage and returns a structured error below.
         }
         $name = $input->getFirstArgument();
-        if (!\in_array($name, ['sillbeam:architecture', 'sillbeam:report', 'sillbeam:doctor', 'sillbeam:inspect:module'], true)) {
+        if (!\in_array($name, ['sillbeam:architecture', 'sillbeam:report', 'sillbeam:doctor', 'sillbeam:inspect:module', 'sillbeam:graph'], true)) {
             return parent::doRun($input, $output);
         }
         $jsonDoctor = 'sillbeam:doctor' === $name && DoctorCommand::isJsonRequested($input);
@@ -59,6 +60,7 @@ final class Application extends SymfonyApplication
             $command = match ($name) {
                 'sillbeam:doctor' => $this->doctorCommand(),
                 'sillbeam:inspect:module' => $this->inspectModuleCommand(),
+                'sillbeam:graph' => $this->graphCommand(),
                 'sillbeam:report' => $this->reportCommand(),
                 default => $command,
             };
@@ -78,6 +80,9 @@ final class Application extends SymfonyApplication
 
             return $application->doRun($input, $output);
         } catch (\Throwable $error) {
+            if ('sillbeam:graph' === $name) {
+                return GraphCommand::usageError($error, $output);
+            }
             if ('sillbeam:doctor' === $name) {
                 return DoctorCommand::failure($error, $error instanceof \Symfony\Component\Console\Exception\ExceptionInterface ? 'doctor.usage' : 'doctor.execution', DoctorCommand::isJsonRequested($input), $output);
             }
@@ -104,6 +109,7 @@ final class Application extends SymfonyApplication
             'sillbeam:report' => $this->reportCommand(),
             'sillbeam:doctor' => $this->doctorCommand(),
             'sillbeam:inspect:module' => $this->inspectModuleCommand(),
+            'sillbeam:graph' => $this->graphCommand(),
             default => parent::find($name),
         };
     }
@@ -120,8 +126,17 @@ final class Application extends SymfonyApplication
             'sillbeam:report' => $this->reportCommand(),
             'sillbeam:doctor' => $this->doctorCommand(),
             'sillbeam:inspect:module' => $this->inspectModuleCommand(),
+            'sillbeam:graph' => $this->graphCommand(),
             default => parent::get($name),
         };
+    }
+
+    private function graphCommand(): GraphCommand
+    {
+        $command = new GraphCommand(fn (): ArchitectureReport => (new KernelArchitectureReporter())->report($this->getKernel()));
+        $command->setApplication($this);
+
+        return $command;
     }
 
     private function inspectModuleCommand(): InspectModuleCommand
