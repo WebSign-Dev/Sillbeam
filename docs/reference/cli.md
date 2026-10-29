@@ -312,3 +312,19 @@ statuses and unchanged exit priority. `--quiet` suppresses JSON as well. See the
 for fields, repeated IDs, usage/execution errors, clean STDOUT and the distinction
 between command output, Symfony startup and help metadata. This schema is separate
 from architecture-report JSON.
+
+## Targeted module inspection
+
+```bash
+php bin/console sillbeam:inspect:module Billing
+php bin/console sillbeam:inspect:module billing --project=shop
+```
+
+Inspect one module from the existing architecture analysis/report, including
+configuration, validated activation, declared/observed/incoming direct relationships
+and relevant findings. Ambiguous IDs list candidates; `--project` provides ownership
+and activation context. The Core adapter supports this exact command before
+container compilation. Text only in 0.3.0; no `--format`/JSON mode. Exit codes are
+0 valid, 1 architecture violations, 2 usage/selection failure or unavailable analysis.
+See [module inspection](module-inspection.md) for selection, state definitions,
+partial-evidence limits and native-container versus fresh-adapter snapshots.

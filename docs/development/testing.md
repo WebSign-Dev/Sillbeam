@@ -55,3 +55,11 @@ The [Doctor JSON verification](doctor-json-2026-10-29.md) records schema/status
 coverage, real native/Core CLI stream and option tests, text regression comparison
 and Composer/Flex consumers. See the [contract](../reference/doctor-json.md) and
 [schema](../reference/doctor-report.schema.json) for the machine interface.
+
+## Targeted module inspection
+
+The [module-inspection verification](module-inspection-2026-10-29.md) records
+module-only/shared/private/Multi-Project coverage, ambiguity, disabled/unassigned
+modules, cycles and partial analyses, plus real CLI and compiled-consumer checks.
+The [reference](../reference/module-inspection.md) defines selection and state
+semantics; inspection uses existing analysis/report evidence only.

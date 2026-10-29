@@ -6,6 +6,7 @@ namespace Sillbeam\Core\Console;
 
 use Sillbeam\Core\Architecture\ArchitectureReport;
 use Sillbeam\Core\Architecture\Console\ArchitectureCommand;
+use Sillbeam\Core\Architecture\Console\InspectModuleCommand;
 use Sillbeam\Core\Architecture\Console\ReportCommand;
 use Sillbeam\Core\Console\Doctor\DoctorCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Application as SymfonyApplication;
@@ -16,7 +17,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Symfony console adapter that provides architecture, report and doctor commands before container boot.
+ * Symfony console adapter that provides architecture, module inspection, report and doctor commands before container boot.
  *
  * Other commands retain Symfony dispatch. Use this class in the existing console bootstrap
  * to obtain diagnostics even when container compilation fails.
@@ -39,13 +40,14 @@ final class Application extends SymfonyApplication
         }
         // Read option metadata without resolving a kernel-derived output directory.
         $definition->addOption($this->reportCommand('')->getDefinition()->getOption('output'));
+        $definition->addOption($this->inspectModuleCommand()->getDefinition()->getOption('project'));
         try {
             $input->bind($definition);
         } catch (\Exception) {
             // The actual command validates usage and returns a structured error below.
         }
         $name = $input->getFirstArgument();
-        if (!\in_array($name, ['sillbeam:architecture', 'sillbeam:report', 'sillbeam:doctor'], true)) {
+        if (!\in_array($name, ['sillbeam:architecture', 'sillbeam:report', 'sillbeam:doctor', 'sillbeam:inspect:module'], true)) {
             return parent::doRun($input, $output);
         }
         $jsonDoctor = 'sillbeam:doctor' === $name && DoctorCommand::isJsonRequested($input);
@@ -56,6 +58,7 @@ final class Application extends SymfonyApplication
         try {
             $command = match ($name) {
                 'sillbeam:doctor' => $this->doctorCommand(),
+                'sillbeam:inspect:module' => $this->inspectModuleCommand(),
                 'sillbeam:report' => $this->reportCommand(),
                 default => $command,
             };
@@ -100,6 +103,7 @@ final class Application extends SymfonyApplication
             'sillbeam:architecture' => $this->architectureCommand(),
             'sillbeam:report' => $this->reportCommand(),
             'sillbeam:doctor' => $this->doctorCommand(),
+            'sillbeam:inspect:module' => $this->inspectModuleCommand(),
             default => parent::find($name),
         };
     }
@@ -115,8 +119,17 @@ final class Application extends SymfonyApplication
             'sillbeam:architecture' => $this->architectureCommand(),
             'sillbeam:report' => $this->reportCommand(),
             'sillbeam:doctor' => $this->doctorCommand(),
+            'sillbeam:inspect:module' => $this->inspectModuleCommand(),
             default => parent::get($name),
         };
+    }
+
+    private function inspectModuleCommand(): InspectModuleCommand
+    {
+        $command = new InspectModuleCommand(fn (): ArchitectureReport => (new KernelArchitectureReporter())->report($this->getKernel()));
+        $command->setApplication($this);
+
+        return $command;
     }
 
     private function doctorCommand(): DoctorCommand

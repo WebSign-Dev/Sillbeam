@@ -461,6 +461,14 @@ try {
     if (!$kernel->getContainer()->has('legacy') || $kernel->getContainer()->has('off.leak') !== $zero) { throw new \RuntimeException('Skeleton service import boundaries failed.'); }
     $registry = $kernel->getContainer()->get(\Sillbeam\Core\Module\ModuleRegistryInterface::class);
     if (($zero ? 2 : 1) !== \count($registry->active())) { throw new \RuntimeException('Missing active module.'); }
+    $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
+    $application->setAutoExit(false);
+    foreach (['hello' => 'active', 'off' => ($zero ? 'active' : 'disabled')] as $module => $state) {
+        $output = new \Symfony\Component\Console\Output\BufferedOutput();
+        $code = $application->run(new \Symfony\Component\Console\Input\ArrayInput(['command' => 'sillbeam:inspect:module', 'module' => $module]), $output);
+        $text = $output->fetch();
+        if (0 !== $code || !str_contains($text, 'ID: '.$module) || !str_contains($text, 'State: '.$state)) { throw new \RuntimeException('Compiled module inspection failed: '.$text); }
+    }
     $response = $kernel->handle(\Symfony\Component\HttpFoundation\Request::create('/hello'));
     if (200 !== $response->getStatusCode() || 'Hello from Sillbeam' !== $response->getContent()) { throw new \RuntimeException('Module route failed.'); }
     if ('1' === $argv[1]) {

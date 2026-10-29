@@ -143,6 +143,7 @@ Run these commands from your Symfony application's root:
 | Command | Purpose |
 | :--- | :--- |
 | `php bin/console sillbeam:architecture` | Explain architecture findings and contextual next steps. |
+| `php bin/console sillbeam:inspect:module Billing` | Inspect one module, its configuration, activation and dependency evidence ([reference](docs/reference/module-inspection.md)). |
 | `php bin/console sillbeam:doctor` | Inspect static installation evidence; review unverified checks manually. |
 | `php bin/console sillbeam:doctor --format=json` | Export the [versioned Doctor result](docs/reference/doctor-json.md) with stable check IDs. |
 | `php bin/console sillbeam:architecture --format=json` | Export the architecture catalog and dependency evidence. |
@@ -152,7 +153,7 @@ Run these commands from your Symfony application's root:
 | `php bin/console debug:router` | Inspect imported application routes. |
 | `php bin/console doctrine:mapping:info` | Inspect entity mappings when DoctrineBundle is installed. |
 
-Architecture errors block ordinary container-backed commands. With `Sillbeam\Core\Console\Application` selected in the existing bootstrap, the exact architecture, report and Doctor commands remain available before container compilation. Doctor recognizes conventional Runtime callbacks and stock Symfony 7.4/8.1 kernels statically; dynamic or ambiguous configuration remains `not verified`. Unknown routing does not hide independently proven service-import conflicts. The regular Symfony entry point can write cache files before Doctor runs. See the [CLI reference](docs/reference/cli.md) and [troubleshooting guide](docs/operations/troubleshooting.md).
+Architecture errors block ordinary container-backed commands. With `Sillbeam\Core\Console\Application` selected in the existing bootstrap, the exact architecture, report, module-inspection and Doctor commands remain available before container compilation. Doctor recognizes conventional Runtime callbacks and stock Symfony 7.4/8.1 kernels statically; dynamic or ambiguous configuration remains `not verified`. Unknown routing does not hide independently proven service-import conflicts. The regular Symfony entry point can write cache files before Doctor runs. See the [CLI reference](docs/reference/cli.md) and [troubleshooting guide](docs/operations/troubleshooting.md).
 
 ## Documentation
 
