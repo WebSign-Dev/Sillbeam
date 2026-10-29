@@ -53,13 +53,23 @@ final class FlexRecipeTest extends TestCase
         $manifest = json_decode($this->read('manifest.json'), true, flags: \JSON_THROW_ON_ERROR);
         self::assertSame(['bundles', 'copy-from-recipe'], array_keys($manifest));
         $instructions = $this->read('post-install.txt');
-        foreach (['php bin/console sillbeam:doctor', 'use Sillbeam\\Core\\Console\\Application;', 'bin/console', 'bootstrap and Kernel', 'services.yaml', 'Module', 'Project', 'php bin/console sillbeam:make:module Billing', 'php bin/console sillbeam:architecture'] as $text) {
+        foreach (['php bin/console sillbeam:doctor', 'use Sillbeam\\Core\\Console\\Application;', 'bin/console', 'bootstrap and Kernel', 'services.yaml', 'Module', 'Project', 'php bin/console sillbeam:make:module Hello', 'php bin/console sillbeam:architecture'] as $text) {
             self::assertStringContainsString($text, $instructions);
         }
         self::assertLessThan(strpos($instructions, 'sillbeam:architecture'), strpos($instructions, 'sillbeam:doctor'));
         self::assertStringEndsWith("\n", $instructions);
         self::assertFileDoesNotExist(self::RECIPE_DIRECTORY.'/bin/console');
         self::assertFileDoesNotExist(self::RECIPE_DIRECTORY.'/config/services.yaml');
+    }
+
+    public function testInstructionsPrepareTheAdapterBeforeDoctorAndLinkTheWorkingExample(): void
+    {
+        $instructions = $this->read('post-install.txt');
+        self::assertLessThan(strpos($instructions, 'php bin/console sillbeam:doctor'), strpos($instructions, 'use Sillbeam\\Core\\Console\\Application;'));
+        self::assertStringContainsString('config/routes/sillbeam.yaml', $instructions);
+        self::assertStringContainsString('docs/guides/getting-started.md', $instructions);
+        self::assertStringContainsString('Never overwrite', $instructions);
+        self::assertStringNotContainsString('sillbeam:install', $instructions);
     }
 
     public function testRecipeTextAndConfigurationFollowApplicableSymfonyChecks(): void

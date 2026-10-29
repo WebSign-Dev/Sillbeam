@@ -256,14 +256,17 @@ recognizable Console adapter construction in `bin/console`, conventional
 MicroKernel configuration loading, YAML Sillbeam route imports, Symfony service
 resource overlap with discovery areas, and discovery option/Composer namespace
 consistency using Core's existing resolver. Service imports must exclude complete
-module/Project areas so they cannot bypass Sillbeam activation. Globs, explicit
+module/Project areas so they cannot bypass Sillbeam activation. A single finite brace group in
+exclusions (for example `../src/{Entity,Kernel.php,Module,Project}`) is expanded
+without scanning or executing source. Wildcards, nested braces, explicit
 service definitions, imported configuration, environment overlays, PHP/XML
 configuration, custom Kernel hooks and ambiguous Runtime callbacks require
 manual review. Conventional Symfony Runtime callbacks are inspected through their
 returned Application, resolving imports, aliases and fully qualified names.
 Standard Symfony 7.4/8.1 MicroKernelTrait kernels (including a literal private
 `getAllowedEnvs()`) and unmodified `SillbeamKernel` subclasses are supported. Comments and unused imports do not establish adapter
-use. A valid
+use. Duplicate literal Sillbeam imports are action items with both source locations;
+keep exactly one to avoid loading the stateful loader twice. A valid
 route import uses `resource: .` and `type: sillbeam`; options whose consequences
 cannot be established statically require manual review. Discovery consistency
 checks do not analyze descriptors, activation graphs or architecture rules.

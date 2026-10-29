@@ -1,46 +1,84 @@
 # Symfony Flex
 
-The Contrib recipe source for v0.2.0 is in [flex-recipe](../../flex-recipe/README.md). It registers SillbeamCoreBundle and imports `type: sillbeam` once for routing. Doctrine activates only when DoctrineBundle is installed and registered. The recipe does not install Foundation.
+Use the [getting-started guide](getting-started.md) for the complete Composer →
+Console adapter → Doctor → first `/hello` module path for 0.3.0. The compatible
+recipe source remains [flex-recipe/websign-dev/sillbeam-core/0.2](../../flex-recipe/README.md):
+`0.2` is its minimum recipe version, not a separate installation system.
 
-Install Sillbeam Core v0.2.0 with `composer require websign-dev/sillbeam-core:^0.2.0`. The package is registered on Packagist; this command requires its stable `0.2.0` version to be available (see [release status](../../README.md#release-status)). The recipe is technically complete and locally tested, but public Recipes Contrib approval is outstanding. Flex recipe availability depends on the configured Symfony Flex endpoint and is independent of package installation. If the recipe is not installed automatically, register the bundle and route import manually as shown in the [README](../../README.md). A local Composer/Flex installation test checks registration, files, symfony.lock, installation without a package configuration file, both kernels and subsequent removal: `composer test:flex-recipe`.
+The manifest performs two tasks when the developer installs this recipe:
 
-The recipe preserves existing `services.yaml` files. In a Symfony skeleton, keep the active `App\:` import and add `Module`/`Project` or custom discovery areas to its exclusions when Sillbeam should control automatic activation. See the [integration rules](getting-started.md#preserve-symfony-integration). The local Flex test uses this normal import, checks a native service and a disabled module, and boots both kernels in development/production with cold and warm caches.
+1. Register `Sillbeam\Core\SillbeamCoreBundle` for all environments.
+2. Copy `config/routes/sillbeam.yaml` containing one `type: sillbeam` import.
 
-The recipe does not create a semantically empty `config/packages/sillbeam.yaml`. Create that file yourself with the desired options if needed. Removal preserves native services and manually created Sillbeam configuration; the recipe removes only its route import and bundle registration.
+It does not edit `services.yaml`, `bin/console`, the kernel, database settings or
+existing application routes. It creates no empty package configuration. Doctor
+also writes no files. Review native Symfony changes yourself; retain existing
+exclusions, definitions, comments and bootstrap code. Ordinary Flex installation
+preserves an existing destination; never use a forced recipe reinstall as a repair.
+A preserved but incorrect route file still needs manual correction.
 
-After uninstalling, remove manually created `sillbeam` options from Symfony package imports, restore a manually selected Core Console adapter to Symfony, and, if necessary, switch an application kernel derived from `SillbeamKernel` back to the standard Symfony kernel. These are application settings; the recipe neither deletes nor overwrites them. The consumer test also checks native kernel boot after this explicit cleanup.
+## Package installation and recipe availability
 
-After installation, first run `php bin/console sillbeam:doctor`. Review action
-items and checks marked `not verified`. If needed, manually change the Application
-import in the existing `bin/console` to `use Sillbeam\Core\Console\Application;`,
-keeping the bootstrap and Kernel. This enables checks without container compilation.
-Review broad service imports as described above, then run
-`php bin/console sillbeam:make:module Billing` and
-`php bin/console sillbeam:architecture`.
+```bash
+composer require websign-dev/sillbeam-core
+```
 
-Doctor is static and read-only in its implementation. Conventional Runtime
-callbacks and standard Symfony 7.4/8.1 kernels are supported; unknown route overlays
-no longer hide independently proven service-import conflicts. Dynamic or ambiguous
-configuration still needs manual review; see the
-[F01/F02 follow-up](../development/doctor-f01-f02-verification-2026-10-25/README.md).
-The regular Symfony entry point boots first and can write its ordinary cache;
-select the existing Core Console adapter for inspection without that boot.
+This installs an available compatible package version. For 0.3.0 release consumers,
+use `:^0.3.0` once published. Public recipe installation additionally requires
+Contrib approval, an eligible recipe on the configured endpoint, permission for
+the Flex plugin and the application's decision to allow Contrib recipes
+(`composer config extra.symfony.allow-contrib true`). None of these is implied by
+package installation or a package tag. See [release status](../../README.md#release-status).
+The repository tests use a local endpoint and simulated version; they do not
+publish or submit anything. Check Composer output and `symfony.lock` rather than
+assuming the recipe ran.
 
-These steps are printed by Flex from the recipe's `post-install.txt`. The source
-manifest contains only `bundles` and `copy-from-recipe`; the endpoint generates
-its post-install output metadata. Neither the source text file nor an empty
-package configuration is copied into your application.
+When no recipe is installed, manually register the bundle and exactly one route
+import as shown in the installation guide. Keep an existing registration/import.
+No alternative installer command is needed.
 
-The package already exists on Packagist. For public automatic recipe installation,
-a matching stable package version must be available, the separate Recipes Contrib
-review must be completed, and
-the accepted recipe must be available through the configured endpoint. Publishing
-the v0.2.0 tag alone does not activate it. Enable Contrib recipes with
-`composer config extra.symfony.allow-contrib true` and allow the Flex plugin.
-See the [submission instructions](../../flex-recipe/README.md#submit-to-symfonyrecipes-contrib)
-and [verification record](../development/flex-recipe-verification.md).
+## After installation
 
-Before uninstalling, preserve application-specific edits to the recipe-managed
-`config/routes/sillbeam.yaml`: Flex tracks that filename even if it existed
-before installation. Other manually created configuration, including package
-options and native service imports, is retained.
+1. Manually select `use Sillbeam\Core\Console\Application;` in the existing
+   `bin/console`, preserving the bootstrap, aliases and kernel. This makes Doctor
+   available when the bundle is absent or container compilation fails.
+2. Run `php bin/console sillbeam:doctor`. Apply reviewed fixes for missing bundle,
+   routing or service exclusions, then rerun it. Unknown dynamic configuration
+   stays `not verified`; inspect it manually.
+3. Run `php bin/console sillbeam:architecture`, then
+   `php bin/console sillbeam:make:module Hello`. Add the guide's service/controller
+   and verify `/hello` with Symfony's router and an HTTP request.
+
+Broad native `App\` imports must exclude entire module/Project discovery areas
+when Sillbeam should control activation. Doctor reports the actual conflicting
+file, import and paths, including custom roots. Literal finite brace exclusions
+are supported; wildcard resources, nested groups, imported configuration and
+unknown overlays remain unverified. Keep existing services/exclusions; Sillbeam
+uses Symfony's native service loader within active areas.
+
+Doctrine mappings activate only when DoctrineBundle is installed and registered;
+the recipe never installs Doctrine. Existing database and native mapping choices
+remain application-owned. The standard Symfony kernel is sufficient.
+
+These instructions are displayed from `post-install.txt`, not copied into the
+application. The source manifest contains only `bundles` and `copy-from-recipe`;
+the endpoint derives the post-install output metadata.
+
+## Verification and removal
+
+`composer test:flex-recipe` exercises a pre-existing Symfony application;
+`SILLBEAM_TEST_FRESH=1 composer test:flex-recipe` exercises a fresh consumer.
+Repeat each with `SILLBEAM_TEST_DOCTRINE=1` for the Doctrine variants. The test
+installs through real Composer/Flex, preserves native files, diagnoses a broken
+installation, applies explicit test-authored corrections, reruns Doctor, creates
+the first module and checks HTTP, activation and mappings. Both Symfony and
+Sillbeam kernels boot with cold/warm development/production caches.
+
+Flex removal deletes its bundle registration and recipe-managed route file.
+Back up application-specific changes to `config/routes/sillbeam.yaml` first:
+Flex tracks that filename even if it existed before installation. Other
+application-owned files and manually created package options are retained.
+After removal, explicitly remove `sillbeam` options from package imports, restore
+the Console Application to Symfony and, if selected, switch an optional
+`SillbeamKernel` subclass back to Symfony. These are manual application decisions.
+See the [recipe source and submission notes](../../flex-recipe/README.md).

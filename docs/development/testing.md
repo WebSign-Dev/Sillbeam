@@ -38,3 +38,13 @@ routing and package files after install/removal. `SILLBEAM_TEST_EXISTING_ROUTE=1
 also checks non-overwrite of an existing recipe destination and the standard Flex
 ownership boundary at uninstall. See the [recipe verification record](flex-recipe-verification.md)
 for official checker results and the outstanding Packagist prerequisite.
+
+## Installation and onboarding (0.3.0)
+
+The [2026-10-29 verification](installation-onboarding-2026-10-29.md) records the
+Composer/Flex matrix for fresh and existing Symfony 7.4/8.1 consumers, each with
+and without Doctrine, including broken installation, manual repair, read-only
+Doctor checks and the documented first HTTP module. `composer test:flex-recipe`
+now defaults to installing/booting Symfony before adding Core; use
+`SILLBEAM_TEST_FRESH=1` for a single fresh installation. The report lists exact
+versions, reproduction commands and scope limits.

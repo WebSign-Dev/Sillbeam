@@ -52,13 +52,13 @@ final class InstallationInspector
                             $enabled = $flags[$environment] ?? $flags['all'] ?? false;
                         }
                     }
-                    $add($label, $enabled ? 'verified' : 'action required', $enabled ? '' : 'Register Sillbeam\\Core\\SillbeamCoreBundle::class for this environment in config/bundles.php.');
+                    $add($label, $enabled ? 'verified' : 'action required', $enabled ? '' : 'In config/bundles.php, enable Sillbeam\\Core\\SillbeamCoreBundle::class in the existing bundle array. For all environments use [\'all\' => true]; an explicit \''.$environment.'\' => false overrides it. Preserve other bundles.');
                 } else {
                     $adapter = $this->consoleAdapter($nodes);
                     if ('Sillbeam\\Core\\Console\\Application' === $adapter) {
                         $add($label, 'verified');
                     } elseif ('Symfony\\Bundle\\FrameworkBundle\\Console\\Application' === $adapter) {
-                        $add($label, 'action required', 'In bin/console use Sillbeam\\Core\\Console\\Application; to keep doctor available before container compilation. Preserve the existing bootstrap and Kernel.');
+                        $add($label, 'action required', 'In bin/console use Sillbeam\\Core\\Console\\Application; instead of the Symfony Console Application import, or change its fully qualified construction. Preserve the existing bootstrap and Kernel, including import aliases. This adapter makes Doctor available even when the bundle is missing or container compilation fails.');
                     } else {
                         throw new \RuntimeException('bin/console uses an ambiguous or unsupported bootstrap. Manually verify use Sillbeam\\Core\\Console\\Application; and its construction.');
                     }
@@ -144,7 +144,7 @@ final class InstallationInspector
             $unknown = ['route' => true, 'discovery' => true, 'service' => true];
             $add('Configuration files', 'not verified', $error->getMessage().' Review configuration manually.');
         }
-        $route = false;
+        $routeImports = [];
         $routeUnknown = $unknown['route'];
         $routeNames = [];
         foreach ($documents as $path => $data) {
@@ -161,7 +161,7 @@ final class InstallationInspector
                 } elseif ('sillbeam' === ($entry['type'] ?? null)) {
                     // The loader ignores resource; require an import rather than a route definition.
                     if (isset($entry['resource']) && !isset($entry['path']) && ['resource', 'type'] === array_values(array_intersect(['resource', 'type'], array_keys($entry))) && 2 === \count($entry)) {
-                        $route = true;
+                        $routeImports[] = substr($path, \strlen($directory) + 1).': '.$name;
                     } else {
                         $routeUnknown = true;
                     }
@@ -170,7 +170,13 @@ final class InstallationInspector
                 }
             }
         }
-        $add('Route import', $routeUnknown ? 'not verified' : ($route ? 'verified' : 'action required'), $routeUnknown ? 'Review route imports and options manually; dynamic/imported configuration is unresolved.' : ($route ? '' : 'Add a Sillbeam import in config/routes.yaml: resource: . and type: sillbeam.'));
+        $routeDetail = match (true) {
+            $routeUnknown => 'Review route imports and options manually; dynamic/imported configuration is unresolved. Confirm exactly one effective type: sillbeam import; do not add another blindly.',
+            [] === $routeImports => 'Add exactly one import in config/routes/sillbeam.yaml (or existing config/routes.yaml): sillbeam: { resource: ., type: sillbeam }. Preserve existing routes; do not duplicate an import installed by Flex.',
+            \count($routeImports) > 1 => implode(', ', $routeImports).' declares multiple Sillbeam imports. Keep exactly one effective import; the loader can only run once. Remove a duplicate only after reviewing the existing routing configuration.',
+            default => '',
+        };
+        $add('Route import', $routeUnknown ? 'not verified' : (1 === \count($routeImports) ? 'verified' : 'action required'), $routeDetail);
         $options = null;
         try {
             if ($unknown['discovery']) {
@@ -231,11 +237,11 @@ final class InstallationInspector
                 $excludes = [];
                 $excludeUnknown = false;
                 foreach ((array) ($service['exclude'] ?? []) as $exclude) {
-                    $excludePath = $this->directory($exclude, \dirname($path), $directory);
-                    if (null === $excludePath) {
+                    $excludePaths = $this->exclusionDirectories($exclude, \dirname($path), $directory);
+                    if (null === $excludePaths) {
                         $excludeUnknown = $serviceUnknown = true;
                     } else {
-                        $excludes[] = $excludePath;
+                        $excludes = [...$excludes, ...$excludePaths];
                     }
                 }
                 foreach (null === $options ? [] : [...$options->moduleRoots, ...$options->projectRoots] as $root) {
@@ -249,13 +255,18 @@ final class InstallationInspector
                         }
                     }
                     if (!$excluded && !$excludeUnknown) {
-                        $overlaps[] = substr($path, \strlen($directory) + 1).': '.$id;
+                        $key = substr($path, \strlen($directory) + 1).': '.$id;
+                        $overlaps[$key][] = str_starts_with($root->path, rtrim($directory, '/').'/')
+                            ? '%kernel.project_dir%'.substr($root->path, \strlen(rtrim($directory, '/'))).'/'
+                            : rtrim($root->path, '/').'/';
                     }
                 }
             }
         }
         if ([] !== $overlaps) {
-            $add('Service imports', 'action required', implode(', ', array_unique($overlaps)).' declares imports overlapping discovery areas and can bypass activation. Exclude complete module and Project discovery areas from Symfony resource imports; let Sillbeam register their services.'.($serviceUnknown ? ' Additional unresolved configuration may override these declarations; verify effective imports manually.' : ''));
+            foreach ($overlaps as $import => $areas) {
+                $add('Service imports', 'action required', $import.' overlaps discovery areas. These imports can bypass activation. Exclude complete module and Project discovery areas from Symfony resource imports; let Sillbeam register their services. Add these paths to this import\'s existing exclude list: '.implode(', ', array_unique($areas)).'. Preserve existing exclusions and explicit services.'.($serviceUnknown ? ' Additional unresolved configuration may override these declarations; verify effective imports manually.' : ''));
+            }
         }
         if ($serviceUnknown) {
             $add('Service imports', 'not verified', 'Manually check unresolved service resources, excludes, imports and overrides against module/Project areas.');
@@ -413,7 +424,7 @@ final class InstallationInspector
             return null;
         }
         $value = str_replace('%kernel.project_dir%', $project, $value);
-        if (preg_match('/[%*?{}!]/', $value)) {
+        if (false !== strpbrk($value, '%*?{}![]')) {
             return null;
         }
         $path = str_starts_with($value, '/') ? $value : $base.'/'.$value;
@@ -428,5 +439,42 @@ final class InstallationInspector
         $path = '/'.implode('/', $parts);
 
         return false !== ($real = realpath($path)) ? $real : $path;
+    }
+
+    /**
+     * Expands a single finite brace group used by conventional Symfony excludes.
+     *
+     * No globbing or filesystem enumeration: absent module directories must still
+     * be covered. Nested groups, wildcards and unresolved parameters remain unknown.
+     *
+     * @return list<string>|null
+     */
+    private function exclusionDirectories(mixed $value, string $base, string $project): ?array
+    {
+        if (!\is_string($value)) {
+            return null;
+        }
+        if (!str_contains($value, '{')) {
+            $path = $this->directory($value, $base, $project);
+
+            return null === $path ? null : [$path];
+        }
+        if (!preg_match('/^([^{}]*)\{([^{}]+)\}([^{}]*)$/D', $value, $matches)) {
+            return null;
+        }
+        $alternatives = explode(',', $matches[2]);
+        if (\count($alternatives) < 2 || \in_array('', $alternatives, true)) {
+            return null;
+        }
+        $paths = [];
+        foreach ($alternatives as $alternative) {
+            $path = $this->directory($matches[1].$alternative.$matches[3], $base, $project);
+            if (null === $path) {
+                return null;
+            }
+            $paths[] = $path;
+        }
+
+        return $paths;
     }
 }

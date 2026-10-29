@@ -37,10 +37,17 @@ From the Sillbeam repository root:
 ```bash
 composer test:flex-recipe
 SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
+SILLBEAM_TEST_FRESH=1 composer test:flex-recipe
+SILLBEAM_TEST_FRESH=1 SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 ```
 
-The check builds a local Flex endpoint from this source, installs Sillbeam into a
-temporary Symfony consumer through Composer and verifies the generated bundle,
+The check builds a local Flex endpoint from this source and installs a simulated
+0.3.0 Core package into a temporary Symfony consumer through real Composer. By
+default Symfony is installed and booted before adding Core; `SILLBEAM_TEST_FRESH=1`
+resolves the fresh consumer in one install. It diagnoses missing integration and
+service overlap, applies explicit test-authored corrections, checks read-only Doctor
+execution and unverified dynamic configuration, creates Hello with the existing
+make command, and exercises the guide's actual service/controller. It verifies the generated bundle,
 route and `symfony.lock` entries, actual Flex output from `post-install.txt`, and unchanged existing services, routing and console files, then boots without package configuration, exercises both kernels and removes the package again. Removal must preserve native services and user-authored package configuration. The normal PHPUnit suite also
 guards the recipe structure and its safe defaults.
 
@@ -48,17 +55,18 @@ The PHP package cannot load its own recipe. Until the recipe is merged into
 Symfony Recipes Contrib, consumers either register the bundle and route import manually or use
 their own Flex endpoint containing this recipe.
 
-Install Sillbeam Core v0.2.0 with `composer require websign-dev/sillbeam-core:^0.2.0`. The command requires the stable `0.2.0` package version to be listed on Packagist; existing registration alone does not provide a version. See [release status](../README.md#release-status). The `0.2/` recipe applies to v0.2.0 and later compatible 0.2 versions. Recipe availability is independent of Composer package installation. Manual setup remains supported.
+Install an available compatible package with `composer require websign-dev/sillbeam-core`. For 0.3.0 release consumers, `:^0.3.0` requires that release to be published. See [release status](../README.md#release-status). The `0.2/` directory is the compatible minimum recipe version and remains used for this onboarding update. Recipe availability is independent of package installation; manual setup remains supported.
 
 The package declares `type: symfony-bundle`, following [Symfony bundle installation guidance](https://symfony.com/doc/current/bundles/best_practices.html#installation). No semantically empty file is created under `config/packages`, as required by the [recipe checklist](https://github.com/symfony/recipes/blob/main/README.rst#recipe-checklist).
 
-After installation, run `php bin/console sillbeam:doctor`. If needed, manually
-select `use Sillbeam\Core\Console\Application;` in the existing `bin/console`;
+Before running Doctor, manually select `use Sillbeam\Core\Console\Application;` in the existing `bin/console`;
 retain its bootstrap and Kernel. This keeps checks available before container
-compilation. Review broad service imports and exclude module/Project discovery
+compilation even when bundle registration is missing. Run `php bin/console sillbeam:doctor`,
+review its action items and unverified checks, and make the reviewed changes yourself.
+Review broad service imports and exclude module/Project discovery
 areas where Sillbeam should control activation. Then create the first descriptor
-with `php bin/console sillbeam:make:module Billing` and run
-`php bin/console sillbeam:architecture`. See [CLI setup](../docs/reference/cli.md).
+with `php bin/console sillbeam:make:module Hello` and run
+`php bin/console sillbeam:architecture`. Add the service and controller from the [first-module example](../docs/guides/getting-started.md#4-create-the-first-module) and verify `/hello`. See [CLI setup](../docs/reference/cli.md).
 The recipe never edits `bin/console` or `services.yaml`.
 
 ## Submit to symfony/recipes-contrib

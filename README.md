@@ -50,78 +50,72 @@ The current CI targets PHP 8.4/8.5 with Symfony 7.4/8.1. The [independent v0.2.0
 
 ### Install with Composer
 
-Install Sillbeam in your Symfony application's root directory:
+From the root of a fresh or existing Symfony application:
 
 ```bash
-composer require websign-dev/sillbeam-core:^0.2.0
+composer require websign-dev/sillbeam-core
 ```
 
-The current Core version is **v0.2.0**. The package is [registered on Packagist][composer-url]. The constraint `^0.2.0` allows compatible updates within the 0.2 release line; it requires the stable `0.2.0` version to be listed by Packagist. Package registration alone does not provide that version. To pin it exactly, use `composer require websign-dev/sillbeam-core:0.2.0`. See [release status](#release-status) for the tag check.
+Composer selects an available compatible release. This checkout prepares **v0.3.0**;
+a `:^0.3.0` constraint requires that release to be published. See
+[release status](#release-status). Package installation and Flex recipe availability
+are separate. The [existing Flex recipe](flex-recipe/README.md) registers the bundle
+and one route import when installed through your configured endpoint; it does not
+edit `bin/console` or `services.yaml`. Public Contrib approval is a separate step.
 
-### Register Sillbeam
+Before running Doctor, select the Core Application in your **existing** `bin/console`:
 
-Register the bundle in your existing bundle array:
-
-```php
-// config/bundles.php
-return [
-    // Keep your existing bundles here.
-    Sillbeam\Core\SillbeamCoreBundle::class => ['all' => true],
-];
+```diff
+-use Symfony\Bundle\FrameworkBundle\Console\Application;
++use Sillbeam\Core\Console\Application;
 ```
 
-Create the route import. No `config/packages/sillbeam.yaml` is required for the defaults; create it only when configuring [options](docs/reference/configuration.md). If Flex has already enabled the bundle, keep its existing registration.
+Keep the bootstrap, Runtime callback, import aliases and kernel. This deliberate
+manual edit makes Doctor available even without the bundle or a working container.
+Then run:
 
-```yaml
-# config/routes/sillbeam.yaml
-sillbeam:
-    resource: .
-    type: sillbeam
+```bash
+php bin/console sillbeam:doctor
 ```
 
-<details>
-<summary><strong>Install through Symfony Flex</strong></summary>
+Review its concrete next steps:
 
-The [Flex recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md) registers the bundle and creates the route import above when available through your Symfony Flex endpoint. Recipe availability is independent of Composer package installation. The recipe is technically complete and locally tested, but public Recipes Contrib approval is outstanding. The package is already registered on Packagist. A matching stable package version, Contrib acceptance and endpoint availability are required for automatic recipe installation; the v0.2.0 tag alone does not activate it. Consumers must allow Contrib recipes (`composer config extra.symfony.allow-contrib true`). If Composer/Flex does not install the recipe, register the bundle and route import manually as shown above.
+- Enable `Sillbeam\Core\SillbeamCoreBundle::class => ['all' => true]` in the existing
+  bundle array if missing; preserve the other bundles and environment flags.
+- Keep exactly one `sillbeam: { resource: ., type: sillbeam }` import, normally in
+  `config/routes/sillbeam.yaml`. Do not duplicate a Flex-provided import.
+- Append complete Module/Project discovery areas to broad native service imports'
+  existing exclusions. Keep other exclusions and explicit services. For the usual
+  `App\` import of `../src/`, an exclusion can be
+  `../src/{DependencyInjection,Entity,Kernel.php,Module,Project}`; use actual paths
+  for custom roots.
 
-</details>
+Neither Doctor nor the recipe overwrites those native files. Dynamic configuration
+remains `not verified`; review it manually. A green Doctor result confirms static
+evidence only. No `config/packages/sillbeam.yaml` is required for the defaults.
+The [installation guide](docs/guides/getting-started.md) includes exact edits,
+boot-failure recovery and the optional Doctrine setup.
 
-With the usual `App\:` import of `src/`, exclude `Module` and `Project` from that native service import when Sillbeam should control their automatic activation. Keep existing exclusions and explicit services. The Flex recipe preserves your service configuration; it does not add these exclusions. See the [Symfony integration rules](docs/guides/getting-started.md#preserve-symfony-integration), including custom discovery roots and native routing/Doctrine imports.
-
-Run `php bin/console sillbeam:doctor` after integration and review its action items
-and `not verified` checks. If needed, manually select
-`use Sillbeam\Core\Console\Application;` in the existing `bin/console`, preserving
-the bootstrap and Kernel. The recipe never edits that file. After reviewing service
-imports, create the first descriptor below and run `php bin/console sillbeam:architecture`.
-
-### Create your first module
-
-Run `php bin/console sillbeam:make:module Billing` to create the minimal descriptor, or create `src/Module/Billing/BillingModule.php` manually:
-
-```php
-<?php
-
-namespace App\Module\Billing;
-
-use Sillbeam\Core\Module\Attribute\SillbeamModule;
-
-#[SillbeamModule]
-final class BillingModule
-{
-}
+```bash
+php bin/console sillbeam:doctor
+php bin/console sillbeam:architecture
+php bin/console sillbeam:make:module Hello
 ```
 
-1. **Organize the feature.** Put its services inside the module directory. Sillbeam derives the `billing` ID and its PSR-4 namespace.
-2. **Expose routes and persistence.** Controllers under `Controller/` use ordinary Symfony route attributes. Entities under `Entity/` receive automatic mappings when DoctrineBundle is registered. `Entity/` and `Dto/` are excluded from automatic service imports by default.
-3. **Inspect the architecture.** Build the container and review the discovered modules:
+Add the guide's [Greeting service and HelloController](docs/guides/getting-started.md#4-create-the-first-module)
+to the new module. Then verify it:
 
 ```bash
 php bin/console cache:clear
 php bin/console sillbeam:architecture
-php bin/console debug:router
+php bin/console debug:router hello
 ```
 
-See the [getting-started guide](docs/guides/getting-started.md) for service discovery and integration details.
+A request to `/hello` through your existing development server returns
+`Hello from Sillbeam`. The descriptor command alone creates no route. Existing
+Projects must select the shared Hello module first; Project routes have prefixed
+names and optional host filters. Ordinary make/container commands require a usable
+architecture; the adapter keeps Doctor and reporting available before boot.
 
 ## Modules and Projects
 

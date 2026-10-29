@@ -16,8 +16,9 @@ if (!is_file($autoload)) {
 require $autoload;
 
 $withDoctrine = '1' === getenv('SILLBEAM_TEST_DOCTRINE');
+$fresh = '1' === getenv('SILLBEAM_TEST_FRESH');
 $symfony = getenv('SILLBEAM_SYMFONY_VERSION') ?: null;
-$requirements = ['websign-dev/sillbeam-core' => '0.2.0', 'symfony/flex' => '^2.11', 'symfony/framework-bundle' => $symfony ?? '^7.4 || ^8.0', 'symfony/console' => $symfony ?? '^7.4 || ^8.0', 'symfony/yaml' => $symfony ?? '^7.4 || ^8.0'];
+$requirements = ['websign-dev/sillbeam-core' => '0.3.0', 'symfony/flex' => '^2.11', 'symfony/framework-bundle' => $symfony ?? '^7.4 || ^8.0', 'symfony/console' => $symfony ?? '^7.4 || ^8.0', 'symfony/yaml' => $symfony ?? '^7.4 || ^8.0'];
 $conflicts = [];
 if ($withDoctrine) {
     $requirements['doctrine/doctrine-bundle'] = '^3.3';
@@ -112,7 +113,7 @@ try {
         'repositories' => [[
             'type' => 'path',
             'url' => $packageDirectory,
-            'options' => ['symlink' => false, 'versions' => ['websign-dev/sillbeam-core' => '0.2.0']],
+            'options' => ['symlink' => false, 'versions' => ['websign-dev/sillbeam-core' => '0.3.0']],
         ]],
         'require' => $requirements,
         'conflict' => (object) $conflicts,
@@ -147,12 +148,22 @@ services:
     _defaults: { autowire: true, autoconfigure: true }
     App\:
         resource: '../src/'
-        exclude: '../src/{DependencyInjection,Entity,Kernel.php,Module,Project}'
+        exclude: '../src/{DependencyInjection,Entity,Kernel.php}'
 YAML,
         'config/packages/application.yaml' => "parameters: { application_marker: preserved }\n",
         'config/routes/application.yaml' => "application_status: { path: /application-status }\n",
         'config/routes.yaml' => "# Application-owned routing entry point.\n{}\n",
-        'bin/console' => '<?php // Application-owned Console bootstrap. No recipe edits. '."\n",
+        'bin/console' => <<<'PHP'
+#!/usr/bin/env php
+<?php
+// Application-owned Console bootstrap. No recipe edits.
+use App\Kernel;
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+require dirname(__DIR__).'/vendor/autoload.php';
+$kernel = new Kernel('dev', true);
+$application = new Application($kernel);
+$application->run();
+PHP,
     ];
     if ('1' === getenv('SILLBEAM_TEST_EXISTING_ROUTE')) {
         $applicationFiles['config/routes/sillbeam.yaml'] = "# Existing application-authored import must not be overwritten.\n".file_get_contents($recipeDirectory.'/config/routes/sillbeam.yaml');
@@ -160,7 +171,29 @@ YAML,
     foreach ($applicationFiles as $file => $contents) {
         file_put_contents($applicationDirectory.'/'.$file, $contents);
     }
-    $output = runComposer($applicationDirectory);
+    // A real existing consumer has its Symfony dependencies installed and boots
+    // before Core is added; a fresh consumer resolves everything in one install.
+    mkdir($applicationDirectory.'/src', 0777, true);
+    file_put_contents($applicationDirectory.'/src/Kernel.php', '<?php namespace App; final class Kernel extends \\Symfony\\Component\\HttpKernel\\Kernel { use \\Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait; }');
+    $nativeBundles = [Symfony\Bundle\FrameworkBundle\FrameworkBundle::class => ['all' => true]];
+    if ($withDoctrine) {
+        $nativeBundles[Doctrine\Bundle\DoctrineBundle\DoctrineBundle::class] = ['all' => true];
+        file_put_contents($applicationDirectory.'/config/packages/doctrine.yaml', "doctrine:\n    dbal: { url: 'sqlite:///:memory:' }\n    orm: { auto_mapping: false }\n");
+    }
+    file_put_contents($applicationDirectory.'/config/bundles.php', '<?php return '.var_export($nativeBundles, true).';');
+    file_put_contents($applicationDirectory.'/config/packages/framework.yaml', "framework:\n    secret: smoke\n    router: { utf8: true }\n");
+    if (!$fresh) {
+        $composer = decodeJson($applicationDirectory.'/composer.json');
+        $composer['conflict'] = (object) $composer['conflict'];
+        $composer['scripts']['auto-scripts'] = (object) $composer['scripts']['auto-scripts'];
+        unset($composer['require']['websign-dev/sillbeam-core']);
+        writeJson($applicationDirectory.'/composer.json', $composer);
+        runComposer($applicationDirectory);
+        consumerConsole($applicationDirectory, ['about'], 0);
+        $composer['require']['websign-dev/sillbeam-core'] = '0.3.0';
+        writeJson($applicationDirectory.'/composer.json', $composer);
+    }
+    $output = runComposer($applicationDirectory, $fresh ? 'install' : 'update');
     foreach ($instructions as $line) {
         if ('' !== trim($line) && !str_contains($output, $line)) {
             throw new RuntimeException('Flex did not print post-install.txt line: '.$line);
@@ -192,6 +225,12 @@ YAML,
         'config/routes/sillbeam.yaml',
     ], $installedFiles, 'symfony.lock does not track only the Sillbeam route import.');
 
+    verifyOnboarding($applicationDirectory);
+    // These two edits are explicit developer decisions in this disposable app,
+    // not recipe or Doctor writes. Preserve the reviewed state on uninstall.
+    foreach (['config/services.yaml', 'bin/console'] as $file) {
+        $applicationFiles[$file] = file_get_contents($applicationDirectory.'/'.$file);
+    }
     bootConsumer($applicationDirectory, $withDoctrine);
     uninstallRecipe($applicationDirectory);
     // Flex owns the recipe destination even if it existed; document and test this boundary.
@@ -199,7 +238,7 @@ YAML,
     foreach ($applicationFiles as $file => $contents) {
         assertSame($contents, file_get_contents($applicationDirectory.'/'.$file), 'Recipe removal changed '.$file);
     }
-    fwrite(\STDOUT, 'Sillbeam Flex recipe installation, both consumer kernels and removal passed ('.($withDoctrine ? 'with Doctrine' : 'without Doctrine').").\n");
+    fwrite(\STDOUT, 'Sillbeam Flex recipe installation, both consumer kernels and removal passed ('.($fresh ? 'fresh' : 'existing').' application, '.($withDoctrine ? 'with Doctrine' : 'without Doctrine').").\n");
 } finally {
     if (is_resource($endpointServer)) {
         proc_terminate($endpointServer);
@@ -264,7 +303,7 @@ function hashDirectory(string $directory): string
     return hash_final($hash);
 }
 
-function runComposer(string $workingDirectory): string
+function runComposer(string $workingDirectory, string $operation = 'install'): string
 {
     $output = tmpfile();
     if (false === $output) {
@@ -272,7 +311,7 @@ function runComposer(string $workingDirectory): string
     }
     $process = proc_open([
         'composer',
-        'install',
+        $operation,
         '--no-interaction',
         '--no-progress',
         '--prefer-dist',
@@ -298,6 +337,66 @@ function runComposer(string $workingDirectory): string
     return $contents;
 }
 
+/** Runs the real application console; captures output for actionable failure messages.
+ * @param list<string> $arguments
+ */
+function consumerConsole(string $directory, array $arguments, int $expected): string
+{
+    $output = tmpfile();
+    if (false === $output) {
+        throw new RuntimeException('Unable to capture consumer console output.');
+    }
+    $process = proc_open([\PHP_BINARY, 'bin/console', ...$arguments, '--no-ansi'], [\STDIN, $output, $output], $pipes, $directory);
+    if (!is_resource($process)) {
+        throw new RuntimeException('Unable to run consumer console.');
+    }
+    $code = proc_close($process);
+    rewind($output);
+    $text = (string) stream_get_contents($output);
+    fclose($output);
+    if ($expected !== $code) {
+        throw new RuntimeException(implode(' ', $arguments).' returned '.$code.' instead of '.$expected.': '.$text);
+    }
+
+    return $text;
+}
+
+/** Manual corrections in a disposable consumer; Doctor itself must remain read-only. */
+function verifyOnboarding(string $directory): void
+{
+    $native = consumerConsole($directory, ['sillbeam:doctor'], 1);
+    assertSame(true, str_contains($native, 'Console adapter: action required'), 'Missing adapter needs instructions.');
+    $console = (string) file_get_contents($directory.'/bin/console');
+    file_put_contents($directory.'/bin/console', str_replace('use Symfony\\Bundle\\FrameworkBundle\\Console\\Application;', 'use Sillbeam\\Core\\Console\\Application;', $console));
+    $bundles = (string) file_get_contents($directory.'/config/bundles.php');
+    $route = (string) file_get_contents($directory.'/config/routes/sillbeam.yaml');
+    // Keep the same conventional class::class syntax as Flex's bundle configurator.
+    file_put_contents($directory.'/config/bundles.php', preg_replace('/^.*SillbeamCoreBundle::class.*\n/m', '', $bundles));
+    file_put_contents($directory.'/config/routes/sillbeam.yaml', '{}');
+    $before = hashDirectory($directory);
+    $broken = consumerConsole($directory, ['sillbeam:doctor'], 1);
+    foreach (['Bundle registration: action required', 'Route import: action required', 'Service imports: action required'] as $message) {
+        assertSame(true, str_contains($broken, $message), 'Missing broken-install diagnosis: '.$message);
+    }
+    assertSame($before, hashDirectory($directory), 'Doctor wrote consumer files while diagnosing a broken installation.');
+    file_put_contents($directory.'/config/bundles.php', $bundles);
+    file_put_contents($directory.'/config/routes/sillbeam.yaml', $route);
+    $services = (string) file_get_contents($directory.'/config/services.yaml');
+    file_put_contents($directory.'/config/services.yaml', str_replace('{DependencyInjection,Entity,Kernel.php}', '{DependencyInjection,Entity,Kernel.php,Module,Project}', $services));
+    $before = hashDirectory($directory);
+    consumerConsole($directory, ['sillbeam:doctor'], 0);
+    assertSame($before, hashDirectory($directory), 'Doctor wrote consumer files after manual repair.');
+    // Dynamic PHP must not be executed even when every literal check looks good.
+    file_put_contents($directory.'/config/packages/unresolved.php', '<?php file_put_contents(__DIR__."/executed", "bad");');
+    $before = hashDirectory($directory);
+    consumerConsole($directory, ['sillbeam:doctor'], 2);
+    assertSame($before, hashDirectory($directory), 'Doctor executed unresolved configuration.');
+    unlink($directory.'/config/packages/unresolved.php');
+    consumerConsole($directory, ['sillbeam:make:module', 'Hello'], 0);
+    consumerConsole($directory, ['sillbeam:architecture'], 0);
+    fwrite(\STDOUT, "Doctor repair, unchanged consumer files, unresolved configuration and first module creation passed.\n");
+}
+
 /** Boots the installed consumer in another process without the repository development autoloader. */
 function bootConsumer(string $directory, bool $withDoctrine): void
 {
@@ -317,8 +416,16 @@ function bootConsumer(string $directory, bool $withDoctrine): void
     file_put_contents($directory.'/src/Module/Off/Leak.php', '<?php namespace App\Module\Off; #[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "off.leak", public: true)] final class Leak {}');
     file_put_contents($directory.'/src/Legacy.php', '<?php namespace App; #[\Symfony\Component\DependencyInjection\Attribute\AsAlias(id: "legacy", public: true)] final class Legacy {}');
     mkdir($directory.'/src/Module/Hello/Controller', 0777, true);
-    file_put_contents($directory.'/src/Module/Hello/HelloModule.php', '<?php namespace App\Module\Hello; #[\Sillbeam\Core\Module\Attribute\SillbeamModule] final class HelloModule {}');
-    file_put_contents($directory.'/src/Module/Hello/Controller/HelloController.php', '<?php namespace App\Module\Hello\Controller; final class HelloController { #[\Symfony\Component\Routing\Attribute\Route("/hello", name: "hello")] public function hello(): \Symfony\Component\HttpFoundation\Response { return new \Symfony\Component\HttpFoundation\Response("hello"); } }');
+    assertSame(true, is_file($directory.'/src/Module/Hello/HelloModule.php'), 'Onboarding must create Hello with the existing make command.');
+    // Execute the documented service/controller example, not a parallel imitation.
+    $guide = (string) file_get_contents(__DIR__.'/../docs/guides/getting-started.md');
+    preg_match_all('/```php\n(.*?)\n```/s', $guide, $examples);
+    foreach (['Greeting', 'HelloController'] as $class) {
+        $snippets = array_values(array_filter($examples[1], static fn (string $code): bool => str_contains($code, 'class '.$class)));
+        assertSame(1, count($snippets), 'Missing or ambiguous documented class: '.$class);
+        $path = 'HelloController' === $class ? 'Controller/'.$class : $class;
+        file_put_contents($directory.'/src/Module/Hello/'.$path.'.php', "<?php\n".$snippets[0]."\n");
+    }
     if ($withDoctrine) {
         mkdir($directory.'/src/Module/Hello/Entity', 0777, true);
         file_put_contents($directory.'/src/Module/Hello/Entity/Record.php', '<?php namespace App\Module\Hello\Entity; #[\Doctrine\ORM\Mapping\Entity] final class Record { #[\Doctrine\ORM\Mapping\Id] #[\Doctrine\ORM\Mapping\Column(type: "integer")] public int $id = 1; }');
@@ -345,7 +452,7 @@ try {
     $registry = $kernel->getContainer()->get(\Sillbeam\Core\Module\ModuleRegistryInterface::class);
     if (($zero ? 2 : 1) !== \count($registry->active())) { throw new \RuntimeException('Missing active module.'); }
     $response = $kernel->handle(\Symfony\Component\HttpFoundation\Request::create('/hello'));
-    if (200 !== $response->getStatusCode() || 'hello' !== $response->getContent()) { throw new \RuntimeException('Module route failed.'); }
+    if (200 !== $response->getStatusCode() || 'Hello from Sillbeam' !== $response->getContent()) { throw new \RuntimeException('Module route failed.'); }
     if ('1' === $argv[1]) {
         $manager = $kernel->getContainer()->get('doctrine.orm.entity_manager');
         if (1 !== count($manager->getMetadataFactory()->getAllMetadata())) { throw new \RuntimeException('Recipe consumer mapping failed.'); }

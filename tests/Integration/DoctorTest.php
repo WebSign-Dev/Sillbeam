@@ -320,6 +320,93 @@ PHP);
         self::assertStringNotContainsString('Service imports: action required', $tester->getDisplay());
     }
 
+    public function testConventionalBraceExclusionsCanBeVerifiedWithoutExistingModuleDirectories(): void
+    {
+        $this->source->write('config/services.yaml', "services:\n    App\\:\n        resource: '../src/'\n        exclude: '../src/{DependencyInjection,Entity,Kernel.php,Module,Project}'\n");
+        $before = $this->snapshot();
+        $tester = $this->runDoctor();
+        self::assertSame(0, $tester->getStatusCode(), $tester->getDisplay());
+        self::assertStringContainsString('Service imports: verified', $tester->getDisplay());
+        self::assertSame($before, $this->snapshot());
+    }
+
+    public function testBraceExclusionsDoNotHideMissingAreaAndExplainRepair(): void
+    {
+        $this->source->write('config/services.yaml', "services:\n    App\\: {resource: '../src/', exclude: '../src/{Entity,Kernel.php,Module}'}\n");
+        $tester = $this->runDoctor();
+        self::assertSame(1, $tester->getStatusCode(), $tester->getDisplay());
+        self::assertStringContainsString('config/services.yaml: App\\', $tester->getDisplay());
+        self::assertStringContainsString('%kernel.project_dir%/src/Project/', $tester->getDisplay());
+        self::assertStringContainsString('existing exclude', $tester->getDisplay());
+        self::assertStringContainsString('Preserve', $tester->getDisplay());
+    }
+
+    public function testUnsupportedExclusionPatternsRemainUnverified(): void
+    {
+        foreach (['../src/{Module,Project}/**', '../src/{Module,{Project,Entity}}', '../src/{Module,}', '../src/{Module}', '%custom_exclude%', '../src/Mod*', '../src/{Module,Project', '../src/{Module,Project}/[A-Z]'] as $exclude) {
+            $this->source->write('config/services.yaml', "services:\n    App\\: {resource: '../src/', exclude: '".$exclude."'}\n");
+            $before = $this->snapshot();
+            $tester = $this->runDoctor();
+            self::assertSame(2, $tester->getStatusCode(), $tester->getDisplay());
+            self::assertStringContainsString('Service imports: not verified', $tester->getDisplay());
+            self::assertStringNotContainsString('Service imports: action required', $tester->getDisplay());
+            self::assertSame($before, $this->snapshot());
+        }
+    }
+
+    public function testCharacterClassServiceResourcesRemainUnverified(): void
+    {
+        $this->source->write('config/services.yaml', "services:\n    App\\: {resource: '../src/[MP]odule'}\n");
+        $tester = $this->runDoctor();
+        self::assertSame(2, $tester->getStatusCode(), $tester->getDisplay());
+        self::assertStringContainsString('Service imports: not verified', $tester->getDisplay());
+    }
+
+    public function testDuplicateSillbeamImportsReportBothFilesAndCanBeRepairedManually(): void
+    {
+        $this->source->write('config/routes/sillbeam.yaml', "sillbeam_modules: {resource: ., type: sillbeam}\n");
+        $before = $this->snapshot();
+        $tester = $this->runDoctor();
+        self::assertSame(1, $tester->getStatusCode(), $tester->getDisplay());
+        self::assertStringContainsString('exactly one', $tester->getDisplay());
+        self::assertStringContainsString('config/routes.yaml', $tester->getDisplay());
+        self::assertStringContainsString('config/routes/sillbeam.yaml', $tester->getDisplay());
+        self::assertSame($before, $this->snapshot());
+        $this->source->write('config/routes.yaml', '{}');
+        self::assertSame(0, $this->runDoctor()->getStatusCode());
+    }
+
+    public function testInstallationProblemsHaveExplicitManualRepairSteps(): void
+    {
+        $this->source->write('config/bundles.php', '<?php return [];');
+        $this->source->write('config/routes.yaml', '{}');
+        $this->source->write('bin/console', '<?php use Symfony\\Bundle\\FrameworkBundle\\Console\\Application; $app = new Application($kernel); $app->run();');
+        $before = $this->snapshot();
+        $tester = $this->runDoctor();
+        self::assertSame(1, $tester->getStatusCode(), $tester->getDisplay());
+        foreach (["['all' => true]", 'existing bundle', 'config/routes/sillbeam.yaml', 'resource: .', 'type: sillbeam', 'exactly one', 'use Sillbeam\\Core\\Console\\Application;', 'existing bootstrap', 'php bin/console sillbeam:doctor'] as $instruction) {
+            self::assertStringContainsString($instruction, $tester->getDisplay());
+        }
+        self::assertSame($before, $this->snapshot());
+        $this->source->write('config/bundles.php', '<?php return [Sillbeam\\Core\\SillbeamCoreBundle::class => ["all" => true]];');
+        $this->source->write('bin/console', '<?php use Sillbeam\\Core\\Console\\Application; $app = new Application($kernel); $app->run();');
+        $this->source->write('config/routes/sillbeam.yaml', "sillbeam: {resource: ., type: sillbeam}\n");
+        $repaired = $this->snapshot();
+        self::assertSame(0, $this->runDoctor()->getStatusCode());
+        self::assertSame($repaired, $this->snapshot());
+    }
+
+    public function testCustomRootOverlapNamesTheConfiguredExclusion(): void
+    {
+        $this->source->write('features/.gitkeep', '');
+        $this->source->write('config/packages/sillbeam.yaml', "sillbeam:\n    discovery:\n        modules: [{path: '%kernel.project_dir%/features', namespace: 'Features\\'}]\n");
+        $this->source->write('config/services.yaml', "services:\n    Features\\: {resource: '../features/'}\n");
+        $tester = $this->runDoctor();
+        self::assertSame(1, $tester->getStatusCode(), $tester->getDisplay());
+        self::assertStringContainsString('%kernel.project_dir%/features/', $tester->getDisplay());
+        self::assertStringNotContainsString('%kernel.project_dir%/src/Module/', $tester->getDisplay());
+    }
+
     private function runDoctor(): CommandTester
     {
         $tester = new CommandTester(new DoctorCommand($this->source->directory, 'test'));

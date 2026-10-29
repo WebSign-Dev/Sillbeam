@@ -48,6 +48,9 @@ final class DoctorCommand extends Command
                 $style->text($check['detail'], '     ');
             }
         }
+        $style->text(isset($counts['not verified']) || isset($counts['action required'])
+            ? 'Next: make the reviewed changes yourself, resolve unverified checks manually, then rerun php bin/console sillbeam:doctor.'
+            : 'Next: run php bin/console sillbeam:architecture to validate descriptors and dependencies.');
 
         return isset($counts['not verified']) ? 2 : (isset($counts['action required']) ? 1 : 0);
     }
