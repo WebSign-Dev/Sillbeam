@@ -3,13 +3,13 @@ name: CI
 # Keep branch protection / ruleset requirements aligned separately.
 on:
     push:
-        branches: [main, dev, dev-0.3.x]
+        branches: [main, dev]
     workflow_dispatch:
 
 concurrency:
     # Development branches supersede older runs; main keeps each acceptance run.
-    group: ${{ github.workflow }}-${{ github.ref }}-${{ (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-0.3.x') && 'latest' || github.run_id }}
-    cancel-in-progress: ${{ (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-0.3.x') }}
+    group: ${{ github.workflow }}-${{ github.ref }}-${{ (github.ref == 'refs/heads/dev') && 'latest' || github.run_id }}
+    cancel-in-progress: ${{ (github.ref == 'refs/heads/dev') }}
 
 jobs:
     compatibility:
