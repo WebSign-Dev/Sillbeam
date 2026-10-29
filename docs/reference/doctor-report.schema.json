@@ -1,0 +1,249 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "title": "Sillbeam Core installation Doctor report v1",
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+        "schema_version",
+        "status",
+        "exit_code",
+        "summary",
+        "checks",
+        "errors"
+    ],
+    "properties": {
+        "schema_version": {
+            "const": 1
+        },
+        "status": {
+            "enum": [
+                "verified",
+                "action required",
+                "not verified"
+            ]
+        },
+        "exit_code": {
+            "enum": [
+                0,
+                1,
+                2
+            ]
+        },
+        "summary": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+                "verified",
+                "action required",
+                "not verified"
+            ],
+            "properties": {
+                "verified": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "action required": {
+                    "type": "integer",
+                    "minimum": 0
+                },
+                "not verified": {
+                    "type": "integer",
+                    "minimum": 0
+                }
+            }
+        },
+        "checks": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "id",
+                    "status",
+                    "description",
+                    "detail"
+                ],
+                "properties": {
+                    "id": {
+                        "enum": [
+                            "bundle.registration",
+                            "console.adapter",
+                            "configuration.loading",
+                            "configuration.files",
+                            "routing.import",
+                            "discovery.configuration",
+                            "services.imports"
+                        ]
+                    },
+                    "status": {
+                        "enum": [
+                            "verified",
+                            "action required",
+                            "not verified"
+                        ]
+                    },
+                    "description": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "detail": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "errors": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                    "code",
+                    "message"
+                ],
+                "properties": {
+                    "code": {
+                        "enum": [
+                            "doctor.usage",
+                            "doctor.execution"
+                        ]
+                    },
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "allOf": [
+        {
+            "if": {
+                "properties": {
+                    "status": {
+                        "const": "verified"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "exit_code": {
+                        "const": 0
+                    },
+                    "summary": {
+                        "properties": {
+                            "action required": {
+                                "const": 0
+                            },
+                            "not verified": {
+                                "const": 0
+                            }
+                        }
+                    },
+                    "errors": {
+                        "maxItems": 0
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "status": {
+                        "const": "action required"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "exit_code": {
+                        "const": 1
+                    },
+                    "summary": {
+                        "properties": {
+                            "action required": {
+                                "minimum": 1
+                            },
+                            "not verified": {
+                                "const": 0
+                            }
+                        }
+                    },
+                    "errors": {
+                        "maxItems": 0
+                    }
+                }
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "status": {
+                        "const": "not verified"
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "exit_code": {
+                        "const": 2
+                    }
+                },
+                "anyOf": [
+                    {
+                        "properties": {
+                            "summary": {
+                                "properties": {
+                                    "not verified": {
+                                        "minimum": 1
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "properties": {
+                            "errors": {
+                                "minItems": 1
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "if": {
+                "properties": {
+                    "errors": {
+                        "minItems": 1
+                    }
+                }
+            },
+            "then": {
+                "properties": {
+                    "status": {
+                        "const": "not verified"
+                    },
+                    "exit_code": {
+                        "const": 2
+                    },
+                    "checks": {
+                        "maxItems": 0
+                    },
+                    "summary": {
+                        "properties": {
+                            "verified": {
+                                "const": 0
+                            },
+                            "action required": {
+                                "const": 0
+                            },
+                            "not verified": {
+                                "const": 0
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    ]
+}

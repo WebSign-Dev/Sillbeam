@@ -22,14 +22,14 @@ use Symfony\Component\Yaml\Yaml;
  */
 final class InstallationInspector
 {
-    /** @return list<array{label: string, status: string, detail: string}> */
+    /** @return list<array{id: string, label: string, status: string, detail: string}> */
     public function inspect(string $directory, string $environment, ?string $kernelFile = null): array
     {
         $checks = [];
-        $add = static function (string $label, string $status, string $detail = '') use (&$checks): void {
-            $checks[] = compact('label', 'status', 'detail');
+        $add = static function (string $id, string $label, string $status, string $detail = '') use (&$checks): void {
+            $checks[] = compact('id', 'label', 'status', 'detail');
         };
-        foreach (['Bundle registration', 'Console adapter'] as $label) {
+        foreach (['bundle.registration' => 'Bundle registration', 'console.adapter' => 'Console adapter'] as $id => $label) {
             try {
                 $nodes = $this->php($directory.('Bundle registration' === $label ? '/config/bundles.php' : '/bin/console'));
                 if ('Bundle registration' === $label) {
@@ -52,19 +52,19 @@ final class InstallationInspector
                             $enabled = $flags[$environment] ?? $flags['all'] ?? false;
                         }
                     }
-                    $add($label, $enabled ? 'verified' : 'action required', $enabled ? '' : 'In config/bundles.php, enable Sillbeam\\Core\\SillbeamCoreBundle::class in the existing bundle array. For all environments use [\'all\' => true]; an explicit \''.$environment.'\' => false overrides it. Preserve other bundles.');
+                    $add($id, $label, $enabled ? 'verified' : 'action required', $enabled ? '' : 'In config/bundles.php, enable Sillbeam\\Core\\SillbeamCoreBundle::class in the existing bundle array. For all environments use [\'all\' => true]; an explicit \''.$environment.'\' => false overrides it. Preserve other bundles.');
                 } else {
                     $adapter = $this->consoleAdapter($nodes);
                     if ('Sillbeam\\Core\\Console\\Application' === $adapter) {
-                        $add($label, 'verified');
+                        $add($id, $label, 'verified');
                     } elseif ('Symfony\\Bundle\\FrameworkBundle\\Console\\Application' === $adapter) {
-                        $add($label, 'action required', 'In bin/console use Sillbeam\\Core\\Console\\Application; instead of the Symfony Console Application import, or change its fully qualified construction. Preserve the existing bootstrap and Kernel, including import aliases. This adapter makes Doctor available even when the bundle is missing or container compilation fails.');
+                        $add($id, $label, 'action required', 'In bin/console use Sillbeam\\Core\\Console\\Application; instead of the Symfony Console Application import, or change its fully qualified construction. Preserve the existing bootstrap and Kernel, including import aliases. This adapter makes Doctor available even when the bundle is missing or container compilation fails.');
                     } else {
                         throw new \RuntimeException('bin/console uses an ambiguous or unsupported bootstrap. Manually verify use Sillbeam\\Core\\Console\\Application; and its construction.');
                     }
                 }
             } catch (\Throwable $error) {
-                $add($label, 'not verified', $error->getMessage().' Review this file manually.');
+                $add($id, $label, 'not verified', $error->getMessage().' Review this file manually.');
             }
         }
         $kernelKnown = false;
@@ -74,9 +74,9 @@ final class InstallationInspector
                 throw new \RuntimeException('Custom or unavailable Kernel loading hooks.');
             }
             $kernelKnown = true;
-            $add('Configuration loading convention', 'verified');
+            $add('configuration.loading', 'Configuration loading convention', 'verified');
         } catch (\Throwable $error) {
-            $add('Configuration loading convention', 'not verified', $error->getMessage().' Manually verify which bundle, route, service and discovery files the selected Kernel loads.');
+            $add('configuration.loading', 'Configuration loading convention', 'not verified', $error->getMessage().' Manually verify which bundle, route, service and discovery files the selected Kernel loads.');
         }
         $documents = [];
         $unknown = ['route' => !$kernelKnown, 'discovery' => !$kernelKnown, 'service' => !$kernelKnown];
@@ -137,12 +137,12 @@ final class InstallationInspector
                     $documents[$path] = $data;
                 } catch (\Throwable $error) {
                     $this->markUnknown($unknown, $routing);
-                    $add('Configuration files', 'not verified', $relative.': '.$error->getMessage().' Review configuration manually.');
+                    $add('configuration.files', 'Configuration files', 'not verified', $relative.': '.$error->getMessage().' Review configuration manually.');
                 }
             }
         } catch (\Throwable $error) {
             $unknown = ['route' => true, 'discovery' => true, 'service' => true];
-            $add('Configuration files', 'not verified', $error->getMessage().' Review configuration manually.');
+            $add('configuration.files', 'Configuration files', 'not verified', $error->getMessage().' Review configuration manually.');
         }
         $routeImports = [];
         $routeUnknown = $unknown['route'];
@@ -176,7 +176,7 @@ final class InstallationInspector
             \count($routeImports) > 1 => implode(', ', $routeImports).' declares multiple Sillbeam imports. Keep exactly one effective import; the loader can only run once. Remove a duplicate only after reviewing the existing routing configuration.',
             default => '',
         };
-        $add('Route import', $routeUnknown ? 'not verified' : (1 === \count($routeImports) ? 'verified' : 'action required'), $routeDetail);
+        $add('routing.import', 'Route import', $routeUnknown ? 'not verified' : (1 === \count($routeImports) ? 'verified' : 'action required'), $routeDetail);
         $options = null;
         try {
             if ($unknown['discovery']) {
@@ -199,9 +199,9 @@ final class InstallationInspector
             $container = new ContainerBuilder();
             $container->setParameter('kernel.project_dir', $directory);
             $options = (new DiscoveryOptionsResolver())->resolve($container, $configs, $config);
-            $add('Discovery configuration', 'verified');
+            $add('discovery.configuration', 'Discovery configuration', 'verified');
         } catch (\Throwable $error) {
-            $add('Discovery configuration', 'not verified', $error->getMessage().' Manually check discovery roots, namespaces and Composer mappings.');
+            $add('discovery.configuration', 'Discovery configuration', 'not verified', $error->getMessage().' Manually check discovery roots, namespaces and Composer mappings.');
         }
         $serviceUnknown = $unknown['service'] || null === $options;
         $overlaps = [];
@@ -265,13 +265,13 @@ final class InstallationInspector
         }
         if ([] !== $overlaps) {
             foreach ($overlaps as $import => $areas) {
-                $add('Service imports', 'action required', $import.' overlaps discovery areas. These imports can bypass activation. Exclude complete module and Project discovery areas from Symfony resource imports; let Sillbeam register their services. Add these paths to this import\'s existing exclude list: '.implode(', ', array_unique($areas)).'. Preserve existing exclusions and explicit services.'.($serviceUnknown ? ' Additional unresolved configuration may override these declarations; verify effective imports manually.' : ''));
+                $add('services.imports', 'Service imports', 'action required', $import.' overlaps discovery areas. These imports can bypass activation. Exclude complete module and Project discovery areas from Symfony resource imports; let Sillbeam register their services. Add these paths to this import\'s existing exclude list: '.implode(', ', array_unique($areas)).'. Preserve existing exclusions and explicit services.'.($serviceUnknown ? ' Additional unresolved configuration may override these declarations; verify effective imports manually.' : ''));
             }
         }
         if ($serviceUnknown) {
-            $add('Service imports', 'not verified', 'Manually check unresolved service resources, excludes, imports and overrides against module/Project areas.');
+            $add('services.imports', 'Service imports', 'not verified', 'Manually check unresolved service resources, excludes, imports and overrides against module/Project areas.');
         } elseif ([] === $overlaps) {
-            $add('Service imports', 'verified');
+            $add('services.imports', 'Service imports', 'verified');
         }
 
         return $checks;

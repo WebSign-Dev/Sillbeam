@@ -48,3 +48,10 @@ Doctor checks and the documented first HTTP module. `composer test:flex-recipe`
 now defaults to installing/booting Symfony before adding Core; use
 `SILLBEAM_TEST_FRESH=1` for a single fresh installation. The report lists exact
 versions, reproduction commands and scope limits.
+
+## Doctor JSON v1
+
+The [Doctor JSON verification](doctor-json-2026-10-29.md) records schema/status
+coverage, real native/Core CLI stream and option tests, text regression comparison
+and Composer/Flex consumers. See the [contract](../reference/doctor-json.md) and
+[schema](../reference/doctor-report.schema.json) for the machine interface.

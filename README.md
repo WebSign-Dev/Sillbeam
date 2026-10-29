@@ -144,6 +144,7 @@ Run these commands from your Symfony application's root:
 | :--- | :--- |
 | `php bin/console sillbeam:architecture` | Explain architecture findings and contextual next steps. |
 | `php bin/console sillbeam:doctor` | Inspect static installation evidence; review unverified checks manually. |
+| `php bin/console sillbeam:doctor --format=json` | Export the [versioned Doctor result](docs/reference/doctor-json.md) with stable check IDs. |
 | `php bin/console sillbeam:architecture --format=json` | Export the architecture catalog and dependency evidence. |
 | `php bin/console sillbeam:report` | Write a standalone Markdown architecture report. |
 | `php bin/console sillbeam:about` | Show application, runtime and module information. |

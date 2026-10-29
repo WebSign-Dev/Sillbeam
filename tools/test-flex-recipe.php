@@ -366,6 +366,9 @@ function verifyOnboarding(string $directory): void
 {
     $native = consumerConsole($directory, ['sillbeam:doctor'], 1);
     assertSame(true, str_contains($native, 'Console adapter: action required'), 'Missing adapter needs instructions.');
+    $nativeJson = json_decode(consumerConsole($directory, ['sillbeam:doctor', '--format=json'], 1), true, flags: \JSON_THROW_ON_ERROR);
+    assertSame(1, $nativeJson['schema_version'], 'Native Doctor JSON schema version changed.');
+    assertSame('action required', $nativeJson['status'], 'Native Doctor JSON lost action items.');
     $console = (string) file_get_contents($directory.'/bin/console');
     file_put_contents($directory.'/bin/console', str_replace('use Symfony\\Bundle\\FrameworkBundle\\Console\\Application;', 'use Sillbeam\\Core\\Console\\Application;', $console));
     $bundles = (string) file_get_contents($directory.'/config/bundles.php');
@@ -378,6 +381,8 @@ function verifyOnboarding(string $directory): void
     foreach (['Bundle registration: action required', 'Route import: action required', 'Service imports: action required'] as $message) {
         assertSame(true, str_contains($broken, $message), 'Missing broken-install diagnosis: '.$message);
     }
+    $brokenJson = json_decode(consumerConsole($directory, ['sillbeam:doctor', '--format=json'], 1), true, flags: \JSON_THROW_ON_ERROR);
+    assertSame([], $brokenJson['errors'], 'Expected Inspector action items became execution errors.');
     assertSame($before, hashDirectory($directory), 'Doctor wrote consumer files while diagnosing a broken installation.');
     file_put_contents($directory.'/config/bundles.php', $bundles);
     file_put_contents($directory.'/config/routes/sillbeam.yaml', $route);
@@ -385,11 +390,16 @@ function verifyOnboarding(string $directory): void
     file_put_contents($directory.'/config/services.yaml', str_replace('{DependencyInjection,Entity,Kernel.php}', '{DependencyInjection,Entity,Kernel.php,Module,Project}', $services));
     $before = hashDirectory($directory);
     consumerConsole($directory, ['sillbeam:doctor'], 0);
+    $verifiedJson = json_decode(consumerConsole($directory, ['sillbeam:doctor', '--format=json'], 0), true, flags: \JSON_THROW_ON_ERROR);
+    assertSame('verified', $verifiedJson['status'], 'Doctor JSON lost the verified state.');
+    assertSame('bundle.registration', $verifiedJson['checks'][0]['id'], 'Doctor JSON check ID changed.');
     assertSame($before, hashDirectory($directory), 'Doctor wrote consumer files after manual repair.');
     // Dynamic PHP must not be executed even when every literal check looks good.
     file_put_contents($directory.'/config/packages/unresolved.php', '<?php file_put_contents(__DIR__."/executed", "bad");');
     $before = hashDirectory($directory);
     consumerConsole($directory, ['sillbeam:doctor'], 2);
+    $unknownJson = json_decode(consumerConsole($directory, ['sillbeam:doctor', '--format=json'], 2), true, flags: \JSON_THROW_ON_ERROR);
+    assertSame('not verified', $unknownJson['status'], 'Doctor JSON claimed success for dynamic configuration.');
     assertSame($before, hashDirectory($directory), 'Doctor executed unresolved configuration.');
     unlink($directory.'/config/packages/unresolved.php');
     consumerConsole($directory, ['sillbeam:make:module', 'Hello'], 0);

@@ -37,7 +37,8 @@ final class Application extends SymfonyApplication
         foreach ($command->getDefinition()->getOptions() as $option) {
             $definition->addOption($option);
         }
-        $definition->addOption($this->reportCommand()->getDefinition()->getOption('output'));
+        // Read option metadata without resolving a kernel-derived output directory.
+        $definition->addOption($this->reportCommand('')->getDefinition()->getOption('output'));
         try {
             $input->bind($definition);
         } catch (\Exception) {
@@ -47,28 +48,44 @@ final class Application extends SymfonyApplication
         if (!\in_array($name, ['sillbeam:architecture', 'sillbeam:report', 'sillbeam:doctor'], true)) {
             return parent::doRun($input, $output);
         }
-        $command = match ($name) {
-            'sillbeam:doctor' => $this->doctorCommand(),
-            'sillbeam:report' => $this->reportCommand(),
-            default => $command,
-        };
-        if ($input->hasParameterOption(['--help', '-h'], true)) {
-            // HelpCommand has its own --format option: avoid merging report options into it.
-            (new DescriptorHelper())->describe($output, $command, ['format' => 'txt']);
-
-            return 0;
+        $jsonDoctor = 'sillbeam:doctor' === $name && DoctorCommand::isJsonRequested($input);
+        $bufferLevel = ob_get_level();
+        if ($jsonDoctor) {
+            ob_start();
         }
-        $definition = clone $this->getDefinition();
-        foreach ($command->getDefinition()->getOptions() as $option) {
-            $definition->addOption($option);
-        }
-        $application = new ConsoleApplication('Sillbeam');
-        $application->setDefinition($definition);
-        $application->addCommand($command);
         try {
+            $command = match ($name) {
+                'sillbeam:doctor' => $this->doctorCommand(),
+                'sillbeam:report' => $this->reportCommand(),
+                default => $command,
+            };
+            if ($input->hasParameterOption(['--help', '-h'], true)) {
+                // HelpCommand has its own --format option: avoid merging report options into it.
+                (new DescriptorHelper())->describe($output, $command, ['format' => 'txt']);
+
+                return 0;
+            }
+            $definition = clone $this->getDefinition();
+            foreach ($command->getDefinition()->getOptions() as $option) {
+                $definition->addOption($option);
+            }
+            $application = new ConsoleApplication('Sillbeam');
+            $application->setDefinition($definition);
+            $application->addCommand($command);
+
             return $application->doRun($input, $output);
         } catch (\Throwable $error) {
+            if ('sillbeam:doctor' === $name) {
+                return DoctorCommand::failure($error, $error instanceof \Symfony\Component\Console\Exception\ExceptionInterface ? 'doctor.usage' : 'doctor.execution', DoctorCommand::isJsonRequested($input), $output);
+            }
+
             return ArchitectureCommand::usageError($error, 'sillbeam:architecture' === $name && 'json' === $input->getParameterOption('--format'), $input, $output);
+        } finally {
+            if ($jsonDoctor) {
+                while (ob_get_level() > $bufferLevel) {
+                    ob_end_clean();
+                }
+            }
         }
     }
 
@@ -110,9 +127,9 @@ final class Application extends SymfonyApplication
         return $command;
     }
 
-    private function reportCommand(): ReportCommand
+    private function reportCommand(?string $projectDir = null): ReportCommand
     {
-        $command = new ReportCommand(fn (): ArchitectureReport => (new KernelArchitectureReporter())->report($this->getKernel()), $this->getKernel()->getProjectDir());
+        $command = new ReportCommand(fn (): ArchitectureReport => (new KernelArchitectureReporter())->report($this->getKernel()), $projectDir ?? $this->getKernel()->getProjectDir());
         $command->setApplication($this);
 
         return $command;

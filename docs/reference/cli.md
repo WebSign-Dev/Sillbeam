@@ -239,6 +239,7 @@ architecture/configuration must be corrected before Symfony can run these comman
 
 ```bash
 php bin/console sillbeam:doctor
+php bin/console sillbeam:doctor --format=json
 php bin/console sillbeam:doctor --env=prod --no-debug
 php bin/console sillbeam:doctor --help
 ```
@@ -301,3 +302,13 @@ The Doctor implementation never performs those writes. For inspection without
 that boot, use the existing adapter. Doctor never edits `bin/console`, services,
 routes, configuration or application sources, and does not execute discovered PHP
 configuration to obtain a more optimistic result.
+
+### Machine-readable Doctor results
+
+`--format=text|json` selects the presentation; text remains the default. JSON uses
+the same Inspector observations with explicit stable category IDs, the original
+statuses and unchanged exit priority. `--quiet` suppresses JSON as well. See the
+[Doctor JSON v1 contract](doctor-json.md) and [JSON Schema](doctor-report.schema.json)
+for fields, repeated IDs, usage/execution errors, clean STDOUT and the distinction
+between command output, Symfony startup and help metadata. This schema is separate
+from architecture-report JSON.
