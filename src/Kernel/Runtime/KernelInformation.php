@@ -9,6 +9,11 @@ use Sillbeam\Core\Kernel\SillbeamKernel;
 use Sillbeam\Core\Module\ModuleRegistryInterface;
 use Symfony\Component\HttpKernel\Kernel;
 
+/**
+ * Collects current kernel, Composer version and compiled module counts for the about command.
+ *
+ * @internal
+ */
 final readonly class KernelInformation implements KernelInformationInterface
 {
     public function __construct(

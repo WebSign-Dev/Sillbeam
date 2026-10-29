@@ -41,3 +41,24 @@ final readonly class ArchitectureStatus
     }
 }
 ```
+
+## Generated PHPDoc reference (0.3.0)
+
+Run `composer docs:build` and open `build/docs/api/index.html` for the English HTML
+reference generated from source. This documentation release describes the existing
+0.2.0 behavior; it does not add runtime features or dependencies.
+
+Supported declarations are marked `@api`. The analyzer's input types `DiscoveryOptions`
+and `DiscoveryRoot`, and output types `ArchitectureAnalysisResult`, `ArchitectureFinding`,
+`ArchitectureValidationException`, `CompiledArchitecture` and `DiscoveryResult` document
+the analysis contract alongside `ArchitectureAnalyzer` and `ArchitectureReport`.
+The graph/catalog objects are data snapshots: constructing them directly performs no
+validation. Use the analyzer to obtain validated runtime graph data. Discovery and
+compiler services themselves remain internal. Expected findings are returned by
+`analyze()`; arbitrary exceptions from application descriptor code propagate.
+`throwIfInvalid()` provides strict failure with the available result attached.
+
+Concrete registry/context/information services are internal; inject the documented
+interfaces. `@internal` declarations and members are excluded from the public HTML.
+See [Contributing](../../CONTRIBUTING.md#code-documentation-and-api-reference) for the
+PHPDoc standard, tooling prerequisites and generated-file policy.

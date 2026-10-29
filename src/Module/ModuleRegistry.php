@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Module;
 
+/**
+ * Runtime implementation hydrated from the compiled container; consumers inject ModuleRegistryInterface.
+ *
+ * @internal
+ */
 final readonly class ModuleRegistry implements ModuleRegistryInterface
 {
     /**

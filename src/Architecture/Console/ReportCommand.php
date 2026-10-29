@@ -14,6 +14,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Writes the architecture catalog as Markdown using the shared report provider.
+ *
+ * @internal
+ */
 #[AsCommand(name: 'sillbeam:report', description: 'Write a standalone Markdown architecture report.')]
 final class ReportCommand extends Command
 {

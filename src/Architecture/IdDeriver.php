@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Architecture;
 
+/**
+ * Derives lowercase hyphenated IDs from descriptor class names after removing their suffix.
+ *
+ * @internal
+ */
 final class IdDeriver
 {
     public static function fromClass(string $class, string $suffix, ?string $file = null): string

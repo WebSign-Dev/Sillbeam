@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Project;
 
+/**
+ * Runtime catalog implementation; consumers inject ProjectRegistryInterface.
+ *
+ * @internal
+ */
 final readonly class ProjectRegistry implements ProjectRegistryInterface
 {
     /** @var array<class-string, ProjectDefinition> */

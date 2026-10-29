@@ -4,10 +4,23 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Architecture;
 
+/**
+ * One architecture rule violation with scalar source context and error or fatal severity.
+ *
+ * Error findings permit independent checks to continue; fatal findings stop checks
+ * that would depend on unreliable source, ownership or identity information.
+ *
+ * @api
+ */
 final readonly class ArchitectureFinding
 {
-    /** @param array<string, string|int|null> $context
-     * @param 'error'|'fatal' $severity
+    /**
+     * Creates a finding; canonical ordering and deduplication happen in the analysis result.
+     *
+     * @param array<string, string|int|null> $context
+     * @param 'error'|'fatal'                $severity
+     * @param string                         $rule     Stable rule identifier, for example dependency.cycle.
+     * @param string                         $message  human-readable explanation without terminal formatting
      */
     public function __construct(
         public string $rule,
@@ -17,6 +30,9 @@ final readonly class ArchitectureFinding
     ) {
     }
 
+    /**
+     * Returns a rule-specific remediation hint, or null for rules without a known hint.
+     */
     public function suggestion(): ?string
     {
         return match ($this->rule) {
@@ -45,6 +61,9 @@ final readonly class ArchitectureFinding
         };
     }
 
+    /**
+     * Formats the rule, message, available module/Project/file/line context and remediation hint.
+     */
     public function describe(): string
     {
         $context = [];

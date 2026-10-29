@@ -12,9 +12,20 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/** Prepares the real kernel's configuration, without compiling or booting it. */
+/**
+ * Prepares the real kernel's configuration, without compiling or booting it.
+ *
+ * @internal
+ */
 final class KernelArchitectureReporter
 {
+    /**
+     * Prepares fresh bundle/configuration state and analyzes without compiling or booting the kernel.
+     *
+     * Initializes bundle hooks and reads application configuration; descriptor code may execute.
+     *
+     * @throws \LogicException if kernel preparation, bundle registration or configuration is incompatible
+     */
     public function report(KernelInterface $kernel): ArchitectureReport
     {
         $kernel = clone $kernel;

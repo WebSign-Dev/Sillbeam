@@ -13,6 +13,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Creates a module descriptor through the shared guarded descriptor creator.
+ *
+ * @internal
+ */
 #[AsCommand(name: 'sillbeam:make:module', description: 'Create a minimal Sillbeam module descriptor.')]
 final class MakeModuleCommand extends Command
 {

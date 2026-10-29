@@ -10,6 +10,11 @@ use Sillbeam\Core\Architecture\IdDeriver;
 use Sillbeam\Core\Architecture\SourceInspector;
 use Sillbeam\Core\Project\Attribute\SillbeamProject;
 
+/**
+ * Discovers Project descriptors and rejects overlapping or misplaced Project areas.
+ *
+ * @internal
+ */
 final readonly class ProjectDiscovery
 {
     public function __construct(private SourceInspector $inspector = new SourceInspector())

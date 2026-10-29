@@ -12,6 +12,11 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Creates a Project descriptor through the shared guarded descriptor creator.
+ *
+ * @internal
+ */
 #[AsCommand(name: 'sillbeam:make:project', description: 'Create a minimal Sillbeam project descriptor.')]
 final class MakeProjectCommand extends Command
 {

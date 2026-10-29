@@ -15,7 +15,11 @@ use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Yaml\Yaml;
 
-/** Static evidence only. Never includes application PHP or prepares a kernel. */
+/**
+ * Static evidence only. Never includes application PHP or prepares a kernel.
+ *
+ * @internal
+ */
 final class InstallationInspector
 {
     /** @return list<array{label: string, status: string, detail: string}> */

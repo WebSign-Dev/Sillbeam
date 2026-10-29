@@ -14,6 +14,20 @@ final readonly class DescriptorCreator
     {
     }
 
+    /**
+     * Validates ownership and target paths before creating a directory and an exclusive descriptor file.
+     *
+     * Returns the new file path. Loading existing descriptors can execute application code.
+     * I/O failure after directory creation can leave a partial target; no rollback is performed.
+     *
+     * @param string      $name    ASCII base name without the Module/Project suffix
+     * @param bool        $project whether to create a Project instead of a module
+     * @param string|null $owner   existing Project ID, class or directory name for a private module
+     *
+     * @throws \InvalidArgumentException       if the name, owner, boundary or target is invalid
+     * @throws \RuntimeException               if creating or writing the target fails
+     * @throws ArchitectureValidationException if existing discovery fails
+     */
     public function create(string $name, bool $project = false, ?string $owner = null): string
     {
         if (!preg_match('/^[a-zA-Z][a-zA-Z0-9]*$/D', $name)) {

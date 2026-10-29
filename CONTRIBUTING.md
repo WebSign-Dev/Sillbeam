@@ -76,6 +76,60 @@ php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --allow-unsuppor
 
 Review the resulting diff and rerun the affected checks. See [testing documentation](docs/development/testing.md) and the [CI workflow](https://github.com/WebSign-Dev/sillbeam-core/blob/main/.github/workflows/ci.yml) for coverage and the PHP/Symfony compatibility matrix. Local success on one combination does not establish that every matrix job passes.
 
+## Code documentation and API reference
+
+Write PHPDoc in English. Describe the contract and its reason, rather than repeating
+native types or trivial method bodies. Document non-obvious parameters, return
+semantics, expected exceptions, filesystem/container/output side effects and important
+architecture constraints. Keep PHPStan-compatible collection types, array shapes and
+`class-string` annotations; do not weaken them for the renderer.
+
+Mark supported entry points, contracts and their input/output data classes with `@api`.
+The [public API reference](docs/reference/public-api.md) defines this boundary.
+Consumers should inject registry/context interfaces; their concrete services, discovery,
+compiler, AST index, loaders, diagnostic presentation and Symfony integration helpers
+are `@internal`. Public PHP visibility alone does not make a service supported API.
+Inherited interface contracts need not be repeated on trivial implementations. Document
+meaningful overrides and keep new internal declarations explicitly marked.
+
+Build the navigable HTML reference from the repository root:
+
+```bash
+composer install
+composer docs:build
+```
+
+Open `build/docs/api/index.html` in a browser. `phpdoc.dist.xml` labels the existing
+contracts for the 0.3.0 documentation release and scans only `src/`. It renders public
+and protected members of non-internal types; `@internal` classes/members are omitted.
+Check that changed API contracts appear, their parameter/return types and exceptions
+are readable, navigation links work, and internal service pages are absent.
+
+phpDocumentor 3 is a development-only PHAR installed through `phpdocumentor/shim`.
+Composer explicitly allows only `phpdocumentor/shim`; do not use a wildcard plugin
+allowance. Its `phar-io/composer-distributor` dependency is a library and needs no
+plugin allowance. The installer downloads
+and verifies the upstream PHAR signature. The PHAR isolates documentation dependencies
+from the application's Symfony constraints. Composer platform checks cover the installer,
+not everything bundled inside the PHAR: run `vendor/bin/phpdoc --version` and the real
+build as well. The installed 3.10 PHAR requires PHP `^8.1` (covered by this project's
+PHP `^8.4` floor), DOM/libxml, SimpleXML/XML/XMLWriter, fileinfo, iconv, tokenizer,
+Phar, zlib and the core date/filter/hash/JSON extensions. Keep mbstring enabled as
+recommended upstream. The bundled Symfony components conflict with `ext-psr`; the
+PHAR dependency isolation does not isolate PHP extensions. GnuPG must be available
+for the installer's signature verification. Diagrams are optional and not required
+for this HTML build. See the upstream
+[installation requirements](https://docs.phpdoc.org/guide/getting-started/installing.html) and
+[configuration reference](https://docs.phpdoc.org/guide/references/configuration.html).
+No documentation tool belongs in `require` or application boot code.
+
+Generated HTML (`build/docs/`), parser caches (`.phpdoc/`) and local overrides
+(`phpdoc.xml`) are ignored. The Composer script explicitly uses the distribution
+configuration for reproducibility. When changing visibility or removing API elements,
+delete the generated `build/docs/api/` directory before rebuilding: phpDocumentor does
+not remove obsolete HTML files. Run `composer test`, `composer analyse` and
+`composer cs:check` after PHPDoc changes; annotations are inputs to static analysis.
+
 ## Submit a pull request
 
 Target `main` and describe:

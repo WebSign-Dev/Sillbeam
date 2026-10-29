@@ -15,9 +15,21 @@ use Symfony\Component\Console\Helper\DescriptorHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-/** Use in the existing bin/console bootstrap to make reporting independent of boot. */
+/**
+ * Symfony console adapter that provides architecture, report and doctor commands before container boot.
+ *
+ * Other commands retain Symfony dispatch. Use this class in the existing console bootstrap
+ * to obtain diagnostics even when container compilation fails.
+ *
+ * @api
+ */
 final class Application extends SymfonyApplication
 {
+    /**
+     * Dispatches diagnostic commands without booting the container and delegates other commands to Symfony.
+     *
+     * Writes command/help/error output; diagnostic commands use status codes 0, 1 and 2.
+     */
     public function doRun(InputInterface $input, OutputInterface $output): int
     {
         $command = $this->architectureCommand();
@@ -60,6 +72,11 @@ final class Application extends SymfonyApplication
         }
     }
 
+    /**
+     * Resolves diagnostic commands before container boot; delegates other names to Symfony.
+     *
+     * @throws \Symfony\Component\Console\Exception\CommandNotFoundException if Symfony cannot resolve the name
+     */
     public function find(string $name): Command
     {
         return match ($name) {
@@ -70,6 +87,11 @@ final class Application extends SymfonyApplication
         };
     }
 
+    /**
+     * Returns a diagnostic command without container boot; delegates other names to Symfony.
+     *
+     * @throws \Symfony\Component\Console\Exception\CommandNotFoundException if Symfony cannot resolve the name
+     */
     public function get(string $name): Command
     {
         return match ($name) {

@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Architecture;
 
+/**
+ * Caches a deterministic AST source index per serialized discovery options for one build.
+ *
+ * Descriptor reflection can load application code; ordinary target references are not executed.
+ * Reuse within one analysis only: cached indexes do not track subsequent filesystem edits.
+ *
+ * @internal
+ */
 final class SourceInspector
 {
     /** @var array<string, array<string, SourceFile>> */
@@ -12,7 +20,13 @@ final class SourceInspector
     /** @var array<string, list<string>> */
     private array $prunedPaths = [];
 
-    /** @return array<string, SourceFile> */
+    /**
+     * Reads and parses visible PHP files in sorted order, caching the result for these options.
+     *
+     * @return array<string, SourceFile>
+     *
+     * @throws ArchitectureValidationException if any source file cannot be read or parsed
+     */
     public function files(DiscoveryOptions $options): array
     {
         $key = serialize($options);
@@ -149,12 +163,19 @@ final class SourceInspector
     }
 
     /**
+     * Loads a descriptor class and instantiates its attribute metadata.
+     *
+     * Application code can execute through loading and attribute construction. Arbitrary
+     * application failures propagate; expected reflection/attribute failures become findings.
+     *
      * @template T of object
      *
      * @param class-string    $class
      * @param class-string<T> $attribute
      *
      * @return T
+     *
+     * @throws ArchitectureValidationException if descriptor metadata is missing or invalid
      */
     public function metadata(string $class, string $file, string $attribute): object
     {
@@ -172,8 +193,14 @@ final class SourceInspector
         }
     }
 
-    /** @param class-string $class
+    /**
+     * Loads an unloaded descriptor with require_once and verifies its defining file.
+     *
+     * @param class-string $class
+     *
      * @return \ReflectionClass<object>
+     *
+     * @throws ArchitectureValidationException if the loaded class belongs to a different source file
      */
     public function reflection(string $class, string $file): \ReflectionClass
     {

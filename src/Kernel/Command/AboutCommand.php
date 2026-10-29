@@ -11,6 +11,11 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Renders scalar kernel information through the shared console style.
+ *
+ * @internal
+ */
 #[AsCommand(name: 'sillbeam:about', description: 'Display the important Sillbeam runtime and module information.')]
 final class AboutCommand extends Command
 {

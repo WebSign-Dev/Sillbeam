@@ -7,13 +7,27 @@ namespace Sillbeam\Core\Architecture;
 use Composer\Autoload\ClassLoader;
 use Sillbeam\Core\Module\ModuleDefinition;
 
+/**
+ * Checks static module references against declared dependencies, privacy and activation.
+ *
+ * Uses the source index and bounded Composer lookups; dynamic names, PHPDoc and unused
+ * imports are not dependency edges. Observed evidence never activates modules.
+ *
+ * @internal
+ */
 final readonly class CodeDependencyAnalyzer
 {
     public function __construct(private SourceInspector $inspector = new SourceInspector())
     {
     }
 
-    /** @return array<class-string, list<array{module: class-string, class: string, file: string, line: int}>> */
+    /**
+     * Runs static reference checks and rejects all collected violations.
+     *
+     * @return array<class-string, list<array{module: class-string, class: string, file: string, line: int}>>
+     *
+     * @throws ArchitectureValidationException if any dependency or source finding is collected
+     */
     public function analyze(DiscoveryResult $discovery, CompiledArchitecture $architecture, DiscoveryOptions $options): array
     {
         $findings = new ArchitectureFindings();
@@ -24,11 +38,17 @@ final readonly class CodeDependencyAnalyzer
     }
 
     /**
+     * Collects module edges and application couplings without activating referenced modules.
+     *
+     * Mutates the findings collector and replaces applicationReferences with per-module evidence.
+     *
      * @internal collect without publishing an invalid graph
      *
      * @param array<class-string, list<array{class: string, file: string, line: int, target_file: string}>> $applicationReferences
      *
      * @return array<class-string, list<array{module: class-string, class: string, file: string, line: int}>>
+     *
+     * @throws ArchitectureValidationException if duplicate source symbols make ownership ambiguous
      */
     public function collect(DiscoveryResult $discovery, CompiledArchitecture $architecture, DiscoveryOptions $options, ArchitectureFindings $findings, array &$applicationReferences = []): array
     {

@@ -27,6 +27,7 @@
         "doctrine/doctrine-bundle": "^3.3",
         "doctrine/orm": "^3.6",
         "friendsofphp/php-cs-fixer": "^3.0",
+        "phpdocumentor/shim": "^3.10",
         "phpstan/phpstan": "^2.0",
         "phpunit/phpunit": "^12.0"
     },
@@ -51,7 +52,10 @@
         "doctrine/doctrine-bundle": "Enables automatic attribute mappings for active Sillbeam modules and projects."
     },
     "config": {
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "phpdocumentor/shim": true
+        }
     },
     "scripts": {
         "analyse": "phpstan analyse --configuration=phpstan.neon.dist --no-progress --debug",
@@ -60,7 +64,8 @@
         "test": "phpunit --configuration=phpunit.xml.dist",
         "test:consumer": "php tools/test-consumer.php",
         "test:flex-recipe": "php tools/test-flex-recipe.php",
-        "test:release-package": "php tools/test-release-package.php"
+        "test:release-package": "php tools/test-release-package.php",
+        "docs:build": "phpdoc --config=phpdoc.dist.xml"
     },
     "extra": {
         "branch-alias": {

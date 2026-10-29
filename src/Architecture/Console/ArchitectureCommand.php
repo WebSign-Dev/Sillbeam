@@ -12,6 +12,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
+/**
+ * Renders structured architecture findings and maps report status to CLI exit codes.
+ *
+ * @internal
+ */
 #[AsCommand(name: 'sillbeam:architecture', description: 'Explain architecture findings and evidence-based next steps.')]
 final class ArchitectureCommand extends Command
 {

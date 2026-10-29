@@ -12,8 +12,19 @@ use PhpParser\ParserFactory;
 use Sillbeam\Core\Module\Attribute\SillbeamModule;
 use Sillbeam\Core\Project\Attribute\SillbeamProject;
 
+/**
+ * Reads PHP source into resolved declarations and static references without executing it.
+ *
+ * @internal
+ */
 final class SourceFileParser
 {
+    /**
+     * Reads a file and collects name-resolved static references without executing the file.
+     *
+     * @throws ArchitectureValidationException if the file is unreadable or descriptor attributes are ambiguous
+     * @throws \PhpParser\Error                if the file contains invalid PHP syntax
+     */
     public function parse(string $path): SourceFile
     {
         $contents = @file_get_contents($path);

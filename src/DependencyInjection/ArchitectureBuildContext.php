@@ -8,7 +8,11 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/** Build-only policy; warm request paths never instantiate this helper. */
+/**
+ * Build-only policy; warm request paths never instantiate this helper.
+ *
+ * @internal
+ */
 final class ArchitectureBuildContext
 {
     public static function assertCompilationAllowed(ContainerBuilder $container): void

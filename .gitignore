@@ -8,3 +8,8 @@
 # Generated Symfony config-builder references
 /apps/*/config/reference.php
 /tests/Fixtures/*/config/reference.php
+
+# Generated API documentation and phpDocumentor cache/local overrides
+/build/docs/
+/.phpdoc/
+/phpdoc.xml

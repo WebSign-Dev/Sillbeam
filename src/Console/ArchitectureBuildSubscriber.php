@@ -14,7 +14,11 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-/** Fresh checks before standard build commands can claim success with a warm cache. */
+/**
+ * Fresh checks before standard build commands can claim success with a warm cache.
+ *
+ * @internal
+ */
 final readonly class ArchitectureBuildSubscriber implements EventSubscriberInterface
 {
     public function __construct(private KernelInterface $kernel)
@@ -26,6 +30,11 @@ final readonly class ArchitectureBuildSubscriber implements EventSubscriberInter
         return [ConsoleEvents::COMMAND => ['validateBuild', 1000]];
     }
 
+    /**
+     * Runs fresh architecture validation before cache:clear and cache:warmup, including warm caches.
+     *
+     * @throws \RuntimeException if the report is invalid or unavailable; includes buffered diagnostics
+     */
     public function validateBuild(ConsoleCommandEvent $event): void
     {
         if (!\in_array($event->getCommand()?->getName(), ['cache:clear', 'cache:warmup'], true)) {

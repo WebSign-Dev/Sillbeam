@@ -11,6 +11,11 @@ use Sillbeam\Core\Architecture\SourceInspector;
 use Sillbeam\Core\Module\Attribute\SillbeamModule;
 use Sillbeam\Core\Project\ProjectDefinition;
 
+/**
+ * Discovers shared and Project-owned module descriptors and rejects ambiguous ownership.
+ *
+ * @internal
+ */
 final readonly class ModuleDiscovery
 {
     public function __construct(private SourceInspector $inspector = new SourceInspector())

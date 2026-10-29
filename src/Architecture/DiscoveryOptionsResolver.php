@@ -6,11 +6,21 @@ namespace Sillbeam\Core\Architecture;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * Resolves Symfony configuration and Composer PSR-4 mappings into build-time discovery options.
+ *
+ * @internal
+ */
 final class DiscoveryOptionsResolver
 {
     /**
+     * Reads Composer metadata and resolves configuration paths relative to kernel.project_dir.
+     *
      * @param array<array-key, array<string, mixed>> $configs
      * @param array<string, mixed>|null              $processedConfig
+     *
+     * @throws \LogicException if paths, namespaces or Composer mappings cannot be resolved unambiguously
+     * @throws \JsonException  if Composer metadata is invalid JSON
      */
     public function resolve(ContainerBuilder $container, array $configs, ?array $processedConfig = null): DiscoveryOptions
     {

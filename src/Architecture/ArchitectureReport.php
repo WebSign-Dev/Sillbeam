@@ -6,16 +6,34 @@ namespace Sillbeam\Core\Architecture;
 
 use Sillbeam\Core\Architecture\Console\ArchitecturePresentation;
 
+/**
+ * Scalar architecture report shared by text, JSON and Markdown command output.
+ *
+ * Schema version 1 represents valid, violations or unavailable status. Presentation data
+ * is a separate internal view and is never serialized by toJson().
+ *
+ * @api
+ */
 final readonly class ArchitectureReport
 {
-    /** @param array<string, mixed> $data
+    /**
+     * Stores a schema-versioned scalar report; callers normally use fromAnalysis() or unavailable().
+     *
+     * @param array<string, mixed> $data         schema-version-1 report data including status, findings and module/Project catalogs
      * @param array<string, mixed> $presentation internal scalar view, never serialized to JSON
      */
-    public function __construct(public array $data, public array $presentation = [])
+    public function __construct(public array $data, /** @internal Scalar view used only by Core renderers. */ public array $presentation = [])
     {
     }
 
-    /** @param array<string, mixed> $config */
+    /**
+     * Builds a stable schema-version-1 report, retaining available evidence on invalid/incomplete analysis.
+     *
+     * Unknown activation is represented as null rather than an inactive module.
+     *
+     * @param array<string, mixed> $config     resolved configuration used to retain overrides and host evidence on incomplete results
+     * @param string|null          $projectDir base directory for human-readable presentation paths
+     */
     public static function fromAnalysis(ArchitectureAnalysisResult $analysis, array $config = [], ?string $projectDir = null): self
     {
         $graph = $analysis->architecture;
@@ -75,6 +93,9 @@ final readonly class ArchitectureReport
         ], ArchitecturePresentation::fromAnalysis($analysis, $projectDir));
     }
 
+    /**
+     * Converts an execution failure into a fatal report.execution finding with unavailable status.
+     */
     public static function unavailable(\Throwable $error): self
     {
         return self::fromAnalysis(new ArchitectureAnalysisResult([
@@ -82,7 +103,15 @@ final readonly class ArchitectureReport
         ]));
     }
 
-    /** @param self|\Closure(): self $provider */
+    /**
+     * Evaluates a report provider while suppressing incidental output.
+     *
+     * Temporarily buffers output and installs an error handler: enabled warnings become
+     * exceptions, notices/deprecations are suppressed. Any Throwable becomes an unavailable
+     * report. Restores the previous handler and closes added buffers in all cases.
+     *
+     * @param self|\Closure(): self $provider an existing report or a closure evaluated once inside the guarded output/error scope
+     */
     public static function collect(self|\Closure $provider): self
     {
         $level = ob_get_level();
@@ -108,6 +137,9 @@ final readonly class ArchitectureReport
         }
     }
 
+    /**
+     * Maps report status to CLI success (0), architecture violations (1) or unavailable (2).
+     */
     public function exitCode(): int
     {
         return match ($this->data['status']) {
@@ -117,6 +149,13 @@ final readonly class ArchitectureReport
         };
     }
 
+    /**
+     * Serializes only schema data as pretty JSON, keeping finding context as an object.
+     *
+     * Invalid UTF-8 is substituted; the internal presentation view is omitted.
+     *
+     * @throws \JsonException if report data contains values that cannot be encoded
+     */
     public function toJson(): string
     {
         $data = $this->data;

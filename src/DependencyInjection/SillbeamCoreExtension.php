@@ -41,6 +41,15 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 
+/**
+ * Compiles architecture into runtime registries, services, routes and optional Doctrine mappings.
+ *
+ * Doctrine preparation runs during prepend(); changed configuration after that phase is rejected.
+ * Without Doctrine, analysis waits until all bundles have prepended configuration.
+ * Warm runtime requests consume compiled data and never instantiate the source analyzer.
+ *
+ * @internal
+ */
 final class SillbeamCoreExtension extends Extension implements PrependExtensionInterface
 {
     private ?ContainerBuilder $preparationContainer = null;
@@ -61,6 +70,12 @@ final class SillbeamCoreExtension extends Extension implements PrependExtensionI
         return 'sillbeam';
     }
 
+    /**
+     * Prepares architecture-dependent Doctrine mappings before Doctrine configuration is loaded.
+     *
+     * @throws \LogicException                                                         if configuration or architecture preparation fails
+     * @throws \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException on cold non-debug HTTP compilation
+     */
     public function prepend(ContainerBuilder $container): void
     {
         ArchitectureBuildContext::assertCompilationAllowed($container);
@@ -80,7 +95,14 @@ final class SillbeamCoreExtension extends Extension implements PrependExtensionI
         }
     }
 
-    /** @param array<array-key, array<string, mixed>> $configs */
+    /**
+     * Validates architecture and mutates the container with compiled services, registries and tracked resources.
+     *
+     * @param array<array-key, array<string, mixed>> $configs
+     *
+     * @throws \LogicException                                                         if validation fails or Doctrine configuration changed after prepend()
+     * @throws \Symfony\Component\HttpKernel\Exception\ServiceUnavailableHttpException on cold non-debug HTTP compilation
+     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         ArchitectureBuildContext::assertCompilationAllowed($container);

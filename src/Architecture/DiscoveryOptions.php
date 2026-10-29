@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Architecture;
 
+/**
+ * Immutable input paths, PSR-4 namespaces and exclusion patterns for architecture analysis.
+ *
+ * Paths are normalized without filesystem writes. Null module/Project roots select
+ * conventional directories; empty lists explicitly disable those discovery areas.
+ *
+ * @api
+ */
 final readonly class DiscoveryOptions
 {
     public string $root;
@@ -14,13 +22,19 @@ final readonly class DiscoveryOptions
     public array $projectRoots;
 
     /**
-     * @param list<DiscoveryRoot>|null $moduleRoots
-     * @param list<DiscoveryRoot>|null $projectRoots
-     * @param list<string>             $excludes
-     * @param list<string>             $controllerPatterns
-     * @param list<string>             $entityPatterns
-     * @param list<DiscoveryRoot>      $applicationRoots
-     * @param list<string>             $serviceExcludes
+     * Normalizes roots and rejects conflicting namespaces for the same path.
+     *
+     * @param list<DiscoveryRoot>|null $moduleRoots        explicit module roots; null selects the application root plus /Module, an empty list disables shared-module roots
+     * @param list<DiscoveryRoot>|null $projectRoots       explicit Project roots; null selects the application root plus /Project, an empty list disables Project roots
+     * @param list<string>             $excludes           global absolute or application-root-relative glob-like exclusion patterns
+     * @param list<string>             $controllerPatterns area-relative patterns used to discover controller directories
+     * @param list<string>             $entityPatterns     area-relative patterns used to discover entity directories
+     * @param list<DiscoveryRoot>      $applicationRoots   additional Composer namespace/path mappings for reference classification, not recursive scanning
+     * @param list<string>             $serviceExcludes    area-relative patterns excluded from automatic service registration
+     * @param string                   $root               application source root
+     * @param string                   $namespace          PSR-4 namespace prefix for the application source root
+     *
+     * @throws \LogicException if the same discovery path has conflicting namespace mappings
      */
     public function __construct(
         string $root,
@@ -45,12 +59,21 @@ final readonly class DiscoveryOptions
         }
     }
 
-    /** @return list<DiscoveryRoot> */
+    /**
+     * Returns the application source root followed by module and Project roots.
+     *
+     * Additional applicationRoots classify referenced application types; they are not scan roots.
+     *
+     * @return list<DiscoveryRoot>
+     */
     public function roots(): array
     {
         return [new DiscoveryRoot($this->root, $this->namespace), ...$this->moduleRoots, ...$this->projectRoots];
     }
 
+    /**
+     * Tests normalized absolute or application-relative paths and root-local exclusion patterns.
+     */
     public function excluded(string $file): bool
     {
         $file = FilesystemPath::normalize($file);
@@ -66,6 +89,11 @@ final readonly class DiscoveryOptions
         return false;
     }
 
+    /**
+     * Derives a namespace using the longest configured containing root.
+     *
+     * @throws \LogicException if no configured root contains the directory
+     */
     public function namespaceForDirectory(string $directory): string
     {
         $directory = FilesystemPath::normalize($directory);

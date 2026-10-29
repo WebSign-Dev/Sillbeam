@@ -8,12 +8,22 @@ use Sillbeam\Core\Module\ModuleDiscovery;
 use Sillbeam\Core\Project\ProjectDefinition;
 use Sillbeam\Core\Project\ProjectDiscovery;
 
+/**
+ * Discovers Projects before modules so private ownership and nested integration directories are unambiguous.
+ *
+ * @internal
+ */
 final readonly class ArchitectureDiscovery
 {
     public function __construct(private SourceInspector $inspector = new SourceInspector())
     {
     }
 
+    /**
+     * Builds a source catalog and tracked cache resources; descriptor loading may execute application code.
+     *
+     * @throws ArchitectureValidationException if source, descriptor identity or ownership is ambiguous
+     */
     public function discover(DiscoveryOptions $options): DiscoveryResult
     {
         $projects = (new ProjectDiscovery($this->inspector))->discover($options);

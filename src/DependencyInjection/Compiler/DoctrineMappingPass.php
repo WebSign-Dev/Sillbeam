@@ -9,9 +9,19 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
-/** Keeps Sillbeam exclusions local to generated mappings, preserving native Doctrine mappings. */
+/**
+ * Keeps Sillbeam exclusions local to generated mappings, preserving native Doctrine mappings.
+ *
+ * @internal
+ */
 final class DoctrineMappingPass implements CompilerPassInterface
 {
+    /**
+     * Replaces only generated Doctrine drivers with exclusion-aware drivers.
+     *
+     * Mutates container definitions and places specific private-module prefixes before
+     * the enclosing Project prefix, preserving authoritative native mapping overrides.
+     */
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasParameter('sillbeam.doctrine.mappings')) {

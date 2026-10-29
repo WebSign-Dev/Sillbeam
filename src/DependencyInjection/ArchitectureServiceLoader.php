@@ -9,12 +9,26 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
 
+/**
+ * Registers autowired area services through Symfony and defers interface aliases across areas.
+ *
+ * @internal
+ */
 final class ArchitectureServiceLoader
 {
     private ?YamlFileLoader $loader = null;
     private ?ContainerBuilder $container = null;
 
-    /** @param list<string>|null $excludes */
+    /**
+     * Registers services in the supplied container; missing directories are skipped.
+     *
+     * Switching containers finalizes pending aliases. With deferAliases enabled the caller
+     * must invoke finish() after all areas have been registered.
+     *
+     * @param list<string>|null $excludes
+     *
+     * @throws \LogicException If kernel.environment is not a string or the loader is unavailable.
+     */
     public function load(ContainerBuilder $container, string $directory, string $namespace, string $descriptorFile, bool $excludeNestedModules = false, ?array $excludes = null, bool $deferAliases = false): void
     {
         if (!is_dir($directory)) {
@@ -44,6 +58,9 @@ final class ArchitectureServiceLoader
         }
     }
 
+    /**
+     * Registers aliases for interfaces with a single implementation across loaded areas.
+     */
     public function finish(): void
     {
         $this->loader?->registerAliasesForSinglyImplementedInterfaces();

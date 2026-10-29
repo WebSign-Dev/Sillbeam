@@ -7,6 +7,11 @@ namespace Sillbeam\Core\Project;
 use Sillbeam\Core\Module\ModuleRegistryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+/**
+ * RequestStack-backed context implementation; consumers inject ProjectContextInterface.
+ *
+ * @internal
+ */
 final readonly class ProjectContext implements ProjectContextInterface
 {
     public function __construct(

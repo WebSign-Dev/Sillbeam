@@ -9,8 +9,18 @@ use Sillbeam\Core\Project\ProjectRegistryInterface;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 
+/**
+ * Rejects containers missing compiled registries or their injectable interface aliases.
+ *
+ * @internal
+ */
 final class ArchitectureValidationPass implements CompilerPassInterface
 {
+    /**
+     * Verifies required compiled registry definitions and injectable aliases.
+     *
+     * @throws \LogicException if registries or aliases are missing
+     */
     public function process(ContainerBuilder $container): void
     {
         if (!$container->hasDefinition('sillbeam.module_registry') || !$container->hasDefinition('sillbeam.project_registry')) {

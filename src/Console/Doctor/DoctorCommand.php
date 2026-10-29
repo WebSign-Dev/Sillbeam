@@ -11,6 +11,11 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
+/**
+ * Runs installation diagnostics and writes a console report without changing application configuration.
+ *
+ * @internal
+ */
 #[AsCommand(name: 'sillbeam:doctor', description: 'Check static Symfony installation evidence without changing files.')]
 final class DoctorCommand extends Command
 {

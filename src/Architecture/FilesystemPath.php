@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Architecture;
 
-/** Shared representation for filesystem paths; namespace separators are unrelated. */
+/**
+ * Shared representation for filesystem paths; namespace separators are unrelated.
+ *
+ * @internal
+ */
 final class FilesystemPath
 {
     public static function normalize(string $path): string

@@ -7,6 +7,11 @@ namespace Sillbeam\Core\DependencyInjection;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
+/**
+ * Defines the sillbeam configuration tree while preserving native Symfony integration defaults.
+ *
+ * @internal
+ */
 final class Configuration implements ConfigurationInterface
 {
     /** @return TreeBuilder<'array'> */

@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Architecture;
 
+/**
+ * Matches normalized paths against anchored glob-like patterns, including recursive double stars.
+ *
+ * @internal
+ */
 final class PathMatcher
 {
     /** @param list<string> $patterns */

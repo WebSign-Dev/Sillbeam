@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Sillbeam\Core\Architecture;
 
+/**
+ * Parsed source evidence; references retain file-local line numbers and attribute classification.
+ *
+ * @internal
+ */
 final readonly class SourceFile
 {
     /** @param list<class-string> $classes

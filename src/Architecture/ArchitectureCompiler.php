@@ -7,9 +7,23 @@ namespace Sillbeam\Core\Architecture;
 use Sillbeam\Core\Module\ModuleDefinition;
 use Sillbeam\Core\Project\ProjectDefinition;
 
+/**
+ * Validates descriptor identities, dependency cycles, overrides and host assignments at build time.
+ *
+ * Candidate graphs from collect() may be invalid; only the strict compile() result
+ * or a valid analyzer result may be used to configure runtime services.
+ *
+ * @internal
+ */
 final class ArchitectureCompiler
 {
-    /** @param array<string, mixed> $config */
+    /**
+     * Strictly validates and compiles discovered catalogs into activation graphs.
+     *
+     * @param array<string, mixed> $config
+     *
+     * @throws ArchitectureValidationException if any architecture finding is collected
+     */
     public function compile(DiscoveryResult $discovery, array $config): CompiledArchitecture
     {
         $findings = new ArchitectureFindings();
@@ -20,6 +34,11 @@ final class ArchitectureCompiler
     }
 
     /**
+     * Collects independent validation findings and returns a candidate graph.
+     *
+     * Mutates the supplied collector; the returned candidate must not be used at runtime
+     * until the complete analysis has succeeded.
+     *
      * @internal candidate graphs are only for further analysis, never runtime use
      *
      * @param array<string, mixed> $config

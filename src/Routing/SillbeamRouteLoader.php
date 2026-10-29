@@ -14,6 +14,14 @@ use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\Routing\Loader\AttributeFileLoader;
 use Symfony\Component\Routing\RouteCollection;
 
+/**
+ * Imports native attribute routes once from active modules and Project-owned controllers.
+ *
+ * Project routes receive host constraints and module routes are deduplicated per graph.
+ * Source and configuration resources participate in Symfony cache invalidation.
+ *
+ * @internal
+ */
 final class SillbeamRouteLoader extends Loader
 {
     private bool $loaded = false;
@@ -34,6 +42,13 @@ final class SillbeamRouteLoader extends Loader
         parent::__construct();
     }
 
+    /**
+     * Imports controller files, applies Project host constraints and tracks cache resources.
+     *
+     * This loader is stateful and permits one load only; use the sillbeam resource type.
+     *
+     * @throws \LogicException if called more than once
+     */
     public function load(mixed $resource, ?string $type = null): RouteCollection
     {
         if ($this->loaded) {
