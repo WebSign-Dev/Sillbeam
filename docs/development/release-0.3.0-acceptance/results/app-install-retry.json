@@ -1,0 +1,20 @@
+{
+  "label": "app-install-retry",
+  "command": [
+    "composer",
+    "install",
+    "--no-scripts",
+    "--no-plugins",
+    "--no-interaction",
+    "--prefer-dist",
+    "--working-dir=apps/test-app/app"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:55:38.901292+00:00",
+  "seconds": 2.24,
+  "exit_code": 0,
+  "log": "logs/app-install-retry.log",
+  "environment": {
+    "COMPOSER_CACHE_DIR": "/tmp/sillbeam-composer-cache"
+  }
+}

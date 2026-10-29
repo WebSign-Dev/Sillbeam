@@ -1,0 +1,10 @@
+  - Removing phpdocumentor/shim (v3.10.0)
+  - Installing phpdocumentor/shim (v3.10.0): Extracting archive
+
+    WARNING
+    No GPG installation found! Use installed PHARs with care. 
+    Consider installing GnuPG to verify PHAR authenticity.
+    If you need help installing GnuPG visit http://phar.io/install-gnupg
+
+  - Downloading artifact from https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.10.0/phpDocumentor.phar
+  - No GnuPG found to verify signature! Use this file with care!

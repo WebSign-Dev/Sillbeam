@@ -1,0 +1,13 @@
+{
+  "label": "root-deptrac",
+  "command": [
+    "composer",
+    "architecture"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:48:00.757428+00:00",
+  "seconds": 0.779,
+  "exit_code": 0,
+  "log": "logs/root-deptrac.log",
+  "environment": {}
+}

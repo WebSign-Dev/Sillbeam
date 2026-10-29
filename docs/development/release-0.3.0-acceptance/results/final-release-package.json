@@ -1,0 +1,16 @@
+{
+  "label": "final-release-package",
+  "command": [
+    "composer",
+    "test:release-package"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T13:08:58.402078+00:00",
+  "seconds": 8.015,
+  "exit_code": 0,
+  "log": "logs/final-release-package.log",
+  "stderr_log": "logs/final-release-package.stderr.log",
+  "environment": {
+    "COMPOSER_CACHE_DIR": "/tmp/sillbeam-composer-cache"
+  }
+}

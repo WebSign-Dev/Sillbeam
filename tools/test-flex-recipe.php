@@ -469,6 +469,8 @@ try {
         $text = $output->fetch();
         if (0 !== $code || !str_contains($text, 'ID: '.$module) || !str_contains($text, 'State: '.$state)) { throw new \RuntimeException('Compiled module inspection failed: '.$text); }
     }
+    $graphOutput = new \Symfony\Component\Console\Output\BufferedOutput();
+    if (0 !== $application->run(new \Symfony\Component\Console\Input\ArrayInput(['command' => 'sillbeam:graph', '--format' => 'mermaid']), $graphOutput) || !str_starts_with($graphOutput->fetch(), 'flowchart LR')) { throw new \RuntimeException('Compiled Mermaid export failed.'); }
     $response = $kernel->handle(\Symfony\Component\HttpFoundation\Request::create('/hello'));
     if (200 !== $response->getStatusCode() || 'Hello from Sillbeam' !== $response->getContent()) { throw new \RuntimeException('Module route failed.'); }
     if ('1' === $argv[1]) {

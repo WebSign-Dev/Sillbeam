@@ -1,0 +1,14 @@
+{
+  "label": "ci-configuration",
+  "command": [
+    "php",
+    "/tmp/sillbeam-release-workflow-check.php"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T13:00:31.782108+00:00",
+  "seconds": 0.063,
+  "exit_code": 0,
+  "log": "logs/ci-configuration.log",
+  "stderr_log": "logs/ci-configuration.stderr.log",
+  "environment": {}
+}

@@ -6,6 +6,7 @@ composer test
 composer analyse
 composer architecture
 composer cs:check
+composer docs:build
 composer validate --strict
 composer audit --locked
 composer audit --locked --working-dir=apps/test-app/app
@@ -28,9 +29,9 @@ The CI matrix installs current compatible dependencies for PHP 8.4/8.5 with the 
 
 Reproducible performance comparison: `php tools/benchmark-architecture.php > benchmark.jsonl`. It pairs Sillbeam and native Symfony applications with 10/50/100 logical areas in development/production. Both expose identical routes and use 20 chained services per area; every response is checked. Three alternating paired repetitions measure cold and cached `cache:warmup`, warm container boot, first HTTP and 150 subsequent HTTP samples per variant/environment/size with p50/p95 and allocated PHP peak memory. Each build/boot/HTTP batch gets a separate PHP process; HTTP uses `Kernel::handle`, not a network server. `--smoke` is exercised by the full PHPUnit suite; `--phases` retains the original standalone architecture-phase diagnostic. It is separate from the fair paired application measurements because it preparses sources. See [methodology/results](core-benchmark-2026-10-23.md) and [RC verification](core-rc-2026-10-23.md).
 
-Use `COMPOSER_PROCESS_TIMEOUT=900` (or 0 for an intentionally unbounded local run) for slower consumer installations. `COMPOSER_DISABLE_NETWORK=1 COMPOSER_CACHE_DIR=/path/to/populated/cache` supports offline consumers/archive tests, but cannot be used for Flex because it also blocks the local recipe HTTP endpoint. CI now includes the real release ZIP/no-dev test and explicit audits of both lockfiles. A remote workflow run is separate from local execution of its commands; the workflow currently runs on main/dev pushes or manual dispatch, not pull requests.
+Use `COMPOSER_PROCESS_TIMEOUT=900` (or 0 for an intentionally unbounded local run) for slower consumer installations. `COMPOSER_DISABLE_NETWORK=1 COMPOSER_CACHE_DIR=/path/to/populated/cache` supports offline consumers/archive tests, but cannot be used for Flex because it also blocks the local recipe HTTP endpoint. CI now includes the real release ZIP/no-dev test and explicit audits of both lockfiles. A remote workflow run is separate from local execution of its commands; the workflow currently runs on main/dev/dev-0.3.x pushes or manual dispatch, not pull requests.
 
-For the technical v0.2.0 migration, see the [Core rename verification](core-rename-2026-10-23.md) for its historical checks. The integrated RC report supersedes those counts for the current candidate.
+For the technical v0.2.0 migration, see the [Core rename verification](core-rename-2026-10-23.md) for its historical checks. Those counts remain historical; see the [0.3.0 acceptance report](release-0.3.0-acceptance/README.md) for the current candidate.
 
 The Flex test now runs controlled auto-scripts to assert the actual instructions
 compiled from `post-install.txt`, and compares pre-existing services, console,

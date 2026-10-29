@@ -1,0 +1,7 @@
+gpg: Signature made Wed May 13 21:39:53 2026 CEST
+gpg:                using RSA key F33A0AF69AF7A8B15017DB526DA3ACC4991FFAE5
+gpg:                issuer "info@phpdoc.org"
+gpg: Good signature from "phpDocumentor <info@phpdoc.org>" [unknown]
+gpg: WARNING: The key's User ID is not certified with a trusted signature!
+gpg:          There is no indication that the signature belongs to the owner.
+Primary key fingerprint: F33A 0AF6 9AF7 A8B1 5017  DB52 6DA3 ACC4 991F FAE5

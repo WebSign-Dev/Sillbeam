@@ -1,0 +1,15 @@
+{
+  "label": "app-audit",
+  "command": [
+    "composer",
+    "audit",
+    "--locked",
+    "--working-dir=apps/test-app/app"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:49:01.827634+00:00",
+  "seconds": 0.573,
+  "exit_code": 0,
+  "log": "logs/app-audit.log",
+  "environment": {}
+}

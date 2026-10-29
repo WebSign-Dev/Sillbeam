@@ -1,0 +1,14 @@
+{
+  "label": "candidate-benchmark-streams",
+  "command": [
+    "php",
+    "tools/benchmark-architecture.php"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T13:00:42.490067+00:00",
+  "seconds": 123.256,
+  "exit_code": 0,
+  "log": "logs/candidate-benchmark-streams.log",
+  "stderr_log": "logs/candidate-benchmark-streams.stderr.log.gz",
+  "environment": {}
+}

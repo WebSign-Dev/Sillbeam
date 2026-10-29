@@ -1,0 +1,24 @@
+{
+  "date_utc": "2026-10-29T13:01:35.662643+00:00",
+  "head": "16b69f4f44ea7f69ce08a05458418b1930647591",
+  "branch": "dev-0.3.x",
+  "baseline": "cf2f410",
+  "working_tree": "uncommitted release metadata/docs/test/CI changes on top of HEAD",
+  "host_php": "8.5.4",
+  "host_composer": "Composer version 2.9.5 2026-01-29 11:40:53",
+  "matrix_php": {
+    "php84": "8.4.26",
+    "php85": "8.5.11"
+  },
+  "matrix_composer": "2.9.5",
+  "initial_matrix_memory_limit": "128M",
+  "corrected_matrix_memory_limit": "512M",
+  "root_runtime_require_unchanged": true,
+  "public_signature_classes": 20,
+  "remote_ci_run": false,
+  "publication_or_remote_writes": false,
+  "matrix_images": {
+    "php84": "sha256:2560b9e6cc3c84ea3920751c1934765b72872a9d8495adb428a2b6783a5732ad",
+    "php85": "sha256:b6202974838a15a2f74a1a525d06389902533b6a3f490d77f26ed8adb1240acc"
+  }
+}

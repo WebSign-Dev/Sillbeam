@@ -1,0 +1,17 @@
+{
+  "label": "app-lock-update",
+  "command": [
+    "composer",
+    "update",
+    "websign-dev/sillbeam-core",
+    "--no-install",
+    "--no-scripts",
+    "--no-plugins",
+    "--no-interaction",
+    "--working-dir=apps/test-app/app"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "exit_code": 0,
+  "log": "logs/app-lock-update.log",
+  "note": "Recorded from the actual tool result; no duration retained."
+}

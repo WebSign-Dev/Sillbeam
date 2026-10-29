@@ -1,0 +1,13 @@
+{
+  "label": "root-phpdoc",
+  "command": [
+    "composer",
+    "docs:build"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:48:00.751394+00:00",
+  "seconds": 2.273,
+  "exit_code": 0,
+  "log": "logs/root-phpdoc.log",
+  "environment": {}
+}

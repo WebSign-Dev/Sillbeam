@@ -1,0 +1,17 @@
+{
+  "label": "app-install",
+  "command": [
+    "composer",
+    "install",
+    "--no-scripts",
+    "--no-plugins",
+    "--no-interaction",
+    "--working-dir=apps/test-app/app"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:50:05.842228+00:00",
+  "seconds": 33.745,
+  "exit_code": 1,
+  "log": "logs/app-install.log",
+  "environment": {}
+}

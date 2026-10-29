@@ -5,13 +5,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.4",
-        "websign-dev/sillbeam-core": "^0.2.0"
+        "websign-dev/sillbeam-core": "^0.3.0"
     },
     "repositories": [
         {
             "type": "path",
             "url": "../..",
-            "options": { "symlink": true, "versions": { "websign-dev/sillbeam-core": "0.2.0" } }
+            "options": { "symlink": true, "versions": { "websign-dev/sillbeam-core": "0.3.0" } }
         }
     ],
     "autoload": {

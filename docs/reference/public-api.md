@@ -45,8 +45,9 @@ final readonly class ArchitectureStatus
 ## Generated PHPDoc reference (0.3.0)
 
 Run `composer docs:build` and open `build/docs/api/index.html` for the English HTML
-reference generated from source. This documentation release describes the existing
-0.2.0 behavior; it does not add runtime features or dependencies.
+reference generated from source. The 0.3.0 runtime contracts retain the documented
+0.2.0 behavior; the new diagnostic CLI interfaces are described separately in the
+[CLI reference](cli.md). phpDocumentor is a development dependency only.
 
 Supported declarations are marked `@api`. The analyzer's input types `DiscoveryOptions`
 and `DiscoveryRoot`, and output types `ArchitectureAnalysisResult`, `ArchitectureFinding`,

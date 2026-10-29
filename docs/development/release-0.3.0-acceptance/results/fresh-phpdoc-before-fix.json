@@ -1,0 +1,27 @@
+{
+  "label": "fresh-phpdoc-before-fix",
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "--user",
+    "1000:1000",
+    "-v",
+    "/tmp/sillbeam-release-030-matrix/php84-sf74:/workspace",
+    "-v",
+    "/tmp/sillbeam-release-tools:/acceptance-tools:ro",
+    "-w",
+    "/workspace",
+    "-e",
+    "PATH=/acceptance-tools:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+    "sillbeam-frame-verify:php84",
+    "composer",
+    "docs:build"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:50:40.664663+00:00",
+  "seconds": 1.009,
+  "exit_code": 127,
+  "log": "logs/fresh-phpdoc-before-fix.log",
+  "environment": {}
+}

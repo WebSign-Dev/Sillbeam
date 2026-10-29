@@ -90,7 +90,7 @@ The recipe never edits `bin/console` or `services.yaml`.
    Flex endpoint. Consumers must allow Contrib recipes, for example with
    `composer config extra.symfony.allow-contrib true`, and allow the Flex plugin.
 
-Publishing the v0.2.0 package tag alone does **not** activate this recipe. Stable
+Publishing a compatible Core package tag alone does **not** activate this recipe. Stable
 package-version availability, recipe acceptance and endpoint availability are
 separate steps. Package registration is complete. Until recipe approval, use
 manual installation or an explicitly configured private endpoint. The `0.2` directory describes the minimum recipe version; Flex chooses

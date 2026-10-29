@@ -1,4 +1,4 @@
-# CLI and architecture reporting
+# CLI and architecture reporting (0.3.0)
 
 ```bash
 php bin/console sillbeam:architecture
@@ -338,3 +338,24 @@ private ownership, validated Project membership, disabled configuration and reco
 cycle participants. Invalid or incomplete analysis remains explicitly diagnostic,
 with unknown activation and evidence warnings. See the [graph reference](mermaid-graph.md)
 for identity, escaping, determinism and exit semantics.
+
+## 0.3.0 command compatibility
+
+| Command | Default / optional formats | Data source | Exit semantics |
+| --- | --- | --- | --- |
+| `sillbeam:doctor` | text / JSON schema v1 | Existing static InstallationInspector checks | 0 verified, 1 action required, 2 unknown/unexecutable; 2 takes priority |
+| `sillbeam:architecture` | text / existing JSON schema v1 | ArchitectureReport | 0 valid, 1 violations, 2 unavailable/usage |
+| `sillbeam:report` | Markdown file | ArchitectureReport | Same architecture status; write/usage errors 2 |
+| `sillbeam:inspect:module` | text only | Same report catalog and relationship evidence | Same architecture status; selection/usage errors 2 |
+| `sillbeam:graph` | raw Mermaid only | Same report catalog, direct edges and findings | Same architecture status; usage errors 2 |
+
+The diagnostic formats do not change the underlying checks, runtime activation,
+Project membership or architecture rules. `enabled` never implies `active`, and
+incomplete evidence never proves absence. Doctor remains a separate static
+installation check; its JSON output does not run architecture analysis.
+
+The Core Console adapter resolves all five exact diagnostic names before container
+boot. Native Symfony Console requires a compilable container and may use a compiled
+report snapshot. None of these command additions places parser/architecture analysis
+on the production HTTP path. See [upgrade guidance](../migration/0.3.0.md) and the
+[current acceptance report](../development/release-0.3.0-acceptance/README.md).

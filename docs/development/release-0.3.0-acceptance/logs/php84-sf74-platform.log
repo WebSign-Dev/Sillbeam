@@ -1,0 +1,16 @@
+Checking platform requirements for packages in the vendor dir
+composer-plugin-api  2.9.0      success                                       
+composer-runtime-api 2.2.2      success                                       
+ext-ctype            *          success provided by symfony/polyfill-ctype    
+ext-dom              20031129   success                                       
+ext-filter           8.4.26     success                                       
+ext-hash             8.4.26     success                                       
+ext-iconv            8.4.26     success                                       
+ext-json             8.4.26     success                                       
+ext-libxml           8.4.26     success                                       
+ext-mbstring         *          success provided by symfony/polyfill-mbstring 
+ext-phar             8.4.26     success                                       
+ext-tokenizer        8.4.26     success                                       
+ext-xml              8.4.26     success                                       
+ext-xmlwriter        8.4.26     success                                       
+php                  8.4.26     success                                       

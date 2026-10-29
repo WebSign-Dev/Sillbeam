@@ -1,0 +1,12 @@
+PASS PHP 8.4.26 / Symfony v8.1.10 / symfony-only / no Doctrine / both kernels
+PASS PHP 8.4.26 / Symfony v8.1.10 / symfony-only / Doctrine 3.3.4 / ORM 3.7.5 / both kernels
+PASS PHP 8.4.26 / Symfony v8.1.10 / modules-only / no Doctrine / both kernels
+PASS PHP 8.4.26 / Symfony v8.1.10 / modules-only / Doctrine 3.3.4 / ORM 3.7.5 / both kernels
+PASS PHP 8.4.26 / Symfony v8.1.10 / project-only / no Doctrine / both kernels
+PASS PHP 8.4.26 / Symfony v8.1.10 / project-only / Doctrine 3.3.4 / ORM 3.7.5 / both kernels
+PASS PHP 8.4.26 / Symfony v8.1.10 / single-project / no Doctrine / both kernels
+PASS PHP 8.4.26 / Symfony v8.1.10 / single-project / Doctrine 3.3.4 / ORM 3.7.5 / both kernels
+PASS PHP 8.4.26 / Symfony v8.1.10 / multi-project / no Doctrine / both kernels
+PASS PHP 8.4.26 / Symfony v8.1.10 / multi-project / Doctrine 3.3.4 / ORM 3.7.5 / both kernels
+PASS PHP 8.4.26 / Symfony v8.1.10 / hybrid / no Doctrine / both kernels
+PASS PHP 8.4.26 / Symfony v8.1.10 / hybrid / Doctrine 3.3.4 / ORM 3.7.5 / both kernels

@@ -2,6 +2,16 @@
 
 This changelog records the version history of Sillbeam Core.
 
+## v0.3.0 (release candidate)
+
+- Document public contracts and relevant implementation decisions with English PHPDoc; add development-only phpDocumentor 3, `composer docs:build`, contributor conventions and ignored generated output.
+- Improve Composer/Flex installation guidance and static Doctor diagnoses for bundle/routing integration, service-import overlap and the Core Console adapter. Preserve developer ownership of existing Symfony files; retain recipe version `0.2`.
+- Add `sillbeam:doctor --format=text|json` with text as default and documented JSON schema v1. Reuse InstallationInspector results, stable check IDs/statuses and existing 0/1/2 exit-code priority.
+- Add text-only `sillbeam:inspect:module` with ID/descriptor selection, Project disambiguation, configuration versus validated activation, direct declared/observed/incoming relationships and related findings.
+- Add `sillbeam:graph --format=mermaid`: deterministic source with safe labels, distinct scopes/Project membership, direct declarations, observed undeclared references, disabled configuration and recorded cycle participants. No renderer/runtime is included.
+- Reuse existing ArchitectureReport/analyzer evidence and Core Console pre-container dispatch. Preserve unknown/incomplete states, public architecture JSON v1, runtime contracts and production HTTP compilation guards; add no runtime dependencies or architecture rules.
+- Prepare active manifests, branch aliases, consumer/ZIP versions and CI for `dev-0.3.x`, PHP 8.4/8.5 and Symfony 7.4/8.1. See [release notes](docs/releases/0.3.0.md), [upgrade guide](docs/migration/0.3.0.md) and [acceptance report](docs/development/release-0.3.0-acceptance/README.md). This entry does not authorize or imply publication.
+
 ## v0.2.0
 
 ### Breaking changes

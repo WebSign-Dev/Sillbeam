@@ -1,0 +1,247 @@
+Installing dependencies from lock file (including require-dev)
+Verifying lock file contents can be installed on current platform.
+Package operations: 54 installs, 0 updates, 0 removals
+Cannot create cache directory /home/oeffe/.cache/composer/files/, or directory is not writable. Proceeding without cache. See also cache-read-only config if your filesystem is read-only.
+  - Downloading symfony/flex (v2.11.0)
+  - Downloading symfony/runtime (v7.4.14)
+  - Downloading symfony/deprecation-contracts (v3.7.1)
+  - Downloading psr/container (2.0.2)
+  - Downloading symfony/service-contracts (v3.7.3)
+  - Downloading symfony/polyfill-mbstring (v1.38.2)
+  - Downloading symfony/http-foundation (v7.4.21)
+  - Downloading psr/event-dispatcher (1.0.0)
+  - Downloading symfony/event-dispatcher-contracts (v3.7.1)
+  - Downloading symfony/event-dispatcher (v7.4.17)
+  - Downloading symfony/var-dumper (v7.4.18)
+  - Downloading symfony/polyfill-php85 (v1.41.0)
+  - Downloading psr/log (3.0.2)
+  - Downloading symfony/error-handler (v7.4.17)
+  - Downloading symfony/http-kernel (v7.4.18)
+  - Downloading symfony/routing (v7.4.18)
+  - Downloading symfony/finder (v7.4.17)
+  - Downloading symfony/filesystem (v7.4.18)
+  - Downloading symfony/var-exporter (v7.4.18)
+  - Downloading symfony/dependency-injection (v7.4.17)
+  - Downloading symfony/config (v7.4.17)
+  - Downloading psr/cache (3.0.0)
+  - Downloading symfony/cache-contracts (v3.7.1)
+  - Downloading symfony/cache (v7.4.18)
+  - Downloading symfony/framework-bundle (v7.4.18)
+  - Downloading symfony/polyfill-intl-normalizer (v1.42.0)
+  - Downloading symfony/polyfill-intl-grapheme (v1.41.0)
+  - Downloading symfony/string (v7.4.15)
+  - Downloading symfony/console (v7.4.18)
+  - Downloading symfony/stopwatch (v7.4.8)
+  - Downloading doctrine/event-manager (2.1.1)
+  - Downloading doctrine/deprecations (1.1.6)
+  - Downloading doctrine/dbal (4.4.4)
+  - Downloading doctrine/migrations (3.9.7)
+  - Downloading doctrine/persistence (4.2.0)
+  - Downloading symfony/doctrine-bridge (v7.4.18)
+  - Downloading doctrine/sql-formatter (1.5.4)
+  - Downloading doctrine/doctrine-bundle (3.3.2)
+  - Downloading doctrine/doctrine-migrations-bundle (4.0.1)
+  - Downloading symfony/polyfill-php86 (v1.41.0)
+  - Downloading doctrine/lexer (3.0.1)
+  - Downloading doctrine/instantiator (2.1.0)
+  - Downloading doctrine/inflector (2.1.0)
+  - Downloading doctrine/collections (3.1.0)
+  - Downloading doctrine/orm (3.7.0)
+  - Downloading symfony/dotenv (v7.4.18)
+  - Downloading symfony/type-info (v7.4.17)
+  - Downloading symfony/property-info (v7.4.18)
+  - Downloading symfony/translation-contracts (v3.7.1)
+  - Downloading symfony/polyfill-php83 (v1.41.0)
+  - Downloading symfony/validator (v7.4.18)
+  - Downloading symfony/yaml (v7.4.18)
+  - Downloading nikic/php-parser (v5.9.0)
+  0/53 [>---------------------------]   0%    Failed to download symfony/flex from dist: curl error 6 while downloading https://api.github.com/repos/symfony/flex/zipball/4a6d98eea3ebc7f68d82810cb682eedca2649e99: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/flex (v2.11.0) into cache
+
+  1/53 [>---------------------------]   1%    Failed to download symfony/polyfill-mbstring from dist: curl error 6 while downloading https://api.github.com/repos/symfony/polyfill-mbstring/zipball/d3d318bad5e7a1bfbd026009c8bfb8d8f99ae6b6: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/polyfill-mbstring (v1.38.2) into cache
+    Failed to download symfony/runtime from dist: curl error 6 while downloading https://api.github.com/repos/symfony/runtime/zipball/15497f743dd714f3167cb6a56509b9d42e6417b3: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/runtime (v7.4.14) into cache
+    Failed to download symfony/deprecation-contracts from dist: curl error 6 while downloading https://api.github.com/repos/symfony/deprecation-contracts/zipball/f3202fa1b5097b0af062dc978b32ecf63404e31d: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/deprecation-contracts (v3.7.1) into cache
+    Failed to download psr/container from dist: curl error 6 while downloading https://api.github.com/repos/php-fig/container/zipball/c71ecc56dfe541dbd90c5360474fbc405f8d5963: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing psr/container (2.0.2) into cache
+    Failed to download symfony/service-contracts from dist: curl error 6 while downloading https://api.github.com/repos/symfony/service-contracts/zipball/15e6a07ec2a2c75ceb1b21dd98105ee8456d2257: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/service-contracts (v3.7.3) into cache
+    Failed to download symfony/http-foundation from dist: curl error 6 while downloading https://api.github.com/repos/symfony/http-foundation/zipball/58c89144c7a36dd89c3d01917e9fa3a72d8aaf31: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/http-foundation (v7.4.21) into cache
+    Failed to download psr/event-dispatcher from dist: curl error 6 while downloading https://api.github.com/repos/php-fig/event-dispatcher/zipball/dbefd12671e8a14ec7f180cab83036ed26714bb0: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing psr/event-dispatcher (1.0.0) into cache
+    Failed to download symfony/event-dispatcher-contracts from dist: curl error 6 while downloading https://api.github.com/repos/symfony/event-dispatcher-contracts/zipball/c7de7a00ffb67842132da02ea92988a39ccd9f4e: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/event-dispatcher-contracts (v3.7.1) into cache
+    Failed to download symfony/event-dispatcher from dist: curl error 6 while downloading https://api.github.com/repos/symfony/event-dispatcher/zipball/d269974ee93c61d03620ffee358355bfdb471d66: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/event-dispatcher (v7.4.17) into cache
+    Failed to download symfony/var-dumper from dist: curl error 6 while downloading https://api.github.com/repos/symfony/var-dumper/zipball/e088da50b813f32473a76871616cbb8fa54653a8: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/var-dumper (v7.4.18) into cache
+    Failed to download symfony/polyfill-php85 from dist: curl error 6 while downloading https://api.github.com/repos/symfony/polyfill-php85/zipball/255fab485aaa1006ed411040c42aecd7b5302d7a: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/polyfill-php85 (v1.41.0) into cache
+
+ 12/53 [======>---------------------]  22%    Failed to download psr/log from dist: curl error 6 while downloading https://api.github.com/repos/php-fig/log/zipball/f16e1d5863e37f8d8c2a01719f5b34baa2b714d3: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing psr/log (3.0.2) into cache
+    Failed to download symfony/error-handler from dist: curl error 6 while downloading https://api.github.com/repos/symfony/error-handler/zipball/8373921e231e190a88e2ad526951bbaa791576fa: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/error-handler (v7.4.17) into cache
+
+ 14/53 [=======>--------------------]  26%    Failed to download symfony/http-kernel from dist: curl error 6 while downloading https://api.github.com/repos/symfony/http-kernel/zipball/275d2d2d24530f2a0eaf17704a3a93860a036351: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/http-kernel (v7.4.18) into cache
+    Failed to download symfony/routing from dist: curl error 6 while downloading https://api.github.com/repos/symfony/routing/zipball/ddd558991e98f693ae6bf5063cc1b0362c6bbec3: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/routing (v7.4.18) into cache
+    Failed to download symfony/finder from dist: curl error 6 while downloading https://api.github.com/repos/symfony/finder/zipball/5ce28827081f6d1f0c32eaf3882750f19cb5bbe6: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/finder (v7.4.17) into cache
+    Failed to download symfony/filesystem from dist: curl error 6 while downloading https://api.github.com/repos/symfony/filesystem/zipball/90d412aa5277c6819db39e7605aa46b1019e3232: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/filesystem (v7.4.18) into cache
+    Failed to download symfony/var-exporter from dist: curl error 6 while downloading https://api.github.com/repos/symfony/var-exporter/zipball/d6a87acbe48cbc707b9aba7f1a6c2215aab02603: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/var-exporter (v7.4.18) into cache
+    Failed to download symfony/dependency-injection from dist: curl error 6 while downloading https://api.github.com/repos/symfony/dependency-injection/zipball/f318ac9da5aba0be2cf43ecdd562c05a33bc11c0: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/dependency-injection (v7.4.17) into cache
+    Failed to download symfony/config from dist: curl error 6 while downloading https://api.github.com/repos/symfony/config/zipball/696e12da8eea497a1a3808d714b43ff67a7df43e: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/config (v7.4.17) into cache
+    Failed to download psr/cache from dist: curl error 6 while downloading https://api.github.com/repos/php-fig/cache/zipball/aa5030cfa5405eccfdcb1083ce040c2cb8d253bf: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing psr/cache (3.0.0) into cache
+    Failed to download symfony/cache-contracts from dist: curl error 6 while downloading https://api.github.com/repos/symfony/cache-contracts/zipball/9789738bc19af1106dc54d6afba9a0b467516cf2: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/cache-contracts (v3.7.1) into cache
+    Failed to download symfony/cache from dist: curl error 6 while downloading https://api.github.com/repos/symfony/cache/zipball/6c521e19a99e8ae57e22aa85b9271534513ee850: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/cache (v7.4.18) into cache
+
+ 24/53 [============>---------------]  45%    Failed to download symfony/framework-bundle from dist: curl error 6 while downloading https://api.github.com/repos/symfony/framework-bundle/zipball/45d6d66b6ea1ef7a3c4193dfe606370f0f80c9bf: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/framework-bundle (v7.4.18) into cache
+    Failed to download symfony/polyfill-intl-normalizer from dist: curl error 6 while downloading https://api.github.com/repos/symfony/polyfill-intl-normalizer/zipball/aa20edea75bd9c48cfecc8360922e5a6e5c44502: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/polyfill-intl-normalizer (v1.42.0) into cache
+
+ 26/53 [=============>--------------]  49%    Failed to download symfony/polyfill-intl-grapheme from dist: curl error 6 while downloading https://api.github.com/repos/symfony/polyfill-intl-grapheme/zipball/bb899c1db0aa8127dc3afe8cda4a67eb24915f8d: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/polyfill-intl-grapheme (v1.41.0) into cache
+    Failed to download symfony/string from dist: curl error 6 while downloading https://api.github.com/repos/symfony/string/zipball/e394af32256bf9e7bf80849d95e589167c10097b: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/string (v7.4.15) into cache
+    Failed to download symfony/console from dist: curl error 6 while downloading https://api.github.com/repos/symfony/console/zipball/23d6f88a29f6d0eac45bd77d70307adf83ba7ab0: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/console (v7.4.18) into cache
+    Failed to download symfony/stopwatch from dist: curl error 6 while downloading https://api.github.com/repos/symfony/stopwatch/zipball/70a852d72fec4d51efb1f48dcd968efcaf5ccb89: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/stopwatch (v7.4.8) into cache
+    Failed to download doctrine/event-manager from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/event-manager/zipball/dda33921b198841ca8dbad2eaa5d4d34769d18cf: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/event-manager (2.1.1) into cache
+    Failed to download doctrine/deprecations from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/deprecations/zipball/d4fe3e6fd9bb9e72557a19674f44d8ac7db4c6ca: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/deprecations (1.1.6) into cache
+    Failed to download doctrine/dbal from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/dbal/zipball/fb9e0ffe15e1590e24dc61c0c0a23f9a33ee42ce: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/dbal (4.4.4) into cache
+    Failed to download doctrine/migrations from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/migrations/zipball/96cb2a89b56c9efb0bac38e606dc0b0f13e650ec: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/migrations (3.9.7) into cache
+    Failed to download doctrine/persistence from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/persistence/zipball/49ab73e0d3e2ac8d1f5ecda3dd8acd5503781e8b: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/persistence (4.2.0) into cache
+    Failed to download symfony/doctrine-bridge from dist: curl error 6 while downloading https://api.github.com/repos/symfony/doctrine-bridge/zipball/d79e35e27ce56972ecc6878721cf20a29f4fef9d: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/doctrine-bridge (v7.4.18) into cache
+
+ 36/53 [===================>--------]  67%    Failed to download doctrine/sql-formatter from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/sql-formatter/zipball/9563949f5cd3bd12a17d12fb980528bc141c5806: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/sql-formatter (1.5.4) into cache
+    Failed to download doctrine/doctrine-bundle from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/DoctrineBundle/zipball/e6cd6aca912a5701fdc9bf4f0ad8f18f3f1448ed: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/doctrine-bundle (3.3.2) into cache
+
+ 38/53 [====================>-------]  71%    Failed to download doctrine/doctrine-migrations-bundle from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/DoctrineMigrationsBundle/zipball/43e9212c7441178e3748580e53f88c08f4e70e5f: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/doctrine-migrations-bundle (4.0.1) into cache
+    Failed to download symfony/polyfill-php86 from dist: curl error 6 while downloading https://api.github.com/repos/symfony/polyfill-php86/zipball/6bc356ed3d8dbfeea8f0de235e34d670704e880e: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/polyfill-php86 (v1.41.0) into cache
+    Failed to download doctrine/lexer from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/lexer/zipball/31ad66abc0fc9e1a1f2d9bc6a42668d2fbbcd6dd: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/lexer (3.0.1) into cache
+    Failed to download doctrine/instantiator from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/instantiator/zipball/23da848e1a2308728fe5fdddabf4be17ff9720c7: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/instantiator (2.1.0) into cache
+    Failed to download doctrine/inflector from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/inflector/zipball/6d6c96277ea252fc1304627204c3d5e6e15faa3b: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/inflector (2.1.0) into cache
+    Failed to download doctrine/collections from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/collections/zipball/7c2f25ed928553a3de389ccb99aa46c0eedb2d4d: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/collections (3.1.0) into cache
+    Failed to download doctrine/orm from dist: curl error 6 while downloading https://api.github.com/repos/doctrine/orm/zipball/f25c5e5385d3a0bca2dc364d556d3b83a06559ed: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing doctrine/orm (3.7.0) into cache
+    Failed to download symfony/dotenv from dist: curl error 6 while downloading https://api.github.com/repos/symfony/dotenv/zipball/99b5b14953237c89ed24f1af5ba34225caf598a4: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/dotenv (v7.4.18) into cache
+    Failed to download symfony/type-info from dist: curl error 6 while downloading https://api.github.com/repos/symfony/type-info/zipball/62d0ad6995630a4f7ea8fd270aadb3e2545c8e31: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/type-info (v7.4.17) into cache
+    Failed to download symfony/property-info from dist: curl error 6 while downloading https://api.github.com/repos/symfony/property-info/zipball/52420d499b03ec20c0d38f0dc2f940bc9c43dc8e: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/property-info (v7.4.18) into cache
+
+ 48/53 [=========================>--]  90%    Failed to download symfony/translation-contracts from dist: curl error 6 while downloading https://api.github.com/repos/symfony/translation-contracts/zipball/ccb206b98faccc511ebae8e5fad50f2dc0b30621: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/translation-contracts (v3.7.1) into cache
+    Failed to download symfony/polyfill-php83 from dist: curl error 6 while downloading https://api.github.com/repos/symfony/polyfill-php83/zipball/5ea99087fb99c273a9b9236ed4c31e78b16103c6: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/polyfill-php83 (v1.41.0) into cache
+
+ 50/53 [==========================>-]  94%    Failed to download symfony/validator from dist: curl error 6 while downloading https://api.github.com/repos/symfony/validator/zipball/976bd879fda78de30ee4688fd38ae87bc4d2dc76: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/validator (v7.4.18) into cache
+    Failed to download symfony/yaml from dist: curl error 6 while downloading https://api.github.com/repos/symfony/yaml/zipball/4cef939e55b8a21c5780418de0d98ab00d0736e1: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing symfony/yaml (v7.4.18) into cache
+    Failed to download nikic/php-parser from dist: curl error 6 while downloading https://api.github.com/repos/nikic/PHP-Parser/zipball/9e33da9553fe7786f0962b35f4e4ecf01be89def: Could not resolve host: api.github.com
+    Now trying to download from source
+  - Syncing nikic/php-parser (v5.9.0) into cache
+
+ 53/53 [============================] 100%
+In Git.php line 652:
+                                                                               
+  Failed to clone https://github.com/symfony/flex.git via https, ssh protocol  
+  s, aborting.                                                                 
+                                                                               
+  - https://github.com/symfony/flex.git                                        
+    Cloning into bare repository '/home/oeffe/.cache/composer/vcs/https---git  
+  hub.com-symfony-flex.git'...                                                 
+    /home/oeffe/.cache/composer/vcs/https---github.com-symfony-flex.git: Read  
+  -only file system                                                            
+                                                                               
+  - git@github.com:symfony/flex.git                                            
+    Cloning into bare repository '/home/oeffe/.cache/composer/vcs/https---git  
+  hub.com-symfony-flex.git'...                                                 
+    /home/oeffe/.cache/composer/vcs/https---github.com-symfony-flex.git: Read  
+  -only file system                                                            
+                                                                               
+
+install [--prefer-source] [--prefer-dist] [--prefer-install PREFER-INSTALL] [--dry-run] [--download-only] [--dev] [--no-suggest] [--no-dev] [--no-security-blocking] [--no-autoloader] [--no-progress] [--no-install] [--audit] [--audit-format AUDIT-FORMAT] [-v|vv|vvv|--verbose] [-o|--optimize-autoloader] [-a|--classmap-authoritative] [--apcu-autoloader] [--apcu-autoloader-prefix APCU-AUTOLOADER-PREFIX] [--ignore-platform-req IGNORE-PLATFORM-REQ] [--ignore-platform-reqs] [--] [<packages>...]
+

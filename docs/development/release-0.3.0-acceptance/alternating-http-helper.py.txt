@@ -1,0 +1,26 @@
+from pathlib import Path
+import json,subprocess,shutil
+roots={'baseline':'/tmp/sillbeam-release-020-baseline','candidate':'/home/oeffe/PhpstormProjects/websign/Sillbeam'}
+fixtures={}; rows=[]
+try:
+ for version,root in roots.items():
+  for variant in ['symfony','sillbeam']:
+   fixture=json.loads(subprocess.check_output(['php','/tmp/sillbeam-release-create-benchmark.php',root,variant]))
+   fixtures[version,variant]=fixture
+   built=subprocess.run(['php',root+'/tools/benchmark-architecture.php','--sample',fixture['directory'],fixture['namespace'],'prod','build','0','100'],capture_output=True)
+   if built.returncode: raise RuntimeError(built.stderr.decode())
+ for repeat in range(5):
+  for version in (['baseline','candidate'] if repeat%2==0 else ['candidate','baseline']):
+   for variant in (['symfony','sillbeam'] if repeat%2==0 else ['sillbeam','symfony']):
+    f=fixtures[version,variant];root=roots[version]
+    process=subprocess.run(['php',root+'/tools/benchmark-architecture.php','--sample',f['directory'],f['namespace'],'prod','http','200','100'],capture_output=True)
+    if process.returncode: raise RuntimeError(process.stderr.decode())
+    result=json.loads(process.stdout)
+    assert result['analyzer_loaded'] is False and result['parser_loaded'] is False
+    assert result['routes']==100 and len(result['ms'])==201
+    rows.append({'version':version,'variant':variant,'repeat':repeat,'fixture':f,'result':result})
+ print(json.dumps({'modules':100,'environment':'prod','repeats':5,'warm_requests_per_batch':200,'alternating_versions_and_variants':True,'rows':rows},indent=2))
+finally:
+ for f in fixtures.values():
+  assert f['directory'].startswith('/tmp/sillbeam-source-')
+  shutil.rmtree(f['directory'])
