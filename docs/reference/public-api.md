@@ -63,3 +63,10 @@ Concrete registry/context/information services are internal; inject the document
 interfaces. `@internal` declarations and members are excluded from the public HTML.
 See [Contributing](../../CONTRIBUTING.md#code-documentation-and-api-reference) for the
 PHPDoc standard, tooling prerequisites and generated-file policy.
+
+## English JSON artifact
+
+`composer docs:export-json` exports the same public boundary to
+`build/docs/api/sillbeam-core.en.json`. See the [JSON contract](phpdoc-json.md)
+and [schema v1](phpdoc-api.schema.json) for stable IDs, text/code fidelity, fields
+and phpDocumentor 3.10 limitations. HTML remains available through `docs:build`.

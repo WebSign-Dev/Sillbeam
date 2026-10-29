@@ -130,6 +130,17 @@ delete the generated `build/docs/api/` directory before rebuilding: phpDocumento
 not remove obsolete HTML files. Run `composer test`, `composer analyse` and
 `composer cs:check` after PHPDoc changes; annotations are inputs to static analysis.
 
+### Export English API JSON
+
+Run `composer docs:export-json` to write `build/docs/api/sillbeam-core.en.json`.
+The [versioned schema and field guide](docs/reference/phpdoc-json.md) explain
+plain descriptions, original method signatures, code examples, stable identities,
+public/internal filtering and phpDocumentor 3.10 limitations. The JSON-only Twig
+transformation uses existing descriptors and a separate ignored cache; it does not
+consume HTML or add another AST parser. Export twice after changes and compare
+bytes. Keep the HTML build working and test both paths. This is a manual development
+command, with no translation, website integration, release hook or new CI trigger.
+
 ## Submit a pull request
 
 Target `main` and describe:

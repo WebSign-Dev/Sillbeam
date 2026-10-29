@@ -65,7 +65,8 @@
         "test:consumer": "php tools/test-consumer.php",
         "test:flex-recipe": "php tools/test-flex-recipe.php",
         "test:release-package": "php tools/test-release-package.php",
-        "docs:build": "phpdoc --config=phpdoc.dist.xml"
+        "docs:build": "phpdoc --config=phpdoc.dist.xml",
+        "docs:export-json": "@php tools/export-phpdoc-json.php"
     },
     "extra": {
         "branch-alias": {

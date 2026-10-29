@@ -167,6 +167,7 @@ Architecture errors block ordinary container-backed commands. With `Sillbeam\Cor
 | [Projects](docs/guides/projects.md) | Shared and private modules, hosts and request context. |
 | [Configuration](docs/reference/configuration.md) | Discovery roots, exclusions and integration settings. |
 | [Public API](docs/reference/public-api.md) | Attributes, registries and runtime interfaces. |
+| [English API JSON](docs/reference/phpdoc-json.md) | Run `composer docs:export-json` for the manually translated website artifact. |
 | [Doctrine](docs/modules/doctrine.md) | Optional entity mapping integration. |
 | [Migration](docs/migration/modular-monolith.md) | Breaking changes and replacing the former Foundation features. |
 | [Testing](docs/development/testing.md) | Repository checks and integration coverage. |

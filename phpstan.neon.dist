@@ -9,10 +9,13 @@ parameters:
         - apps/project-only/src
         - apps/single-project/src
         - apps/symfony-only/src
+        - tools/phpdoc-json
+        - tools/export-phpdoc-json.php
     tmpDir: .phpstan-cache
     treatPhpDocTypesAsCertain: false
     excludePaths:
         analyse:
+            - tests/Fixtures/PhpDocApi
             - tests/Fixtures/CliPrototype12
             - tests/Fixtures/Application/var (?)
             - tests/Fixtures/*/config/reference.php (?)

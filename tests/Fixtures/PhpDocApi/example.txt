@@ -1,0 +1,3 @@
+<?php
+$path = '\App\Thing';
+echo "café Ω\n";
