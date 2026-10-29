@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Sillbeam English PHP API documentation, schema version 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "package", "version", "language", "elements"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "package": {"type": "string", "minLength": 1},
+    "version": {"type": "string", "minLength": 1},
+    "language": {"const": "en"},
+    "elements": {"type": "array", "items": {"$ref": "#/$defs/element"}}
+  },
+  "$defs": {
+    "nullableText": {"type": ["string", "null"]},
+    "typedDescription": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "description"],
+      "properties": {
+        "type": {"$ref": "#/$defs/nullableText"},
+        "description": {"type": "string"}
+      }
+    },
+    "tag": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "description", "type", "variable", "reference", "link", "version"],
+      "properties": {
+        "name": {"type": "string"},
+        "description": {"type": "string"},
+        "type": {"$ref": "#/$defs/nullableText"},
+        "variable": {"$ref": "#/$defs/nullableText"},
+        "reference": {"$ref": "#/$defs/nullableText"},
+        "link": {"$ref": "#/$defs/nullableText"},
+        "version": {"$ref": "#/$defs/nullableText"}
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["description", "file", "starting_line", "line_count", "code"],
+      "properties": {
+        "description": {"type": "string"},
+        "file": {"$ref": "#/$defs/nullableText"},
+        "starting_line": {"type": ["integer", "null"]},
+        "line_count": {"type": ["integer", "null"]},
+        "code": {"$ref": "#/$defs/nullableText"}
+      }
+    },
+    "parameter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "type", "description", "default", "by_reference", "variadic"],
+      "properties": {
+        "name": {"type": "string"},
+        "type": {"$ref": "#/$defs/nullableText"},
+        "description": {"type": "string"},
+        "default": {"$ref": "#/$defs/nullableText"},
+        "by_reference": {"type": "boolean"},
+        "variadic": {"type": "boolean"}
+      }
+    },
+    "element": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "kind", "name", "container", "summary", "description", "tags", "examples"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "kind": {"enum": ["class", "interface", "trait", "enum", "enum_case", "method", "function", "property", "constant"]},
+        "name": {"type": "string"},
+        "container": {"$ref": "#/$defs/nullableText"},
+        "summary": {"type": "string"},
+        "description": {"type": "string"},
+        "tags": {"type": "array", "items": {"$ref": "#/$defs/tag"}},
+        "examples": {"type": "array", "items": {"$ref": "#/$defs/example"}},
+        "extends": {"type": "array", "items": {"type": "string"}},
+        "implements": {"type": "array", "items": {"type": "string"}},
+        "traits": {"type": "array", "items": {"type": "string"}},
+        "abstract": {"type": "boolean"},
+        "final": {"type": "boolean"},
+        "static": {"type": "boolean"},
+        "visibility": {"enum": ["public", "protected"]},
+        "parameters": {"type": "array", "items": {"$ref": "#/$defs/parameter"}},
+        "returns": {"$ref": "#/$defs/typedDescription"},
+        "throws": {"type": "array", "items": {"$ref": "#/$defs/typedDescription"}},
+        "signature": {"type": "string"},
+        "type": {"$ref": "#/$defs/nullableText"},
+        "default": {"$ref": "#/$defs/nullableText"},
+        "value": {"$ref": "#/$defs/nullableText"}
+      },
+      "allOf": [
+        {"if": {"properties": {"kind": {"enum": ["method", "function"]}}}, "then": {"required": ["parameters", "returns", "throws", "signature"]}},
+        {"if": {"properties": {"kind": {"enum": ["class", "interface", "trait", "enum"]}}}, "then": {"required": ["extends", "implements", "traits"]}},
+        {"if": {"properties": {"kind": {"const": "property"}}}, "then": {"required": ["visibility", "type", "default"]}}
+      ]
+    }
+  }
+}

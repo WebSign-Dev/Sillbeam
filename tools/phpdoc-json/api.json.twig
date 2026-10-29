@@ -1,0 +1,103 @@
+{# phpDocumentor 3.10 descriptors only. Never use HTML/Markdown rendering filters. #}
+{% macro tags(node) %}
+[
+{% set separator = '' %}
+{% for group in node.tags %}{% for tag in group %}
+{{ separator|raw }}{% set separator = ',' %}
+{{ {
+    name: tag.name,
+    description: tag.description ~ '',
+    type: tag.type is defined and tag.type is not null ? tag.type ~ '' : null,
+    variable: tag.variableName|default(null),
+    reference: tag.reference is defined ? tag.reference ~ '' : null,
+    link: tag.link|default(null),
+    version: tag.version|default(null)
+}|json_encode(constant('JSON_THROW_ON_ERROR'))|raw }}
+{% endfor %}{% endfor %}
+]
+{% endmacro %}
+{% macro examples(node) %}
+[
+{% for tag in node.tags.example|default([]) %}
+{{ not loop.first ? ',' : '' }}{{ {
+    description: tag.description ~ '',
+    file: tag.filePath,
+    starting_line: tag.startingLine,
+    line_count: tag.lineCount,
+    code: tag.example
+}|json_encode(constant('JSON_THROW_ON_ERROR'))|raw }}
+{% endfor %}
+]
+{% endmacro %}
+{% set entries = [] %}
+{% for file in documentationSet.files %}
+    {% for kind in ['class', 'interface', 'trait', 'enum', 'function', 'constant'] %}
+        {% set catalog = kind == 'class' ? file.classes : (kind == 'interface' ? file.interfaces : (kind == 'trait' ? file.traits : (kind == 'enum' ? file.enums : (kind == 'function' ? file.functions : file.constants)))) %}
+        {% for element in catalog %}
+            {% set entries = entries|merge([{node: element, kind: kind, parent: null}]) %}
+            {% if kind in ['class', 'interface', 'trait', 'enum'] %}
+                {% for member in element.methods %}{% set entries = entries|merge([{node: member, kind: 'method', parent: element.fullyQualifiedStructuralElementName ~ ''}]) %}{% endfor %}
+                {% for member in element.properties|default([]) %}{% set entries = entries|merge([{node: member, kind: 'property', parent: element.fullyQualifiedStructuralElementName ~ ''}]) %}{% endfor %}
+                {% for member in element.constants|default([]) %}{% set entries = entries|merge([{node: member, kind: 'constant', parent: element.fullyQualifiedStructuralElementName ~ ''}]) %}{% endfor %}
+                {% if kind == 'enum' %}{% for member in element.cases %}{% set entries = entries|merge([{node: member, kind: 'enum_case', parent: element.fullyQualifiedStructuralElementName ~ ''}]) %}{% endfor %}{% endif %}
+            {% endif %}
+        {% endfor %}
+    {% endfor %}
+{% endfor %}
+{
+"files": {
+{% for file in documentationSet.files %}
+{{ not loop.first ? ',' : '' }}{{ (file.path ~ '')|json_encode|raw }}: {{ file.source|json_encode(constant('JSON_THROW_ON_ERROR'))|raw }}
+{% endfor %}
+},
+"elements": [
+{% for entry in entries %}
+{% set e = entry.node %}
+{{ not loop.first ? ',' : '' }}
+{
+"id": {{ (e.fullyQualifiedStructuralElementName ~ '')|json_encode|raw }},
+"kind": {{ entry.kind|json_encode|raw }},
+"name": {{ e.name|json_encode|raw }},
+"container": {{ entry.parent|json_encode|raw }},
+"summary": {{ e.summary|json_encode(constant('JSON_THROW_ON_ERROR'))|raw }},
+"description": {{ (e.description ~ '')|json_encode(constant('JSON_THROW_ON_ERROR'))|raw }},
+"tags": {{ _self.tags(e) }},
+"examples": {{ _self.examples(e) }},
+"_source": {{ {file: e.file.path, start: e.startLocation.columnNumber|default(null), end: e.endLocation.columnNumber|default(null)}|json_encode|raw }}
+{% if entry.kind in ['class', 'interface', 'trait', 'enum'] %}
+    {% set parents = [] %}{% set interfaces = [] %}{% set traits = [] %}
+    {% if entry.kind == 'class' and e.parent %}{% set parents = [e.parent ~ ''] %}{% endif %}
+    {% if entry.kind == 'interface' %}{% for parent in e.parent %}{% set parents = parents|merge([parent ~ '']) %}{% endfor %}{% endif %}
+    {% if entry.kind in ['class', 'enum'] %}{% for interface in e.interfaces %}{% set interfaces = interfaces|merge([interface ~ '']) %}{% endfor %}{% endif %}
+    {% for trait in e.usedTraits|default([]) %}{% set traits = traits|merge([trait ~ '']) %}{% endfor %}
+    ,"extends": {{ parents|sort|json_encode|raw }},"implements": {{ interfaces|sort|json_encode|raw }},"traits": {{ traits|sort|json_encode|raw }}
+    {% if entry.kind == 'class' %},"abstract": {{ e.abstract|json_encode|raw }},"final": {{ e.final|json_encode|raw }}{% endif %}
+{% endif %}
+{% if entry.kind in ['method', 'property'] or (entry.kind == 'constant' and entry.parent) %},"visibility": {{ (e.visibility ~ '')|json_encode|raw }}{% endif %}
+{% if entry.kind in ['method', 'function'] %}
+    ,"parameters": [
+    {% for argument in e.arguments %}
+        {{ not loop.first ? ',' : '' }}{{ {
+            name: argument.name,
+            type: argument.type is not null ? argument.type ~ '' : null,
+            description: argument.description ~ '',
+            default: argument.default is not null ? argument.default ~ '' : null,
+            by_reference: argument.byReference,
+            variadic: argument.variadic
+        }|json_encode(constant('JSON_THROW_ON_ERROR'))|raw }}
+    {% endfor %}
+    ],
+    "returns": {{ {type: e.response.type is not null ? e.response.type ~ '' : null, description: e.response.description ~ ''}|json_encode(constant('JSON_THROW_ON_ERROR'))|raw }},
+    "throws": [
+    {% for exception in e.tags.throws|default([]) %}
+        {{ not loop.first ? ',' : '' }}{{ {type: exception.type ~ '', description: exception.description ~ ''}|json_encode(constant('JSON_THROW_ON_ERROR'))|raw }}
+    {% endfor %}
+    ]
+    {% if entry.kind == 'method' %},"abstract": {{ e.abstract|json_encode|raw }},"final": {{ e.final|json_encode|raw }},"static": {{ e.static|json_encode|raw }}{% endif %}
+{% endif %}
+{% if entry.kind == 'property' %},"type": {{ e.type is not null ? (e.type ~ '')|json_encode|raw : 'null' }},"default": {{ e.default is not null ? (e.default ~ '')|json_encode|raw : 'null' }}{% endif %}
+{% if entry.kind in ['constant', 'enum_case'] %},"type": {{ e.type is defined and e.type is not null ? (e.type ~ '')|json_encode|raw : 'null' }},"value": {{ e.value is not null ? (e.value ~ '')|json_encode|raw : 'null' }}{% endif %}
+}
+{% endfor %}
+]
+}

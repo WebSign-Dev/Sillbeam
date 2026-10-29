@@ -5,6 +5,7 @@
 - [Modules](guides/modules.md), [Projects](guides/projects.md)
 - [Architecture analysis](reference/architecture-analysis.md), [targeted module inspection](reference/module-inspection.md), [Mermaid graph export](reference/mermaid-graph.md)
 - [Doctor JSON v1](reference/doctor-json.md) and [schema](reference/doctor-report.schema.json)
+- [English PHPDoc JSON export](reference/phpdoc-json.md)
 - [Configuration](reference/configuration.md), [public API](reference/public-api.md), [CLI](reference/cli.md)
 - [Upgrade from 0.2.0](migration/0.3.0.md), [earlier migration](migration/modular-monolith.md)
 - [v0.3.0 release notes](releases/0.3.0.md), [release acceptance](development/release-0.3.0-acceptance/README.md)

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <name>sillbeam-json</name>
+    <author>Sillbeam</author>
+    <version>1.0.0</version>
+    <transformations>
+        <transformation writer="twig" source="api.json.twig" artifact="descriptors.json"/>
+    </transformations>
+</template>

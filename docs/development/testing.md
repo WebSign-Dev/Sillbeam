@@ -70,3 +70,10 @@ semantics; inspection uses existing analysis/report evidence only.
 The [graph verification report](mermaid-graph-2026-10-29.md) records deterministic
 source, evidence/state boundaries, label escaping and both CLI entry points.
 The [graph reference](../reference/mermaid-graph.md) defines the export contract.
+
+## English PHPDoc JSON export
+
+`composer docs:export-json` manually writes the English public API artifact.
+See the [contract](../reference/phpdoc-json.md) and
+[verification record](phpdoc-json-export-2026-10-29.md). Export integration tests
+use temporary projects so ordinary test runs do not update the website artifact.
