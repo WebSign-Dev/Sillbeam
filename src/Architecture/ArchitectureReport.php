@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Sillbeam\Core\Architecture;
 
 use Sillbeam\Core\Architecture\Console\ArchitecturePresentation;
+use Sillbeam\Core\Architecture\Console\ModuleInspection;
 
 /**
  * Scalar architecture report shared by text, JSON and Markdown command output.
@@ -90,7 +91,7 @@ final readonly class ArchitectureReport
                 return $data;
             }, $analysis->findings),
             'modules' => $modules, 'projects' => $projectData,
-        ], ArchitecturePresentation::fromAnalysis($analysis, $projectDir));
+        ], ArchitecturePresentation::fromAnalysis($analysis, $projectDir) + ['module_inspection' => ModuleInspection::metadata($analysis, $config)]);
     }
 
     /**
