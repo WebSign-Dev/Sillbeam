@@ -1,0 +1,16 @@
+{
+  "label": "app-validate",
+  "command": [
+    "composer",
+    "validate",
+    "--strict",
+    "--working-dir=apps/test-app/app"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:57:35.644579+00:00",
+  "seconds": 0.282,
+  "exit_code": 0,
+  "log": "logs/app-validate.log",
+  "stderr_log": "logs/app-validate.stderr.log",
+  "environment": {}
+}

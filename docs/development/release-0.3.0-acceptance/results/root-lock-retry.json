@@ -1,0 +1,16 @@
+{
+  "label": "root-lock-retry",
+  "command": [
+    "composer",
+    "update",
+    "--lock",
+    "--no-install",
+    "--no-scripts",
+    "--no-plugins",
+    "--no-interaction"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "exit_code": 0,
+  "log": "logs/root-lock-update-retry.log",
+  "note": "Recorded from the actual tool result; no duration retained."
+}

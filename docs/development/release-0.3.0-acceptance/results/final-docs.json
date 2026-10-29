@@ -1,0 +1,14 @@
+{
+  "label": "final-docs",
+  "command": [
+    "composer",
+    "docs:build"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T13:08:59.622309+00:00",
+  "seconds": 1.986,
+  "exit_code": 0,
+  "log": "logs/final-docs.log",
+  "stderr_log": "logs/final-docs.stderr.log",
+  "environment": {}
+}

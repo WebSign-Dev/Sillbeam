@@ -14,11 +14,28 @@ try {
     mkdir($application.'/config/packages', 0777, true);
     mkdir($application.'/src/Module/Hello/Controller', 0777, true);
     $metadata = array_intersect_key($package, array_flip(['name', 'description', 'type', 'license', 'require', 'autoload']));
-    $metadata['version'] = '0.2.0';
+    $metadata['version'] = '0.3.0';
+    $require = ['php' => '^8.4', 'websign-dev/sillbeam-core' => '0.3.0'];
+    $conflicts = [];
+    if ($symfony = getenv('SILLBEAM_SYMFONY_VERSION')) {
+        foreach ($package['require'] as $name => $constraint) {
+            if (str_starts_with($name, 'symfony/')) {
+                $require[$name] = $symfony;
+            }
+        }
+        [$major, $minor] = array_map('intval', explode('.', $symfony));
+        $lock = json_decode((string) file_get_contents($repository.'/composer.lock'), true, flags: \JSON_THROW_ON_ERROR);
+        foreach ([...$lock['packages'], ...$lock['packages-dev']] as $dependency) {
+            if (str_starts_with($dependency['name'], 'symfony/') && preg_match('/^v?[78]\./', $dependency['version'])) {
+                $conflicts[$dependency['name']] = '<'.$major.'.'.$minor.' || >='.$major.'.'.($minor + 1);
+            }
+        }
+    }
     $metadata['dist'] = ['type' => 'zip', 'url' => 'file://'.$temporary.'/sillbeam.zip'];
     file_put_contents($application.'/composer.json', json_encode([
         'name' => 'sillbeam/manual-release-consumer', 'description' => 'Isolated manual release installation test.', 'type' => 'project', 'license' => 'MIT',
-        'require' => ['php' => '^8.4', 'websign-dev/sillbeam-core' => '0.2.0'],
+        'require' => $require,
+        'conflict' => (object) $conflicts,
         'repositories' => [['type' => 'package', 'package' => $metadata]],
         'autoload' => ['psr-4' => ['App\\' => 'src/']],
     ], \JSON_THROW_ON_ERROR | \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES)."\n");
@@ -71,6 +88,7 @@ if (class_exists('Doctrine\Bundle\DoctrineBundle\DoctrineBundle') || is_file(__D
 if (class_exists('PHPUnit\Framework\TestCase')) { throw new RuntimeException('Consumer unexpectedly has development dependencies.'); }
 $kernel = new App\Kernel($argv[1], 'dev' === $argv[1]);
 try {
+    if ('0.3.0' !== \Composer\InstalledVersions::getPrettyVersion('websign-dev/sillbeam-core')) { throw new RuntimeException('Wrong Core release version.'); }
     $kernel->boot();
     if (!$kernel->getContainer()->has('legacy')) { throw new RuntimeException('Native service import failed.'); }
     $container = $kernel->getContainer();
@@ -87,10 +105,16 @@ try {
     if (200 !== $response->getStatusCode() || 'Hello from Sillbeam' !== $response->getContent()) { throw new RuntimeException('Documented Hello example failed.'); }
     $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
     $application->setAutoExit(false);
-    foreach (['sillbeam:about', 'sillbeam:architecture'] as $name) {
+    foreach (['sillbeam:about', 'sillbeam:architecture', 'sillbeam:graph'] as $name) {
         $tester = new \Symfony\Component\Console\Tester\CommandTester($application->find($name));
         if (0 !== $tester->execute([])) { throw new RuntimeException('Diagnostic command failed: '.$name); }
     }
+    $inspect = new \Symfony\Component\Console\Tester\CommandTester($application->find('sillbeam:inspect:module'));
+    if (0 !== $inspect->execute(['module' => 'hello']) || !str_contains($inspect->getDisplay(), 'State: active')) { throw new RuntimeException('Packaged module inspection failed.'); }
+    $doctor = new \Symfony\Component\Console\Tester\CommandTester($application->find('sillbeam:doctor'));
+    $doctor->execute(['--format' => 'json']);
+    $data = json_decode($doctor->getDisplay(), true, flags: \JSON_THROW_ON_ERROR);
+    if (1 !== $data['schema_version']) { throw new RuntimeException('Packaged Doctor JSON failed.'); }
 } finally { $kernel->shutdown(); }
 PHP);
     foreach (['symfony', 'sillbeam'] as $kernel) {

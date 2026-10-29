@@ -1,0 +1,30 @@
+from pathlib import Path
+import json
+p=Path('docs/development/release-0.3.0-acceptance')
+a=[json.loads(line) for line in (p/'logs/baseline-benchmark-streams.log').read_text().splitlines()]
+b=[json.loads(line) for line in (p/'logs/candidate-benchmark-streams.log').read_text().splitlines()]
+assert len(a)==len(b)==13
+for label,rows in [('baseline',a),('candidate',b)]:
+ assert rows[0]['type']=='metadata'
+ for row in rows[1:]:
+  assert row['response']=='ok:'+str(row['services'])
+  assert row['routes']==row['modules']
+  assert all(row['ms'][m]['n']==(150 if m=='http_warm' else 3) for m in row['ms'])
+  if row['environment']=='prod':
+   assert row['http_analyzer_loaded'] is False and row['http_parser_loaded'] is False
+ print(label,rows[0]['php'],rows[0]['symfony'])
+index=lambda rows:{(r['variant'],r['modules'],r['environment']):r for r in rows[1:]}
+ai,bi=index(a),index(b)
+comparison=[]
+for count in [10,50,100]:
+ for env in ['dev','prod']:
+  old,new=ai['sillbeam',count,env],bi['sillbeam',count,env]
+  native_old,native_new=ai['symfony',count,env],bi['symfony',count,env]
+  d={'modules':count,'environment':env,'metrics':{},'peak_mib':{'baseline':old['peak_mib'],'candidate':new['peak_mib']}}
+  for metric in old['ms']:
+   before,after=old['ms'][metric]['p50'],new['ms'][metric]['p50']
+   native_before,native_after=native_old['ms'][metric]['p50'],native_new['ms'][metric]['p50']
+   d['metrics'][metric]={'baseline_p50_ms':before,'candidate_p50_ms':after,'delta_percent':round((after/before-1)*100,2),'native_control_delta_percent':round((native_after/native_before-1)*100,2),'baseline_p95_ms':old['ms'][metric]['p95'],'candidate_p95_ms':new['ms'][metric]['p95']}
+  comparison.append(d)
+  print(count,env,[(m,round(v['baseline_p50_ms'],3),round(v['candidate_p50_ms'],3),v['delta_percent'],v['native_control_delta_percent']) for m,v in d['metrics'].items()])
+(p/'performance-comparison.json').write_text(json.dumps({'baseline_commit':'cf2f410','candidate_head':'16b69f4','same_dependencies':True,'comparison':comparison,'production_http_analyzer_and_parser_absent':True,'valid_rows_per_run':13},indent=2)+'\n')

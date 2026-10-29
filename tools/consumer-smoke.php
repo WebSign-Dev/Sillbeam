@@ -30,6 +30,7 @@ if (isset($argv[4])) {
     exit(0);
 }
 
+consumerAssert('0.3.0' === InstalledVersions::getPrettyVersion('websign-dev/sillbeam-core'), 'Wrong simulated Core release version.');
 consumerAssert(!InstalledVersions::isInstalled('phpunit/phpunit'), 'Root dev dependencies leaked into the consumer.');
 consumerAssert(!class_exists('Sillbeam\\Core\\Tests\\Support\\SourceWorkspace'), 'Root dev autoload leaked into the consumer.');
 consumerAssert(InstalledVersions::isInstalled('doctrine/doctrine-bundle') === ('1' === $withDoctrine), 'Unexpected Doctrine installation.');
@@ -81,6 +82,17 @@ try {
     $data = json_decode($architecture->getDisplay(), true, flags: \JSON_THROW_ON_ERROR);
     consumerAssert(count($data['projects']) === $projectCount, 'CLI project catalog differs from runtime.');
     consumerAssert(1 === $data['schema_version'] && 'valid' === $data['status'], 'CLI report schema or status is invalid.');
+    $graph = new CommandTester($console->find('sillbeam:graph'));
+    consumerAssert(0 === $graph->execute(['--format' => 'mermaid']) && str_starts_with($graph->getDisplay(), 'flowchart LR'), 'CLI Mermaid export failed.');
+    foreach ($data['modules'] as $module) {
+        $inspect = new CommandTester($console->find('sillbeam:inspect:module'));
+        consumerAssert(0 === $inspect->execute(['module' => $module['class']]), 'CLI module inspection failed.');
+        consumerAssert(str_contains($inspect->getDisplay(), 'ID: '.$module['id']), 'Inspection identity differs from architecture report.');
+    }
+    $doctor = new CommandTester($console->find('sillbeam:doctor'));
+    $doctor->execute(['--format' => 'json']);
+    $doctorData = json_decode($doctor->getDisplay(), true, flags: \JSON_THROW_ON_ERROR);
+    consumerAssert(1 === $doctorData['schema_version'], 'CLI Doctor JSON schema failed.');
     if ('1' === $withDoctrine) {
         $manager = $container->get('doctrine.orm.entity_manager');
         consumerAssert($manager instanceof EntityManagerInterface, 'Missing EntityManager.');

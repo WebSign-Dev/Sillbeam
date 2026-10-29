@@ -1,0 +1,29 @@
+You are running PHP CS Fixer on PHP 8.5.11, but the minimum PHP version supported by your project in composer.json is PHP 8.4. Executing PHP CS Fixer on newer PHP versions may introduce syntax or features not yet available in PHP 8.4, which could cause issues under that version. It is recommended to run PHP CS Fixer on PHP 8.4, to fit your project specifics.
+If you need help while solving warnings, ask at https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/discussions/, we will help you!
+
+PHP CS Fixer 3.95.27 Adalbertus by Fabien Potencier, Dariusz Ruminski and contributors.
+PHP runtime: 8.5.11
+Loaded config default from ".php-cs-fixer.dist.php".
+Running analysis on 1 core sequentially.
+   0/196 [░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   0%
+  10/196 [▓░░░░░░░░░░░░░░░░░░░░░░░░░░░]   5%
+  20/196 [▓▓░░░░░░░░░░░░░░░░░░░░░░░░░░]  10%
+  32/196 [▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░░]  16%
+  40/196 [▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░░░]  20%
+  49/196 [▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░░]  25%
+  59/196 [▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░░]  30%
+  69/196 [▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░░░]  35%
+  79/196 [▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░░]  40%
+  86/196 [▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░░]  43%
+  91/196 [▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░░]  46%
+  98/196 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░░]  50%
+ 107/196 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░░]  54%
+ 115/196 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░]  58%
+ 118/196 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░░░░]  60%
+ 138/196 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░░░░]  70%
+ 157/196 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░░░░]  80%
+ 177/196 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓░░░]  90%
+Found 0 of 196 files that can be fixed in 14.737 seconds, 24.00 MB memory used
+
+ 196/196 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
+

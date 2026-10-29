@@ -1,0 +1,8 @@
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 0 installs, 1 update, 0 removals
+  - Upgrading websign-dev/sillbeam-core (0.2.0 => 0.3.0)
+Writing lock file
+No security vulnerability advisories found.
+Bumping dependencies
+No requirements to update in ./composer.json.

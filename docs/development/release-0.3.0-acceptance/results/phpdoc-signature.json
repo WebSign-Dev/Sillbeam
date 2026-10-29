@@ -1,0 +1,16 @@
+{
+  "label": "phpdoc-signature",
+  "command": [
+    "gpg",
+    "--batch",
+    "--verify",
+    "/tmp/sillbeam-release-tools/phpDocumentor.phar.asc",
+    "vendor/bin/phpdoc"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:53:31.910867+00:00",
+  "seconds": 0.115,
+  "exit_code": 0,
+  "log": "logs/phpdoc-signature.log",
+  "environment": {}
+}

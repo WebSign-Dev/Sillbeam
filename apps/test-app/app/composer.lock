@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2d66e40d962be54218bd847799c1c1fe",
+    "content-hash": "70407b62827430ab45c758704776874d",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -4418,11 +4418,11 @@
         },
         {
             "name": "websign-dev/sillbeam-core",
-            "version": "0.2.0",
+            "version": "0.3.0",
             "dist": {
                 "type": "path",
                 "url": "../../..",
-                "reference": "02e0a9e8a4d7a63a69547ae06814a029f2838040"
+                "reference": "16b69f4f44ea7f69ce08a05458418b1930647591"
             },
             "require": {
                 "composer-runtime-api": "^2.2",
@@ -4442,6 +4442,7 @@
                 "doctrine/doctrine-bundle": "^3.3",
                 "doctrine/orm": "^3.6",
                 "friendsofphp/php-cs-fixer": "^3.0",
+                "phpdocumentor/shim": "^3.10",
                 "phpstan/phpstan": "^2.0",
                 "phpunit/phpunit": "^12.0"
             },
@@ -4451,7 +4452,8 @@
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "0.2.x-dev"
+                    "dev-main": "0.3.x-dev",
+                    "dev-dev-0.3.x": "0.3.x-dev"
                 }
             },
             "autoload": {
@@ -4511,6 +4513,9 @@
                 ],
                 "test:release-package": [
                     "php tools/test-release-package.php"
+                ],
+                "docs:build": [
+                    "phpdoc --config=phpdoc.dist.xml"
                 ]
             },
             "license": [

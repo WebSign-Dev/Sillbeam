@@ -42,7 +42,7 @@ try {
             consumerCopy($repository.'/apps/'.$scenario.'/src', $directory.'/src');
             consumerCopy($repository.'/apps/'.$scenario.'/config', $directory.'/config');
             @unlink($directory.'/config/reference.php');
-            $require = ['php' => '^8.4', 'websign-dev/sillbeam-core' => '0.2.0'];
+            $require = ['php' => '^8.4', 'websign-dev/sillbeam-core' => '0.3.0'];
             foreach ($package['require'] as $name => $constraint) {
                 if (str_starts_with($name, 'symfony/')) {
                     $require[$name] = $symfony ?? $constraint;
@@ -62,7 +62,7 @@ try {
                 'conflict' => (object) $conflicts,
                 'repositories' => [[
                     'type' => 'path', 'url' => $packageDirectory,
-                    'options' => ['symlink' => false, 'versions' => ['websign-dev/sillbeam-core' => '0.2.0']],
+                    'options' => ['symlink' => false, 'versions' => ['websign-dev/sillbeam-core' => '0.3.0']],
                 ]],
                 'autoload' => ['psr-4' => [$namespace.'\\' => 'src/']],
             ]);

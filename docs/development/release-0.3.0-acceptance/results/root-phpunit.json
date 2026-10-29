@@ -1,0 +1,13 @@
+{
+  "label": "root-phpunit",
+  "command": [
+    "composer",
+    "test"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:48:00.734778+00:00",
+  "seconds": 50.617,
+  "exit_code": 0,
+  "log": "logs/root-phpunit.log",
+  "environment": {}
+}

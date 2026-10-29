@@ -1,0 +1,15 @@
+{
+  "label": "final-diff-check",
+  "command": [
+    "git",
+    "diff",
+    "--check"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T13:11:23.584625+00:00",
+  "seconds": 0.08,
+  "exit_code": 0,
+  "log": "logs/final-diff-check.log",
+  "stderr_log": "logs/final-diff-check.stderr.log",
+  "environment": {}
+}

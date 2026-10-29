@@ -1,0 +1,15 @@
+{
+  "label": "app-platform",
+  "command": [
+    "composer",
+    "check-platform-reqs",
+    "--working-dir=apps/test-app/app"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:57:36.002034+00:00",
+  "seconds": 0.252,
+  "exit_code": 0,
+  "log": "logs/app-platform.log",
+  "stderr_log": "logs/app-platform.stderr.log",
+  "environment": {}
+}

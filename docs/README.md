@@ -1,4 +1,4 @@
-# Sillbeam Core v0.2.0 handbook
+# Sillbeam Core v0.3.0 handbook
 
 - [Getting started](guides/getting-started.md) and [Flex](guides/flex-recipe.md)
 - [Architecture](architecture/overview.md), [Scope](architecture/foundation.md)
@@ -6,7 +6,8 @@
 - [Architecture analysis](reference/architecture-analysis.md), [targeted module inspection](reference/module-inspection.md), [Mermaid graph export](reference/mermaid-graph.md)
 - [Doctor JSON v1](reference/doctor-json.md) and [schema](reference/doctor-report.schema.json)
 - [Configuration](reference/configuration.md), [public API](reference/public-api.md), [CLI](reference/cli.md)
-- [Migration](migration/modular-monolith.md)
+- [Upgrade from 0.2.0](migration/0.3.0.md), [earlier migration](migration/modular-monolith.md)
+- [v0.3.0 release notes](releases/0.3.0.md), [release acceptance](development/release-0.3.0-acceptance/README.md)
 - [Testing](development/testing.md), [Test apps](development/test-apps.md), [Troubleshooting](operations/troubleshooting.md)
 - [v0.2.0 RC report](development/core-rc-2026-10-23.md), [benchmark](development/core-benchmark-2026-10-23.md)
 - [Creation/reporting/dependency evidence audit and benchmark comparison](development/core-extension-audit-2026-10-24.md)
@@ -15,6 +16,13 @@
 - [Doctor F01/F02 follow-up and final compatibility checks](development/doctor-f01-f02-verification-2026-10-25/README.md)
 - [Core components](modules/README.md)
 
-The reference pages describe the current state. [Changelog](../CHANGELOG.md), [Release notes](releases/0.2.0.md), [Support](../SUPPORT.md) describe Sillbeam Core v0.2.0; [Security](../SECURITY.md) describes maintenance and vulnerability reporting. See the [upgrade guide](migration/0.2.0.md) for breaking changes.
+The reference pages describe the 0.3.0 candidate. [Changelog](../CHANGELOG.md),
+[release notes](releases/0.3.0.md) and [upgrade guide](migration/0.3.0.md) describe
+its changes and compatibility boundaries. Historical 0.2.0 reports above retain
+their original results; the current [acceptance report](development/release-0.3.0-acceptance/README.md)
+records what was executed for this candidate. Final release approval is pending.
 
-The [Composer package](https://packagist.org/packages/websign-dev/sillbeam-core) is registered. Stable installation requires the corresponding `v0.2.0` tag to be available through Packagist; see [release status](../README.md#release-status). The locally tested Flex recipe awaits public Recipes Contrib approval; manual installation is supported.
+Stable `:^0.3.0` installation requires the approved release to be published;
+see [release status](../README.md#release-status). The compatible Flex recipe
+remains version `0.2`, independent of package release numbering. Manual installation
+is supported; local tests do not prove public recipe availability.

@@ -1,0 +1,14 @@
+{
+  "label": "alternating-http-repeat",
+  "command": [
+    "python3",
+    "/tmp/sillbeam-release-repeat-http.py"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T13:04:32.488602+00:00",
+  "seconds": 38.401,
+  "exit_code": 0,
+  "log": "logs/alternating-http-repeat.log",
+  "stderr_log": "logs/alternating-http-repeat.stderr.log",
+  "environment": {}
+}

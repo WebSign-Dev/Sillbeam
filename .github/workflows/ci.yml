@@ -3,13 +3,13 @@ name: CI
 # Keep branch protection / ruleset requirements aligned separately.
 on:
     push:
-        branches: [main, dev]
+        branches: [main, dev, dev-0.3.x]
     workflow_dispatch:
 
 concurrency:
-    # Share a group only on dev; unique groups elsewhere also preserve pending main runs.
-    group: ${{ github.workflow }}-${{ github.ref }}-${{ github.ref == 'refs/heads/dev' && 'latest' || github.run_id }}
-    cancel-in-progress: ${{ github.ref == 'refs/heads/dev' }}
+    # Development branches supersede older runs; main keeps each acceptance run.
+    group: ${{ github.workflow }}-${{ github.ref }}-${{ (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-0.3.x') && 'latest' || github.run_id }}
+    cancel-in-progress: ${{ (github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/dev-0.3.x') }}
 
 jobs:
     compatibility:
@@ -28,15 +28,17 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '${{ matrix.php }}'
-                  extensions: pdo_sqlite
+                  extensions: pdo_sqlite, mbstring, xml, intl, zip, gd
                   ini-values: memory_limit=512M
                   tools: composer:v2
                   coverage: none
             - run: composer validate --strict
+            - run: gpg --version
+            # The allow-listed phpDocumentor shim plugin provisions its signed PHAR.
             - name: Resolve selected Symfony version
               run: |
                   php tools/prepare-compatibility.php
-                  composer update --with-all-dependencies --no-scripts --no-plugins --no-interaction --prefer-dist
+                  composer update --with-all-dependencies --no-scripts --no-interaction --prefer-dist
             - run: composer validate --strict
             - run: composer check-platform-reqs
             - run: composer audit --locked
@@ -45,7 +47,11 @@ jobs:
             - run: composer analyse
             - run: composer architecture
             - run: composer cs:check
+            - run: composer docs:build
             - run: composer test:flex-recipe
+            - run: SILLBEAM_TEST_FRESH=1 composer test:flex-recipe
+            - run: SILLBEAM_TEST_EXISTING_ROUTE=1 composer test:flex-recipe
             - run: SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
+            - run: SILLBEAM_TEST_FRESH=1 SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
             - run: composer test:consumer
             - run: composer test:release-package

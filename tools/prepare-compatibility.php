@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 // Run only in a disposable checkout: this selects dependencies for one matrix job.
-$version = getenv('SILLBEAM_SYMFONY_VERSION') ?: throw new RuntimeException('Set SILLBEAM_SYMFONY_VERSION to 7.4.*, 8.0.* or 8.1.*.');
+$version = getenv('SILLBEAM_SYMFONY_VERSION') ?: throw new RuntimeException('Set SILLBEAM_SYMFONY_VERSION to 7.4.* or 8.1.*.');
 $config = json_decode((string) file_get_contents('composer.json'), true, flags: \JSON_THROW_ON_ERROR);
 $lock = json_decode((string) file_get_contents('composer.lock'), true, flags: \JSON_THROW_ON_ERROR);
 foreach ($config['require'] as $package => &$constraint) {

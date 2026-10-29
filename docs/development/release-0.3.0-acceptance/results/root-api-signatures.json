@@ -1,0 +1,15 @@
+{
+  "label": "root-api-signatures",
+  "command": [
+    "cmp",
+    "docs/development/release-0.3.0-acceptance/public-api-0.2.0.json",
+    "docs/development/release-0.3.0-acceptance/public-api-0.3.0.json"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:57:35.448370+00:00",
+  "seconds": 0.004,
+  "exit_code": 0,
+  "log": "logs/root-api-signatures.log",
+  "stderr_log": "logs/root-api-signatures.stderr.log",
+  "environment": {}
+}

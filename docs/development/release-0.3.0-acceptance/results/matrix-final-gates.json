@@ -1,0 +1,14 @@
+{
+  "label": "matrix-final-gates",
+  "command": [
+    "python3",
+    "/tmp/sillbeam-release-final-gates.py"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T13:05:05.132946+00:00",
+  "seconds": 0.045,
+  "exit_code": 0,
+  "log": "logs/matrix-final-gates.log",
+  "stderr_log": "logs/matrix-final-gates.stderr.log",
+  "environment": {}
+}

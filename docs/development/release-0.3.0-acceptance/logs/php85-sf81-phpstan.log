@@ -1,0 +1,178 @@
+/workspace/apps/hybrid/src/Controller/HealthController.php
+/workspace/apps/hybrid/src/Kernel.php
+/workspace/apps/hybrid/src/Module/Backoffice/BackofficeModule.php
+/workspace/apps/hybrid/src/Module/Backoffice/Controller/BackofficeController.php
+/workspace/apps/hybrid/src/Module/Common/CommonModule.php
+/workspace/apps/hybrid/src/Module/Common/Controller/CommonController.php
+/workspace/apps/hybrid/src/Module/Unused/Service/UnusedService.php
+/workspace/apps/hybrid/src/Module/Unused/UnusedModule.php
+/workspace/apps/hybrid/src/Project/Admin/AdminProject.php
+/workspace/apps/hybrid/src/Project/PublicSite/PublicProject.php
+/workspace/apps/hybrid/src/Service/ApplicationStatus.php
+/workspace/apps/modules-only/src/Kernel.php
+/workspace/apps/modules-only/src/Module/Archived/ArchivedModule.php
+/workspace/apps/modules-only/src/Module/Archived/Controller/ArchivedController.php
+/workspace/apps/modules-only/src/Module/Foundation/FoundationModule.php
+/workspace/apps/modules-only/src/Module/Foundation/Service/ModuleClock.php
+/workspace/apps/modules-only/src/Module/Inventory/Controller/InventoryController.php
+/workspace/apps/modules-only/src/Module/Inventory/InventoryModule.php
+/workspace/apps/multi-project/src/Kernel.php
+/workspace/apps/multi-project/src/Module/Catalog/CatalogModule.php
+/workspace/apps/multi-project/src/Module/Catalog/Controller/CatalogController.php
+/workspace/apps/multi-project/src/Module/Catalog/EventSubscriber/CatalogSubscriber.php
+/workspace/apps/multi-project/src/Project/Admin/AdminProject.php
+/workspace/apps/multi-project/src/Project/Admin/Module/Checkout/CheckoutModule.php
+/workspace/apps/multi-project/src/Project/Admin/Module/Checkout/Controller/CheckoutController.php
+/workspace/apps/multi-project/src/Project/Storefront/Module/Checkout/CheckoutModule.php
+/workspace/apps/multi-project/src/Project/Storefront/Module/Checkout/Controller/CheckoutController.php
+/workspace/apps/multi-project/src/Project/Storefront/StorefrontProject.php
+/workspace/apps/project-only/src/Kernel.php
+/workspace/apps/project-only/src/Project/Portal/Controller/PortalController.php
+/workspace/apps/project-only/src/Project/Portal/Entity/ProjectRecord.php
+/workspace/apps/project-only/src/Project/Portal/PortalProject.php
+/workspace/apps/project-only/src/Project/Portal/Service/ProjectGreeting.php
+/workspace/apps/single-project/src/Kernel.php
+/workspace/apps/single-project/src/Module/Profile/Controller/ProfileController.php
+/workspace/apps/single-project/src/Module/Profile/ProfileModule.php
+/workspace/apps/single-project/src/Project/Portal/Controller/PortalController.php
+/workspace/apps/single-project/src/Project/Portal/Entity/PortalRecord.php
+/workspace/apps/single-project/src/Project/Portal/Module/Dashboard/Controller/DashboardController.php
+/workspace/apps/single-project/src/Project/Portal/Module/Dashboard/DashboardModule.php
+/workspace/apps/single-project/src/Project/Portal/Module/Dashboard/Entity/DashboardRecord.php
+/workspace/apps/single-project/src/Project/Portal/PortalProject.php
+/workspace/apps/symfony-only/src/Controller/HomeController.php
+/workspace/apps/symfony-only/src/Kernel.php
+/workspace/apps/symfony-only/src/Service/Greeting.php
+/workspace/src/Architecture/ArchitectureAnalysisResult.php
+/workspace/src/Architecture/ArchitectureAnalyzer.php
+/workspace/src/Architecture/ArchitectureCompiler.php
+/workspace/src/Architecture/ArchitectureDiscovery.php
+/workspace/src/Architecture/ArchitectureFinding.php
+/workspace/src/Architecture/ArchitectureFindings.php
+/workspace/src/Architecture/ArchitectureReport.php
+/workspace/src/Architecture/ArchitectureValidationException.php
+/workspace/src/Architecture/CodeDependencyAnalyzer.php
+/workspace/src/Architecture/CompiledArchitecture.php
+/workspace/src/Architecture/Console/ArchitectureCommand.php
+/workspace/src/Architecture/Console/ArchitecturePresentation.php
+/workspace/src/Architecture/Console/ArchitectureRenderer.php
+/workspace/src/Architecture/Console/GraphCommand.php
+/workspace/src/Architecture/Console/InspectModuleCommand.php
+/workspace/src/Architecture/Console/MakeModuleCommand.php
+/workspace/src/Architecture/Console/MakeProjectCommand.php
+/workspace/src/Architecture/Console/MarkdownCatalog.php
+/workspace/src/Architecture/Console/MermaidGraph.php
+/workspace/src/Architecture/Console/ModuleInspection.php
+/workspace/src/Architecture/Console/ReportCommand.php
+/workspace/src/Architecture/Console/ReportRenderer.php
+/workspace/src/Architecture/DescriptorCreator.php
+/workspace/src/Architecture/Diagnostic/DeclaredDependencyGraph.php
+/workspace/src/Architecture/Diagnostic/DependencyAssessment.php
+/workspace/src/Architecture/Diagnostic/Diagnosis.php
+/workspace/src/Architecture/Diagnostic/DiagnosticCollection.php
+/workspace/src/Architecture/Diagnostic/DiagnosticContext.php
+/workspace/src/Architecture/Diagnostic/DiagnosticRuleCatalog.php
+/workspace/src/Architecture/Diagnostic/FindingExplanation.php
+/workspace/src/Architecture/Diagnostic/Resolution.php
+/workspace/src/Architecture/DiscoveryOptions.php
+/workspace/src/Architecture/DiscoveryOptionsResolver.php
+/workspace/src/Architecture/DiscoveryResult.php
+/workspace/src/Architecture/DiscoveryRoot.php
+/workspace/src/Architecture/FilesystemPath.php
+/workspace/src/Architecture/IdDeriver.php
+/workspace/src/Architecture/PathMatcher.php
+/workspace/src/Architecture/SourceFile.php
+/workspace/src/Architecture/SourceFileParser.php
+/workspace/src/Architecture/SourceInspector.php
+/workspace/src/Console/Application.php
+/workspace/src/Console/ArchitectureBuildSubscriber.php
+/workspace/src/Console/Doctor/DoctorCommand.php
+/workspace/src/Console/Doctor/DoctorReport.php
+/workspace/src/Console/Doctor/InstallationInspector.php
+/workspace/src/Console/KernelArchitectureReporter.php
+/workspace/src/Console/Style/ConsoleStyle.php
+/workspace/src/Console/Style/TerminalText.php
+/workspace/src/DependencyInjection/ArchitectureBuildContext.php
+/workspace/src/DependencyInjection/ArchitectureServiceLoader.php
+/workspace/src/DependencyInjection/Compiler/ArchitectureValidationPass.php
+/workspace/src/DependencyInjection/Compiler/DoctrineMappingPass.php
+/workspace/src/DependencyInjection/Configuration.php
+/workspace/src/DependencyInjection/SillbeamCoreExtension.php
+/workspace/src/Kernel/Command/AboutCommand.php
+/workspace/src/Kernel/Runtime/KernelInformation.php
+/workspace/src/Kernel/Runtime/KernelInformationInterface.php
+/workspace/src/Kernel/SillbeamKernel.php
+/workspace/src/Module/Attribute/SillbeamModule.php
+/workspace/src/Module/ModuleDefinition.php
+/workspace/src/Module/ModuleDiscovery.php
+/workspace/src/Module/ModuleRegistry.php
+/workspace/src/Module/ModuleRegistryInterface.php
+/workspace/src/Project/Attribute/SillbeamProject.php
+/workspace/src/Project/ProjectContext.php
+/workspace/src/Project/ProjectContextInterface.php
+/workspace/src/Project/ProjectDefinition.php
+/workspace/src/Project/ProjectDiscovery.php
+/workspace/src/Project/ProjectRegistry.php
+/workspace/src/Project/ProjectRegistryInterface.php
+/workspace/src/Routing/SillbeamRouteLoader.php
+/workspace/src/SillbeamCoreBundle.php
+/workspace/tests/Fixtures/Application/config/bundles.php
+/workspace/tests/Fixtures/Application/config/preload.php
+/workspace/tests/Fixtures/Application/src/Controller/HomeController.php
+/workspace/tests/Fixtures/Application/src/Controller/LegacyHealthController.php
+/workspace/tests/Fixtures/Application/src/Entity/LegacyWidget.php
+/workspace/tests/Fixtures/Application/src/Kernel.php
+/workspace/tests/Fixtures/Application/src/Module/Billing/BillingModule.php
+/workspace/tests/Fixtures/Application/src/Module/Billing/Invoice/Controller/InvoiceController.php
+/workspace/tests/Fixtures/Application/src/Module/Billing/Invoice/Entity/Invoice.php
+/workspace/tests/Fixtures/Application/src/Module/Identity/IdentityModule.php
+/workspace/tests/Fixtures/Application/src/SillbeamTestKernel.php
+/workspace/tests/Fixtures/Invalid/NestedModule/src/Module/Sales/Module/Tax/TaxModule.php
+/workspace/tests/Fixtures/Invalid/NestedModule/src/Module/Sales/SalesModule.php
+/workspace/tests/Fixtures/Invalid/NestedProject/src/Project/Storefront/Project/Admin/AdminProject.php
+/workspace/tests/Fixtures/Invalid/NestedProject/src/Project/Storefront/StorefrontProject.php
+/workspace/tests/Integration/ApplicationVariantsTest.php
+Fatal error: Allowed memory size of 134217728 bytes exhausted (tried to allocate 20480 bytes) in phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Parser/SimpleParser.php on line 40
+Stack trace:
+#0 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Parser/SimpleParser.php(40): PHPStan\Parser\ParserRunner::parse(Object(PhpParser\Parser\Php8), '<?php declare(s...', Object(PhpParser\ErrorHandler\Collecting))
+#1 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Parser/SimpleParser.php(29): PHPStan\Parser\SimpleParser->parseString('<?php declare(s...')
+#2 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Parser/CleaningParser.php(22): PHPStan\Parser\SimpleParser->parseFile('/workspace/vend...')
+#3 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Parser/CachedParser.php(72): PHPStan\Parser\CleaningParser->parseFile('/workspace/vend...')
+#4 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Parser/PathRoutingParser.php(46): PHPStan\Parser\CachedParser->parseFile('/workspace/vend...')
+#5 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Reflection/BetterReflection/SourceLocator/FileNodesFetcher.php(35): PHPStan\Parser\PathRoutingParser->parseFile('/workspace/vend...')
+#6 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Reflection/BetterReflection/SourceLocator/OptimizedDirectorySourceLocator.php(148): PHPStan\Reflection\BetterReflection\SourceLocator\FileNodesFetcher->fetchNodes('/workspace/vend...')
+#7 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/vendor/ondrejmirtes/better-reflection/src/SourceLocator/Type/AggregateSourceLocator.php(26): PHPStan\Reflection\BetterReflection\SourceLocator\OptimizedDirectorySourceLocator->locateIdentifier(Object(PHPStan\Reflection\BetterReflection\Reflector\MemoizingReflector), Object(PHPStan\BetterReflection\Identifier\Identifier))
+#8 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/vendor/ondrejmirtes/better-reflection/src/SourceLocator/Type/AggregateSourceLocator.php(26): PHPStan\BetterReflection\SourceLocator\Type\AggregateSourceLocator->locateIdentifier(Object(PHPStan\Reflection\BetterReflection\Reflector\MemoizingReflector), Object(PHPStan\BetterReflection\Identifier\Identifier))
+#9 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Reflection/BetterReflection/SourceLocator/SkipPolyfillSourceLocator.php(30): PHPStan\BetterReflection\SourceLocator\Type\AggregateSourceLocator->locateIdentifier(Object(PHPStan\Reflection\BetterReflection\Reflector\MemoizingReflector), Object(PHPStan\BetterReflection\Identifier\Identifier))
+#10 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/vendor/ondrejmirtes/better-reflection/src/SourceLocator/Type/AggregateSourceLocator.php(26): PHPStan\Reflection\BetterReflection\SourceLocator\SkipPolyfillSourceLocator->locateIdentifier(Object(PHPStan\Reflection\BetterReflection\Reflector\MemoizingReflector), Object(PHPStan\BetterReflection\Identifier\Identifier))
+#11 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Reflection/BetterReflection/SourceLocator/RewriteClassAliasSourceLocator.php(33): PHPStan\BetterReflection\SourceLocator\Type\AggregateSourceLocator->locateIdentifier(Object(PHPStan\Reflection\BetterReflection\Reflector\MemoizingReflector), Object(PHPStan\BetterReflection\Identifier\Identifier))
+#12 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/vendor/ondrejmirtes/better-reflection/src/SourceLocator/Type/AggregateSourceLocator.php(26): PHPStan\Reflection\BetterReflection\SourceLocator\RewriteClassAliasSourceLocator->locateIdentifier(Object(PHPStan\Reflection\BetterReflection\Reflector\MemoizingReflector), Object(PHPStan\BetterReflection\Identifier\Identifier))
+#13 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Reflection/BetterReflection/SourceLocator/LazySourceLocator.php(31): PHPStan\BetterReflection\SourceLocator\Type\AggregateSourceLocator->locateIdentifier(Object(PHPStan\Reflection\BetterReflection\Reflector\MemoizingReflector), Object(PHPStan\BetterReflection\Identifier\Identifier))
+#14 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Reflection/BetterReflection/Reflector/MemoizingReflector.php(55): PHPStan\Reflection\BetterReflection\SourceLocator\LazySourceLocator->locateIdentifier(Object(PHPStan\Reflection\BetterReflection\Reflector\MemoizingReflector), Object(PHPStan\BetterReflection\Identifier\Identifier))
+#15 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Reflection/BetterReflection/BetterReflectionProvider.php(158): PHPStan\Reflection\BetterReflection\Reflector\MemoizingReflector->reflectClass('PHPUnit\\Framewo...')
+#16 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Reflection/ReflectionProvider/MemoizingReflectionProvider.php(40): PHPStan\Reflection\BetterReflection\BetterReflectionProvider->hasClass('PHPUnit\\Framewo...')
+#17 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Rules/ClassCaseSensitivityCheck.php(42): PHPStan\Reflection\ReflectionProvider\MemoizingReflectionProvider->hasClass('PHPUnit\\Framewo...')
+#18 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Rules/ClassNameCheck.php(46): PHPStan\Rules\ClassCaseSensitivityCheck->checkClassNames(Array)
+#19 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Rules/Namespaces/ExistingNamesInUseRule.php(116): PHPStan\Rules\ClassNameCheck->checkClassNames(Object(PHPStan\Analyser\NodeCallbackScope), Array, NULL)
+#20 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Rules/Namespaces/ExistingNamesInUseRule.php(64): PHPStan\Rules\Namespaces\ExistingNamesInUseRule->checkClasses(Object(PHPStan\Analyser\NodeCallbackScope), Array)
+#21 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Analyser/FileAnalyserCallback.php(168): PHPStan\Rules\Namespaces\ExistingNamesInUseRule->processNode(Object(PhpParser\Node\Stmt\Use_), Object(PHPStan\Analyser\NodeCallbackScope))
+#22 [internal function]: PHPStan\Analyser\FileAnalyserCallback->__invoke(Object(PhpParser\Node\Stmt\Use_), Object(PHPStan\Analyser\NodeCallbackScope))
+#23 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Analyser/FileAnalyser.php(123): PHPStan\Analyser\NodeScopeResolver->processFileNodes(Array, Object(PHPStan\Analyser\MutatingScope), Object(PHPStan\Analyser\FileAnalyserCallback))
+#24 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Analyser/Analyser.php(81): PHPStan\Analyser\FileAnalyser->analyseFile('/workspace/test...', Array, Object(PHPStan\Rules\LazyRegistry), Object(PHPStan\Collectors\Registry), NULL)
+#25 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Command/AnalyserRunner.php(82): PHPStan\Analyser\Analyser->analyse(Array, Object(Closure), NULL, true, Array)
+#26 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Command/AnalyseApplication.php(188): PHPStan\Command\AnalyserRunner->runAnalyser(Array, Array, Object(Closure), NULL, true, true, '/workspace/phps...', NULL, NULL, Object(_PHPStan_034afd3ee\Symfony\Component\Console\Input\ArgvInput), Object(PHPStan\Command\Symfony\SymfonyOutput))
+#27 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Command/AnalyseApplication.php(85): PHPStan\Command\AnalyseApplication->runAnalyser(Array, Array, true, '/workspace/phps...', NULL, NULL, Object(PHPStan\Command\Symfony\SymfonyOutput), Object(PHPStan\Command\Symfony\SymfonyOutput), Object(_PHPStan_034afd3ee\Symfony\Component\Console\Input\ArgvInput))
+#28 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/src/Command/AnalyseCommand.php(273): PHPStan\Command\AnalyseApplication->analyse(Array, false, Object(PHPStan\Command\Symfony\SymfonyOutput), Object(PHPStan\Command\Symfony\SymfonyOutput), false, true, '/workspace/phps...', Array, NULL, NULL, Object(_PHPStan_034afd3ee\Symfony\Component\Console\Input\ArgvInput))
+#29 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/vendor/symfony/console/Command/Command.php(259): PHPStan\Command\AnalyseCommand->execute(Object(_PHPStan_034afd3ee\Symfony\Component\Console\Input\ArgvInput), Object(_PHPStan_034afd3ee\Symfony\Component\Console\Output\ConsoleOutput))
+#30 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/vendor/symfony/console/Application.php(868): _PHPStan_034afd3ee\Symfony\Component\Console\Command\Command->run(Object(_PHPStan_034afd3ee\Symfony\Component\Console\Input\ArgvInput), Object(_PHPStan_034afd3ee\Symfony\Component\Console\Output\ConsoleOutput))
+#31 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/vendor/symfony/console/Application.php(261): _PHPStan_034afd3ee\Symfony\Component\Console\Application->doRunCommand(Object(PHPStan\Command\AnalyseCommand), Object(_PHPStan_034afd3ee\Symfony\Component\Console\Input\ArgvInput), Object(_PHPStan_034afd3ee\Symfony\Component\Console\Output\ConsoleOutput))
+#32 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/vendor/symfony/console/Application.php(157): _PHPStan_034afd3ee\Symfony\Component\Console\Application->doRun(Object(_PHPStan_034afd3ee\Symfony\Component\Console\Input\ArgvInput), Object(_PHPStan_034afd3ee\Symfony\Component\Console\Output\ConsoleOutput))
+#33 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/bin/phpstan(118): _PHPStan_034afd3ee\Symfony\Component\Console\Application->run()
+#34 phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/bin/phpstan(119): {closure:phar:///workspace/vendor/phpstan/phpstan/phpstan.phar/bin/phpstan:18}()
+#35 /workspace/vendor/phpstan/phpstan/phpstan(8): require('phar:///workspa...')
+#36 /workspace/vendor/bin/phpstan(119): include('/workspace/vend...')
+#37 {main}
+
+PHPStan process crashed because it reached configured PHP memory limit: 128M
+Increase your memory limit in php.ini or run PHPStan with --memory-limit CLI option.
+Script phpstan analyse --configuration=phpstan.neon.dist --no-progress --debug handling the analyse event returned with error code 255

@@ -15,7 +15,7 @@
 
 **A modular architecture layer for scalable, maintainable Symfony applications.**
 
-[Website](https://getsillbeam.websign.de/) · [Quick start](#quick-start) · [Documentation](docs/README.md) · [Release notes](docs/releases/0.2.0.md) · [Report an issue][issues-url]
+[Website](https://getsillbeam.websign.de/) · [Quick start](#quick-start) · [Documentation](docs/README.md) · [Release notes](docs/releases/0.3.0.md) · [Report an issue][issues-url]
 
 </div>
 
@@ -174,13 +174,13 @@ Architecture errors block ordinary container-backed commands. With `Sillbeam\Cor
 
 ## Release status
 
-Sillbeam Core **v0.2.0** is the finished, feature-frozen Core version, distributed as [`websign-dev/sillbeam-core`][composer-url]. The [changelog](CHANGELOG.md) and [release notes](docs/releases/0.2.0.md) describe its features, breaking changes and known limits, including the completed Doctor F01/F02 corrections.
+Sillbeam Core **v0.3.0 is prepared for release acceptance**, based on v0.2.0. It adds English PHPDoc/API documentation, clearer installation guidance, Doctor JSON v1, targeted module inspection and Mermaid graph export. See the [changelog](CHANGELOG.md), [release notes](docs/releases/0.3.0.md), [upgrade guide](docs/migration/0.3.0.md) and [acceptance report](docs/development/release-0.3.0-acceptance/README.md).
 
-The package is registered on Packagist. At the public metadata check on **2026-10-25**, the [GitHub tag list](https://github.com/WebSign-Dev/sillbeam-core/tags) contained `v0.1.0` and no `v0.2.0`; Packagist listed no package versions. Stable installation therefore depends on making the corresponding Git tag available to Packagist. Composer derives the version from that tag; no fixed `version` field is needed, and `0.2.x-dev` remains the development branch alias.
+This checkout does not establish publication or final approval. A stable `:^0.3.0` installation requires the matching approved tag/version to become available through Packagist. Composer derives release versions from Git tags; no fixed package `version` field is added. `main` and the current `dev-0.3.x` branch alias to `0.3.x-dev`.
 
-The only outstanding external integration is public approval of the locally tested [Symfony Recipes Contrib recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md). Manual integration works independently of that approval. Finalizing this repository does not create a tag, publish a package version or submit the recipe.
+The compatible [Flex recipe](flex-recipe/README.md) remains under `0.2/`. Its public availability is separate from the package release; manual integration remains supported. No tag, push, Packagist publication or Recipes Contrib submission is performed by the acceptance checks. Final release authorization belongs to the maintainer.
 
-See the [v0.2 migration guide](docs/migration/0.2.0.md) for the breaking package, namespace and bundle changes.
+The [v0.2 migration guide](docs/migration/0.2.0.md) remains the historical guide for the earlier package/namespace rename. Historical reports retain their original findings and scope.
 
 For reports even when the service container cannot compile, use `Sillbeam\Core\Console\Application` in the existing `bin/console` bootstrap. See [CLI reporting](docs/reference/cli.md) for setup, JSON schema and exit codes.
 
@@ -235,5 +235,5 @@ Sillbeam is licensed under the [MIT License](LICENSE).
 [ci-shield]: https://github.com/WebSign-Dev/sillbeam-core/actions/workflows/ci.yml/badge.svg
 [php-shield]: https://img.shields.io/badge/PHP-%E2%89%A5%208.4-777bb4?logo=php&logoColor=white
 [symfony-shield]: https://img.shields.io/badge/Symfony-7.4%20%7C%208.x-000000?logo=symfony&logoColor=white
-[status-shield]: https://img.shields.io/badge/status-v0.2.0-57606a
+[status-shield]: https://img.shields.io/badge/status-v0.3.0_candidate-57606a
 [license-shield]: https://img.shields.io/badge/license-MIT-57606a

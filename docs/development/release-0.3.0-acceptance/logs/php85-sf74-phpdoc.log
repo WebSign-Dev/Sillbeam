@@ -1,0 +1,2 @@
+sh: 1: phpdoc: not found
+Script phpdoc --config=phpdoc.dist.xml handling the docs:build event returned with error code 127

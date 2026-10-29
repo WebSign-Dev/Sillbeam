@@ -1,0 +1,13 @@
+{
+  "label": "candidate-benchmark",
+  "command": [
+    "php",
+    "tools/benchmark-architecture.php"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:56:43.109188+00:00",
+  "seconds": 120.372,
+  "exit_code": 0,
+  "log": "logs/candidate-benchmark.log",
+  "environment": {}
+}

@@ -1,0 +1,13 @@
+{
+  "label": "baseline-benchmark-final",
+  "command": [
+    "php",
+    "/tmp/sillbeam-release-020-baseline/tools/benchmark-architecture.php"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:54:06.419533+00:00",
+  "seconds": 126.549,
+  "exit_code": 0,
+  "log": "logs/baseline-benchmark-final.log",
+  "environment": {}
+}

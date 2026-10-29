@@ -1,0 +1,5 @@
+gpg: keybox '/tmp/sillbeam-release-gnupg/pubring.kbx' created
+gpg: /tmp/sillbeam-release-gnupg/trustdb.gpg: trustdb created
+gpg: key 6DA3ACC4991FFAE5: public key "phpDocumentor <info@phpdoc.org>" imported
+gpg: Total number processed: 1
+gpg:               imported: 1

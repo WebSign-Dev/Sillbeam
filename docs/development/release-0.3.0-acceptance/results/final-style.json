@@ -1,0 +1,14 @@
+{
+  "label": "final-style",
+  "command": [
+    "composer",
+    "cs:check"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T13:08:59.639145+00:00",
+  "seconds": 0.521,
+  "exit_code": 0,
+  "log": "logs/final-style.log",
+  "stderr_log": "logs/final-style.stderr.log",
+  "environment": {}
+}

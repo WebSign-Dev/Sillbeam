@@ -11,7 +11,7 @@ Search [existing issues](https://github.com/WebSign-Dev/sillbeam-core/issues) be
 - Expected behavior, actual behavior and the complete relevant error message.
 - Architecture diagnostic output when the container can boot.
 
-Remove credentials and private application data from shared configuration and logs. For larger features or changes to the public API, open an issue to discuss the intended behavior before implementation. The [release notes](docs/releases/0.2.0.md) describe the current scope and limitations. Report security vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+Remove credentials and private application data from shared configuration and logs. For larger features or changes to the public API, open an issue to discuss the intended behavior before implementation. The [release notes](docs/releases/0.3.0.md) describe the current scope and limitations. Report security vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
 
 ## Set up a development checkout
 

@@ -7,7 +7,8 @@ Sillbeam Core provides security fixes for the current Core release line on a bes
 
 | Version | Supported |
 |---------|-----------|
-| v0.2.x (current Core release line) | ✅ |
+| v0.3.x (release candidate; not yet approved/published) | Best-effort fixes during acceptance |
+| v0.2.x (preceding Core release line) | ✅ until 0.3.0 is approved |
 | v0.1.x and older | ❌ |
 
 No long-term security support or guaranteed maintenance period is provided.

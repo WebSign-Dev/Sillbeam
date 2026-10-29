@@ -1,0 +1,14 @@
+{
+  "label": "root-validate",
+  "command": [
+    "composer",
+    "validate",
+    "--strict"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:48:00.758301+00:00",
+  "seconds": 0.305,
+  "exit_code": 0,
+  "log": "logs/root-validate.log",
+  "environment": {}
+}

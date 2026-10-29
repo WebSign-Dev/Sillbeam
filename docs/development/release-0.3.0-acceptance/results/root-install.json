@@ -1,0 +1,16 @@
+{
+  "label": "root-install",
+  "command": [
+    "composer",
+    "install",
+    "--no-scripts",
+    "--no-plugins",
+    "--no-interaction"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:49:37.989123+00:00",
+  "seconds": 0.809,
+  "exit_code": 0,
+  "log": "logs/root-install.log",
+  "environment": {}
+}

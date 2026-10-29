@@ -1,0 +1,14 @@
+{
+  "label": "root-audit",
+  "command": [
+    "composer",
+    "audit",
+    "--locked"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "start_utc": "2026-10-29T12:49:03.368672+00:00",
+  "seconds": 0.469,
+  "exit_code": 0,
+  "log": "logs/root-audit.log",
+  "environment": {}
+}

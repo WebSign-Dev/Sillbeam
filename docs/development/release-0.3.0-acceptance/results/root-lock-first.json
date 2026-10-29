@@ -1,0 +1,16 @@
+{
+  "label": "root-lock-first",
+  "command": [
+    "composer",
+    "update",
+    "--lock",
+    "--no-install",
+    "--no-scripts",
+    "--no-plugins",
+    "--no-interaction"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/Sillbeam",
+  "exit_code": 100,
+  "log": "logs/root-lock-update.log",
+  "note": "Recorded from the actual tool result; no duration retained."
+}
