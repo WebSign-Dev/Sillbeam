@@ -211,10 +211,8 @@ final class GraphCommandTest extends TestCase
         $this->module('Billing');
         $this->source->write('config/packages/framework.yaml', 'framework: {secret: graph-test, test: true}');
         $this->source->write('config/services.yaml', 'services: {}');
-        $this->source->write('renderer/dot', '#!'.\PHP_BINARY."\n<?php stream_get_contents(STDIN); echo '<svg xmlns=\"http://www.w3.org/2000/svg\"></svg>';");
-        chmod($this->source->directory.'/renderer/dot', 0700);
         $originalPath = getenv('PATH');
-        putenv('PATH='.$this->source->directory.'/renderer');
+        putenv('PATH=');
         $kernel = new TestApplicationKernel($this->source);
         try {
             foreach ([new Application($kernel), new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel)] as $app) {
@@ -229,6 +227,14 @@ final class GraphCommandTest extends TestCase
                 self::assertSame(0, $tester->run(['command' => 'sillbeam:graph', '--output' => $path]));
                 self::assertStringContainsString($path, $tester->getDisplay());
                 self::assertFileExists($path);
+                $modulePath = $this->source->directory.'/filtered/'.str_replace('\\', '-', $app::class).'.svg';
+                self::assertSame(0, $tester->run(['command' => 'sillbeam:graph', '--module' => 'billing', '--output' => $modulePath]));
+                $svg = simplexml_load_file($modulePath);
+                self::assertNotFalse($svg);
+                $svg->registerXPathNamespace('s', 'http://www.w3.org/2000/svg');
+                $nodes = $svg->xpath('//s:g[@class="module"]');
+                self::assertIsArray($nodes);
+                self::assertCount(1, $nodes);
                 self::assertSame(0, $tester->run(['command' => 'sillbeam:graph', '--output' => $path, '--force' => true, '--quiet' => true]));
                 self::assertSame('', $tester->getDisplay());
                 foreach ([['--unknown' => true], ['--format' => 'json'], ['--module' => 'absent']] as $options) {
@@ -431,8 +437,8 @@ final class GraphCommandTest extends TestCase
         self::assertSame(45, substr_count($text, ' --> '));
         self::assertSame(10, preg_match_all('/^        m[0-9]+\["/m', $text));
         self::assertStringNotContainsString($this->source->namespace, $text);
-        $dot = (new \Sillbeam\Core\Architecture\Console\DotGraph())->render(\Sillbeam\Core\Architecture\Console\GraphView::fromReport($report));
-        self::assertSame(45, substr_count($dot, ' -> '));
+        $dot = (new \Sillbeam\Core\Architecture\Console\SvgGraph())->render(\Sillbeam\Core\Architecture\Console\GraphView::fromReport($report));
+        self::assertSame(45, substr_count($dot, 'class="dependency declared"'));
         self::assertStringNotContainsString('|declared|', $text);
     }
 

@@ -7,7 +7,7 @@ namespace Sillbeam\Core\Architecture\Console;
 use Sillbeam\Core\Architecture\ArchitectureReport;
 
 /**
- * Presentation of existing report evidence shared by DOT and Mermaid.
+ * Presentation of existing report evidence shared by SVG and Mermaid.
  * Filters inspect direct edge endpoints once; no dependency traversal or analysis.
  * Descriptor identities and node IDs remain stable across filtered views.
  *

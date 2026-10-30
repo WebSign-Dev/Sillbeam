@@ -335,9 +335,9 @@ partial-evidence limits and native-container versus fresh-adapter snapshots.
 ## Architecture graph
 
 `php bin/console sillbeam:graph` writes `architecture.svg` in the current working
-directory and confirms the full path. SVG requires optional Graphviz (`dot` on
-PATH); no renderer is installed automatically. `--format=svg` is explicit;
-`--output=PATH` selects an existing parent directory and `--force` permits replacing
+directory and confirms the full path. SVG is generated directly in PHP without
+Graphviz or other extra tools. `--format=svg` is explicit;
+`--output=PATH` creates missing directories recursively and `--force` permits replacing
 an existing regular file. Failed rendering leaves existing artifacts untouched.
 
 `--module=ID` selects the same identity as module inspection and includes only its
@@ -362,7 +362,7 @@ semantics. Invalid/incomplete architecture never implies runtime activation.
 | `sillbeam:architecture` | text / existing JSON schema v1 | ArchitectureReport | 0 valid, 1 violations, 2 unavailable/usage |
 | `sillbeam:report` | Markdown file | ArchitectureReport | Same architecture status; write/usage errors 2 |
 | `sillbeam:inspect:module` | text only | Same report catalog and relationship evidence | Same architecture status; selection/usage errors 2 |
-| `sillbeam:graph` | SVG file (optional Graphviz) / raw Mermaid | Same report catalog, direct edges and findings | 0/1/2 after export; usage/selection 3; renderer/output 4 |
+| `sillbeam:graph` | SVG file (built in) / raw Mermaid | Same report catalog, direct edges and findings | 0/1/2 after export; usage/selection 3; renderer/output 4 |
 
 The diagnostic formats do not change the underlying checks, runtime activation,
 Project membership or architecture rules. `enabled` never implies `active`, and

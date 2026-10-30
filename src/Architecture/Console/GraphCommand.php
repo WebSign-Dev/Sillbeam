@@ -17,7 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class GraphCommand extends Command
 {
     /** @param ArchitectureReport|\Closure(): ArchitectureReport $report */
-    public function __construct(private readonly ArchitectureReport|\Closure $report, private readonly ?GraphvizRenderer $renderer = null)
+    public function __construct(private readonly ArchitectureReport|\Closure $report)
     {
         parent::__construct();
     }
@@ -37,10 +37,10 @@ Render module identities and direct dependency evidence from the existing report
   php bin/console sillbeam:graph --module=Billing --project=shop
   php bin/console sillbeam:graph --format=mermaid > architecture.mmd
 
-SVG requires the optional Graphviz renderer (dot on PATH). Install Graphviz using
-your operating system's package manager; no renderer is downloaded automatically.
-The default output is architecture.svg in the current working directory. Its parent
-must exist. Existing files require --force; directory/symlink targets are rejected.
+SVG is generated directly by Core in PHP. No Graphviz, Node.js, browser or extra
+Composer package is required. Missing output directories are created automatically.
+The default output is architecture.svg in the current working directory.
+Existing files require --force; directory/symlink targets are rejected.
 Serialize forced exports: concurrent changes to the destination entry may be replaced.
 --output and --force apply only to SVG. Successful SVG output confirms the full path;
 --quiet suppresses messages but still writes the file. Renderer errors use STDERR.
@@ -105,7 +105,7 @@ HELP);
             try {
                 $writer = new SvgOutput();
                 $destination = $writer->destination($input->getOption('output') ?? 'architecture.svg', $force);
-                $svg = ($this->renderer ?? new GraphvizRenderer())->render((new DotGraph())->render($view));
+                $svg = (new SvgGraph())->render($view);
                 $writer->write($destination, $svg, $force);
             } catch (\RuntimeException $error) {
                 self::usageError($error, $output);
