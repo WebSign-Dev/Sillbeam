@@ -1,0 +1,15 @@
+{
+  "checked_utc": "2026-10-30T15:04:14.391620+00:00",
+  "commit": "0b70c3143acf25cae5082f3ec6007b6d2a31da79",
+  "tree": "3a6830cc4d7c41497df1892e527784e183c4fd23",
+  "tracked_source_differences": [],
+  "matrix_differences_excluding_dependency_resolution": {
+    "php84-sf74": [],
+    "php84-sf81": [],
+    "php85-sf74": [],
+    "php85-sf81": []
+  },
+  "workflow_blob": "fff5249f69ea1107d9811b27056f1c3bd5a86e84",
+  "status": "?? docs/development/final-release-acceptance-2026-10-30/\n",
+  "snapshot_status_note": "Snapshot captured after the new evidence directory was created: only that untracked directory appears; no tracked source changes were present."
+}

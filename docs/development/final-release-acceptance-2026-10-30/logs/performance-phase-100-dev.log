@@ -1,0 +1,1 @@
+{"php":"8.5.4","modules":100,"environment":"dev","files":2200,"references":1980,"ms":{"index_cold":778.272,"index_warm":0.014,"discovery_after_index":65.176,"discovery_warm":57.565,"compile":1.385,"analysis":34.331,"analysis_warm":30.394,"container_cold":2711.082,"container_warm":82.747,"routes_cold":159.149,"routes_warm":111.45},"peak_mib":62}

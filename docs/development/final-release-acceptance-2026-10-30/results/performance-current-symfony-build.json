@@ -1,0 +1,21 @@
+{
+  "label": "performance-current-symfony-build",
+  "command": [
+    "php",
+    "tools/benchmark-architecture.php",
+    "--sample",
+    "/tmp/sillbeam-source-91aab83b9655",
+    "SillbeamFixture2872652e08c4",
+    "prod",
+    "build",
+    "0",
+    "100"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:53:04.235657+00:00",
+  "log": "logs/performance-current-symfony-build.log",
+  "exit_code": 0,
+  "elapsed_seconds": 1.775,
+  "finished_utc": "2026-10-30T11:53:06.010291+00:00"
+}

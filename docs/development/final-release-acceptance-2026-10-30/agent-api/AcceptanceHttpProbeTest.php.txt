@@ -1,0 +1,220 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Sillbeam\Core\Tests\Integration;
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
+use Sillbeam\Core\Tests\Support\SourceWorkspace;
+
+final class AcceptanceHttpProbeTest extends TestCase
+{
+    private SourceWorkspace $source;
+    private string $kernel;
+
+    protected function setUp(): void
+    {
+        $this->source = new SourceWorkspace();
+        $this->kernel = $this->source->php('src/Kernel.php', 'final class Kernel extends \\Symfony\\Component\\HttpKernel\\Kernel { use \\Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait; public function getProjectDir(): string { return \\dirname(__DIR__); } }');
+        $this->source->write('config/bundles.php', '<?php return [\\Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle::class => ["all" => true], \\Sillbeam\\Core\\SillbeamCoreBundle::class => ["all" => true]];');
+        $this->source->write('config/packages/framework.yaml', 'framework: { secret: test, test: true, router: { utf8: true } }');
+        $this->source->write('config/services.yaml', 'services: {}');
+        $this->source->write('config/routes.yaml', 'sillbeam: {resource: ., type: sillbeam}');
+        $this->source->php('src/Module/Hello/HelloModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule] final class HelloModule {}');
+        $this->source->php('src/Module/Hello/Greeting.php', 'final class Greeting { public function text(): string { return "hello"; } }');
+        $this->source->php('src/Module/Hello/Controller/HelloController.php', 'final class HelloController { #[\\Symfony\\Component\\Routing\\Attribute\\Route("/hello", name: "hello")] public function hello(\\'.$this->source->namespace.'\\Module\\Hello\\Greeting $greeting): \\Symfony\\Component\\HttpFoundation\\Response { return new \\Symfony\\Component\\HttpFoundation\\Response($greeting->text()); } }');
+        $this->source->write('run.php', <<<'PHP'
+<?php
+$loader = require $argv[1];
+$loader->addPsr4($argv[2].'\\', __DIR__.'/src');
+if (isset($argv[6]) && '' !== $argv[6]) { $_SERVER['APP_RUNTIME_MODE'] = $argv[6]; }
+$debug = 'dev' === $argv[4];
+$kernel = new $argv[3]($argv[4], $debug);
+try {
+    if (str_starts_with($argv[5], 'http')) {
+        $response = $kernel->handle(\Symfony\Component\HttpFoundation\Request::create('/hello'));
+        $result = ['status' => $response->getStatusCode(), 'body' => $response->getContent()];
+        if ('http-probe' === $argv[5]) { $result['analyzer_loaded'] = class_exists(\Sillbeam\Core\Architecture\ArchitectureAnalyzer::class, false); $result['parser_loaded'] = class_exists(\PhpParser\ParserFactory::class, false); $result['inspector_loaded'] = class_exists(\Sillbeam\Core\Architecture\SourceInspector::class, false); $result['svg_loaded'] = class_exists(\Sillbeam\Core\Architecture\Console\SvgGraph::class, false); $result['inspection_view_loaded'] = class_exists(\Sillbeam\Core\Architecture\Console\ModuleInspectionPresentation::class, false); }
+        echo json_encode($result, JSON_THROW_ON_ERROR);
+    } elseif ('boot' === $argv[5]) {
+        $kernel->boot();
+        $modules = $kernel->getContainer()->get(\Sillbeam\Core\Module\ModuleRegistryInterface::class);
+        echo json_encode(['modules' => count($modules->active())], JSON_THROW_ON_ERROR);
+    } else {
+        // Also verify the ordinary Symfony console: no reporting adapter is needed for warmup.
+        $app = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
+        $app->setAutoExit(false);
+        $output = new \Symfony\Component\Console\Output\BufferedOutput();
+        $arguments = ['command' => $argv[5], ('cache:warmup' === $argv[5] ? '--no-optional-warmers' : '--no-warmup') => true];
+        $code = $app->run(new \Symfony\Component\Console\Input\ArrayInput($arguments), $output);
+        echo json_encode(['exit' => $code, 'output' => $output->fetch()], JSON_THROW_ON_ERROR);
+    }
+} catch (Throwable $error) {
+    $result = ['exception' => $error::class, 'message' => $error->getMessage(), 'status' => $error instanceof \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface ? $error->getStatusCode() : 500];
+    if ('http-probe' === $argv[5]) { $result['analyzer_loaded'] = class_exists(\Sillbeam\Core\Architecture\ArchitectureAnalyzer::class, false); $result['parser_loaded'] = class_exists(\PhpParser\ParserFactory::class, false); $result['inspector_loaded'] = class_exists(\Sillbeam\Core\Architecture\SourceInspector::class, false); $result['svg_loaded'] = class_exists(\Sillbeam\Core\Architecture\Console\SvgGraph::class, false); $result['inspection_view_loaded'] = class_exists(\Sillbeam\Core\Architecture\Console\ModuleInspectionPresentation::class, false); }
+    echo json_encode($result, JSON_THROW_ON_ERROR);
+} finally { $kernel->shutdown(); }
+PHP);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->source->remove();
+    }
+
+    public function testColdProductionHttpDoesNotAnalyzeSourcesOrDiscloseFindings(): void
+    {
+        $this->invalidSource();
+        $result = $this->runProcess('prod', 'http');
+        self::assertSame(503, $result['status']);
+        self::assertSame('Service temporarily unavailable.', $result['message']);
+        self::assertStringNotContainsString('Missing', $result['message']);
+        self::assertStringNotContainsString($this->source->directory, $result['message']);
+    }
+
+    public function testColdDevelopmentHttpShowsDetailedFindingsAndRemediation(): void
+    {
+        $this->invalidSource();
+        $result = $this->runProcess('dev', 'http');
+        self::assertSame(500, $result['status']);
+        self::assertStringContainsString('dependency.unknown', $result['message']);
+        self::assertStringContainsString('BrokenModule', $result['message']);
+        self::assertStringContainsString('Hint:', $result['message']);
+        self::assertStringContainsString('BrokenModule.php', $result['message']);
+    }
+
+    #[DataProvider('environments')]
+    public function testColdCliBuildRejectsInvalidArchitecture(string $environment): void
+    {
+        $this->invalidSource();
+        $result = $this->runProcess($environment, 'boot');
+        self::assertStringContainsString('dependency.unknown', $result['message']);
+        self::assertArrayNotHasKey('modules', $result);
+    }
+
+    public function testWarmProductionHttpUsesCompiledStateButWarmupRejectsChangedSources(): void
+    {
+        self::assertSame(['modules' => 1], $this->runProcess('prod', 'boot'));
+        self::assertSame(['status' => 200, 'body' => 'hello'], $this->runProcess('prod', 'http'));
+        $this->invalidSource();
+        self::assertSame(['status' => 200, 'body' => 'hello'], $this->runProcess('prod', 'http'));
+        $build = $this->runProcess('prod', 'cache:warmup');
+        self::assertNotSame(0, $build['exit']);
+        self::assertStringContainsString('dependency.unknown', $build['output']);
+        self::assertSame(['status' => 200, 'body' => 'hello'], $this->runProcess('prod', 'http'));
+    }
+
+    public function testWarmDevelopmentHttpRevalidatesChangedSources(): void
+    {
+        self::assertSame(['status' => 200, 'body' => 'hello'], $this->runProcess('dev', 'http'));
+        self::assertSame(['status' => 200, 'body' => 'hello'], $this->runProcess('dev', 'http'));
+        $this->invalidSource();
+        touch($this->source->directory.'/src/Module/Broken/BrokenModule.php', time() + 2);
+        $result = $this->runProcess('dev', 'http');
+        self::assertStringContainsString('dependency.unknown', $result['message']);
+    }
+
+    #[DataProvider('environments')]
+    public function testValidColdAndWarmCliWarmupAndHttpKeepRuntimeIntegrations(string $environment): void
+    {
+        self::assertSame(['modules' => 1], $this->runProcess($environment, 'boot'));
+        $warmup = $this->runProcess($environment, 'cache:warmup');
+        self::assertSame(0, $warmup['exit'], $warmup['output']);
+        self::assertSame(['status' => 200, 'body' => 'hello'], $this->runProcess($environment, 'http'));
+        self::assertSame(['status' => 200, 'body' => 'hello'], $this->runProcess($environment, 'http'));
+    }
+
+    public function testNativeWebWorkerModeCannotCompileAProductionContainer(): void
+    {
+        $this->invalidSource();
+        $result = $this->runProcess('prod', 'boot', 'web=1&worker=1');
+        self::assertSame(503, $result['status']);
+        self::assertSame('Service temporarily unavailable.', $result['message']);
+    }
+
+    public function testExplicitConsoleBuildCannotSkipValidationThroughInheritedWebMode(): void
+    {
+        self::assertSame(['modules' => 1], $this->runProcess('prod', 'boot'));
+        $this->invalidSource();
+        $result = $this->runProcess('prod', 'cache:warmup', 'web=1');
+        self::assertNotSame(0, $result['exit']);
+        self::assertStringContainsString('dependency.unknown', $result['output']);
+    }
+
+    public function testFreshCacheClearCannotReleaseAnInvalidNewBuild(): void
+    {
+        self::assertSame(['modules' => 1], $this->runProcess('prod', 'boot'));
+        $this->invalidSource();
+        $result = $this->runProcess('prod', 'cache:clear');
+        self::assertNotSame(0, $result['exit']);
+        self::assertStringContainsString('dependency.unknown', $result['output']);
+    }
+
+    public function testBuildValidationReadsChangedBundleRegistrationInsteadOfCachedBundleList(): void
+    {
+        self::assertSame(['modules' => 1], $this->runProcess('prod', 'boot'));
+        $bundle = $this->source->php('src/InvalidConfigBundle.php', 'final class InvalidConfigBundle extends \\Symfony\\Component\\HttpKernel\\Bundle\\Bundle { public function getContainerExtension(): \\Symfony\\Component\\DependencyInjection\\Extension\\ExtensionInterface { return new class extends \\Symfony\\Component\\DependencyInjection\\Extension\\Extension implements \\Symfony\\Component\\DependencyInjection\\Extension\\PrependExtensionInterface { public function getAlias(): string { return "invalid_config"; } public function prepend(\\Symfony\\Component\\DependencyInjection\\ContainerBuilder $container): void { $container->prependExtensionConfig("sillbeam", ["modules" => ["not-discovered" => ["enabled" => false]]]); } public function load(array $configs, \\Symfony\\Component\\DependencyInjection\\ContainerBuilder $container): void {} }; } }');
+        $this->source->write('config/bundles.php', '<?php return [\\Symfony\\Bundle\\FrameworkBundle\\FrameworkBundle::class => ["all" => true], \\Sillbeam\\Core\\SillbeamCoreBundle::class => ["all" => true], \\'.$bundle.'::class => ["all" => true]];');
+        $result = $this->runProcess('prod', 'cache:warmup');
+        self::assertNotSame(0, $result['exit']);
+        self::assertStringContainsString('module.unknown_override', $result['output']);
+    }
+
+    public function testFreshBuildAnalysisPreservesApplicationBundleInitializationHook(): void
+    {
+        $path = $this->source->directory.'/src/Kernel.php';
+        $code = (string) file_get_contents($path);
+        $code = str_replace('public function getProjectDir()', 'protected function initializeBundles(): void { parent::initializeBundles(); if (is_file($this->getProjectDir()."/reject-build")) { throw new \\LogicException("Application bundle hook rejected build."); } } public function getProjectDir()', $code);
+        file_put_contents($path, $code);
+        self::assertSame(['modules' => 1], $this->runProcess('prod', 'boot'));
+        $this->source->write('reject-build', 'reject');
+        $result = $this->runProcess('prod', 'cache:warmup');
+        self::assertNotSame(0, $result['exit']);
+        self::assertStringContainsString('Application bundle hook rejected build.', $result['output']);
+    }
+
+    public function testProductionHttpNeverLoadsTheSourceAnalyzerWithColdOrWarmCache(): void
+    {
+        $cold = $this->runProcess('prod', 'http-probe');
+        self::assertSame(503, $cold['status']);
+        self::assertFalse($cold['analyzer_loaded']);
+        self::assertFalse($cold['parser_loaded']); foreach (['inspector_loaded', 'svg_loaded', 'inspection_view_loaded'] as $class) { self::assertFalse($cold[$class], $class); }
+        self::assertSame(['modules' => 1], $this->runProcess('prod', 'boot'));
+        $this->invalidSource();
+        $warm = $this->runProcess('prod', 'http-probe');
+        self::assertSame(200, $warm['status']);
+        self::assertFalse($warm['analyzer_loaded']);
+        self::assertFalse($warm['parser_loaded']); foreach (['inspector_loaded', 'svg_loaded', 'inspection_view_loaded'] as $class) { self::assertFalse($warm[$class], $class); }
+    }
+
+    /** @return iterable<string, array{string}> */
+    public static function environments(): iterable
+    {
+        yield 'development' => ['dev'];
+        yield 'production' => ['prod'];
+    }
+
+    private function invalidSource(): void
+    {
+        $this->source->php('src/Module/Broken/BrokenModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(dependencies: [\\Missing\\Module::class])] final class BrokenModule {}');
+    }
+
+    /**
+     * Each invocation observes current source/cache state in a new subprocess.
+     *
+     * @phpstan-impure
+     *
+     * @return array<string, mixed>
+     */
+    private function runProcess(string $environment, string $operation, string $runtimeMode = ''): array
+    {
+        $stdout = $this->source->directory.'/stdout.log';
+        $stderr = $this->source->directory.'/stderr.log';
+        $process = proc_open([\PHP_BINARY, $this->source->directory.'/run.php', '/home/oeffe/PhpstormProjects/websign/sillbeam-core/vendor/autoload.php', $this->source->namespace, $this->kernel, $environment, $operation, $runtimeMode], [\STDIN, ['file', $stdout, 'w'], ['file', $stderr, 'w']], $pipes);
+        self::assertIsResource($process);
+        self::assertSame(0, proc_close($process), (string) file_get_contents($stderr));
+
+        return json_decode((string) file_get_contents($stdout), true, flags: \JSON_THROW_ON_ERROR);
+    }
+}

@@ -1,0 +1,13 @@
+You are running PHP CS Fixer on PHP 8.5.4, but the minimum PHP version supported by your project in composer.json is PHP 8.4. Executing PHP CS Fixer on newer PHP versions may introduce syntax or features not yet available in PHP 8.4, which could cause issues under that version. It is recommended to run PHP CS Fixer on PHP 8.4, to fit your project specifics.
+If you need help while solving warnings, ask at https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/discussions/, we will help you!
+
+PHP CS Fixer 3.95.25 Adalbertus by Fabien Potencier, Dariusz Ruminski and contributors.
+PHP runtime: 8.5.4
+Loaded config default from ".php-cs-fixer.dist.php".
+Running analysis on 1 core sequentially.
+Using cache file ".php-cs-fixer.cache".
+   0/205 [░░░░░░░░░░░░░░░░░░░░░░░░░░░░]   0%
+ 205/205 [▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓] 100%
+
+
+Found 0 of 205 files that can be fixed in 0.006 seconds, 20.00 MB memory used

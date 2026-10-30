@@ -1,0 +1,31 @@
+<?php
+require '/home/oeffe/PhpstormProjects/websign/sillbeam-core/vendor/autoload.php';
+$loader = new Composer\Autoload\ClassLoader();
+$loader->addPsr4('Sillbeam\\Core\\', $argv[1].'/src');
+$loader->register(true);
+$root = '/home/oeffe/PhpstormProjects/websign/sillbeam-core';
+$api = [];
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root.'/src', FilesystemIterator::SKIP_DOTS)) as $file) {
+    if ('php' !== $file->getExtension() || !str_contains(file_get_contents($file->getPathname()), '@api')) { continue; }
+    $class = 'Sillbeam\\Core\\'.str_replace('/', '\\', substr($file->getPathname(), strlen($root.'/src/'), -4));
+    $reflection = new ReflectionClass($class);
+    $methods = [];
+    foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC | ReflectionMethod::IS_PROTECTED) as $method) {
+        if ($class !== $method->getDeclaringClass()->getName()) { continue; }
+        $parameters = [];
+        foreach ($method->getParameters() as $parameter) {
+            $parameters[] = [$parameter->getName(), (string) $parameter->getType(), $parameter->isPassedByReference(), $parameter->isVariadic(), $parameter->isOptional(), $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null];
+        }
+        $methods[$method->getName()] = [$method->isPublic(), $method->isStatic(), $method->isFinal(), (string) $method->getReturnType(), $parameters];
+    }
+    ksort($methods);
+    $properties = [];
+    foreach ($reflection->getProperties(ReflectionProperty::IS_PUBLIC | ReflectionProperty::IS_PROTECTED) as $property) {
+        if ($class !== $property->getDeclaringClass()->getName()) { continue; }
+        $properties[$property->getName()] = [$property->isPublic(), $property->isStatic(), $property->isReadOnly(), (string) $property->getType()];
+    }
+    ksort($properties);
+    $api[$class] = ['parent' => ($reflection->getParentClass() ?: null)?->getName(), 'interfaces' => $reflection->getInterfaceNames(), 'traits' => $reflection->getTraitNames(), 'abstract' => $reflection->isAbstract(), 'interface' => $reflection->isInterface(), 'final' => $reflection->isFinal(), 'readonly' => $reflection->isReadOnly(), 'methods' => $methods, 'properties' => $properties, 'constants' => $reflection->getConstants()];
+}
+ksort($api);
+echo json_encode($api, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)."\n";

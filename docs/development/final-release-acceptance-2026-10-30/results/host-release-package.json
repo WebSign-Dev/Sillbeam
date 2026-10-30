@@ -1,0 +1,14 @@
+{
+  "label": "host-release-package",
+  "command": [
+    "composer",
+    "test:release-package"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:52:24.901884+00:00",
+  "log": "logs/host-release-package.log",
+  "exit_code": 0,
+  "elapsed_seconds": 7.697,
+  "finished_utc": "2026-10-30T11:52:32.598620+00:00"
+}

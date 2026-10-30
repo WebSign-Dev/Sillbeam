@@ -1,0 +1,10 @@
+PHPUnit 12.5.35 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.5.4
+Configuration: /home/oeffe/PhpstormProjects/websign/sillbeam-core/phpunit.xml.dist
+
+..                                                                  2 / 2 (100%)
+
+Time: 00:00.004, Memory: 16.00 MB
+
+[30;42mOK (2 tests, 51 assertions)[0m

@@ -1,0 +1,14 @@
+{
+  "label": "environment-composer",
+  "command": [
+    "composer",
+    "--version"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:55:09.606303+00:00",
+  "log": "logs/environment-composer.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.219,
+  "finished_utc": "2026-10-30T11:55:09.825633+00:00"
+}

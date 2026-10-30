@@ -1,0 +1,109 @@
+{
+    "default": {
+        "arguments": [],
+        "exit": 0,
+        "expected": 0,
+        "passed": true
+    },
+    "overwrite-refused": {
+        "arguments": [],
+        "exit": 4,
+        "expected": 4,
+        "passed": true
+    },
+    "force": {
+        "arguments": {
+            "--force": true
+        },
+        "exit": 0,
+        "expected": 0,
+        "passed": true
+    },
+    "mermaid": {
+        "arguments": {
+            "--format": "mermaid"
+        },
+        "exit": 0,
+        "expected": 0,
+        "passed": true
+    },
+    "filter": {
+        "arguments": {
+            "--module": "Billing",
+            "--output": "nested/deep/billing.svg"
+        },
+        "exit": 0,
+        "expected": 0,
+        "passed": true
+    },
+    "ambiguous": {
+        "arguments": {
+            "--module": "User"
+        },
+        "exit": 3,
+        "expected": 3,
+        "passed": true
+    },
+    "private-project": {
+        "arguments": {
+            "--module": "SillbeamFixturedc5df0b18b11\\Project\\Shop\\Module\\User\\UserModule",
+            "--project": "shop",
+            "--output": "shop.svg"
+        },
+        "exit": 0,
+        "expected": 0,
+        "passed": true
+    },
+    "standard": {
+        "arguments": {
+            "module": "Billing"
+        },
+        "exit": 0,
+        "expected": 0,
+        "passed": true
+    },
+    "verbose": {
+        "arguments": {
+            "module": "Billing"
+        },
+        "exit": 0,
+        "expected": 0,
+        "passed": true
+    },
+    "invalid-output": {
+        "arguments": {
+            "--output": "architecture.svg/inside.svg"
+        },
+        "exit": 4,
+        "expected": 4,
+        "passed": true
+    },
+    "without-renderer": {
+        "arguments": {
+            "--output": "without-renderer.svg"
+        },
+        "exit": 0,
+        "expected": 0,
+        "passed": true
+    },
+    "quiet": {
+        "arguments": {
+            "--output": "quiet.svg"
+        },
+        "exit": 0,
+        "expected": 0,
+        "passed": true
+    },
+    "svg": {
+        "valid_xml": true,
+        "nodes": 14,
+        "dependencies": 32,
+        "root_attributes": {
+            "width": "1540",
+            "height": "1599",
+            "viewBox": "0 0 1540 1599",
+            "role": "img",
+            "aria-labelledby": "graph-title graph-description"
+        }
+    }
+}

@@ -1,0 +1,5 @@
+<?php
+function tokens(string $source): array {return array_values(array_filter(array_map(static fn($t) => is_array($t) ? (in_array($t[0], [T_WHITESPACE,T_COMMENT,T_DOC_COMMENT], true) ? null : [$t[0],$t[1]]) : $t, token_get_all($source)), static fn($t) => null !== $t));}
+$root='/home/oeffe/PhpstormProjects/websign/sillbeam-core';$base='/tmp/sillbeam-api-v020';$result=[];
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($root.'/src',FilesystemIterator::SKIP_DOTS)) as $f) { $relative=substr($f->getPathname(),strlen($root)+1);if (!is_file($base.'/'.$relative))continue;$result[$relative]=tokens(file_get_contents($base.'/'.$relative))===tokens(file_get_contents($f->getPathname()));}
+ksort($result);echo json_encode($result,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES|JSON_THROW_ON_ERROR)."\n";

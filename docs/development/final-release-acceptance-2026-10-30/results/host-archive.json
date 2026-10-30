@@ -1,0 +1,17 @@
+{
+  "label": "host-archive",
+  "command": [
+    "composer",
+    "archive",
+    "--format=zip",
+    "--dir=/home/oeffe/PhpstormProjects/websign/sillbeam-core/docs/development/final-release-acceptance-2026-10-30/artifacts",
+    "--file=sillbeam-core-0.3.0"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:52:32.599053+00:00",
+  "log": "logs/host-archive.log",
+  "exit_code": 0,
+  "elapsed_seconds": 1.975,
+  "finished_utc": "2026-10-30T11:52:34.574271+00:00"
+}

@@ -1,0 +1,23 @@
+{
+  "label": "php85-sf74-resolve",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-final-php85-sf74",
+    "composer",
+    "update",
+    "--with-all-dependencies",
+    "--no-scripts",
+    "--no-interaction",
+    "--prefer-dist"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:55:34.830344+00:00",
+  "log": "logs/php85-sf74-resolve.log",
+  "exit_code": 0,
+  "elapsed_seconds": 5.585,
+  "finished_utc": "2026-10-30T11:55:40.415628+00:00"
+}

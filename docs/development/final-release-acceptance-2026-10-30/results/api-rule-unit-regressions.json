@@ -1,0 +1,20 @@
+{
+  "label": "api-rule-unit-regressions",
+  "command": [
+    "vendor/bin/phpunit",
+    "--configuration=phpunit.xml.dist",
+    "tests/Unit/ArchitectureTest.php",
+    "tests/Unit/ArchitectureFindingsTest.php",
+    "tests/Unit/ArchitectureReportTest.php",
+    "tests/Unit/ClassAnalysisConsistencyTest.php",
+    "tests/Unit/ApplicationCouplingTest.php",
+    "tests/Unit/ClassReferenceTest.php"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:52:34.932110+00:00",
+  "log": "logs/api-rule-unit-regressions.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.468,
+  "finished_utc": "2026-10-30T11:52:35.400394+00:00"
+}

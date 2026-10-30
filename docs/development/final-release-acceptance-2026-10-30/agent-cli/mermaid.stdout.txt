@@ -1,0 +1,63 @@
+flowchart LR
+    %% Analysis: valid; catalog evidence; runtime activation only where known
+    %% Analysis complete
+    %% Reference evidence complete
+    %% Legend: arrow = depends on; dashed orange = observed undeclared
+    %% Gray = disabled; dashed node = unknown; red border = recorded cycle member
+    subgraph architecture["Analysis#58; valid#59; catalog evidence#59; runtime activation only where known<br/>Analysis complete<br/>Reference evidence complete<br/>Legend#58; arrow #61; depends on#59; dashed orange #61; observed undeclared<br/>Gray #61; disabled#59; dashed node #61; unknown#59; red border #61; recorded cycle member"]
+    subgraph shared_scope["Shared modules"]
+        m0001["audit<br/>state#61;active<br/>Projects#58; admin#44; shop"]
+        m0002["billing<br/>state#61;active<br/>Projects#58; admin#44; shop"]
+        m0003["cart<br/>state#61;active<br/>Projects#58; admin#44; shop"]
+        m0004["catalog<br/>state#61;active<br/>Projects#58; admin#44; shop"]
+        m0005["identity<br/>state#61;active<br/>Projects#58; admin#44; shop"]
+        m0006["notifications<br/>state#61;active<br/>Projects#58; admin#44; shop"]
+        m0007["orders<br/>state#61;active<br/>Projects#58; admin#44; shop"]
+        m0008["payments<br/>state#61;active<br/>Projects#58; admin#44; shop"]
+        m0009["pricing<br/>state#61;active<br/>Projects#58; admin#44; shop"]
+        m0010["shipping<br/>state#61;active<br/>Projects#58; admin#44; shop"]
+        m0011["stock<br/>state#61;active<br/>Projects#58; admin#44; shop"]
+        m0012["user<br/>shared<br/>state#61;active<br/>Projects#58; admin#44; shop"]
+    end
+    subgraph project_scope_0001["Private modules #124; admin#59; membership#61;validated"]
+        m0013["user<br/>private Project#58; admin<br/>state#61;active"]
+    end
+    subgraph project_scope_0002["Private modules #124; shop#59; membership#61;validated"]
+        m0014["user<br/>private Project#58; shop<br/>state#61;active"]
+    end
+    m0001 --> m0006
+    m0001 --> m0008
+    m0001 --> m0010
+    m0002 --> m0003
+    m0002 --> m0007
+    m0002 --> m0009
+    m0003 --> m0004
+    m0003 --> m0009
+    m0003 --> m0011
+    m0004 --> m0005
+    m0004 --> m0012
+    m0005 --> m0012
+    m0006 --> m0002
+    m0006 --> m0008
+    m0006 --> m0010
+    m0007 --> m0003
+    m0007 --> m0009
+    m0007 --> m0011
+    m0008 --> m0002
+    m0008 --> m0003
+    m0008 --> m0007
+    m0009 --> m0004
+    m0009 --> m0005
+    m0009 --> m0011
+    m0010 --> m0002
+    m0010 --> m0007
+    m0010 --> m0008
+    m0011 --> m0004
+    m0011 --> m0005
+    m0011 --> m0012
+    m0013 --> m0012
+    m0014 --> m0012
+    end
+    classDef disabled fill:#eee,color:#555,stroke:#777;
+    classDef unknown stroke-dasharray:5 5;
+    classDef cycle stroke:#c22,stroke-width:3px;

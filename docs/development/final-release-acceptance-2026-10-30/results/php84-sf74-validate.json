@@ -1,0 +1,20 @@
+{
+  "label": "php84-sf74-validate",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-final-php84-sf74",
+    "composer",
+    "validate",
+    "--strict"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:51:56.576404+00:00",
+  "log": "logs/php84-sf74-validate.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.368,
+  "finished_utc": "2026-10-30T11:51:56.944834+00:00"
+}

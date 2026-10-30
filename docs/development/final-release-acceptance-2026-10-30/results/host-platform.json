@@ -1,0 +1,14 @@
+{
+  "label": "host-platform",
+  "command": [
+    "composer",
+    "check-platform-reqs"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:48:45.056697+00:00",
+  "log": "logs/host-platform.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.215,
+  "finished_utc": "2026-10-30T11:48:45.272174+00:00"
+}

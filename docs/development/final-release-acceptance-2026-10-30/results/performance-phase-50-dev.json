@@ -1,0 +1,17 @@
+{
+  "label": "performance-phase-50-dev",
+  "command": [
+    "php",
+    "tools/benchmark-architecture.php",
+    "--phase-worker",
+    "50",
+    "dev"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:56:22.350025+00:00",
+  "log": "logs/performance-phase-50-dev.log",
+  "exit_code": 0,
+  "elapsed_seconds": 2.658,
+  "finished_utc": "2026-10-30T11:56:25.008537+00:00"
+}

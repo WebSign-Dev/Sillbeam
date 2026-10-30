@@ -1,0 +1,24 @@
+<?php
+require '/home/oeffe/PhpstormProjects/websign/sillbeam-core/vendor/autoload.php';
+use Sillbeam\Core\Tests\Support\SourceWorkspace;
+use Sillbeam\Core\Architecture\{ArchitectureAnalyzer,ArchitectureReport,DiscoveryOptions};
+use Sillbeam\Core\Architecture\Console\{GraphCommand,InspectModuleCommand};
+use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\Console\Output\OutputInterface;
+$out='/home/oeffe/PhpstormProjects/websign/sillbeam-core/docs/development/final-release-acceptance-2026-10-30/agent-cli';
+@mkdir($out,0777,true);
+$s=new SourceWorkspace();
+function module($s,$name,$deps=[],$project=null){$path=($project?'Project/'.$project.'/Module/':'Module/').$name;return $s->php('src/'.$path.'/'.$name.'Module.php','#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(dependencies: ['.implode(',',array_map(fn($c)=>'\\'.$c.'::class',$deps)).'])] final class '.$name.'Module {}');}
+$classes=[];
+foreach(['User','Identity','Catalog','Stock','Pricing','Cart','Orders','Billing','Payments','Shipping','Notifications','Audit'] as $i=>$name){$deps=[];foreach($classes as $j=>$class)if($i-$j<=3)$deps[]=$class;$classes[]=module($s,$name,$deps);if($deps){$p=$s->php('src/Module/'.['User','Identity','Catalog','Stock','Pricing','Cart','Orders','Billing','Payments','Shipping','Notifications','Audit'][$i-1].'/Port.php','interface Port {}');$s->php('src/Module/'.$name.'/Consumer.php','final class Consumer { public \\'.$p.' $port; }');}}
+foreach(['Shop','Admin'] as $name){$s->php('src/Project/'.$name.'/'.$name.'Project.php','#[\\Sillbeam\\Core\\Project\\Attribute\\SillbeamProject(modules: ['.implode(',',array_map(fn($c)=>'\\'.$c.'::class',$classes)).'])] final class '.$name.'Project {}');module($s,'User',[$classes[0]],$name);}
+$config=['projects'=>['shop'=>['hosts'=>['shop.test']],'admin'=>['hosts'=>['admin.test']]]];
+$report=ArchitectureReport::fromAnalysis((new ArchitectureAnalyzer())->analyze(new DiscoveryOptions($s->directory.'/src',$s->namespace.'\\'),$config),$config,$s->directory);
+file_put_contents($out.'/architecture.json',$report->toJson());
+$results=[];
+function runCase($label,$command,$args,$expected,$verbosity=32){global $out,$results;$t=new CommandTester($command);$code=$t->execute($args,['verbosity'=>$verbosity,'capture_stderr_separately'=>true]);file_put_contents($out.'/'.$label.'.stdout.txt',$t->getDisplay());file_put_contents($out.'/'.$label.'.stderr.txt',$t->getErrorOutput());$results[$label]=['arguments'=>$args,'exit'=>$code,'expected'=>$expected,'passed'=>$code===$expected];if($code!==$expected)throw new RuntimeException($label.' unexpected: '.$code.' '.$t->getDisplay().$t->getErrorOutput());}
+$cwd=getcwd();chdir($out);
+try{runCase('default',new GraphCommand($report),[],0);runCase('overwrite-refused',new GraphCommand($report),[],4);runCase('force',new GraphCommand($report),['--force'=>true],0);runCase('mermaid',new GraphCommand($report),['--format'=>'mermaid'],0);runCase('filter',new GraphCommand($report),['--module'=>'Billing','--output'=>'nested/deep/billing.svg'],0);runCase('ambiguous',new GraphCommand($report),['--module'=>'User'],3);runCase('private-project',new GraphCommand($report),['--module'=>$s->namespace.'\\Project\\Shop\\Module\\User\\UserModule','--project'=>'shop','--output'=>'shop.svg'],0);runCase('standard',new InspectModuleCommand($report),['module'=>'Billing'],0);runCase('verbose',new InspectModuleCommand($report),['module'=>'Billing'],0,64);runCase('invalid-output',new GraphCommand($report),['--output'=>'architecture.svg/inside.svg'],4);$path=getenv('PATH');putenv('PATH=');try{runCase('without-renderer',new GraphCommand($report),['--output'=>'without-renderer.svg'],0);}finally{putenv('PATH='.$path);}runCase('quiet',new GraphCommand($report),['--output'=>'quiet.svg'],0,16);
+$xml=simplexml_load_file($out.'/architecture.svg');$xml->registerXPathNamespace('s','http://www.w3.org/2000/svg');$results['svg']=['valid_xml'=>false!==$xml,'nodes'=>count($xml->xpath('//s:g[starts-with(@id,"m")]')),'dependencies'=>count($xml->xpath('//s:path[contains(@class,"dependency")]')),'root_attributes'=>array_map('strval',iterator_to_array($xml->attributes()))];
+file_put_contents($out.'/results.json',json_encode($results,JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES)."\n");echo json_encode($results,JSON_PRETTY_PRINT)."\n";
+}finally{chdir($cwd);$s->remove();}

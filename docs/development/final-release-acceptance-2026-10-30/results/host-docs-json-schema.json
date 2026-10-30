@@ -1,0 +1,14 @@
+{
+  "label": "host-docs-json-schema",
+  "command": [
+    "python3",
+    "/tmp/sillbeam-final-json-check.py"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:53:32.410968+00:00",
+  "log": "logs/host-docs-json-schema.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.369,
+  "finished_utc": "2026-10-30T11:53:32.779714+00:00"
+}

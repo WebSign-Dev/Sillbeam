@@ -1,0 +1,17 @@
+{
+  "label": "cli-targeted-tests",
+  "command": [
+    "vendor/bin/phpunit",
+    "tests/Integration/GraphCommandTest.php",
+    "tests/Integration/GraphSvgTest.php",
+    "tests/Integration/InspectModuleTest.php",
+    "tests/Integration/ProductionCliTest.php"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:51:39.694800+00:00",
+  "log": "logs/cli-targeted-tests.log",
+  "exit_code": 0,
+  "elapsed_seconds": 12.274,
+  "finished_utc": "2026-10-30T11:51:51.968409+00:00"
+}

@@ -1,0 +1,14 @@
+{
+  "label": "host-docs-json-second",
+  "command": [
+    "composer",
+    "docs:export-json"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:52:20.491342+00:00",
+  "log": "logs/host-docs-json-second.log",
+  "exit_code": 0,
+  "elapsed_seconds": 1.98,
+  "finished_utc": "2026-10-30T11:52:22.471828+00:00"
+}

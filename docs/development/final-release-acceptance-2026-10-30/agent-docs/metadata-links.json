@@ -1,0 +1,1016 @@
+{
+  "commit": "0b70c3143acf25cae5082f3ec6007b6d2a31da79",
+  "markdown_files": 46,
+  "local_links_checked": 197,
+  "broken_links": [],
+  "workflow_git_blob": "fff5249f69ea1107d9811b27056f1c3bd5a86e84",
+  "workflow_sha256": "a8a1462d79716dd22c8acb9aacb3368ddf772427ce127ec563c8effd96f3cb61",
+  "push_branches_match": true,
+  "manual_dispatch": true,
+  "branch_aliases": {
+    "dev-main": "0.3.x-dev",
+    "dev-dev": "0.3.x-dev",
+    "dev-dev-v0.3.x": "0.3.x-dev"
+  },
+  "runtime_requirements": {
+    "composer-runtime-api": "^2.2",
+    "nikic/php-parser": "^5.7",
+    "php": "^8.4",
+    "symfony/config": "^7.4 || ^8.0",
+    "symfony/console": "^7.4 || ^8.0",
+    "symfony/dependency-injection": "^7.4 || ^8.0",
+    "symfony/framework-bundle": "^7.4 || ^8.0",
+    "symfony/http-foundation": "^7.4 || ^8.0",
+    "symfony/http-kernel": "^7.4 || ^8.0",
+    "symfony/routing": "^7.4 || ^8.0",
+    "symfony/yaml": "^7.4 || ^8.0"
+  },
+  "checks": [
+    {
+      "source": "README.md",
+      "target": "LICENSE",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/README.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/releases/0.3.0.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/reference/configuration.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/guides/getting-started.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/guides/getting-started.md#4-create-the-first-module",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/guides/modules.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/guides/projects.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/reference/mermaid-graph.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/reference/module-inspection.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/reference/doctor-json.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/reference/cli.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/operations/troubleshooting.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/README.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/guides/getting-started.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/architecture/overview.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/guides/modules.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/guides/projects.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/reference/configuration.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/reference/public-api.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/reference/phpdoc-json.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/modules/doctrine.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/migration/modular-monolith.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "CONTRIBUTING.md#run-the-checks",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "CHANGELOG.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/releases/0.3.0.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/migration/0.3.0.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/releases/0.3.0.md#verification-scope-and-release-flow",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/migration/0.2.0.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/reference/cli.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/migration/modular-monolith.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "CONTRIBUTING.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "SUPPORT.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "SECURITY.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "LICENSE",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/README.md",
+      "exists": true
+    },
+    {
+      "source": "README.md",
+      "target": "docs/assets/sillbeam-header.png",
+      "exists": true
+    },
+    {
+      "source": "CHANGELOG.md",
+      "target": "docs/releases/0.3.0.md",
+      "exists": true
+    },
+    {
+      "source": "CHANGELOG.md",
+      "target": "docs/migration/0.3.0.md",
+      "exists": true
+    },
+    {
+      "source": "CHANGELOG.md",
+      "target": "docs/migration/0.2.0.md",
+      "exists": true
+    },
+    {
+      "source": "CHANGELOG.md",
+      "target": "docs/reference/cli.md",
+      "exists": true
+    },
+    {
+      "source": "CHANGELOG.md",
+      "target": "docs/migration/modular-monolith.md",
+      "exists": true
+    },
+    {
+      "source": "CHANGELOG.md",
+      "target": "docs/releases/0.1.0.md",
+      "exists": true
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "target": "docs/releases/0.3.0.md",
+      "exists": true
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "target": "SECURITY.md",
+      "exists": true
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "target": "docs/migration/modular-monolith.md",
+      "exists": true
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "target": "docs/architecture/overview.md",
+      "exists": true
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "target": "docs/reference/public-api.md",
+      "exists": true
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "target": "docs/reference/public-api.md",
+      "exists": true
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "target": "docs/reference/phpdoc-json.md",
+      "exists": true
+    },
+    {
+      "source": "CONTRIBUTING.md",
+      "target": "LICENSE",
+      "exists": true
+    },
+    {
+      "source": "SUPPORT.md",
+      "target": "docs/README.md",
+      "exists": true
+    },
+    {
+      "source": "SUPPORT.md",
+      "target": "docs/operations/troubleshooting.md",
+      "exists": true
+    },
+    {
+      "source": "SUPPORT.md",
+      "target": "docs/reference/cli.md",
+      "exists": true
+    },
+    {
+      "source": "SUPPORT.md",
+      "target": "README.md#release-status",
+      "exists": true
+    },
+    {
+      "source": "SUPPORT.md",
+      "target": "SECURITY.md",
+      "exists": true
+    },
+    {
+      "source": "SECURITY.md",
+      "target": "README.md#release-status",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "guides/getting-started.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "guides/flex-recipe.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/overview.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "architecture/foundation.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "guides/modules.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "guides/projects.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "reference/architecture-analysis.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "reference/module-inspection.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "reference/mermaid-graph.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "reference/doctor-json.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "reference/doctor-report.schema.json",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "reference/phpdoc-json.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "reference/configuration.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "reference/public-api.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "reference/cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "migration/0.3.0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "migration/modular-monolith.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "releases/0.3.0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "operations/troubleshooting.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "modules/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "../CHANGELOG.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "releases/0.3.0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "migration/0.3.0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "releases/0.3.0.md#verification-scope-and-release-flow",
+      "exists": true
+    },
+    {
+      "source": "docs/README.md",
+      "target": "../README.md#release-status",
+      "exists": true
+    },
+    {
+      "source": "docs/architecture/foundation.md",
+      "target": "../migration/modular-monolith.md",
+      "exists": true
+    },
+    {
+      "source": "docs/architecture/overview.md",
+      "target": "../guides/architecture-reporting.md",
+      "exists": true
+    },
+    {
+      "source": "docs/examples/architecture-reports/README.md",
+      "target": "valid.md",
+      "exists": true
+    },
+    {
+      "source": "docs/examples/architecture-reports/README.md",
+      "target": "valid-with-couplings.md",
+      "exists": true
+    },
+    {
+      "source": "docs/examples/architecture-reports/README.md",
+      "target": "single-error.md",
+      "exists": true
+    },
+    {
+      "source": "docs/examples/architecture-reports/README.md",
+      "target": "multiple-errors.md",
+      "exists": true
+    },
+    {
+      "source": "docs/examples/architecture-reports/README.md",
+      "target": "incomplete.md",
+      "exists": true
+    },
+    {
+      "source": "docs/examples/architecture-reports/README.md",
+      "target": "large.md",
+      "exists": true
+    },
+    {
+      "source": "docs/examples/architecture-reports/README.md",
+      "target": "duplicate-names.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/README.md",
+      "target": "getting-started.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/README.md",
+      "target": "flex-recipe.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/README.md",
+      "target": "modules.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/README.md",
+      "target": "projects.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/README.md",
+      "target": "architecture-reporting.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/README.md",
+      "target": "../migration/modular-monolith.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/architecture-reporting.md",
+      "target": "../examples/architecture-reports/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/architecture-reporting.md",
+      "target": "../reference/cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/architecture-reporting.md",
+      "target": "../reference/diagnostics.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/architecture-reporting.md",
+      "target": "../reference/architecture-analysis.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/flex-recipe.md",
+      "target": "getting-started.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/flex-recipe.md",
+      "target": "../../README.md#release-status",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/getting-started.md",
+      "target": "../../README.md#release-status",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/getting-started.md",
+      "target": "flex-recipe.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/getting-started.md",
+      "target": "../reference/cli.md#installation-doctor",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/getting-started.md",
+      "target": "architecture-reporting.md",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/modules.md",
+      "target": "../reference/cli.md#minimal-module-and-project-creation",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/modules.md",
+      "target": "../reference/architecture-analysis.md#existing-checks-and-identifiers",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/modules.md",
+      "target": "../reference/architecture-analysis.md#informational-application-couplings",
+      "exists": true
+    },
+    {
+      "source": "docs/guides/projects.md",
+      "target": "../reference/cli.md#minimal-module-and-project-creation",
+      "exists": true
+    },
+    {
+      "source": "docs/migration/0.2.0.md",
+      "target": "../../README.md#release-status",
+      "exists": true
+    },
+    {
+      "source": "docs/migration/0.2.0.md",
+      "target": "../reference/cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/migration/0.2.0.md",
+      "target": "../reference/architecture-analysis.md#development-and-production-lifecycle",
+      "exists": true
+    },
+    {
+      "source": "docs/migration/0.3.0.md",
+      "target": "../../README.md#release-status",
+      "exists": true
+    },
+    {
+      "source": "docs/migration/0.3.0.md",
+      "target": "0.2.0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/migration/0.3.0.md",
+      "target": "../guides/getting-started.md",
+      "exists": true
+    },
+    {
+      "source": "docs/migration/0.3.0.md",
+      "target": "../reference/cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/migration/0.3.0.md",
+      "target": "../reference/doctor-json.md",
+      "exists": true
+    },
+    {
+      "source": "docs/migration/0.3.0.md",
+      "target": "../reference/mermaid-graph.md",
+      "exists": true
+    },
+    {
+      "source": "docs/migration/0.3.0.md",
+      "target": "../reference/phpdoc-json.md",
+      "exists": true
+    },
+    {
+      "source": "docs/migration/modular-monolith.md",
+      "target": "../reference/configuration.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/README.md",
+      "target": "architecture.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/README.md",
+      "target": "module-system.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/README.md",
+      "target": "project-system.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/README.md",
+      "target": "dependency-injection.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/README.md",
+      "target": "routing.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/README.md",
+      "target": "doctrine.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/README.md",
+      "target": "kernel.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/README.md",
+      "target": "../architecture/foundation.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/README.md",
+      "target": "../migration/modular-monolith.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/architecture.md",
+      "target": "../architecture/overview.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/architecture.md",
+      "target": "../reference/configuration.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/dependency-injection.md",
+      "target": "../guides/getting-started.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/doctrine.md",
+      "target": "../reference/configuration.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/kernel.md",
+      "target": "../guides/getting-started.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/module-system.md",
+      "target": "../guides/modules.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/project-system.md",
+      "target": "../guides/projects.md",
+      "exists": true
+    },
+    {
+      "source": "docs/modules/routing.md",
+      "target": "../guides/projects.md",
+      "exists": true
+    },
+    {
+      "source": "docs/operations/troubleshooting.md",
+      "target": "../reference/cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/architecture-analysis.md",
+      "target": "diagnostics.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/architecture-analysis.md",
+      "target": "cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/architecture-analysis.md",
+      "target": "cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/architecture-analysis.md",
+      "target": "cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/cli.md",
+      "target": "architecture-report.schema.json",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/cli.md",
+      "target": "architecture-analysis.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/cli.md",
+      "target": "../examples/architecture-reports/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/cli.md",
+      "target": "../guides/architecture-reporting.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/cli.md",
+      "target": "../../CONTRIBUTING.md#run-the-checks",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/cli.md",
+      "target": "doctor-json.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/cli.md",
+      "target": "doctor-report.schema.json",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/cli.md",
+      "target": "module-inspection.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/cli.md",
+      "target": "mermaid-graph.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/cli.md",
+      "target": "../migration/0.3.0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/configuration.md",
+      "target": "../migration/modular-monolith.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/diagnostics.md",
+      "target": "architecture-analysis.md#internal-diagnostic-foundation",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/doctor-json.md",
+      "target": "doctor-report.schema.json",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/doctor-json.md",
+      "target": "architecture-report.schema.json",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/doctor-json.md",
+      "target": "../guides/getting-started.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/mermaid-graph.md",
+      "target": "module-inspection.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/mermaid-graph.md",
+      "target": "cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/module-inspection.md",
+      "target": "cli.md#enable-reporting-before-container-compilation",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/phpdoc-json.md",
+      "target": "phpdoc-api.schema.json",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/phpdoc-json.md",
+      "target": "public-api.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/public-api.md",
+      "target": "cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/public-api.md",
+      "target": "architecture-analysis.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/public-api.md",
+      "target": "../migration/modular-monolith.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/public-api.md",
+      "target": "../guides/projects.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/public-api.md",
+      "target": "cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/public-api.md",
+      "target": "../../CONTRIBUTING.md#code-documentation-and-api-reference",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/public-api.md",
+      "target": "phpdoc-json.md",
+      "exists": true
+    },
+    {
+      "source": "docs/reference/public-api.md",
+      "target": "phpdoc-api.schema.json",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.1.0.md",
+      "target": "../../README.md#quick-start",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.1.0.md",
+      "target": "../guides/getting-started.md#preserve-symfony-integration",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.1.0.md",
+      "target": "../migration/modular-monolith.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.1.0.md",
+      "target": "../../LICENSE",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.1.0.md",
+      "target": "../../SUPPORT.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.1.0.md",
+      "target": "../../SECURITY.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.1.0.md",
+      "target": "../../CONTRIBUTING.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.2.0.md",
+      "target": "../../README.md#release-status",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.2.0.md",
+      "target": "../reference/cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.2.0.md",
+      "target": "../guides/architecture-reporting.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.2.0.md",
+      "target": "../examples/architecture-reports/README.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.2.0.md",
+      "target": "../guides/getting-started.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.2.0.md",
+      "target": "../guides/flex-recipe.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.2.0.md",
+      "target": "../reference/cli.md#installation-doctor",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.2.0.md",
+      "target": "../migration/0.2.0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.2.0.md",
+      "target": "../../README.md#release-status",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.3.0.md",
+      "target": "../reference/public-api.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.3.0.md",
+      "target": "../reference/phpdoc-json.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.3.0.md",
+      "target": "../reference/doctor-json.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.3.0.md",
+      "target": "../reference/cli.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.3.0.md",
+      "target": "../migration/0.3.0.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.3.0.md",
+      "target": "../reference/mermaid-graph.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.3.0.md",
+      "target": "../reference/module-inspection.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.3.0.md",
+      "target": "../reference/phpdoc-json.md",
+      "exists": true
+    },
+    {
+      "source": "docs/releases/0.3.0.md",
+      "target": "../../CONTRIBUTING.md#submit-a-pull-request",
+      "exists": true
+    }
+  ],
+  "scope": "Current packaged/public documentation only; historical development notes and fragment/remote URL crawling excluded."
+}

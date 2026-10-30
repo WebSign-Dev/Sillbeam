@@ -1,0 +1,20 @@
+
+  SILLBEAM CORE  / Module inspection
+  ────────────────────────────────────────────────────────────────────────────
+  Module: billing — Active
+  Scope: Shared
+  Architecture: Valid (whole analysis)
+  Known direct relationships: 3 depends on · 3 used by
+  ────────────────────────────────────────────────────────────────────────────
+  DEPENDS ON
+    cart — Declared only
+    orders — Declared + Observed
+    pricing — Declared only
+  ────────────────────────────────────────────────────────────────────────────
+  USED BY
+    notifications — Declared only
+    payments — Declared + Observed
+    shipping — Declared only
+  ────────────────────────────────────────────────────────────────────────────
+  ARCHITECTURE ISSUES
+  ✓ No related architecture findings in the available evidence.

@@ -1,0 +1,149 @@
+[
+    {
+        "Id": "sha256:2560b9e6cc3c84ea3920751c1934765b72872a9d8495adb428a2b6783a5732ad",
+        "RepoTags": [
+            "sillbeam-frame-verify:php84"
+        ],
+        "RepoDigests": [
+            "sillbeam-frame-verify@sha256:2560b9e6cc3c84ea3920751c1934765b72872a9d8495adb428a2b6783a5732ad"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-26T15:56:03.578191857+01:00",
+        "Config": {
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "PHPIZE_DEPS=autoconf \t\tdpkg-dev \t\tfile \t\tg++ \t\tgcc \t\tlibc-dev \t\tmake \t\tpkg-config \t\tre2c",
+                "PHP_INI_DIR=/usr/local/etc/php",
+                "PHP_CFLAGS=-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+                "PHP_CPPFLAGS=-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+                "PHP_LDFLAGS=-Wl,-O1 -pie",
+                "GPG_KEYS=AFD8691FDAEDF03BDF6E460563F15A9B715376CA 9D7F99A0CB8F05C8A6958D6256A97AF7600A39A6 0616E93D95AF471243E26761770426E17EBBB3DD",
+                "PHP_VERSION=8.4.26",
+                "PHP_URL=https://www.php.net/distributions/php-8.4.26.tar.xz",
+                "PHP_ASC_URL=https://www.php.net/distributions/php-8.4.26.tar.xz.asc",
+                "PHP_SHA256=32a2de53862ad44ed4a5005244ce4f1b50c271e74dced215449a4443b40569f1"
+            ],
+            "Entrypoint": [
+                "docker-php-entrypoint"
+            ],
+            "Cmd": [
+                "php",
+                "-a"
+            ],
+            "WorkingDir": "/work"
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 929869816,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:34467cc93912af891dfee8a3902adf9b4f355a9bca4eaa46f658d1181a21de0d",
+                "sha256:6f05e1966c2829892c718c5611627630f947db0735dee8626f10594ba71d93bc",
+                "sha256:6e3e245fa3090a01e49164801e2b7894a413c313f15d1327090a5d1e7c6c11a1",
+                "sha256:a7d7da3837038711eb560c8205d358eb8604b3d77f3ccdb3d2b2e445eef105d1",
+                "sha256:ae7b042f107931fea06c77f3b79d1acf25162bd54897bd4ff4c9e5bef6185f8a",
+                "sha256:b61d8023cf14ff93a312d7f753026eb6aa8d7ed2ec4c88ce3d4c30ad48821e3a",
+                "sha256:fe630f676222d30779cf947712d8737feb5a78a89fe6d1e9c4ad09475ba97032",
+                "sha256:e389b2397fe0e0902d7e10d466dcf6aca5fc524ee247437bc0f3e6b48557dbb9",
+                "sha256:2cdeb5f877ed4f81aea9940fe071942c1a36d88808da4283692c53688c32a9c1",
+                "sha256:8f49a29c00d93ca0fcb20f97065481ac075f27f4d86312a12b8322a0357c0eca",
+                "sha256:1d3c8de5a93d600021f6941432dd8e931194c0da6cfd30417d34893bd85f3b58",
+                "sha256:9c3e0bd6eb87c6b12633bbd8cce39832140d7b48170f7e894d854c2b88677aef",
+                "sha256:d6794f98e22b5e9fb3ffeca1e7f873f0b6a4eca30029e8c978a0c42051ef20c8",
+                "sha256:eacc5cb550e6467a1a40854ed77240b69ea2f0e2cd5b1d8a56ff1cbca701d6ff",
+                "sha256:f57947821da1677fbbccc2d0fb63a753c0710b8ef0c27f867d88bee72a5aa4ea",
+                "sha256:d08a559339fad9a435896f3201e78853ee071576c564ec4b50c1343f495d9bf4"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-26T14:56:03.77459985Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:2560b9e6cc3c84ea3920751c1934765b72872a9d8495adb428a2b6783a5732ad",
+            "size": 856
+        },
+        "Identity": {
+            "Build": [
+                {
+                    "Ref": "zrc4adtnqe43v6ow6dta0vo7v",
+                    "CreatedAt": "2026-10-26T15:56:03.825148175+01:00"
+                }
+            ]
+        }
+    },
+    {
+        "Id": "sha256:b6202974838a15a2f74a1a525d06389902533b6a3f490d77f26ed8adb1240acc",
+        "RepoTags": [
+            "sillbeam-frame-verify:php85"
+        ],
+        "RepoDigests": [
+            "sillbeam-frame-verify@sha256:b6202974838a15a2f74a1a525d06389902533b6a3f490d77f26ed8adb1240acc"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-10-26T15:57:39.400389808+01:00",
+        "Config": {
+            "Env": [
+                "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "PHPIZE_DEPS=autoconf \t\tdpkg-dev \t\tfile \t\tg++ \t\tgcc \t\tlibc-dev \t\tmake \t\tpkg-config \t\tre2c",
+                "PHP_INI_DIR=/usr/local/etc/php",
+                "PHP_CFLAGS=-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+                "PHP_CPPFLAGS=-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64",
+                "PHP_LDFLAGS=-Wl,-O1 -pie",
+                "GPG_KEYS=1198C0117593497A5EC5C199286AF1F9897469DC 49D9AF6BC72A80D6691719C8AA23F5BE9C7097D4 D95C03BC702BE9515344AE3374E44BC9067701A5",
+                "PHP_VERSION=8.5.11",
+                "PHP_URL=https://www.php.net/distributions/php-8.5.11.tar.xz",
+                "PHP_ASC_URL=https://www.php.net/distributions/php-8.5.11.tar.xz.asc",
+                "PHP_SHA256=d9be75c08e8c316f4c8f4194d8fbe1750a15f6a6d9d4e3fe72082abeeb800360"
+            ],
+            "Entrypoint": [
+                "docker-php-entrypoint"
+            ],
+            "Cmd": [
+                "php",
+                "-a"
+            ],
+            "WorkingDir": "/work"
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 1036135136,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:a6dc765193a52cbaede3c93a9ff48b9540948dd0774bbe7031fcb5847606f9ac",
+                "sha256:0810e59778a0f154889a10d654b0116fdb620c50b939ae3597d58be11615dfb6",
+                "sha256:178b1eb79b7074199906503b0b0cb3564df0d282105de954b309fc0b3c8e1703",
+                "sha256:5aa62ad9bae7e771a8a7ee209a505cc89999bdf7c489b8ccb8bda5fa91a98d5b",
+                "sha256:8f45a8ec4c58ba6302c2b68e07f93775fbbe94b7005672993f028c560fd5ae0e",
+                "sha256:064538ea71e50ea99eba23b3e436d9b013a5010b896e3483a5bddc972bca8755",
+                "sha256:532c9331dbb40f0d7b4dabcd9be35fad0302fa511bc5799dc4ca352084694168",
+                "sha256:68d6e08674e5d1c5a86774176e05aca32b856f3af9025cee88bfff04c1243635",
+                "sha256:df82127083b65b1df36fa1f0eecbedf275cba0707516a12f3fd2cee291313ebc",
+                "sha256:90e7db6b26c0d352d1d73caf274618e6552baa82551352caebb0f2e5a368ff8f",
+                "sha256:9801c2a5d54dd8320c40edbb011ecc3106d35ba57ae980089b334fd411ad00de",
+                "sha256:1b03f599a24a17f0664631f2c4b2750912b9e5b17b0419a494044f1f40b264a1",
+                "sha256:8f813284aad1124882f84ad5e9520db304130d6fa38babfda6cd55615de6373c",
+                "sha256:918f8d4f18179909173ca74a87fb49d2b8f1f4b9bbb7c6bfa74a9b1b82e4fb5e",
+                "sha256:cc43de4724e554a903c12ba689b312c5f4de969e9c46df8039c218931185173a"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-10-26T14:57:39.604868035Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:b6202974838a15a2f74a1a525d06389902533b6a3f490d77f26ed8adb1240acc",
+            "size": 856
+        },
+        "Identity": {
+            "Build": [
+                {
+                    "Ref": "dgwtqy3u1yp3ufq294c7to7sy",
+                    "CreatedAt": "2026-10-26T15:57:39.661946221+01:00"
+                }
+            ]
+        }
+    }
+]

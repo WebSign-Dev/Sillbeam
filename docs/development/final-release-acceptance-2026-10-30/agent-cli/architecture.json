@@ -1,0 +1,549 @@
+{
+    "schema_version": 1,
+    "status": "valid",
+    "valid": true,
+    "complete": true,
+    "findings": [],
+    "modules": [
+        {
+            "id": "audit",
+            "class": "SillbeamFixturedc5df0b18b11\\Module\\Audit\\AuditModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Module/Audit",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Module/Audit/AuditModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Shipping\\ShippingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Notifications\\NotificationsModule"
+            ],
+            "observed_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Notifications\\NotificationsModule"
+            ],
+            "references": [
+                {
+                    "module": "SillbeamFixturedc5df0b18b11\\Module\\Notifications\\NotificationsModule",
+                    "class": "SillbeamFixturedc5df0b18b11\\Module\\Notifications\\Port",
+                    "file": "/tmp/sillbeam-source-117922df565b/src/Module/Audit/Consumer.php",
+                    "line": 1
+                }
+            ],
+            "activation_reasons": [
+                "project:admin:declared",
+                "project:shop:declared"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "billing",
+            "class": "SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Module/Billing",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Module/Billing/BillingModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule"
+            ],
+            "observed_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule"
+            ],
+            "references": [
+                {
+                    "module": "SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule",
+                    "class": "SillbeamFixturedc5df0b18b11\\Module\\Orders\\Port",
+                    "file": "/tmp/sillbeam-source-117922df565b/src/Module/Billing/Consumer.php",
+                    "line": 1
+                }
+            ],
+            "activation_reasons": [
+                "project:admin:declared",
+                "project:shop:declared",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Shipping\\ShippingModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Notifications\\NotificationsModule"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "cart",
+            "class": "SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Module/Cart",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Module/Cart/CartModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Catalog\\CatalogModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule"
+            ],
+            "observed_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule"
+            ],
+            "references": [
+                {
+                    "module": "SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule",
+                    "class": "SillbeamFixturedc5df0b18b11\\Module\\Pricing\\Port",
+                    "file": "/tmp/sillbeam-source-117922df565b/src/Module/Cart/Consumer.php",
+                    "line": 1
+                }
+            ],
+            "activation_reasons": [
+                "project:admin:declared",
+                "project:shop:declared",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "catalog",
+            "class": "SillbeamFixturedc5df0b18b11\\Module\\Catalog\\CatalogModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Module/Catalog",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Module/Catalog/CatalogModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\User\\UserModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Identity\\IdentityModule"
+            ],
+            "observed_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Identity\\IdentityModule"
+            ],
+            "references": [
+                {
+                    "module": "SillbeamFixturedc5df0b18b11\\Module\\Identity\\IdentityModule",
+                    "class": "SillbeamFixturedc5df0b18b11\\Module\\Identity\\Port",
+                    "file": "/tmp/sillbeam-source-117922df565b/src/Module/Catalog/Consumer.php",
+                    "line": 1
+                }
+            ],
+            "activation_reasons": [
+                "project:admin:declared",
+                "project:shop:declared",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "identity",
+            "class": "SillbeamFixturedc5df0b18b11\\Module\\Identity\\IdentityModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Module/Identity",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Module/Identity/IdentityModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\User\\UserModule"
+            ],
+            "observed_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\User\\UserModule"
+            ],
+            "references": [
+                {
+                    "module": "SillbeamFixturedc5df0b18b11\\Module\\User\\UserModule",
+                    "class": "SillbeamFixturedc5df0b18b11\\Module\\User\\Port",
+                    "file": "/tmp/sillbeam-source-117922df565b/src/Module/Identity/Consumer.php",
+                    "line": 1
+                }
+            ],
+            "activation_reasons": [
+                "project:admin:declared",
+                "project:shop:declared",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Catalog\\CatalogModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "notifications",
+            "class": "SillbeamFixturedc5df0b18b11\\Module\\Notifications\\NotificationsModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Module/Notifications",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Module/Notifications/NotificationsModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Shipping\\ShippingModule"
+            ],
+            "observed_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Shipping\\ShippingModule"
+            ],
+            "references": [
+                {
+                    "module": "SillbeamFixturedc5df0b18b11\\Module\\Shipping\\ShippingModule",
+                    "class": "SillbeamFixturedc5df0b18b11\\Module\\Shipping\\Port",
+                    "file": "/tmp/sillbeam-source-117922df565b/src/Module/Notifications/Consumer.php",
+                    "line": 1
+                }
+            ],
+            "activation_reasons": [
+                "project:admin:declared",
+                "project:shop:declared",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Audit\\AuditModule"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "orders",
+            "class": "SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Module/Orders",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Module/Orders/OrdersModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule"
+            ],
+            "observed_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule"
+            ],
+            "references": [
+                {
+                    "module": "SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule",
+                    "class": "SillbeamFixturedc5df0b18b11\\Module\\Cart\\Port",
+                    "file": "/tmp/sillbeam-source-117922df565b/src/Module/Orders/Consumer.php",
+                    "line": 1
+                }
+            ],
+            "activation_reasons": [
+                "project:admin:declared",
+                "project:shop:declared",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Shipping\\ShippingModule"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "payments",
+            "class": "SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Module/Payments",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Module/Payments/PaymentsModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule"
+            ],
+            "observed_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule"
+            ],
+            "references": [
+                {
+                    "module": "SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule",
+                    "class": "SillbeamFixturedc5df0b18b11\\Module\\Billing\\Port",
+                    "file": "/tmp/sillbeam-source-117922df565b/src/Module/Payments/Consumer.php",
+                    "line": 1
+                }
+            ],
+            "activation_reasons": [
+                "project:admin:declared",
+                "project:shop:declared",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Shipping\\ShippingModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Notifications\\NotificationsModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Audit\\AuditModule"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "pricing",
+            "class": "SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Module/Pricing",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Module/Pricing/PricingModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Identity\\IdentityModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Catalog\\CatalogModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule"
+            ],
+            "observed_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule"
+            ],
+            "references": [
+                {
+                    "module": "SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule",
+                    "class": "SillbeamFixturedc5df0b18b11\\Module\\Stock\\Port",
+                    "file": "/tmp/sillbeam-source-117922df565b/src/Module/Pricing/Consumer.php",
+                    "line": 1
+                }
+            ],
+            "activation_reasons": [
+                "project:admin:declared",
+                "project:shop:declared",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "shipping",
+            "class": "SillbeamFixturedc5df0b18b11\\Module\\Shipping\\ShippingModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Module/Shipping",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Module/Shipping/ShippingModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule"
+            ],
+            "observed_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule"
+            ],
+            "references": [
+                {
+                    "module": "SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule",
+                    "class": "SillbeamFixturedc5df0b18b11\\Module\\Payments\\Port",
+                    "file": "/tmp/sillbeam-source-117922df565b/src/Module/Shipping/Consumer.php",
+                    "line": 1
+                }
+            ],
+            "activation_reasons": [
+                "project:admin:declared",
+                "project:shop:declared",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Notifications\\NotificationsModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Audit\\AuditModule"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "stock",
+            "class": "SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Module/Stock",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Module/Stock/StockModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\User\\UserModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Identity\\IdentityModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Catalog\\CatalogModule"
+            ],
+            "observed_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\Catalog\\CatalogModule"
+            ],
+            "references": [
+                {
+                    "module": "SillbeamFixturedc5df0b18b11\\Module\\Catalog\\CatalogModule",
+                    "class": "SillbeamFixturedc5df0b18b11\\Module\\Catalog\\Port",
+                    "file": "/tmp/sillbeam-source-117922df565b/src/Module/Stock/Consumer.php",
+                    "line": 1
+                }
+            ],
+            "activation_reasons": [
+                "project:admin:declared",
+                "project:shop:declared",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "user",
+            "class": "SillbeamFixturedc5df0b18b11\\Module\\User\\UserModule",
+            "scope": "shared",
+            "project": null,
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Module/User",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Module/User/UserModule.php",
+            "declared_dependencies": [],
+            "observed_dependencies": [],
+            "references": [],
+            "activation_reasons": [
+                "project:admin:declared",
+                "project:shop:declared",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Identity\\IdentityModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Catalog\\CatalogModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Project\\Admin\\Module\\User\\UserModule",
+                "dependency:SillbeamFixturedc5df0b18b11\\Project\\Shop\\Module\\User\\UserModule"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "user",
+            "class": "SillbeamFixturedc5df0b18b11\\Project\\Admin\\Module\\User\\UserModule",
+            "scope": "private",
+            "project": "SillbeamFixturedc5df0b18b11\\Project\\Admin\\AdminProject",
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Project/Admin/Module/User",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Project/Admin/Module/User/UserModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\User\\UserModule"
+            ],
+            "observed_dependencies": [],
+            "references": [],
+            "activation_reasons": [
+                "project:admin:private"
+            ],
+            "controllers": [],
+            "entities": []
+        },
+        {
+            "id": "user",
+            "class": "SillbeamFixturedc5df0b18b11\\Project\\Shop\\Module\\User\\UserModule",
+            "scope": "private",
+            "project": "SillbeamFixturedc5df0b18b11\\Project\\Shop\\ShopProject",
+            "enabled": true,
+            "active": true,
+            "inactive_reason": null,
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Project/Shop/Module/User",
+            "descriptor": "/tmp/sillbeam-source-117922df565b/src/Project/Shop/Module/User/UserModule.php",
+            "declared_dependencies": [
+                "SillbeamFixturedc5df0b18b11\\Module\\User\\UserModule"
+            ],
+            "observed_dependencies": [],
+            "references": [],
+            "activation_reasons": [
+                "project:shop:private"
+            ],
+            "controllers": [],
+            "entities": []
+        }
+    ],
+    "projects": [
+        {
+            "id": "admin",
+            "class": "SillbeamFixturedc5df0b18b11\\Project\\Admin\\AdminProject",
+            "description": "",
+            "declaredModules": [
+                "SillbeamFixturedc5df0b18b11\\Module\\User\\UserModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Identity\\IdentityModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Catalog\\CatalogModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Shipping\\ShippingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Notifications\\NotificationsModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Audit\\AuditModule"
+            ],
+            "modules": [
+                "SillbeamFixturedc5df0b18b11\\Module\\User\\UserModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Identity\\IdentityModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Catalog\\CatalogModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Shipping\\ShippingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Notifications\\NotificationsModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Audit\\AuditModule",
+                "SillbeamFixturedc5df0b18b11\\Project\\Admin\\Module\\User\\UserModule"
+            ],
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Project/Admin",
+            "descriptorFile": "/tmp/sillbeam-source-117922df565b/src/Project/Admin/AdminProject.php",
+            "namespace": "SillbeamFixturedc5df0b18b11\\Project\\Admin",
+            "hosts": [
+                "admin.test"
+            ],
+            "controllerDirectories": [],
+            "entityDirectories": []
+        },
+        {
+            "id": "shop",
+            "class": "SillbeamFixturedc5df0b18b11\\Project\\Shop\\ShopProject",
+            "description": "",
+            "declaredModules": [
+                "SillbeamFixturedc5df0b18b11\\Module\\User\\UserModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Identity\\IdentityModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Catalog\\CatalogModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Shipping\\ShippingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Notifications\\NotificationsModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Audit\\AuditModule"
+            ],
+            "modules": [
+                "SillbeamFixturedc5df0b18b11\\Module\\User\\UserModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Identity\\IdentityModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Catalog\\CatalogModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Stock\\StockModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Pricing\\PricingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Cart\\CartModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Orders\\OrdersModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Billing\\BillingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Payments\\PaymentsModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Shipping\\ShippingModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Notifications\\NotificationsModule",
+                "SillbeamFixturedc5df0b18b11\\Module\\Audit\\AuditModule",
+                "SillbeamFixturedc5df0b18b11\\Project\\Shop\\Module\\User\\UserModule"
+            ],
+            "directory": "/tmp/sillbeam-source-117922df565b/src/Project/Shop",
+            "descriptorFile": "/tmp/sillbeam-source-117922df565b/src/Project/Shop/ShopProject.php",
+            "namespace": "SillbeamFixturedc5df0b18b11\\Project\\Shop",
+            "hosts": [
+                "shop.test"
+            ],
+            "controllerDirectories": [],
+            "entityDirectories": []
+        }
+    ]
+}

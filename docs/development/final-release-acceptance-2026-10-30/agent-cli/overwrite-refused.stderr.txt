@@ -1,0 +1,1 @@
+sillbeam:graph: SVG destination already exists. Use --force to replace it intentionally: /home/oeffe/PhpstormProjects/websign/sillbeam-core/docs/development/final-release-acceptance-2026-10-30/agent-cli/architecture.svg

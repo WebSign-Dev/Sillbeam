@@ -1,0 +1,2 @@
+PASS ZIP contents: 130 files, 77 identical runtime files, 197 local documentation links
+PASS real release ZIP / documented Hello / manual installation / both kernels / cold and warm dev+prod / no Doctrine / no dev dependencies / development directory exclusions

@@ -1,0 +1,128 @@
+[
+  {
+    "php": "8.5.4",
+    "modules": 10,
+    "environment": "dev",
+    "files": 220,
+    "references": 180,
+    "ms": {
+      "index_cold": 111.346,
+      "index_warm": 0.014,
+      "discovery_after_index": 8.938,
+      "discovery_warm": 7.645,
+      "compile": 1.293,
+      "analysis": 3.301,
+      "analysis_warm": 2.58,
+      "container_cold": 526.147,
+      "container_warm": 7.523,
+      "routes_cold": 12.278,
+      "routes_warm": 4.795
+    },
+    "peak_mib": 28
+  },
+  {
+    "php": "8.5.4",
+    "modules": 10,
+    "environment": "prod",
+    "files": 220,
+    "references": 180,
+    "ms": {
+      "index_cold": 92.254,
+      "index_warm": 0.014,
+      "discovery_after_index": 6.506,
+      "discovery_warm": 5.823,
+      "compile": 0.972,
+      "analysis": 2.894,
+      "analysis_warm": 1.841,
+      "container_cold": 431.161,
+      "container_warm": 0.397,
+      "routes_cold": 11.352,
+      "routes_warm": 4.402
+    },
+    "peak_mib": 24
+  },
+  {
+    "php": "8.5.4",
+    "modules": 50,
+    "environment": "dev",
+    "files": 1100,
+    "references": 980,
+    "ms": {
+      "index_cold": 432.725,
+      "index_warm": 0.013,
+      "discovery_after_index": 38.459,
+      "discovery_warm": 65.532,
+      "compile": 1.469,
+      "analysis": 15.519,
+      "analysis_warm": 30.559,
+      "container_cold": 1708.242,
+      "container_warm": 33.691,
+      "routes_cold": 53.786,
+      "routes_warm": 32.801
+    },
+    "peak_mib": 44
+  },
+  {
+    "php": "8.5.4",
+    "modules": 50,
+    "environment": "prod",
+    "files": 1100,
+    "references": 980,
+    "ms": {
+      "index_cold": 447.765,
+      "index_warm": 0.013,
+      "discovery_after_index": 33.248,
+      "discovery_warm": 29.325,
+      "compile": 1.044,
+      "analysis": 13.39,
+      "analysis_warm": 12.357,
+      "container_cold": 1163.574,
+      "container_warm": 0.317,
+      "routes_cold": 31.661,
+      "routes_warm": 13.874
+    },
+    "peak_mib": 36
+  },
+  {
+    "php": "8.5.4",
+    "modules": 100,
+    "environment": "dev",
+    "files": 2200,
+    "references": 1980,
+    "ms": {
+      "index_cold": 778.272,
+      "index_warm": 0.014,
+      "discovery_after_index": 65.176,
+      "discovery_warm": 57.565,
+      "compile": 1.385,
+      "analysis": 34.331,
+      "analysis_warm": 30.394,
+      "container_cold": 2711.082,
+      "container_warm": 82.747,
+      "routes_cold": 159.149,
+      "routes_warm": 111.45
+    },
+    "peak_mib": 62
+  },
+  {
+    "php": "8.5.4",
+    "modules": 100,
+    "environment": "prod",
+    "files": 2200,
+    "references": 1980,
+    "ms": {
+      "index_cold": 964.368,
+      "index_warm": 0.013,
+      "discovery_after_index": 66.922,
+      "discovery_warm": 57.815,
+      "compile": 1.64,
+      "analysis": 35.316,
+      "analysis_warm": 30.824,
+      "container_cold": 2281.233,
+      "container_warm": 0.397,
+      "routes_cold": 74.896,
+      "routes_warm": 35.15
+    },
+    "peak_mib": 52
+  }
+]

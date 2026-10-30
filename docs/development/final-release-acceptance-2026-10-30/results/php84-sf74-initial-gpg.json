@@ -1,0 +1,19 @@
+{
+  "label": "php84-sf74-initial-gpg",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-final-php84-sf74",
+    "gpg",
+    "--version"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:51:32.041689+00:00",
+  "log": "logs/php84-sf74-initial-gpg.log",
+  "exit_code": 127,
+  "elapsed_seconds": 0.168,
+  "finished_utc": "2026-10-30T11:51:32.209285+00:00"
+}

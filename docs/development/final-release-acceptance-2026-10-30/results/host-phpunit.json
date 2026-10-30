@@ -1,0 +1,14 @@
+{
+  "label": "host-phpunit",
+  "command": [
+    "composer",
+    "test"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:48:45.327589+00:00",
+  "log": "logs/host-phpunit.log",
+  "exit_code": 0,
+  "elapsed_seconds": 46.977,
+  "finished_utc": "2026-10-30T11:49:32.304549+00:00"
+}

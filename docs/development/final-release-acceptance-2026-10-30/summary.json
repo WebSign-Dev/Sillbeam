@@ -1,0 +1,45 @@
+{
+  "command_records": 142,
+  "exit_code_counts": {
+    "0": 118,
+    "127": 4,
+    "255": 20
+  },
+  "unexpected_failures": [],
+  "recommendation": "NO-GO",
+  "blocker": "B1: all20Flexsmoketestsassertretiredinspectionformat",
+  "matrix": {
+    "php84-sf74": {
+      "tests": 635,
+      "assertions": 8363,
+      "consumer_installs": 12,
+      "consumer_kernel_executions": 24,
+      "flex_failed": 5,
+      "other_recorded_checks_pass": true
+    },
+    "php84-sf81": {
+      "tests": 635,
+      "assertions": 8223,
+      "consumer_installs": 12,
+      "consumer_kernel_executions": 24,
+      "flex_failed": 5,
+      "other_recorded_checks_pass": true
+    },
+    "php85-sf74": {
+      "tests": 635,
+      "assertions": 8363,
+      "consumer_installs": 12,
+      "consumer_kernel_executions": 24,
+      "flex_failed": 5,
+      "other_recorded_checks_pass": true
+    },
+    "php85-sf81": {
+      "tests": 635,
+      "assertions": 8223,
+      "consumer_installs": 12,
+      "consumer_kernel_executions": 24,
+      "flex_failed": 5,
+      "other_recorded_checks_pass": true
+    }
+  }
+}

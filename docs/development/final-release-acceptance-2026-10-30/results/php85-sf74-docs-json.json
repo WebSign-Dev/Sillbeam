@@ -1,0 +1,19 @@
+{
+  "label": "php85-sf74-docs-json",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-final-php85-sf74",
+    "composer",
+    "docs:export-json"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:57:14.802022+00:00",
+  "log": "logs/php85-sf74-docs-json.log",
+  "exit_code": 0,
+  "elapsed_seconds": 2.125,
+  "finished_utc": "2026-10-30T11:57:16.926723+00:00"
+}

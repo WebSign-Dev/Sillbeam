@@ -1,0 +1,12 @@
+{
+  "architecture-report.schema.json": {
+    "baseline": "cf2f410",
+    "unchanged": true,
+    "sha256": "1498bd231c4aa19db5bde8fca34bc8479f6beec33d5a9314d0f7e27781808d99"
+  },
+  "doctor-report.schema.json": {
+    "baseline": "ac8118d",
+    "unchanged": true,
+    "sha256": "76e2ee500b692832b40c050a2c11fb71a9f5dbff3fd92adcc79325b58f9ba5dc"
+  }
+}

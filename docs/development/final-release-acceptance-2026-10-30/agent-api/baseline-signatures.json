@@ -1,0 +1,2084 @@
+{
+    "Sillbeam\\Core\\Architecture\\ArchitectureAnalysisResult": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": true,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "findings",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ],
+                    [
+                        "architecture",
+                        "?Sillbeam\\Core\\Architecture\\CompiledArchitecture",
+                        false,
+                        false,
+                        true,
+                        null
+                    ],
+                    [
+                        "references",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ],
+                    [
+                        "cause",
+                        "?Throwable",
+                        false,
+                        false,
+                        true,
+                        null
+                    ],
+                    [
+                        "discovery",
+                        "?Sillbeam\\Core\\Architecture\\DiscoveryResult",
+                        false,
+                        false,
+                        true,
+                        null
+                    ],
+                    [
+                        "applicationReferences",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ],
+                    [
+                        "diagnosticContext",
+                        "?Sillbeam\\Core\\Architecture\\Diagnostic\\DiagnosticContext",
+                        false,
+                        false,
+                        true,
+                        null
+                    ]
+                ]
+            ],
+            "isComplete": [
+                true,
+                false,
+                false,
+                "bool",
+                []
+            ],
+            "isValid": [
+                true,
+                false,
+                false,
+                "bool",
+                []
+            ],
+            "throwIfInvalid": [
+                true,
+                false,
+                false,
+                "void",
+                []
+            ]
+        },
+        "properties": {
+            "applicationReferences": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "architecture": [
+                true,
+                false,
+                true,
+                "?Sillbeam\\Core\\Architecture\\CompiledArchitecture"
+            ],
+            "diagnosticContext": [
+                true,
+                false,
+                true,
+                "?Sillbeam\\Core\\Architecture\\Diagnostic\\DiagnosticContext"
+            ],
+            "discovery": [
+                true,
+                false,
+                true,
+                "?Sillbeam\\Core\\Architecture\\DiscoveryResult"
+            ],
+            "findings": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "references": [
+                true,
+                false,
+                true,
+                "array"
+            ]
+        },
+        "constants": []
+    },
+    "Sillbeam\\Core\\Architecture\\ArchitectureAnalyzer": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": false,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "inspector",
+                        "?Sillbeam\\Core\\Architecture\\SourceInspector",
+                        false,
+                        false,
+                        true,
+                        null
+                    ]
+                ]
+            ],
+            "analyze": [
+                true,
+                false,
+                false,
+                "Sillbeam\\Core\\Architecture\\ArchitectureAnalysisResult",
+                [
+                    [
+                        "options",
+                        "Sillbeam\\Core\\Architecture\\DiscoveryOptions",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "config",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ]
+                ]
+            ]
+        },
+        "properties": [],
+        "constants": []
+    },
+    "Sillbeam\\Core\\Architecture\\ArchitectureFinding": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": true,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "rule",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "message",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "context",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ],
+                    [
+                        "severity",
+                        "string",
+                        false,
+                        false,
+                        true,
+                        "error"
+                    ]
+                ]
+            ],
+            "describe": [
+                true,
+                false,
+                false,
+                "string",
+                []
+            ],
+            "suggestion": [
+                true,
+                false,
+                false,
+                "?string",
+                []
+            ]
+        },
+        "properties": {
+            "context": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "message": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "rule": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "severity": [
+                true,
+                false,
+                true,
+                "string"
+            ]
+        },
+        "constants": []
+    },
+    "Sillbeam\\Core\\Architecture\\ArchitectureReport": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": true,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "data",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "presentation",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ]
+                ]
+            ],
+            "collect": [
+                true,
+                true,
+                false,
+                "Sillbeam\\Core\\Architecture\\ArchitectureReport",
+                [
+                    [
+                        "provider",
+                        "Sillbeam\\Core\\Architecture\\ArchitectureReport|Closure",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "exitCode": [
+                true,
+                false,
+                false,
+                "int",
+                []
+            ],
+            "fromAnalysis": [
+                true,
+                true,
+                false,
+                "Sillbeam\\Core\\Architecture\\ArchitectureReport",
+                [
+                    [
+                        "analysis",
+                        "Sillbeam\\Core\\Architecture\\ArchitectureAnalysisResult",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "config",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ],
+                    [
+                        "projectDir",
+                        "?string",
+                        false,
+                        false,
+                        true,
+                        null
+                    ]
+                ]
+            ],
+            "toJson": [
+                true,
+                false,
+                false,
+                "string",
+                []
+            ],
+            "unavailable": [
+                true,
+                true,
+                false,
+                "Sillbeam\\Core\\Architecture\\ArchitectureReport",
+                [
+                    [
+                        "error",
+                        "Throwable",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ]
+        },
+        "properties": {
+            "data": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "presentation": [
+                true,
+                false,
+                true,
+                "array"
+            ]
+        },
+        "constants": []
+    },
+    "Sillbeam\\Core\\Architecture\\ArchitectureValidationException": {
+        "parent": "LogicException",
+        "interfaces": [
+            "Stringable",
+            "Throwable"
+        ],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": false,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "result",
+                        "Sillbeam\\Core\\Architecture\\ArchitectureAnalysisResult",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "previous",
+                        "?Throwable",
+                        false,
+                        false,
+                        true,
+                        null
+                    ]
+                ]
+            ],
+            "fatal": [
+                true,
+                true,
+                false,
+                "Sillbeam\\Core\\Architecture\\ArchitectureValidationException",
+                [
+                    [
+                        "rule",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "message",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "context",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ],
+                    [
+                        "previous",
+                        "?Throwable",
+                        false,
+                        false,
+                        true,
+                        null
+                    ]
+                ]
+            ]
+        },
+        "properties": {
+            "result": [
+                true,
+                false,
+                true,
+                "Sillbeam\\Core\\Architecture\\ArchitectureAnalysisResult"
+            ]
+        },
+        "constants": []
+    },
+    "Sillbeam\\Core\\Architecture\\CompiledArchitecture": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": true,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "modules",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "projects",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "applicationModules",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "projectModules",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "activationReasons": [
+                true,
+                false,
+                false,
+                "array",
+                [
+                    [
+                        "class",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "projectMode": [
+                true,
+                false,
+                false,
+                "bool",
+                []
+            ],
+            "usedModules": [
+                true,
+                false,
+                false,
+                "array",
+                []
+            ]
+        },
+        "properties": {
+            "applicationModules": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "modules": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "projectModules": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "projects": [
+                true,
+                false,
+                true,
+                "array"
+            ]
+        },
+        "constants": []
+    },
+    "Sillbeam\\Core\\Architecture\\DiscoveryOptions": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": true,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "root",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "namespace",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "moduleRoots",
+                        "?array",
+                        false,
+                        false,
+                        true,
+                        null
+                    ],
+                    [
+                        "projectRoots",
+                        "?array",
+                        false,
+                        false,
+                        true,
+                        null
+                    ],
+                    [
+                        "excludes",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ],
+                    [
+                        "controllerPatterns",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        [
+                            "Controller",
+                            "**/Controller"
+                        ]
+                    ],
+                    [
+                        "entityPatterns",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        [
+                            "Entity",
+                            "**/Entity"
+                        ]
+                    ],
+                    [
+                        "serviceExcludes",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        [
+                            "Entity/**",
+                            "**/Entity/**",
+                            "Dto/**",
+                            "**/Dto/**",
+                            "Tests/**",
+                            "**/Tests/**",
+                            "Fixtures/**",
+                            "**/Fixtures/**",
+                            "Migrations/**",
+                            "**/Migrations/**"
+                        ]
+                    ],
+                    [
+                        "applicationRoots",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ]
+                ]
+            ],
+            "excluded": [
+                true,
+                false,
+                false,
+                "bool",
+                [
+                    [
+                        "file",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "namespaceForDirectory": [
+                true,
+                false,
+                false,
+                "string",
+                [
+                    [
+                        "directory",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "roots": [
+                true,
+                false,
+                false,
+                "array",
+                []
+            ]
+        },
+        "properties": {
+            "applicationRoots": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "controllerPatterns": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "entityPatterns": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "excludes": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "moduleRoots": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "namespace": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "projectRoots": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "root": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "serviceExcludes": [
+                true,
+                false,
+                true,
+                "array"
+            ]
+        },
+        "constants": []
+    },
+    "Sillbeam\\Core\\Architecture\\DiscoveryResult": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": true,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "root",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "namespace",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "modules",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "projects",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "resources",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ]
+        },
+        "properties": {
+            "modules": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "namespace": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "projects": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "resources": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "root": [
+                true,
+                false,
+                true,
+                "string"
+            ]
+        },
+        "constants": []
+    },
+    "Sillbeam\\Core\\Architecture\\DiscoveryRoot": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": true,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "path",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "namespace",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "excludes",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ]
+                ]
+            ],
+            "contains": [
+                true,
+                false,
+                false,
+                "bool",
+                [
+                    [
+                        "path",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ]
+        },
+        "properties": {
+            "excludes": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "namespace": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "path": [
+                true,
+                false,
+                true,
+                "string"
+            ]
+        },
+        "constants": []
+    },
+    "Sillbeam\\Core\\Console\\Application": {
+        "parent": "Symfony\\Bundle\\FrameworkBundle\\Console\\Application",
+        "interfaces": [
+            "Symfony\\Contracts\\Service\\ContainerProviderInterface",
+            "Symfony\\Contracts\\Service\\ResetInterface"
+        ],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": false,
+        "methods": {
+            "doRun": [
+                true,
+                false,
+                false,
+                "int",
+                [
+                    [
+                        "input",
+                        "Symfony\\Component\\Console\\Input\\InputInterface",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "output",
+                        "Symfony\\Component\\Console\\Output\\OutputInterface",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "find": [
+                true,
+                false,
+                false,
+                "Symfony\\Component\\Console\\Command\\Command",
+                [
+                    [
+                        "name",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "get": [
+                true,
+                false,
+                false,
+                "Symfony\\Component\\Console\\Command\\Command",
+                [
+                    [
+                        "name",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ]
+        },
+        "properties": [],
+        "constants": []
+    },
+    "Sillbeam\\Core\\Kernel\\Runtime\\KernelInformationInterface": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": true,
+        "interface": true,
+        "final": false,
+        "readonly": false,
+        "methods": {
+            "all": [
+                true,
+                false,
+                false,
+                "array",
+                []
+            ]
+        },
+        "properties": [],
+        "constants": []
+    },
+    "Sillbeam\\Core\\Kernel\\SillbeamKernel": {
+        "parent": "Symfony\\Component\\HttpKernel\\Kernel",
+        "interfaces": [
+            "Symfony\\Component\\HttpKernel\\HttpKernelInterface",
+            "Symfony\\Component\\HttpKernel\\TerminableInterface",
+            "Symfony\\Component\\HttpKernel\\RebootableInterface",
+            "Symfony\\Component\\HttpKernel\\KernelInterface",
+            "Symfony\\Component\\DependencyInjection\\Kernel\\KernelInterface"
+        ],
+        "traits": [
+            "Symfony\\Bundle\\FrameworkBundle\\Kernel\\MicroKernelTrait"
+        ],
+        "abstract": true,
+        "interface": false,
+        "final": false,
+        "readonly": false,
+        "methods": {
+            "buildContainer": [
+                false,
+                false,
+                false,
+                "Symfony\\Component\\DependencyInjection\\ContainerBuilder",
+                []
+            ],
+            "doInitializeBundles": [
+                false,
+                false,
+                false,
+                "void",
+                []
+            ],
+            "doInitializeContainer": [
+                false,
+                false,
+                false,
+                "void",
+                []
+            ],
+            "dumpContainer": [
+                false,
+                false,
+                false,
+                "void",
+                [
+                    [
+                        "cache",
+                        "Symfony\\Component\\Config\\ConfigCache",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "container",
+                        "Symfony\\Component\\DependencyInjection\\ContainerBuilder",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "class",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "baseClass",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "getApplicationName": [
+                true,
+                false,
+                false,
+                "string",
+                []
+            ],
+            "getBuildDir": [
+                true,
+                false,
+                false,
+                "string",
+                []
+            ],
+            "getCacheDir": [
+                true,
+                false,
+                false,
+                "string",
+                []
+            ],
+            "getContainerBaseClass": [
+                false,
+                false,
+                false,
+                "string",
+                []
+            ],
+            "getContainerBuilder": [
+                false,
+                false,
+                false,
+                "Symfony\\Component\\DependencyInjection\\ContainerBuilder",
+                []
+            ],
+            "getContainerClass": [
+                false,
+                false,
+                false,
+                "string",
+                []
+            ],
+            "getContainerLoader": [
+                false,
+                false,
+                false,
+                "Symfony\\Component\\Config\\Loader\\DelegatingLoader",
+                [
+                    [
+                        "container",
+                        "Symfony\\Component\\DependencyInjection\\ContainerInterface",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "getKernelParameters": [
+                false,
+                false,
+                false,
+                "array",
+                []
+            ],
+            "getLogDir": [
+                true,
+                false,
+                false,
+                "string",
+                []
+            ],
+            "getShareDir": [
+                true,
+                false,
+                false,
+                "?string",
+                []
+            ],
+            "initializeBundles": [
+                false,
+                false,
+                false,
+                "void",
+                []
+            ],
+            "initializeContainer": [
+                false,
+                false,
+                false,
+                "void",
+                []
+            ],
+            "loadRoutes": [
+                true,
+                false,
+                false,
+                "Symfony\\Component\\Routing\\RouteCollection",
+                [
+                    [
+                        "loader",
+                        "Symfony\\Component\\Config\\Loader\\LoaderInterface",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "prepareContainer": [
+                false,
+                false,
+                false,
+                "void",
+                [
+                    [
+                        "container",
+                        "Symfony\\Component\\DependencyInjection\\ContainerBuilder",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "registerBundles": [
+                true,
+                false,
+                false,
+                "iterable",
+                []
+            ],
+            "registerContainerConfiguration": [
+                true,
+                false,
+                false,
+                "void",
+                [
+                    [
+                        "loader",
+                        "Symfony\\Component\\Config\\Loader\\LoaderInterface",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ]
+        },
+        "properties": [],
+        "constants": {
+            "VERSION": "8.1.6",
+            "VERSION_ID": 80106,
+            "MAJOR_VERSION": 8,
+            "MINOR_VERSION": 1,
+            "RELEASE_VERSION": 6,
+            "EXTRA_VERSION": "",
+            "END_OF_MAINTENANCE": "01/2027",
+            "END_OF_LIFE": "01/2027",
+            "MAIN_REQUEST": 1,
+            "SUB_REQUEST": 2
+        }
+    },
+    "Sillbeam\\Core\\Module\\Attribute\\SillbeamModule": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": true,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "id",
+                        "?string",
+                        false,
+                        false,
+                        true,
+                        null
+                    ],
+                    [
+                        "description",
+                        "string",
+                        false,
+                        false,
+                        true,
+                        ""
+                    ],
+                    [
+                        "dependencies",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ]
+                ]
+            ]
+        },
+        "properties": {
+            "dependencies": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "description": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "id": [
+                true,
+                false,
+                true,
+                "?string"
+            ]
+        },
+        "constants": []
+    },
+    "Sillbeam\\Core\\Module\\ModuleDefinition": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": true,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "id",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "class",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "description",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "dependencies",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "enabled",
+                        "bool",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "directory",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "descriptorFile",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "namespace",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "entityDirectories",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "controllerDirectories",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "projectClass",
+                        "?string",
+                        false,
+                        false,
+                        true,
+                        null
+                    ],
+                    [
+                        "observedDependencies",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ],
+                    [
+                        "dependencyReferences",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ],
+                    [
+                        "activationReasons",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ]
+                ]
+            ],
+            "isPrivate": [
+                true,
+                false,
+                false,
+                "bool",
+                []
+            ],
+            "key": [
+                true,
+                false,
+                false,
+                "string",
+                [
+                    [
+                        "projectId",
+                        "?string",
+                        false,
+                        false,
+                        true,
+                        null
+                    ]
+                ]
+            ]
+        },
+        "properties": {
+            "activationReasons": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "class": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "controllerDirectories": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "dependencies": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "dependencyReferences": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "description": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "descriptorFile": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "directory": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "enabled": [
+                true,
+                false,
+                true,
+                "bool"
+            ],
+            "entityDirectories": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "id": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "namespace": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "observedDependencies": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "projectClass": [
+                true,
+                false,
+                true,
+                "?string"
+            ]
+        },
+        "constants": []
+    },
+    "Sillbeam\\Core\\Module\\ModuleRegistryInterface": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": true,
+        "interface": true,
+        "final": false,
+        "readonly": false,
+        "methods": {
+            "active": [
+                true,
+                false,
+                false,
+                "array",
+                []
+            ],
+            "all": [
+                true,
+                false,
+                false,
+                "array",
+                []
+            ],
+            "forApplication": [
+                true,
+                false,
+                false,
+                "array",
+                []
+            ],
+            "forProject": [
+                true,
+                false,
+                false,
+                "array",
+                [
+                    [
+                        "project",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "get": [
+                true,
+                false,
+                false,
+                "Sillbeam\\Core\\Module\\ModuleDefinition",
+                [
+                    [
+                        "class",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ]
+        },
+        "properties": [],
+        "constants": []
+    },
+    "Sillbeam\\Core\\Project\\Attribute\\SillbeamProject": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": true,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "id",
+                        "?string",
+                        false,
+                        false,
+                        true,
+                        null
+                    ],
+                    [
+                        "description",
+                        "string",
+                        false,
+                        false,
+                        true,
+                        ""
+                    ],
+                    [
+                        "modules",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ]
+                ]
+            ]
+        },
+        "properties": {
+            "description": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "id": [
+                true,
+                false,
+                true,
+                "?string"
+            ],
+            "modules": [
+                true,
+                false,
+                true,
+                "array"
+            ]
+        },
+        "constants": []
+    },
+    "Sillbeam\\Core\\Project\\ProjectContextInterface": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": true,
+        "interface": true,
+        "final": false,
+        "readonly": false,
+        "methods": {
+            "current": [
+                true,
+                false,
+                false,
+                "?Sillbeam\\Core\\Project\\ProjectDefinition",
+                []
+            ],
+            "hasModule": [
+                true,
+                false,
+                false,
+                "bool",
+                [
+                    [
+                        "module",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "id": [
+                true,
+                false,
+                false,
+                "?string",
+                []
+            ],
+            "is": [
+                true,
+                false,
+                false,
+                "bool",
+                [
+                    [
+                        "id",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ]
+        },
+        "properties": [],
+        "constants": []
+    },
+    "Sillbeam\\Core\\Project\\ProjectDefinition": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": true,
+        "methods": {
+            "__construct": [
+                true,
+                false,
+                false,
+                "",
+                [
+                    [
+                        "id",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "class",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "description",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "declaredModules",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "modules",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "directory",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "descriptorFile",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "namespace",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "hosts",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "controllerDirectories",
+                        "array",
+                        false,
+                        false,
+                        false,
+                        null
+                    ],
+                    [
+                        "entityDirectories",
+                        "array",
+                        false,
+                        false,
+                        true,
+                        []
+                    ]
+                ]
+            ],
+            "canonicalHost": [
+                true,
+                false,
+                false,
+                "?string",
+                []
+            ]
+        },
+        "properties": {
+            "class": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "controllerDirectories": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "declaredModules": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "description": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "descriptorFile": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "directory": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "entityDirectories": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "hosts": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "id": [
+                true,
+                false,
+                true,
+                "string"
+            ],
+            "modules": [
+                true,
+                false,
+                true,
+                "array"
+            ],
+            "namespace": [
+                true,
+                false,
+                true,
+                "string"
+            ]
+        },
+        "constants": []
+    },
+    "Sillbeam\\Core\\Project\\ProjectRegistryInterface": {
+        "parent": null,
+        "interfaces": [],
+        "traits": [],
+        "abstract": true,
+        "interface": true,
+        "final": false,
+        "readonly": false,
+        "methods": {
+            "all": [
+                true,
+                false,
+                false,
+                "array",
+                []
+            ],
+            "forHost": [
+                true,
+                false,
+                false,
+                "Sillbeam\\Core\\Project\\ProjectDefinition",
+                [
+                    [
+                        "host",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "get": [
+                true,
+                false,
+                false,
+                "Sillbeam\\Core\\Project\\ProjectDefinition",
+                [
+                    [
+                        "idOrClass",
+                        "string",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ]
+        },
+        "properties": [],
+        "constants": []
+    },
+    "Sillbeam\\Core\\SillbeamCoreBundle": {
+        "parent": "Symfony\\Component\\HttpKernel\\Bundle\\Bundle",
+        "interfaces": [
+            "Symfony\\Component\\HttpKernel\\Bundle\\BundleInterface",
+            "Symfony\\Component\\Config\\Definition\\ConfigurableInterface",
+            "Symfony\\Component\\DependencyInjection\\Extension\\ConfigurableExtensionInterface",
+            "Symfony\\Component\\DependencyInjection\\Kernel\\BundleInterface"
+        ],
+        "traits": [],
+        "abstract": false,
+        "interface": false,
+        "final": true,
+        "readonly": false,
+        "methods": {
+            "build": [
+                true,
+                false,
+                false,
+                "void",
+                [
+                    [
+                        "container",
+                        "Symfony\\Component\\DependencyInjection\\ContainerBuilder",
+                        false,
+                        false,
+                        false,
+                        null
+                    ]
+                ]
+            ],
+            "getContainerExtension": [
+                true,
+                false,
+                false,
+                "Sillbeam\\Core\\DependencyInjection\\SillbeamCoreExtension",
+                []
+            ]
+        },
+        "properties": [],
+        "constants": []
+    }
+}

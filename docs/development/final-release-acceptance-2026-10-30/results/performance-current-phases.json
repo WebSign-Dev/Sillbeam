@@ -1,0 +1,15 @@
+{
+  "label": "performance-current-phases",
+  "command": [
+    "php",
+    "tools/benchmark-architecture.php",
+    "--phases"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:52:50.633037+00:00",
+  "log": "logs/performance-current-phases.log",
+  "exit_code": 0,
+  "elapsed_seconds": 13.363,
+  "finished_utc": "2026-10-30T11:53:03.996368+00:00"
+}

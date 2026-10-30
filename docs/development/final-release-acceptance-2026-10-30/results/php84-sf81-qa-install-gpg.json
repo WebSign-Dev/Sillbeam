@@ -1,0 +1,20 @@
+{
+  "label": "php84-sf81-qa-install-gpg",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "0:0",
+    "sillbeam-final-php84-sf81",
+    "sh",
+    "-c",
+    "apt-get update -qq && apt-get install -y -qq --no-install-recommends gnupg"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:51:32.208625+00:00",
+  "log": "logs/php84-sf81-qa-install-gpg.log",
+  "exit_code": 0,
+  "elapsed_seconds": 8.141,
+  "finished_utc": "2026-10-30T11:51:40.349607+00:00"
+}

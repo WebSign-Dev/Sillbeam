@@ -1,0 +1,8 @@
+<?php
+require $argv[1].'/vendor/autoload.php';
+$code = file_get_contents($argv[1].'/tools/benchmark-architecture.php');
+$function = substr($code, strpos($code, 'function benchmarkFixture('));
+$function = str_replace([': SourceWorkspace', 'new SourceWorkspace()'], [': \\Sillbeam\\Core\\Tests\\Support\\SourceWorkspace', 'new \\Sillbeam\\Core\\Tests\\Support\\SourceWorkspace()'], $function);
+eval($function);
+$fixture = benchmarkFixture(100, $argv[2]);
+echo json_encode(['directory'=>$fixture->directory,'namespace'=>$fixture->namespace,'architecture_report_source'=>(new ReflectionClass(Sillbeam\Core\Architecture\ArchitectureReport::class))->getFileName()], JSON_THROW_ON_ERROR);

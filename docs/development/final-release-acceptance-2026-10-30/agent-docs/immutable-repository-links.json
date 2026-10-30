@@ -1,0 +1,71 @@
+{
+  "unique_immutable_repository_targets": 16,
+  "broken": [],
+  "targets": {
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/doctor-f01-f02-verification-2026-10-25/README.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:flex-recipe/README.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/test-apps.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/release-0.3.0-acceptance/README.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/core-rc-2026-10-23.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/testing.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/core-benchmark-2026-10-23.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/core-extension-audit-2026-10-24.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/class-analysis-audit-2026-10-24.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/package-compatibility-2026-10-10.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/release-package-preparation-2026-10-12.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/final-release-audit-2026-10-12.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/flex-recipe-verification.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/cli-communication-verification.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    },
+    "3f891afbff43a0ab48af4ec5991f19aa59fe80b0:docs/development/markdown-presentation-verification.md": {
+      "exists_in_local_git": true,
+      "exit_code": 0
+    }
+  },
+  "limit": "Validates immutable repository targets against local Git objects; does not claim HTTP/remote publication availability."
+}

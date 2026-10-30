@@ -1,0 +1,20 @@
+{
+  "label": "php84-sf74-audit",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-final-php84-sf74",
+    "composer",
+    "audit",
+    "--locked"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:51:57.364295+00:00",
+  "log": "logs/php84-sf74-audit.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.666,
+  "finished_utc": "2026-10-30T11:51:58.030414+00:00"
+}

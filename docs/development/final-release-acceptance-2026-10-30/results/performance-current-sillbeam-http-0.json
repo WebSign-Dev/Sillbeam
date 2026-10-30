@@ -1,0 +1,21 @@
+{
+  "label": "performance-current-sillbeam-http-0",
+  "command": [
+    "php",
+    "tools/benchmark-architecture.php",
+    "--sample",
+    "/tmp/sillbeam-source-e6d8fceb3623",
+    "SillbeamFixture1e131da5d1cc",
+    "prod",
+    "http",
+    "200",
+    "100"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:53:12.454105+00:00",
+  "log": "logs/performance-current-sillbeam-http-0.log",
+  "exit_code": 0,
+  "elapsed_seconds": 1.274,
+  "finished_utc": "2026-10-30T11:53:13.728101+00:00"
+}

@@ -1,0 +1,15 @@
+{
+  "label": "api-doctor-report-unit",
+  "command": [
+    "vendor/bin/phpunit",
+    "--configuration=phpunit.xml.dist",
+    "tests/Unit/DoctorReportTest.php"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:52:43.894894+00:00",
+  "log": "logs/api-doctor-report-unit.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.269,
+  "finished_utc": "2026-10-30T11:52:44.164145+00:00"
+}

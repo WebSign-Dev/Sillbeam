@@ -1,0 +1,14 @@
+{
+  "label": "host-cs",
+  "command": [
+    "composer",
+    "cs:check"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:52:17.265035+00:00",
+  "log": "logs/host-cs.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.571,
+  "finished_utc": "2026-10-30T11:52:17.835823+00:00"
+}

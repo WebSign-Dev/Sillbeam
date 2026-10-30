@@ -1,0 +1,16 @@
+{
+  "label": "php85-sf81-cleanup",
+  "command": [
+    "docker",
+    "rm",
+    "-f",
+    "sillbeam-final-php85-sf81"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:59:18.105411+00:00",
+  "log": "logs/php85-sf81-cleanup.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.416,
+  "finished_utc": "2026-10-30T11:59:18.521635+00:00"
+}

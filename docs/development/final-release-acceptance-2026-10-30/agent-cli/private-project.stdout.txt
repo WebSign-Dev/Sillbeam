@@ -1,0 +1,1 @@
+Architecture SVG written to /home/oeffe/PhpstormProjects/websign/sillbeam-core/docs/development/final-release-acceptance-2026-10-30/agent-cli/shop.svg

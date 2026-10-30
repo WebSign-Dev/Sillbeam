@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1540" height="1599" viewBox="0 0 1540 1599" role="img" aria-labelledby="graph-title graph-description">
+<title id="graph-title">Sillbeam module architecture</title>
+<desc id="graph-description">Analysis: valid; catalog evidence; runtime activation only where known
+Analysis complete
+Reference evidence complete
+Legend: arrow = depends on; dashed orange = observed undeclared
+Gray = disabled; dashed node = unknown; red border = recorded cycle member</desc>
+<defs><marker id="arrow-declared" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/></marker><marker id="arrow-observed" viewBox="0 0 10 10" refX="10" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#b45309"/></marker></defs>
+<rect width="100%" height="100%" fill="#fff"/>
+<g font-family="monospace" fill="#0f172a">
+<text x="28" y="34" font-family="sans-serif" font-size="21" font-weight="bold">Sillbeam module architecture</text>
+<text x="28" y="60" font-size="12" textLength="521" lengthAdjust="spacingAndGlyphs">Analysis: valid; catalog evidence; runtime activation only where known</text>
+<text x="28" y="79" font-size="12" textLength="127" lengthAdjust="spacingAndGlyphs">Analysis complete</text>
+<text x="28" y="98" font-size="12" textLength="201" lengthAdjust="spacingAndGlyphs">Reference evidence complete</text>
+<text x="28" y="117" font-size="12" textLength="469" lengthAdjust="spacingAndGlyphs">Legend: arrow = depends on; dashed orange = observed undeclared</text>
+<text x="28" y="136" font-size="12" textLength="551" lengthAdjust="spacingAndGlyphs">Gray = disabled; dashed node = unknown; red border = recorded cycle member</text>
+<g id="scope-shared_scope"><rect x="28" y="193" width="680" height="1378" rx="12" fill="#f8fafc" stroke="#cbd5e1"/>
+<text x="44" y="217" font-size="13" textLength="113" lengthAdjust="spacingAndGlyphs" font-weight="bold">Shared modules</text>
+</g>
+<g id="scope-project_scope_0001"><rect x="732" y="193" width="370" height="170" rx="12" fill="#f8fafc" stroke="#cbd5e1"/>
+<text x="748" y="217" font-size="13" textLength="194" lengthAdjust="spacingAndGlyphs" font-weight="bold">Private modules | admin;</text>
+<text x="748" y="235" font-size="13" textLength="162" lengthAdjust="spacingAndGlyphs" font-weight="bold">membership=validated</text>
+</g>
+<g id="scope-project_scope_0002"><rect x="1126" y="193" width="370" height="170" rx="12" fill="#f8fafc" stroke="#cbd5e1"/>
+<text x="1142" y="217" font-size="13" textLength="186" lengthAdjust="spacingAndGlyphs" font-weight="bold">Private modules | shop;</text>
+<text x="1142" y="235" font-size="13" textLength="162" lengthAdjust="spacingAndGlyphs" font-weight="bold">membership=validated</text>
+</g>
+<path id="edge-1" class="dependency declared" data-source="m0001" data-target="m0006" d="M 364 263 H 386 V 810 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Audit\AuditModule → SillbeamFixturedc5df0b18b11\Module\Notifications\NotificationsModule (declared)</title></path>
+<path id="edge-2" class="dependency declared" data-source="m0001" data-target="m0008" d="M 364 277 H 396 V 1027 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Audit\AuditModule → SillbeamFixturedc5df0b18b11\Module\Payments\PaymentsModule (declared)</title></path>
+<path id="edge-3" class="dependency declared" data-source="m0001" data-target="m0010" d="M 364 291 H 406 V 1248 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Audit\AuditModule → SillbeamFixturedc5df0b18b11\Module\Shipping\ShippingModule (declared)</title></path>
+<path id="edge-4" class="dependency declared" data-source="m0002" data-target="m0003" d="M 364 367 H 416 V 477 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Billing\BillingModule → SillbeamFixturedc5df0b18b11\Module\Cart\CartModule (declared)</title></path>
+<path id="edge-5" class="dependency declared" data-source="m0002" data-target="m0007" d="M 364 375 H 426 V 917 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Billing\BillingModule → SillbeamFixturedc5df0b18b11\Module\Orders\OrdersModule (declared)</title></path>
+<path id="edge-6" class="dependency declared" data-source="m0002" data-target="m0009" d="M 364 383 H 436 V 1137 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Billing\BillingModule → SillbeamFixturedc5df0b18b11\Module\Pricing\PricingModule (declared)</title></path>
+<path id="edge-7" class="dependency declared" data-source="m0003" data-target="m0004" d="M 364 485 H 446 V 588 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Cart\CartModule → SillbeamFixturedc5df0b18b11\Module\Catalog\CatalogModule (declared)</title></path>
+<path id="edge-8" class="dependency declared" data-source="m0003" data-target="m0009" d="M 364 493 H 456 V 1145 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Cart\CartModule → SillbeamFixturedc5df0b18b11\Module\Pricing\PricingModule (declared)</title></path>
+<path id="edge-9" class="dependency declared" data-source="m0003" data-target="m0011" d="M 364 501 H 466 V 1357 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Cart\CartModule → SillbeamFixturedc5df0b18b11\Module\Stock\StockModule (declared)</title></path>
+<path id="edge-10" class="dependency declared" data-source="m0004" data-target="m0005" d="M 364 597 H 476 V 700 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Catalog\CatalogModule → SillbeamFixturedc5df0b18b11\Module\Identity\IdentityModule (declared)</title></path>
+<path id="edge-11" class="dependency declared" data-source="m0004" data-target="m0012" d="M 364 607 H 486 V 1471 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Catalog\CatalogModule → SillbeamFixturedc5df0b18b11\Module\User\UserModule (declared)</title></path>
+<path id="edge-12" class="dependency declared" data-source="m0005" data-target="m0012" d="M 364 711 H 496 V 1483 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Identity\IdentityModule → SillbeamFixturedc5df0b18b11\Module\User\UserModule (declared)</title></path>
+<path id="edge-13" class="dependency declared" data-source="m0006" data-target="m0002" d="M 364 821 H 506 V 391 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Notifications\NotificationsModule → SillbeamFixturedc5df0b18b11\Module\Billing\BillingModule (declared)</title></path>
+<path id="edge-14" class="dependency declared" data-source="m0006" data-target="m0008" d="M 364 832 H 516 V 1035 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Notifications\NotificationsModule → SillbeamFixturedc5df0b18b11\Module\Payments\PaymentsModule (declared)</title></path>
+<path id="edge-15" class="dependency declared" data-source="m0006" data-target="m0010" d="M 364 843 H 526 V 1257 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Notifications\NotificationsModule → SillbeamFixturedc5df0b18b11\Module\Shipping\ShippingModule (declared)</title></path>
+<path id="edge-16" class="dependency declared" data-source="m0007" data-target="m0003" d="M 364 925 H 536 V 509 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Orders\OrdersModule → SillbeamFixturedc5df0b18b11\Module\Cart\CartModule (declared)</title></path>
+<path id="edge-17" class="dependency declared" data-source="m0007" data-target="m0009" d="M 364 933 H 546 V 1153 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Orders\OrdersModule → SillbeamFixturedc5df0b18b11\Module\Pricing\PricingModule (declared)</title></path>
+<path id="edge-18" class="dependency declared" data-source="m0007" data-target="m0011" d="M 364 941 H 556 V 1365 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Orders\OrdersModule → SillbeamFixturedc5df0b18b11\Module\Stock\StockModule (declared)</title></path>
+<path id="edge-19" class="dependency declared" data-source="m0008" data-target="m0002" d="M 364 1043 H 566 V 399 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Payments\PaymentsModule → SillbeamFixturedc5df0b18b11\Module\Billing\BillingModule (declared)</title></path>
+<path id="edge-20" class="dependency declared" data-source="m0008" data-target="m0003" d="M 364 1051 H 576 V 517 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Payments\PaymentsModule → SillbeamFixturedc5df0b18b11\Module\Cart\CartModule (declared)</title></path>
+<path id="edge-21" class="dependency declared" data-source="m0008" data-target="m0007" d="M 364 1059 H 586 V 949 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Payments\PaymentsModule → SillbeamFixturedc5df0b18b11\Module\Orders\OrdersModule (declared)</title></path>
+<path id="edge-22" class="dependency declared" data-source="m0009" data-target="m0004" d="M 364 1161 H 596 V 616 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Pricing\PricingModule → SillbeamFixturedc5df0b18b11\Module\Catalog\CatalogModule (declared)</title></path>
+<path id="edge-23" class="dependency declared" data-source="m0009" data-target="m0005" d="M 364 1169 H 606 V 722 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Pricing\PricingModule → SillbeamFixturedc5df0b18b11\Module\Identity\IdentityModule (declared)</title></path>
+<path id="edge-24" class="dependency declared" data-source="m0009" data-target="m0011" d="M 364 1177 H 616 V 1373 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Pricing\PricingModule → SillbeamFixturedc5df0b18b11\Module\Stock\StockModule (declared)</title></path>
+<path id="edge-25" class="dependency declared" data-source="m0010" data-target="m0002" d="M 364 1267 H 626 V 407 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Shipping\ShippingModule → SillbeamFixturedc5df0b18b11\Module\Billing\BillingModule (declared)</title></path>
+<path id="edge-26" class="dependency declared" data-source="m0010" data-target="m0007" d="M 364 1276 H 636 V 957 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Shipping\ShippingModule → SillbeamFixturedc5df0b18b11\Module\Orders\OrdersModule (declared)</title></path>
+<path id="edge-27" class="dependency declared" data-source="m0010" data-target="m0008" d="M 364 1285 H 646 V 1067 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Shipping\ShippingModule → SillbeamFixturedc5df0b18b11\Module\Payments\PaymentsModule (declared)</title></path>
+<path id="edge-28" class="dependency declared" data-source="m0011" data-target="m0004" d="M 364 1381 H 656 V 625 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Stock\StockModule → SillbeamFixturedc5df0b18b11\Module\Catalog\CatalogModule (declared)</title></path>
+<path id="edge-29" class="dependency declared" data-source="m0011" data-target="m0005" d="M 364 1389 H 666 V 733 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Stock\StockModule → SillbeamFixturedc5df0b18b11\Module\Identity\IdentityModule (declared)</title></path>
+<path id="edge-30" class="dependency declared" data-source="m0011" data-target="m0012" d="M 364 1397 H 676 V 1495 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Module\Stock\StockModule → SillbeamFixturedc5df0b18b11\Module\User\UserModule (declared)</title></path>
+<path id="edge-31" class="dependency declared" data-source="m0013" data-target="m0012" d="M 1068 295 H 1090 V 165 H 686 V 1507 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Project\Admin\Module\User\UserModule → SillbeamFixturedc5df0b18b11\Module\User\UserModule (declared)</title></path>
+<path id="edge-32" class="dependency declared" data-source="m0014" data-target="m0012" d="M 1462 295 H 1484 V 179 H 696 V 1519 H 364" fill="none" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow-declared)"><title>SillbeamFixturedc5df0b18b11\Project\Shop\Module\User\UserModule → SillbeamFixturedc5df0b18b11\Module\User\UserModule (declared)</title></path>
+<g id="m0001" class="module"><title>SillbeamFixturedc5df0b18b11\Module\Audit\AuditModule</title><rect x="44" y="235" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="56" y="259" font-size="15" textLength="47" lengthAdjust="spacingAndGlyphs" font-weight="bold">audit</text>
+<text x="56" y="277" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+<text x="56" y="295" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">Projects: admin, shop</text>
+</g>
+<g id="m0002" class="module"><title>SillbeamFixturedc5df0b18b11\Module\Billing\BillingModule</title><rect x="44" y="345" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="56" y="369" font-size="15" textLength="66" lengthAdjust="spacingAndGlyphs" font-weight="bold">billing</text>
+<text x="56" y="387" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+<text x="56" y="405" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">Projects: admin, shop</text>
+</g>
+<g id="m0003" class="module"><title>SillbeamFixturedc5df0b18b11\Module\Cart\CartModule</title><rect x="44" y="455" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="56" y="479" font-size="15" textLength="38" lengthAdjust="spacingAndGlyphs" font-weight="bold">cart</text>
+<text x="56" y="497" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+<text x="56" y="515" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">Projects: admin, shop</text>
+</g>
+<g id="m0004" class="module"><title>SillbeamFixturedc5df0b18b11\Module\Catalog\CatalogModule</title><rect x="44" y="565" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="56" y="589" font-size="15" textLength="66" lengthAdjust="spacingAndGlyphs" font-weight="bold">catalog</text>
+<text x="56" y="607" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+<text x="56" y="625" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">Projects: admin, shop</text>
+</g>
+<g id="m0005" class="module"><title>SillbeamFixturedc5df0b18b11\Module\Identity\IdentityModule</title><rect x="44" y="675" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="56" y="699" font-size="15" textLength="75" lengthAdjust="spacingAndGlyphs" font-weight="bold">identity</text>
+<text x="56" y="717" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+<text x="56" y="735" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">Projects: admin, shop</text>
+</g>
+<g id="m0006" class="module"><title>SillbeamFixturedc5df0b18b11\Module\Notifications\NotificationsModule</title><rect x="44" y="785" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="56" y="809" font-size="15" textLength="121" lengthAdjust="spacingAndGlyphs" font-weight="bold">notifications</text>
+<text x="56" y="827" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+<text x="56" y="845" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">Projects: admin, shop</text>
+</g>
+<g id="m0007" class="module"><title>SillbeamFixturedc5df0b18b11\Module\Orders\OrdersModule</title><rect x="44" y="895" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="56" y="919" font-size="15" textLength="56" lengthAdjust="spacingAndGlyphs" font-weight="bold">orders</text>
+<text x="56" y="937" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+<text x="56" y="955" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">Projects: admin, shop</text>
+</g>
+<g id="m0008" class="module"><title>SillbeamFixturedc5df0b18b11\Module\Payments\PaymentsModule</title><rect x="44" y="1005" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="56" y="1029" font-size="15" textLength="75" lengthAdjust="spacingAndGlyphs" font-weight="bold">payments</text>
+<text x="56" y="1047" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+<text x="56" y="1065" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">Projects: admin, shop</text>
+</g>
+<g id="m0009" class="module"><title>SillbeamFixturedc5df0b18b11\Module\Pricing\PricingModule</title><rect x="44" y="1115" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="56" y="1139" font-size="15" textLength="66" lengthAdjust="spacingAndGlyphs" font-weight="bold">pricing</text>
+<text x="56" y="1157" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+<text x="56" y="1175" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">Projects: admin, shop</text>
+</g>
+<g id="m0010" class="module"><title>SillbeamFixturedc5df0b18b11\Module\Shipping\ShippingModule</title><rect x="44" y="1225" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="56" y="1249" font-size="15" textLength="75" lengthAdjust="spacingAndGlyphs" font-weight="bold">shipping</text>
+<text x="56" y="1267" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+<text x="56" y="1285" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">Projects: admin, shop</text>
+</g>
+<g id="m0011" class="module"><title>SillbeamFixturedc5df0b18b11\Module\Stock\StockModule</title><rect x="44" y="1335" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="56" y="1359" font-size="15" textLength="47" lengthAdjust="spacingAndGlyphs" font-weight="bold">stock</text>
+<text x="56" y="1377" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+<text x="56" y="1395" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">Projects: admin, shop</text>
+</g>
+<g id="m0012" class="module"><title>SillbeamFixturedc5df0b18b11\Module\User\UserModule</title><rect x="44" y="1445" width="320" height="100" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="56" y="1469" font-size="15" textLength="38" lengthAdjust="spacingAndGlyphs" font-weight="bold">user</text>
+<text x="56" y="1487" font-size="12" textLength="45" lengthAdjust="spacingAndGlyphs">shared</text>
+<text x="56" y="1505" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+<text x="56" y="1523" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">Projects: admin, shop</text>
+</g>
+<g id="m0013" class="module"><title>SillbeamFixturedc5df0b18b11\Project\Admin\Module\User\UserModule</title><rect x="748" y="253" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="760" y="277" font-size="15" textLength="38" lengthAdjust="spacingAndGlyphs" font-weight="bold">user</text>
+<text x="760" y="295" font-size="12" textLength="164" lengthAdjust="spacingAndGlyphs">private Project: admin</text>
+<text x="760" y="313" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+</g>
+<g id="m0014" class="module"><title>SillbeamFixturedc5df0b18b11\Project\Shop\Module\User\UserModule</title><rect x="1142" y="253" width="320" height="84" rx="8" fill="#eff6ff" stroke="#64748b" stroke-width="1"/>
+<text x="1154" y="277" font-size="15" textLength="38" lengthAdjust="spacingAndGlyphs" font-weight="bold">user</text>
+<text x="1154" y="295" font-size="12" textLength="157" lengthAdjust="spacingAndGlyphs">private Project: shop</text>
+<text x="1154" y="313" font-size="12" textLength="90" lengthAdjust="spacingAndGlyphs">state=active</text>
+</g>
+</g></svg>

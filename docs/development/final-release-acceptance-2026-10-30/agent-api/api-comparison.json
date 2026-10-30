@@ -1,0 +1,8 @@
+{
+  "baseline": "cf2f410",
+  "current": "0b70c3143acf25cae5082f3ec6007b6d2a31da79",
+  "public_types": 20,
+  "native_signatures_equal": true,
+  "runtime_requirements_equal": true,
+  "compared_inheritance_interfaces_traits": true
+}

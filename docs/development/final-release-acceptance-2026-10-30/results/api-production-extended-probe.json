@@ -1,0 +1,17 @@
+{
+  "label": "api-production-extended-probe",
+  "command": [
+    "vendor/bin/phpunit",
+    "--configuration=phpunit.xml.dist",
+    "--filter",
+    "testProductionHttpNeverLoadsTheSourceAnalyzerWithColdOrWarmCache",
+    "/tmp/AcceptanceHttpProbeTest.php"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:51:45.276866+00:00",
+  "log": "logs/api-production-extended-probe.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.97,
+  "finished_utc": "2026-10-30T11:51:46.247188+00:00"
+}

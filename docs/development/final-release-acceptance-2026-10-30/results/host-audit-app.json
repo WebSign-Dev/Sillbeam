@@ -1,0 +1,16 @@
+{
+  "label": "host-audit-app",
+  "command": [
+    "composer",
+    "audit",
+    "--locked",
+    "--working-dir=apps/test-app/app"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:52:18.252744+00:00",
+  "log": "logs/host-audit-app.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.366,
+  "finished_utc": "2026-10-30T11:52:18.618705+00:00"
+}

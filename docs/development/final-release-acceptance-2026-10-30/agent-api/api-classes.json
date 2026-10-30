@@ -1,0 +1,22 @@
+[
+  "Sillbeam\\Core\\Architecture\\ArchitectureAnalysisResult",
+  "Sillbeam\\Core\\Architecture\\ArchitectureAnalyzer",
+  "Sillbeam\\Core\\Architecture\\ArchitectureFinding",
+  "Sillbeam\\Core\\Architecture\\ArchitectureReport",
+  "Sillbeam\\Core\\Architecture\\ArchitectureValidationException",
+  "Sillbeam\\Core\\Architecture\\CompiledArchitecture",
+  "Sillbeam\\Core\\Architecture\\DiscoveryOptions",
+  "Sillbeam\\Core\\Architecture\\DiscoveryResult",
+  "Sillbeam\\Core\\Architecture\\DiscoveryRoot",
+  "Sillbeam\\Core\\Console\\Application",
+  "Sillbeam\\Core\\Kernel\\Runtime\\KernelInformationInterface",
+  "Sillbeam\\Core\\Kernel\\SillbeamKernel",
+  "Sillbeam\\Core\\Module\\Attribute\\SillbeamModule",
+  "Sillbeam\\Core\\Module\\ModuleDefinition",
+  "Sillbeam\\Core\\Module\\ModuleRegistryInterface",
+  "Sillbeam\\Core\\Project\\Attribute\\SillbeamProject",
+  "Sillbeam\\Core\\Project\\ProjectContextInterface",
+  "Sillbeam\\Core\\Project\\ProjectDefinition",
+  "Sillbeam\\Core\\Project\\ProjectRegistryInterface",
+  "Sillbeam\\Core\\SillbeamCoreBundle"
+]

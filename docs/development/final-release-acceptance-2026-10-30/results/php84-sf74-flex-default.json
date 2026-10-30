@@ -1,0 +1,19 @@
+{
+  "label": "php84-sf74-flex-default",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-final-php84-sf74",
+    "composer",
+    "test:flex-recipe"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:53:36.558402+00:00",
+  "log": "logs/php84-sf74-flex-default.log",
+  "exit_code": 255,
+  "elapsed_seconds": 24.368,
+  "finished_utc": "2026-10-30T11:54:00.926100+00:00"
+}

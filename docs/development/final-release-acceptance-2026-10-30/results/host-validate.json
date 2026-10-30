@@ -1,0 +1,15 @@
+{
+  "label": "host-validate",
+  "command": [
+    "composer",
+    "validate",
+    "--strict"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:48:44.654192+00:00",
+  "log": "logs/host-validate.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.316,
+  "finished_utc": "2026-10-30T11:48:44.969860+00:00"
+}

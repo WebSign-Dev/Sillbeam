@@ -1,0 +1,66 @@
+
+  SILLBEAM CORE  / Module inspection
+  ────────────────────────────────────────────────────────────────────────────
+  Module: billing — Active
+  Scope: Shared
+  Architecture: Valid (whole analysis)
+  Known direct relationships: 3 depends on · 3 used by
+  ────────────────────────────────────────────────────────────────────────────
+  DEPENDS ON
+    cart — Declared only
+    orders — Declared + Observed
+    pricing — Declared only
+  ────────────────────────────────────────────────────────────────────────────
+  USED BY
+    notifications — Declared only
+    payments — Declared + Observed
+    shipping — Declared only
+  ────────────────────────────────────────────────────────────────────────────
+  ARCHITECTURE ISSUES
+  ✓ No related architecture findings in the available evidence.
+  ────────────────────────────────────────────────────────────────────────────
+  TECHNICAL DETAILS
+  ID: billing
+  Descriptor class: SillbeamFixturedc5df0b18b11\Module\Billing\BillingModule
+  Descriptor file:
+  /tmp/sillbeam-source-117922df565b/src/Module/Billing/BillingModule.php
+  Scope: shared
+  Owner Project: none (shared)
+  Configuration key: shared:billing
+  Override: none
+  Enabled: true
+  Active: true
+  State: active
+  Global active: true
+  Activation reasons: project:admin:declared, project:shop:declared,
+  dependency:SillbeamFixturedc5df0b18b11\Module\Payments\PaymentsModule,
+  dependency:SillbeamFixturedc5df0b18b11\Module\Shipping\ShippingModule,
+  dependency:SillbeamFixturedc5df0b18b11\Module\Notifications\NotificationsMod
+  ule
+  Project admin: active —
+  SillbeamFixturedc5df0b18b11\Project\Admin\AdminProject
+  Project shop: active — SillbeamFixturedc5df0b18b11\Project\Shop\ShopProject
+  ────────────────────────────────────────────────────────────────────────────
+  DECLARED DEPENDENCIES
+    SillbeamFixturedc5df0b18b11\Module\Cart\CartModule
+    SillbeamFixturedc5df0b18b11\Module\Orders\OrdersModule
+    SillbeamFixturedc5df0b18b11\Module\Pricing\PricingModule
+  ────────────────────────────────────────────────────────────────────────────
+  OBSERVED DEPENDENCIES
+    SillbeamFixturedc5df0b18b11\Module\Orders\OrdersModule
+    SillbeamFixturedc5df0b18b11\Module\Orders\Port at
+    /tmp/sillbeam-source-117922df565b/src/Module/Billing/Consumer.php:1
+  ────────────────────────────────────────────────────────────────────────────
+  INCOMING DECLARED DEPENDENCIES
+    SillbeamFixturedc5df0b18b11\Module\Notifications\NotificationsModule
+    SillbeamFixturedc5df0b18b11\Module\Payments\PaymentsModule
+    SillbeamFixturedc5df0b18b11\Module\Shipping\ShippingModule
+  ────────────────────────────────────────────────────────────────────────────
+  INCOMING OBSERVED REFERENCES
+    SillbeamFixturedc5df0b18b11\Module\Payments\PaymentsModule
+    SillbeamFixturedc5df0b18b11\Module\Payments\PaymentsModule →
+    SillbeamFixturedc5df0b18b11\Module\Billing\Port at
+    /tmp/sillbeam-source-117922df565b/src/Module/Payments/Consumer.php:1
+  ────────────────────────────────────────────────────────────────────────────
+  ORIGINAL FINDINGS
+  None related to this inspection.

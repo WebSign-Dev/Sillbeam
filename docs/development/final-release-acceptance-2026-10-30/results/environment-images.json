@@ -1,0 +1,17 @@
+{
+  "label": "environment-images",
+  "command": [
+    "docker",
+    "image",
+    "inspect",
+    "sillbeam-frame-verify:php84",
+    "sillbeam-frame-verify:php85"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T11:55:09.904314+00:00",
+  "log": "logs/environment-images.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.219,
+  "finished_utc": "2026-10-30T11:55:10.123345+00:00"
+}
