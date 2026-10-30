@@ -323,13 +323,19 @@ php bin/console sillbeam:inspect:module Billing
 php bin/console sillbeam:inspect:module billing --project=shop
 ```
 
-Inspect one module from the existing architecture analysis/report, including
-configuration, validated activation, declared/observed/incoming direct relationships
-and relevant findings. Ambiguous IDs list candidates; `--project` provides ownership
-and activation context. The Core adapter supports this exact command before
-container compilation. Text only in 0.3.0; no `--format`/JSON mode. Exit codes are
-0 valid, 1 architecture violations, 2 usage/selection failure or unavailable analysis.
-See [module inspection](module-inspection.md) for selection, state definitions,
+The compact default shows module state/scope/Project context, whole-analysis status
+and known direct relationship counts. DEPENDS ON and USED BY merge declared/observed
+evidence per module using short, collision-aware IDs. Declared only does not mean
+unnecessary; incomplete observations remain unverified. Relevant problems, unknown
+state and global analysis blockers stay visible.
+
+`-v` adds configuration, full classes/paths, activation evidence, Project states,
+separate relationship lists, concrete references and original findings/context.
+`--project` retains existing ownership/activation selection. The Core adapter supports
+this exact command before container compilation. Text only in 0.3.0; no `--format`
+or JSON mode. Exit codes remain 0 valid, 1 architecture violations,
+2 usage/selection failure or unavailable analysis. See
+[module inspection](module-inspection.md) for the User example, evidence labels,
 partial-evidence limits and native-container versus fresh-adapter snapshots.
 
 ## Architecture graph

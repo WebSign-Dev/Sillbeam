@@ -89,3 +89,11 @@ concurrent creation are covered. See the
 [native SVG verification report](native-svg-2026-10-30.md). The earlier
 [Graphviz UX report](architecture-graph-ux-2026-10-30.md) records the superseded
 external-renderer implementation.
+
+## Module inspection UX
+
+`vendor/bin/phpunit tests/Integration/InspectModuleTest.php` verifies compact and
+verbose views, direct relationship classification with source-specific completeness,
+short collision-aware identities, Project/global states, blockers, original context,
+relative/external paths, both CLI entries, quiet/help and unchanged report JSON.
+See the [verification record](module-inspection-ux-2026-10-30.md).

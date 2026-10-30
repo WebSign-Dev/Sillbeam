@@ -32,13 +32,16 @@ final class InspectModuleTest extends TestCase
         $this->source->remove();
     }
 
-    public function testModuleOnlyShowsIdentityConfigurationAndValidatedActivation(): void
+    public function testDefaultShowsCompactIdentityAndValidatedActivation(): void
     {
         $billing = $this->module('Billing');
         $tester = $this->inspect('Billing');
         self::assertSame(0, $tester->getStatusCode(), $tester->getDisplay());
-        foreach (['SILLBEAM CORE', 'MODULE', 'ID: billing', $billing, 'Scope: shared', 'Owner Project: none', 'Configuration key: shared:billing', 'Override: none', 'Enabled: true', 'Active: true', 'State: active', 'No related architecture findings'] as $text) {
+        foreach (['SILLBEAM CORE', 'Module: billing — Active', 'Scope: Shared', 'Architecture: Valid', '0 depends on', '0 used by', 'DEPENDS ON', 'USED BY', 'No related architecture findings'] as $text) {
             self::assertStringContainsString($text, $this->unwrapped($tester));
+        }
+        foreach ([$billing, $this->source->directory, 'Configuration key:', 'Global active:', 'DECLARED DEPENDENCIES'] as $hidden) {
+            self::assertStringNotContainsString($hidden, $this->unwrapped($tester));
         }
         self::assertSame($tester->getDisplay(), $this->inspect('\\'.$billing)->getDisplay());
     }
@@ -55,7 +58,7 @@ final class InspectModuleTest extends TestCase
         self::assertStringContainsString('OBSERVED DEPENDENCIES', $outgoing->getDisplay());
         self::assertStringContainsString($target, $this->unwrapped($outgoing));
         self::assertStringContainsString('Consumer.php:1', $outgoing->getDisplay());
-        $incoming = $this->inspect('target');
+        $incoming = $this->inspect('target', verbose: true);
         self::assertStringContainsString('INCOMING DECLARED DEPENDENCIES', $incoming->getDisplay());
         self::assertStringContainsString('INCOMING OBSERVED REFERENCES', $incoming->getDisplay());
         self::assertStringContainsString($source, $this->unwrapped($incoming));
@@ -69,12 +72,14 @@ final class InspectModuleTest extends TestCase
         $this->module('Unused');
         $this->project('Shop', [$selected]);
         $config = ['modules' => ['shared:disabled' => ['enabled' => false]]];
-        $disabled = $this->inspect('disabled', config: $config);
+        $disabled = $this->inspect('disabled', config: $config, verbose: true);
         self::assertSame(0, $disabled->getStatusCode(), $disabled->getDisplay());
+        self::assertStringContainsString('Module: disabled — Disabled', $this->unwrapped($this->inspect('disabled', config: $config)));
+        self::assertStringContainsString('Module: unused — Unassigned', $this->unwrapped($this->inspect('unused', config: $config)));
         foreach (['Enabled: false', 'Active: false', 'State: disabled', 'Override: shared:disabled', 'Configured enabled override: false'] as $text) {
             self::assertStringContainsString($text, $disabled->getDisplay());
         }
-        $unused = $this->inspect('unused', config: $config);
+        $unused = $this->inspect('unused', config: $config, verbose: true);
         foreach (['Enabled: true', 'Active: false', 'State: unassigned'] as $text) {
             self::assertStringContainsString($text, $unused->getDisplay());
         }
@@ -86,7 +91,7 @@ final class InspectModuleTest extends TestCase
         $shop = $this->project('Shop', [$billing]);
         $admin = $this->project('Admin');
         $config = ['projects' => ['shop' => ['hosts' => ['shop.test']], 'admin' => ['hosts' => ['admin.test']]]];
-        $tester = $this->inspect('billing', 'Admin', $config);
+        $tester = $this->inspect('billing', 'Admin', $config, verbose: true);
         self::assertSame(0, $tester->getStatusCode(), $tester->getDisplay());
         foreach (['Inspection Project: admin', 'Global active: true', 'Active: false', 'State: unassigned', $shop, $admin] as $text) {
             self::assertStringContainsString($text, $this->unwrapped($tester));
@@ -106,7 +111,7 @@ final class InspectModuleTest extends TestCase
             self::assertStringContainsString($text, $this->unwrapped($ambiguous));
         }
         foreach (['shop', $shop] as $selector) {
-            $chosen = $this->inspect('billing', $selector, $config);
+            $chosen = $this->inspect('billing', $selector, $config, verbose: true);
             self::assertSame(0, $chosen->getStatusCode(), $chosen->getDisplay());
             foreach (['Scope: private', 'Owner Project: shop', 'Configuration key: project:shop:billing', 'State: active', $one] as $text) {
                 self::assertStringContainsString($text, $this->unwrapped($chosen));
@@ -137,10 +142,10 @@ final class InspectModuleTest extends TestCase
         $tester = $this->inspect('B');
         self::assertSame(1, $tester->getStatusCode(), $tester->getDisplay());
         self::assertStringContainsString('dependency.cycle', $tester->getDisplay());
-        self::assertStringContainsString('Active: unknown', $tester->getDisplay());
-        self::assertStringContainsString('State: unknown', $tester->getDisplay());
-        self::assertStringNotContainsString('State: active', $tester->getDisplay());
-        self::assertStringContainsString('Enabled: true', $tester->getDisplay());
+        self::assertStringContainsString('Activation is unknown', $tester->getDisplay());
+        self::assertStringContainsString('Unknown', $tester->getDisplay());
+        self::assertStringNotContainsString('Module: b — Active', $tester->getDisplay());
+        self::assertStringNotContainsString('Enabled:', $tester->getDisplay());
     }
 
     public function testDisabledDirectDependencyIsRelevantToItsDeclaringModule(): void
@@ -151,7 +156,7 @@ final class InspectModuleTest extends TestCase
         self::assertSame(1, $tester->getStatusCode(), $tester->getDisplay());
         self::assertStringContainsString('dependency.disabled', $tester->getDisplay());
         self::assertStringNotContainsString('No related architecture findings', $this->unwrapped($tester));
-        self::assertStringContainsString('Active: unknown', $tester->getDisplay());
+        self::assertStringContainsString('Activation is unknown', $tester->getDisplay());
     }
 
     public function testPartialCatalogDoesNotInventActivationOrAbsenceOfObservedDependencies(): void
@@ -162,7 +167,7 @@ final class InspectModuleTest extends TestCase
         $report = ArchitectureReport::fromAnalysis($partial, ['modules' => ['billing' => ['enabled' => false]]]);
         $tester = new CommandTester(new InspectModuleCommand($report));
         self::assertSame(2, $tester->execute(['module' => 'Billing']));
-        foreach (['Enabled: unknown', 'Active: unknown', 'State: unknown', 'Reference evidence is incomplete', 'source.read'] as $text) {
+        foreach (['Module: billing — Unknown', 'Reference evidence is incomplete', 'source.read'] as $text) {
             self::assertStringContainsString($text, $this->unwrapped($tester));
         }
         self::assertStringNotContainsString('State: disabled', $tester->getDisplay());
@@ -175,7 +180,7 @@ final class InspectModuleTest extends TestCase
         $private = $this->module('Billing', [], 'Shop');
         $config = ['modules' => ['billing' => ['enabled' => true], 'shared:billing' => ['enabled' => false], 'project:shop:billing' => ['enabled' => false]]];
         foreach ([[$shared, 'shared:billing'], [$private, 'project:shop:billing']] as [$class, $key]) {
-            $tester = $this->inspect($class, config: $config);
+            $tester = $this->inspect($class, config: $config, verbose: true);
             self::assertSame(0, $tester->getStatusCode(), $tester->getDisplay());
             self::assertStringContainsString('Override: '.$key, $this->unwrapped($tester));
             self::assertStringContainsString('State: disabled', $tester->getDisplay());
@@ -184,7 +189,7 @@ final class InspectModuleTest extends TestCase
         self::assertSame($report->toJson(), (new ArchitectureReport($report->data))->toJson());
         self::assertStringNotContainsString('module_inspection', $report->toJson());
         $this->module('None');
-        $legacy = $this->inspect('none', config: ['modules' => ['none' => ['enabled' => false]]]);
+        $legacy = $this->inspect('none', config: ['modules' => ['none' => ['enabled' => false]]], verbose: true);
         self::assertSame(0, $legacy->getStatusCode());
         self::assertStringContainsString('Override: none (configured key)', $this->unwrapped($legacy));
     }
@@ -194,10 +199,10 @@ final class InspectModuleTest extends TestCase
         $a = $this->source->php('src/Module/A/AModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(id: "billing")] final class AModule {}');
         $this->source->php('src/Module/B/BModule.php', '#[\\Sillbeam\\Core\\Module\\Attribute\\SillbeamModule(id: "billing")] final class BModule {}');
         self::assertSame(2, $this->inspect('billing')->getStatusCode());
-        $tester = $this->inspect($a);
+        $tester = $this->inspect($a, verbose: true);
         self::assertSame(2, $tester->getStatusCode());
         self::assertStringContainsString('Configuration key: unknown', $tester->getDisplay());
-        self::assertStringContainsString('State: unknown', $tester->getDisplay());
+        self::assertStringContainsString('Unknown', $tester->getDisplay());
         self::assertStringContainsString('module.duplicate_key', $tester->getDisplay());
     }
 
@@ -255,7 +260,7 @@ final class InspectModuleTest extends TestCase
         try {
             self::assertSame(1, $tester->run(['command' => 'sillbeam:inspect:module', 'module' => 'Billing']));
             self::assertStringContainsString('dependency.unknown', $tester->getDisplay());
-            self::assertStringContainsString('Active: unknown', $tester->getDisplay());
+            self::assertStringContainsString('Activation is unknown', $tester->getDisplay());
             self::assertFalse((new \ReflectionProperty($kernel, 'booted'))->getValue($kernel));
         } finally {
             $kernel->shutdown();
@@ -273,7 +278,7 @@ final class InspectModuleTest extends TestCase
         $tester = new ApplicationTester($native);
         try {
             self::assertSame(0, $tester->run(['command' => 'sillbeam:inspect:module', 'module' => 'billing']));
-            self::assertStringContainsString('State: active', $tester->getDisplay());
+            self::assertStringContainsString('Module: billing — Active', $tester->getDisplay());
             self::assertSame(0, $tester->run(['command' => 'sillbeam:inspect:module', '--help' => true]));
             self::assertStringContainsString('--project', $tester->getDisplay());
         } finally {
@@ -312,13 +317,205 @@ final class InspectModuleTest extends TestCase
             if (\in_array('--quiet', $arguments, true)) {
                 self::assertSame('', $stdout);
             } elseif (1 === $expected) {
-                self::assertStringContainsString('ID: billing', $stdout);
-                self::assertStringContainsString('State: unknown', $stdout);
+                self::assertStringContainsString('Module: billing', $stdout);
+                self::assertStringContainsString('Unknown', $stdout);
                 self::assertStringContainsString('dependency.unknown', $stdout);
             } elseif (0 === $expected) {
                 self::assertStringContainsString('--project', $stdout);
             }
         }
+    }
+
+    public function testMergedRelationshipsUseOneRowPerModuleAndBothDirections(): void
+    {
+        $both = $this->module('Both');
+        $only = $this->module('Only');
+        $this->module('Observed');
+        $user = $this->module('User', [$both, $only]);
+        $this->module('Consumer', [$user]);
+        $this->module('DeclaredConsumer', [$user]);
+        $this->module('ObservedConsumer');
+        $bothPort = $this->source->php('src/Module/Both/Port.php', 'interface Port {}');
+        $observedPort = $this->source->php('src/Module/Observed/Port.php', 'interface Port {}');
+        $userPort = $this->source->php('src/Module/User/Port.php', 'interface Port {}');
+        $this->source->php('src/Module/User/Service.php', 'final class Service { public \\'.$bothPort.' $one; public \\'.$bothPort.' $two; public \\'.$observedPort.' $three; }');
+        foreach (['Consumer', 'ObservedConsumer'] as $consumer) {
+            $this->source->php('src/Module/'.$consumer.'/Service.php', 'final class Service { public \\'.$userPort.' $one; }');
+        }
+        $tester = $this->inspect('User');
+        self::assertSame(1, $tester->getStatusCode());
+        $text = $this->unwrapped($tester);
+        foreach (['3 depends on', '3 used by', 'both — Declared + Observed', 'only — Declared only', 'observed — Observed without declaration', 'consumer — Declared + Observed', 'declared-consumer — Declared only', 'observed-consumer — Observed without declaration'] as $expected) {
+            self::assertStringContainsString($expected, $text);
+        }
+        self::assertSame(1, substr_count($text, 'both — Declared + Observed'));
+        self::assertStringNotContainsString('DECLARED DEPENDENCIES', $text);
+        self::assertStringNotContainsString($this->source->directory, $text);
+        self::assertStringNotContainsString($user, $text);
+        self::assertStringContainsString('code.undeclared_dependency', $text);
+        $verbose = $this->inspect('User', verbose: true);
+        foreach (['DECLARED DEPENDENCIES', 'OBSERVED DEPENDENCIES', 'INCOMING DECLARED DEPENDENCIES', 'ORIGINAL FINDINGS', 'Context:', $bothPort, 'Service.php:1', 'Configuration key:', 'Global active:', 'Activation reasons:'] as $expected) {
+            self::assertStringContainsString($expected, $this->unwrapped($verbose));
+        }
+    }
+
+    public function testMissingReferenceEvidenceDoesNotBecomeDeclaredOnly(): void
+    {
+        $target = $this->module('Target');
+        $this->module('Source', [$target]);
+        $report = $this->report();
+        $metadata = $report->presentation;
+        $source = $this->source->namespace.'\Module\Source\SourceModule';
+        $metadata['module_inspection']['configuration'][$source]['references_complete'] = false;
+        $metadata['module_inspection']['references_complete'] = false;
+        foreach ([['source', 'target'], ['target', 'source']] as [$selected, $relation]) {
+            $tester = new CommandTester(new InspectModuleCommand(new ArchitectureReport($report->data, $metadata)));
+            self::assertSame(0, $tester->execute(['module' => $selected]));
+            self::assertStringContainsString($relation.' — Declared; observation not verified', $this->unwrapped($tester));
+            self::assertStringNotContainsString('Declared only', $tester->getDisplay());
+            self::assertStringContainsString('Reference evidence is incomplete', $this->unwrapped($tester));
+        }
+    }
+
+    public function testStandardProjectStateAndCollisionLabelsStayDistinct(): void
+    {
+        $shared = $this->module('User');
+        $this->project('Shop', [$shared]);
+        $this->project('Admin');
+        $private = $this->module('User', [], 'Shop');
+        $this->module('Consumer', [$shared]);
+        $config = ['projects' => ['shop' => ['hosts' => ['shop.test']], 'admin' => ['hosts' => ['admin.test']]]];
+        $admin = $this->inspect($shared, 'admin', $config);
+        self::assertSame(0, $admin->getStatusCode());
+        foreach (['user [shared] — Unassigned', 'Project context: admin', 'Global activation: active'] as $expected) {
+            self::assertStringContainsString($expected, $this->unwrapped($admin));
+        }
+        self::assertStringNotContainsString('Descriptor class:', $admin->getDisplay());
+        $shop = $this->inspect($private, 'shop', $config);
+        self::assertStringContainsString('user [private: shop] — Active', $this->unwrapped($shop));
+        self::assertStringContainsString('Owner Project: shop', $shop->getDisplay());
+        self::assertStringContainsString('user [shared] — Declared only', $this->unwrapped($this->inspect('consumer', config: $config)));
+    }
+
+    public function testGlobalBlockersRemainVisibleWithoutVerboseSuccess(): void
+    {
+        $this->module('User');
+        $report = $this->report();
+        $data = $report->data;
+        $data['status'] = 'unavailable';
+        $data['valid'] = false;
+        $data['complete'] = false;
+        $data['modules'][0]['active'] = null;
+        $data['findings'][] = ['rule' => 'source.read', 'message' => 'Unrelated source file unavailable', 'severity' => 'fatal', 'context' => ['file' => '/outside/very/long/path/Broken.php', 'line' => 8]];
+        $tester = new CommandTester(new InspectModuleCommand(new ArchitectureReport($data, $report->presentation)));
+        self::assertSame(2, $tester->execute(['module' => 'user']));
+        $text = $this->unwrapped($tester);
+        foreach (['Unknown', 'Architecture: Unavailable', 'ANALYSIS BLOCKERS', 'source.read', 'Broken.php:8'] as $expected) {
+            self::assertStringContainsString($expected, $text);
+        }
+        self::assertStringNotContainsString('✓', $text);
+        self::assertStringNotContainsString('/outside/very/long/path', $text);
+        self::assertStringContainsString('No related architecture findings in the available evidence', $text);
+    }
+
+    public function testBothEntrypointsExposeDefaultVerboseAndQuietViews(): void
+    {
+        $user = $this->module('User');
+        $this->project('Shop', [$user]);
+        $this->source->write('config/packages/framework.yaml', 'framework: {secret: inspect-ux, test: true}');
+        $this->source->write('config/services.yaml', 'services: {}');
+        $kernel = new TestApplicationKernel($this->source);
+        try {
+            foreach ([new Application($kernel), new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel)] as $app) {
+                $app->setAutoExit(false);
+                $tester = new ApplicationTester($app);
+                self::assertSame(0, $tester->run(['command' => 'sillbeam:inspect:module', 'module' => 'User', '--project' => 'shop']));
+                $normal = preg_replace('/\s+/', ' ', $tester->getDisplay());
+                self::assertIsString($normal);
+                self::assertStringContainsString('Module: user — Active', $normal);
+                self::assertStringContainsString('Project context: shop', $normal);
+                self::assertStringNotContainsString($this->source->directory, $normal);
+                self::assertStringNotContainsString('Configuration key:', $normal);
+                self::assertSame(0, $tester->run(['command' => 'sillbeam:inspect:module', 'module' => 'User', '--project' => 'shop', '-v' => true]));
+                $verbose = preg_replace('/\s+/', ' ', $tester->getDisplay());
+                self::assertIsString($verbose);
+                foreach (['TECHNICAL DETAILS', $user, 'Configuration key: shared:user', 'Activation reasons: project:shop:declared', 'Project shop: active'] as $expected) {
+                    self::assertStringContainsString($expected, $verbose);
+                }
+                self::assertSame(0, $tester->run(['command' => 'sillbeam:inspect:module', 'module' => 'User', '--quiet' => true]));
+                self::assertSame('', $tester->getDisplay());
+            }
+        } finally {
+            $kernel->shutdown();
+        }
+    }
+
+    public function testIncomingCompletenessBelongsToItsSourceAndJsonIsUntouched(): void
+    {
+        $target = $this->module('User');
+        $source = $this->module('Consumer', [$target]);
+        $this->module('Unrelated');
+        $report = $this->report();
+        $metadata = $report->presentation;
+        $metadata['module_inspection']['configuration'][$source]['references_complete'] = true;
+        $metadata['module_inspection']['references_complete'] = false;
+        $report = new ArchitectureReport($report->data, $metadata);
+        $before = $report->toJson();
+        $tester = new CommandTester(new InspectModuleCommand($report));
+        foreach ([OutputInterface::VERBOSITY_NORMAL, OutputInterface::VERBOSITY_VERBOSE] as $verbosity) {
+            self::assertSame(0, $tester->execute(['module' => 'User'], ['verbosity' => $verbosity]));
+            self::assertStringContainsString('consumer — Declared only', $this->unwrapped($tester));
+            self::assertStringContainsString('Reference evidence is incomplete', $this->unwrapped($tester));
+            self::assertSame($before, $report->toJson());
+        }
+    }
+
+    public function testUnavailableSelectionRetainsOriginalBlockerContextInVerboseMode(): void
+    {
+        $report = ArchitectureReport::unavailable(new \RuntimeException('Configuration failed'));
+        $tester = new CommandTester(new InspectModuleCommand($report));
+        self::assertSame(2, $tester->execute(['module' => 'user'], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]));
+        foreach (['ORIGINAL FINDINGS', 'report.execution', 'Context:', 'RuntimeException', 'Configuration failed'] as $expected) {
+            self::assertStringContainsString($expected, $this->unwrapped($tester));
+        }
+    }
+
+    public function testCompactProjectProblemNamesTheOffendingHost(): void
+    {
+        $user = $this->module('User');
+        $this->project('Shop', [$user]);
+        $tester = $this->inspect('user', 'shop', ['projects' => ['shop' => ['hosts' => ['https://shop.test']]]]);
+        self::assertSame(1, $tester->getStatusCode());
+        self::assertStringContainsString('project.host_invalid', $tester->getDisplay());
+        self::assertStringContainsString('https://shop.test', $this->unwrapped($tester));
+        self::assertStringNotContainsString($this->source->directory, $tester->getDisplay());
+    }
+
+    public function testExternalFindingPathsUseBasenamesEvenWithPresentationMetadata(): void
+    {
+        $this->module('User');
+        $analysis = (new ArchitectureAnalyzer())->analyze($this->options());
+        $file = '/outside/very/long/path/Broken.php';
+        $partial = new ArchitectureAnalysisResult([new ArchitectureFinding('source.read', 'Cannot read '.$file, ['file' => $file, 'line' => 8], 'fatal')], discovery: $analysis->discovery);
+        $report = ArchitectureReport::fromAnalysis($partial, projectDir: $this->source->directory);
+        $tester = new CommandTester(new InspectModuleCommand($report));
+        self::assertSame(2, $tester->execute(['module' => 'user']));
+        self::assertStringContainsString('Broken.php:8', $this->unwrapped($tester));
+        self::assertStringNotContainsString('outside/very/long/path', $this->unwrapped($tester));
+        self::assertSame(2, $tester->execute(['module' => 'user'], ['verbosity' => OutputInterface::VERBOSITY_VERBOSE]));
+        self::assertStringContainsString($file, $this->unwrapped($tester));
+    }
+
+    public function testExistingCycleCautionIsKeptWithoutSuggestingAnUnsafeDeclaration(): void
+    {
+        $user = $this->module('User');
+        $this->module('Target', [$user]);
+        $port = $this->source->php('src/Module/Target/Port.php', 'interface Port {}');
+        $this->source->php('src/Module/User/Consumer.php', 'final class Consumer { public \\'.$port.' $target; }');
+        $tester = $this->inspect('user');
+        self::assertSame(1, $tester->getStatusCode());
+        self::assertStringContainsString('Adding this dependency would create a cycle', $this->unwrapped($tester));
+        self::assertStringNotContainsString('Hint: Declare the target module as a direct dependency', $this->unwrapped($tester));
     }
 
     /** @param list<string> $dependencies

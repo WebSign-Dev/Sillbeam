@@ -38,7 +38,10 @@ IDs and descriptor classes are matched case-insensitively. Ambiguous IDs list al
 candidates. --project filters private ownership and gives shared modules a Project
 context, even when unassigned there. If shared/private IDs still collide, pass the
 fully qualified descriptor class. No new discovery or dependency analysis is run.
-Declared edges and observed references remain separate; -v shows reference locations.
+Default output merges direct relations into DEPENDS ON and USED BY with evidence
+labels. Declared only does not mean unnecessary; incomplete observations remain
+unverified. -v adds separate technical lists, reference locations, configuration,
+activation evidence, Project states and original findings/context.
 Enabled is configuration availability, not activation. Actual activation is unknown
 without a validated graph; diagnostic candidate membership is never treated as runtime
 state. Results reflect the available architecture snapshot, not a live service audit.
@@ -78,20 +81,104 @@ HELP);
         } catch (\InvalidArgumentException $error) {
             $style->error($error->getMessage());
             if (!$report->data['complete']) {
-                $this->findings($style, $report->data['findings']);
+                $this->findings($style, $report->data['findings'], new ModuleInspectionPresentation($report));
+                if ($output->isVerbose()) {
+                    $this->originals($style, $report->data['findings']);
+                }
             }
 
             return 2;
         }
         $module = $view['module'];
+        $presentation = new ModuleInspectionPresentation($report);
+        $outgoing = $presentation->relationships($view);
+        $incoming = $presentation->relationships($view, true);
+        $style->text('Module: '.$presentation->label($module['class']).' — '.ucfirst($view['state']), style: 'options=bold');
+        $style->text('Scope: '.ucfirst($module['scope']).('private' === $module['scope'] ? ' · Owner Project: '.$presentation->project($module['project']) : ''));
+        if (null !== $view['project']) {
+            $style->text('Project context: '.$presentation->project($view['project']['class']));
+            if ($view['active'] !== $module['active']) {
+                $style->note('Global activation: '.(null === $module['active'] ? 'unknown' : ($module['active'] ? 'active' : 'inactive')).'; differs from the selected Project.');
+            }
+        }
+        $style->text('Architecture: '.ucfirst($report->data['status']).' (whole analysis)');
+        $style->text('Known direct relationships: '.\count($outgoing).' depends on · '.\count($incoming).' used by');
+        if (null === $view['active']) {
+            $style->note('Activation is unknown: no validated graph is available.');
+        }
+        if (!$report->data['complete'] || !$view['configuration']['references_complete'] || !$view['references_complete']) {
+            $style->note('Reference evidence is incomplete; missing observations do not prove absence.');
+        }
+        if (!$report->data['complete']) {
+            $style->note('Module catalog/analysis may be incomplete; counts cover available evidence.');
+        }
+        $this->relationships($style, 'DEPENDS ON', $outgoing);
+        $this->relationships($style, 'USED BY', $incoming);
+        $style->rule();
+        $style->text('ARCHITECTURE ISSUES', style: 'options=bold');
+        $this->findings($style, $view['findings'], $presentation);
+        if ([] === $view['findings']) {
+            $message = 'No related architecture findings in the available evidence.';
+            if ($report->data['valid'] && $report->data['complete'] && [] === $view['blockers'] && null !== $view['active'] && $view['configuration']['references_complete'] && $view['references_complete'] && !array_any(array_merge($outgoing, $incoming), static fn (array $row): bool => $row['problem'])) {
+                $style->success($message);
+            } else {
+                $style->text($message);
+            }
+        }
+        if ([] !== $view['blockers']) {
+            $style->text('ANALYSIS BLOCKERS', style: 'options=bold');
+            $this->findings($style, $view['blockers'], $presentation);
+        }
+        if ($output->isVerbose()) {
+            $this->technical($style, $view);
+        }
+        if (0 !== $report->exitCode()) {
+            $style->note('Whole analysis: '.$report->data['status'].'. Use sillbeam:architecture --all for the complete result.');
+        }
+
+        return $report->exitCode();
+    }
+
+    /** @param list<array{class: string, label: string, evidence: string, problem: bool}> $rows */
+    private function relationships(ConsoleStyle $style, string $title, array $rows): void
+    {
+        $style->rule();
+        $style->text($title, style: 'options=bold');
+        if ([] === $rows) {
+            $style->text('None recorded in the available evidence.');
+        }
+        foreach ($rows as $row) {
+            $text = $row['label'].' — '.$row['evidence'];
+            if ($row['problem']) {
+                $style->error($text);
+            } else {
+                $style->text($text, '    ');
+            }
+        }
+    }
+
+    /** Technical evidence is additive; no effective state is derived from configuration inputs.
+     * @param array<string, mixed> $view
+     */
+    private function technical(ConsoleStyle $style, array $view): void
+    {
+        $module = $view['module'];
         $config = $view['configuration'];
-        $style->text('MODULE', style: 'options=bold');
+        $style->rule();
+        $style->text('TECHNICAL DETAILS', style: 'options=bold');
         foreach ([
-            'ID' => $module['id'], 'Descriptor class' => $module['class'],
-            'Descriptor file' => $module['descriptor'], 'Scope' => $module['scope'],
-            'Owner Project' => $view['owner']['id'] ?? ('shared' === $module['scope'] ? 'none (shared)' : 'unknown'),
+            'ID' => $module['id'], 'Descriptor class' => $module['class'], 'Descriptor file' => $module['descriptor'],
+            'Scope' => $module['scope'], 'Owner Project' => $view['owner']['id'] ?? ('shared' === $module['scope'] ? 'none (shared)' : 'unknown'),
+            'Configuration key' => $config['key'] ?? 'unknown',
+            'Override' => null === $config['key'] ? 'unknown' : (null === $config['source'] ? 'none' : $config['source'].' (configured key)'),
+            'Enabled' => self::boolean($module['enabled']), 'Active' => self::boolean($view['active']),
+            'State' => $view['state'], 'Global active' => self::boolean($module['active']),
+            'Activation reasons' => [] === ($module['activation_reasons'] ?? []) ? 'none recorded' : implode(', ', $module['activation_reasons']),
         ] as $label => $value) {
             $style->text($label.': '.$value);
+        }
+        if (null !== $config['enabled_override']) {
+            $style->text('Configured enabled override: '.self::boolean($config['enabled_override']).' (input, not proof of activation)');
         }
         if (null !== $view['owner']) {
             $style->text('Owner class: '.$view['owner']['class']);
@@ -100,57 +187,35 @@ HELP);
             $style->text('Inspection Project: '.$view['project']['id']);
             $style->text('Project class: '.$view['project']['class']);
         }
-        $style->rule();
-        $style->text('CONFIGURATION AND ACTIVATION', style: 'options=bold');
-        $style->text('Configuration key: '.($config['key'] ?? 'unknown'));
-        $style->text('Override: '.(null === $config['key'] ? 'unknown' : (null === $config['source'] ? 'none' : $config['source'].' (configured key)')));
-        if (null !== $config['enabled_override']) {
-            $style->text('Configured enabled override: '.self::boolean($config['enabled_override']).' (input, not proof of activation)');
-        }
-        $style->text('Enabled: '.self::boolean($module['enabled']));
-        $style->text('Active: '.self::boolean($view['active']));
-        $style->text('State: '.$view['state']);
-        $style->text('Global active: '.self::boolean($module['active']));
-        if (null === $view['active']) {
-            $style->note('Actual activation is unknown: no validated graph is available.');
-        }
         foreach ($view['project_states'] as $state) {
             $style->text('Project '.$state['id'].': '.$state['state'].' — '.$state['class']);
         }
-        $this->section($style, 'DECLARED DEPENDENCIES', $module['declared_dependencies'], 'No declared dependencies.');
-        $this->section($style, 'OBSERVED DEPENDENCIES', $module['observed_dependencies'], 'No observed dependencies in the available evidence.');
-        if (!$config['references_complete']) {
-            $style->note('Reference evidence is incomplete; an empty list is not proof of no dependencies.');
+        $this->section($style, 'DECLARED DEPENDENCIES', $module['declared_dependencies'], 'None recorded.');
+        $this->section($style, 'OBSERVED DEPENDENCIES', $module['observed_dependencies'], 'None recorded; absence requires complete evidence.');
+        foreach ($module['references'] as $reference) {
+            $style->text($reference['class'].' at '.$reference['file'].':'.$reference['line'], '    ');
         }
-        if ($output->isVerbose()) {
-            foreach ($module['references'] as $reference) {
-                $style->text($reference['class'].' at '.$reference['file'].':'.$reference['line'], '    ');
-            }
+        $this->section($style, 'INCOMING DECLARED DEPENDENCIES', $view['incoming'], 'None recorded.');
+        $this->section($style, 'INCOMING OBSERVED REFERENCES', array_values(array_unique(array_column($view['incoming_references'], 'source'))), 'None recorded; absence requires complete evidence.');
+        foreach ($view['incoming_references'] as $incoming) {
+            $reference = $incoming['reference'];
+            $style->text($incoming['source'].' → '.$reference['class'].' at '.$reference['file'].':'.$reference['line'], '    ');
         }
-        $this->section($style, 'INCOMING DECLARED DEPENDENCIES', $view['incoming'], 'No incoming declared dependencies in the available catalog.');
-        $this->section($style, 'INCOMING OBSERVED REFERENCES', array_values(array_unique(array_column($view['incoming_references'], 'source'))), 'No incoming observed references in the available evidence.');
-        if (!$view['references_complete']) {
-            $style->note('Incoming reference evidence is incomplete.');
-        }
-        if ($output->isVerbose()) {
-            foreach ($view['incoming_references'] as $incoming) {
-                $reference = $incoming['reference'];
-                $style->text($incoming['source'].' at '.$reference['file'].':'.$reference['line'], '    ');
-            }
-        }
-        $style->rule();
-        $style->text('RELATED ARCHITECTURE FINDINGS', style: 'options=bold');
-        $this->findings($style, $view['findings']);
-        if ([] === $view['findings']) {
-            $style->text('No related architecture findings in the available analysis.');
-        }
-        if ([] !== $view['blockers']) {
-            $style->text('ANALYSIS BLOCKERS', style: 'options=bold');
-            $this->findings($style, $view['blockers']);
-        }
-        $style->text('Whole analysis: '.$report->data['status'].'. Use sillbeam:architecture --all for the complete result.');
+        $this->originals($style, array_values(array_merge($view['findings'], $view['blockers'])));
+    }
 
-        return $report->exitCode();
+    /** @param list<array<string, mixed>> $findings */
+    private function originals(ConsoleStyle $style, array $findings): void
+    {
+        $style->rule();
+        $style->text('ORIGINAL FINDINGS', style: 'options=bold');
+        if ([] === $findings) {
+            $style->text('None related to this inspection.');
+        }
+        foreach ($findings as $finding) {
+            $style->text('['.$finding['rule'].'] '.$finding['severity'].': '.$finding['message']);
+            $style->text('Context: '.json_encode($finding['context'], \JSON_UNESCAPED_SLASHES | \JSON_INVALID_UTF8_SUBSTITUTE | \JSON_PARTIAL_OUTPUT_ON_ERROR));
+        }
     }
 
     /** @param list<string> $items */
@@ -169,16 +234,16 @@ HELP);
     }
 
     /** @param list<array<string, mixed>> $findings */
-    private function findings(ConsoleStyle $style, array $findings): void
+    private function findings(ConsoleStyle $style, array $findings, ModuleInspectionPresentation $presentation): void
     {
         foreach ($findings as $finding) {
-            $style->text('['.$finding['rule'].'] '.$finding['message']);
-            $file = $finding['context']['file'] ?? null;
-            if (\is_string($file)) {
-                $style->text($file.(isset($finding['context']['line']) ? ':'.$finding['context']['line'] : ''), '    ');
+            $message = $presentation->problem($finding);
+            $style->error('['.$finding['rule'].'] '.$message);
+            if (null !== ($location = $presentation->location($finding))) {
+                $style->text($location, '    ');
             }
-            if (isset($finding['context']['suggestion'])) {
-                $style->text('Hint: '.$finding['context']['suggestion'], '    ');
+            if (null !== ($caution = $presentation->caution($finding))) {
+                $style->note($caution);
             }
         }
     }
