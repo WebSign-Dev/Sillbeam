@@ -13,7 +13,8 @@ concurrency:
 
 jobs:
     compatibility:
-        runs-on: ubuntu-latest
+        # Keep the QA environment stable across ubuntu-latest migrations.
+        runs-on: ubuntu-24.04
         strategy:
             fail-fast: false
             matrix:
@@ -24,7 +25,7 @@ jobs:
             SILLBEAM_SYMFONY_VERSION: '${{ matrix.symfony }}'
             COMPOSER_PROCESS_TIMEOUT: '900'
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v6
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '${{ matrix.php }}'
