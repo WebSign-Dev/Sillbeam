@@ -30,7 +30,8 @@ final class Application extends SymfonyApplication
     /**
      * Dispatches diagnostic commands without booting the container and delegates other commands to Symfony.
      *
-     * Writes command/help/error output; diagnostic commands use status codes 0, 1 and 2.
+     * Writes command/help/error output; analysis uses status codes 0, 1 and 2.
+     * Graph invocation and renderer/output failures use 3 and 4 respectively.
      */
     public function doRun(InputInterface $input, OutputInterface $output): int
     {
@@ -42,6 +43,11 @@ final class Application extends SymfonyApplication
         // Read option metadata without resolving a kernel-derived output directory.
         $definition->addOption($this->reportCommand('')->getDefinition()->getOption('output'));
         $definition->addOption($this->inspectModuleCommand()->getDefinition()->getOption('project'));
+        foreach ($this->graphCommand()->getDefinition()->getOptions() as $option) {
+            if (!$definition->hasOption($option->getName())) {
+                $definition->addOption($option);
+            }
+        }
         try {
             $input->bind($definition);
         } catch (\Exception) {

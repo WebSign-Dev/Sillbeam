@@ -71,14 +71,7 @@ final readonly class ModuleInspection
     public function select(string $identifier, ?string $projectSelector = null): array
     {
         $projects = $this->report->data['projects'];
-        $project = null;
-        if (null !== $projectSelector) {
-            $matches = array_values(array_filter($projects, fn (array $candidate): bool => $this->matches($candidate, $projectSelector)));
-            if (1 !== \count($matches)) {
-                throw new \InvalidArgumentException(([] === $matches ? 'Unknown Project: ' : 'Ambiguous Project: ').$projectSelector.'. Use a Project ID or descriptor class. Candidates: '.implode('; ', array_column($matches, 'class')));
-            }
-            $project = $matches[0];
-        }
+        $project = null === $projectSelector ? null : $this->selectProject($projectSelector);
         $matches = array_values(array_filter($this->report->data['modules'], fn (array $module): bool => $this->matches($module, $identifier) && (null === $project || 'shared' === $module['scope'] || $module['project'] === $project['class'])));
         if ([] === $matches) {
             $unavailable = !$this->report->data['complete'];
@@ -139,6 +132,25 @@ final readonly class ModuleInspection
             'references_complete' => $metadata['references_complete'] ?? false,
             'findings' => $related, 'blockers' => $blockers,
         ];
+    }
+
+    /**
+     * Resolves the same Project identity for inspection and graph context selection.
+     *
+     * @return array<string, mixed>
+     *
+     * @throws \InvalidArgumentException if the Project is missing or ambiguous
+     */
+    public function selectProject(string $identifier): array
+    {
+        $matches = array_values(array_filter($this->report->data['projects'], fn (array $candidate): bool => $this->matches($candidate, $identifier)));
+        if (1 !== \count($matches)) {
+            $candidates = array_column($matches, 'class');
+            sort($candidates, \SORT_STRING);
+            throw new \InvalidArgumentException(([] === $matches ? 'Unknown Project: ' : 'Ambiguous Project: ').$identifier.'. Use a Project ID or descriptor class. Candidates: '.implode('; ', $candidates));
+        }
+
+        return $matches[0];
     }
 
     private static function state(?bool $enabled, ?bool $active): string

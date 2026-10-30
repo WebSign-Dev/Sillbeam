@@ -77,3 +77,13 @@ The [graph reference](../reference/mermaid-graph.md) defines the export contract
 See the [contract](../reference/phpdoc-json.md) and
 [verification record](phpdoc-json-export-2026-10-29.md). Export integration tests
 use temporary projects so ordinary test runs do not update the website artifact.
+
+## Architecture graph UX
+
+`vendor/bin/phpunit tests/Integration/GraphCommandTest.php tests/Integration/GraphSvgTest.php`
+checks the common Mermaid/DOT view, direct filters, Project boundaries, collisions,
+status evidence, both CLI entries and renderer/filesystem failures. Renderer test
+executables exercise actual argument-array process invocation without Graphviz.
+The real SVG integration test runs when `dot` is already executable on PATH;
+otherwise PHPUnit reports one explicit skip. No renderer is installed by tests.
+See the [UX verification report](architecture-graph-ux-2026-10-30.md).
