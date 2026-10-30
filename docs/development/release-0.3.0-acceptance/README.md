@@ -1,5 +1,24 @@
 # Release-Abnahme Sillbeam Core v0.3.0 — 2026-10-29
 
+> **Aktuelle Einordnung — 2026-10-30 (Release Consistency):** Dieser Bericht und
+> seine folgenden Befunde/Testergebnisse dokumentieren den ursprünglichen Stand
+> vom 2026-10-29. Sie sind kein erneuter vollständiger Matrixnachweis für spätere
+> Änderungen. Der dort beschriebene zusätzliche Entwicklungsbranch-Push-Trigger
+> wurde aufgehoben: Die unveränderte Workflow-Datei enthält Push-Trigger nur für
+> `main` und `dev` sowie manuellen Dispatch, keinen PR-Trigger. Der aktuelle
+> Entwicklungsbranch heißt `dev-v0.3.x`; Composer verwendet dafür
+> `dev-dev-v0.3.x` → `0.3.x-dev`, daneben `dev-dev` und `dev-main`.
+> Der verbindliche Ablauf lautet: Entwicklungsbranch → `dev` mit automatischer CI
+> → Maintainer-Freigabe → `main` mit automatischer CI → ausdrücklich autorisierter
+> Release. Der ursprüngliche GO-Hinweis unten ersetzt diese Freigaben nicht.
+> Seit dem geprüften Stand erzeugt der Graph standardmäßig SVG direkt in PHP ohne
+> Graphviz; Mermaid ist expliziter Rohdatenexport. Die Modul-Inspektion ist kompakt
+> mit technischen Details unter `-v`; `composer docs:export-json` ist ein manueller
+> englischer API-Export ohne Übersetzung/Website-Anbindung. Aktuelle Verträge stehen
+> in [Release Notes](../../releases/0.3.0.md#verification-scope-and-release-flow) und
+> [Upgrade-Anleitung](../../migration/0.3.0.md). Die ursprünglichen Commit-IDs,
+> Branch-Bezeichnungen, Rohdaten, Fehler und Testergebnisse bleiben unverändert.
+
 **Empfehlung: GO zur manuellen Release-Abnahme des geprüften lokalen Stands.**
 Es gibt nach den dokumentierten Korrekturen keinen offenen funktionalen Blocker.
 Dies ist **keine Release-Freigabe**. Veröffentlichung, Tag, Merge und Push erfolgen

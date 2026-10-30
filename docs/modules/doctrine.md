@@ -2,7 +2,7 @@
 
 When DoctrineBundle is present, direct Project entities and active modules are integrated using native AttributeDriver mappings. Dedicated drivers keep automatic exclusions local to Sillbeam and preserve manual native mappings. `doctrine: false` disables integration. There are no Sillbeam entity bases, stores, filters or listeners. [Configuration](../reference/configuration.md).
 
-The application installs and configures Doctrine itself, e.g. `composer require symfony/orm-pack`. Tested dependency versions are listed in the [compatibility report](../development/package-compatibility-2026-10-10.md); the core package requires neither ORM nor database drivers. Entity classes under `src/Module/Hello/Entity/` use ordinary `Doctrine\ORM\Mapping` attributes:
+The application installs and configures Doctrine itself, e.g. `composer require symfony/orm-pack`. Tested dependency versions are listed in the [compatibility report](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/docs/development/package-compatibility-2026-10-10.md); the core package requires neither ORM nor database drivers. Entity classes under `src/Module/Hello/Entity/` use ordinary `Doctrine\ORM\Mapping` attributes:
 
 ```php
 namespace App\Module\Hello\Entity;

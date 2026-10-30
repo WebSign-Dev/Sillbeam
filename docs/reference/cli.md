@@ -183,7 +183,7 @@ normal Symfony environment, verbosity, help and quiet options.
 
 ## Verification
 
-See [testing](../development/testing.md) for the test suite and quality commands.
+See [contributor checks](../../CONTRIBUTING.md#run-the-checks) for the test suite and quality commands.
 Reporting tests cover text grouping and summaries, the unchanged JSON schema,
 Markdown output paths and atomic replacement, and reporting without a compilable
 container. Run compatibility checks on each supported PHP/Symfony combination;
@@ -290,7 +290,7 @@ container imports can affect Discovery as well as services, so those checks rema
 unverified together. Duplicate service IDs and unknown exclusions require manual
 review rather than a claimed definitive overlap.
 
-The [F01/F02 follow-up](../development/doctor-f01-f02-verification-2026-10-25/README.md) records the corrected Runtime/kernel detection and
+The [F01/F02 follow-up](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/docs/development/doctor-f01-f02-verification-2026-10-25/README.md) records the corrected Runtime/kernel detection and
 routing/service separation against the original independent acceptance. Standard
 route overlays can still leave **routing itself** unverified; this does not certify
 their effective configuration. Symfony's normal verbosity, ANSI and quiet options
@@ -379,4 +379,4 @@ The Core Console adapter resolves all five exact diagnostic names before contain
 boot. Native Symfony Console requires a compilable container and may use a compiled
 report snapshot. None of these command additions places parser/architecture analysis
 on the production HTTP path. See [upgrade guidance](../migration/0.3.0.md) and the
-[current acceptance report](../development/release-0.3.0-acceptance/README.md).
+[initial acceptance evidence (2026-10-29)](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/docs/development/release-0.3.0-acceptance/README.md).

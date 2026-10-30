@@ -1,42 +1,48 @@
-# Auto detect text files and perform LF normalization
+# Normalize repository text independently of distribution contents.
 * text=auto
 
-# Composer/Git distribution: runtime, license and public documentation only.
-/.github export-ignore
-/.gitignore export-ignore
-/.gitattributes export-ignore
-/.php-cs-fixer.dist.php export-ignore
-/apps export-ignore
-/tests export-ignore
-/tools export-ignore
-/skeleton export-ignore
-/flex-recipe export-ignore
-/composer.lock export-ignore
-/phpunit.xml.dist export-ignore
-/phpstan.neon.dist export-ignore
-/deptrac.yaml export-ignore
-/docs/superpowers export-ignore
+# Single distribution policy, shared by Composer archive and Git source archives.
+# Deny by default; only runtime, package metadata and user documentation are exported.
+/** export-ignore
+/.* export-ignore
+/composer.json -export-ignore
+/README.md -export-ignore
+/LICENSE -export-ignore
+/CHANGELOG.md -export-ignore
+/CONTRIBUTING.md -export-ignore
+/SUPPORT.md -export-ignore
+/SECURITY.md -export-ignore
+/src -export-ignore
+/src/** -export-ignore
+/docs -export-ignore
+/docs/** export-ignore
+/docs/.* export-ignore
+/docs/README.md -export-ignore
+/docs/architecture -export-ignore
+/docs/architecture/** -export-ignore
+/docs/assets -export-ignore
+/docs/assets/** -export-ignore
+/docs/examples -export-ignore
+/docs/examples/** -export-ignore
+/docs/guides -export-ignore
+/docs/guides/** -export-ignore
+/docs/migration -export-ignore
+/docs/migration/** -export-ignore
+/docs/modules -export-ignore
+/docs/modules/** -export-ignore
+/docs/operations -export-ignore
+/docs/operations/** -export-ignore
+/docs/reference -export-ignore
+/docs/reference/** -export-ignore
+/docs/releases -export-ignore
+/docs/releases/** -export-ignore
 
-/vendor export-ignore
-/vendor/** export-ignore
-/.idea export-ignore
-/.idea/** export-ignore
-/.agents export-ignore
-/.agents/** export-ignore
-/.codex export-ignore
-/.codex/** export-ignore
-/.aws export-ignore
-/.aws/** export-ignore
-/.phpunit.cache export-ignore
-/.phpunit.cache/** export-ignore
-/.phpstan-cache export-ignore
-/.phpstan-cache/** export-ignore
-/.php-cs-fixer.cache export-ignore
-/.deptrac.cache export-ignore
-/.github/** export-ignore
-/apps/** export-ignore
-/tests/** export-ignore
-/tools/** export-ignore
-/skeleton/** export-ignore
-/flex-recipe/** export-ignore
-/docs/superpowers/** export-ignore
+# Hidden placeholders, secrets and local files are never package contents.
+**/.* export-ignore
+# Development by-products are excluded even inside otherwise public trees.
+**/*.log export-ignore
+**/*.jsonl export-ignore
+**/*.tmp export-ignore
+**/*.bak export-ignore
+**/*.cache export-ignore
+**/reference.php export-ignore

@@ -41,6 +41,14 @@ different owner is not selected in the requested Project context.
 Use the command-first spelling above with ordinary Symfony Console. The Core
 adapter additionally recognizes `--project shop sillbeam:inspect:module Billing`.
 
+## Text compatibility
+
+The 0.3.0 compact view changes the earlier human-readable layout. Scripts parsing
+those lines must adapt; `-v` exposes the preserved technical evidence, not a stable
+serialization. Module selection and 0/1/2 exit semantics remain unchanged. There is
+no `--format` option or inspection JSON schema; use architecture-report JSON when
+its existing fields meet automation needs.
+
 ## Compact default output
 
 The normal view focuses on the selected module and problems:

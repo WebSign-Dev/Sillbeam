@@ -87,7 +87,7 @@ try {
     foreach ($data['modules'] as $module) {
         $inspect = new CommandTester($console->find('sillbeam:inspect:module'));
         consumerAssert(0 === $inspect->execute(['module' => $module['class']]), 'CLI module inspection failed.');
-        consumerAssert(str_contains($inspect->getDisplay(), 'ID: '.$module['id']), 'Inspection identity differs from architecture report.');
+        consumerAssert(str_contains($inspect->getDisplay(), 'Module: '.$module['id']), 'Inspection identity differs from architecture report.');
     }
     $doctor = new CommandTester($console->find('sillbeam:doctor'));
     $doctor->execute(['--format' => 'json']);

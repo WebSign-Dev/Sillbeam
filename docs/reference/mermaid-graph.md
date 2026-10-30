@@ -26,9 +26,10 @@ is never followed or changed. Serialize forced exports when sharing a destinatio
 `--force` authorizes replacement, not compare-and-swap against the original file.
 Temporary files are removed on handled failures.
 
-## No extra installation
+## Built-in renderer and requirements
 
-SVG is generated directly by Core in PHP. Composer installation of Core is enough;
+SVG is generated directly by Core in PHP. The earlier optional Graphviz setup is
+obsolete; the current command has no renderer-selection option. Composer installation of Core is enough;
 no Graphviz, `dot`, Node.js, browser, PHP graphics extension or additional Composer
 package is required. The command does not launch a subprocess, install anything,
 download assets, or call an external service. It also works with process functions

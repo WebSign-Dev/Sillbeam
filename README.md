@@ -46,7 +46,7 @@ Modules normally live in `src/Module`; Projects live in `src/Project`. These def
 - **Symfony 7.4 or 8.x** in the consuming application.
 - **DoctrineBundle**, only if you want automatic Doctrine entity mappings.
 
-The current CI targets PHP 8.4/8.5 with Symfony 7.4/8.1. The [independent v0.2.0 acceptance](docs/development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md) records its exact tested versions and historical limitations; the [F01/F02 follow-up](docs/development/doctor-f01-f02-verification-2026-10-25/README.md) documents the subsequent Doctor corrections. The original report is not an unconditional release approval. Earlier compatibility snapshots describe their own historical scope.
+The current CI targets PHP 8.4/8.5 with Symfony 7.4/8.1. The [independent v0.2.0 acceptance](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/docs/development/installation-acceptance-2026-10-25/INSTALLATIONS-ABNAHME.md) records its exact tested versions and historical limitations; the [F01/F02 follow-up](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/docs/development/doctor-f01-f02-verification-2026-10-25/README.md) documents the subsequent Doctor corrections. The original report is not an unconditional release approval. Earlier compatibility snapshots describe their own historical scope.
 
 ### Install with Composer
 
@@ -59,7 +59,7 @@ composer require websign-dev/sillbeam-core
 Composer selects an available compatible release. This checkout prepares **v0.3.0**;
 a `:^0.3.0` constraint requires that release to be published. See
 [release status](#release-status). Package installation and Flex recipe availability
-are separate. The [existing Flex recipe](flex-recipe/README.md) registers the bundle
+are separate. The [existing Flex recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/flex-recipe/README.md) registers the bundle
 and one route import when installed through your configured endpoint; it does not
 edit `bin/console` or `services.yaml`. Public Contrib approval is a separate step.
 
@@ -167,19 +167,29 @@ Architecture errors block ordinary container-backed commands. With `Sillbeam\Cor
 | [Projects](docs/guides/projects.md) | Shared and private modules, hosts and request context. |
 | [Configuration](docs/reference/configuration.md) | Discovery roots, exclusions and integration settings. |
 | [Public API](docs/reference/public-api.md) | Attributes, registries and runtime interfaces. |
-| [English API JSON](docs/reference/phpdoc-json.md) | Run `composer docs:export-json` for the manually translated website artifact. |
+| [English API JSON](docs/reference/phpdoc-json.md) | Manually export English API JSON with `composer docs:export-json`; translation and integration are separate manual work. |
 | [Doctrine](docs/modules/doctrine.md) | Optional entity mapping integration. |
 | [Migration](docs/migration/modular-monolith.md) | Breaking changes and replacing the former Foundation features. |
-| [Testing](docs/development/testing.md) | Repository checks and integration coverage. |
-| [Test applications](docs/development/test-apps.md) | Example layouts and the isolated consumer application. |
+| [Testing](CONTRIBUTING.md#run-the-checks) | Repository checks and integration coverage. |
+| [Test applications](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/docs/development/test-apps.md) | Example layouts and the isolated consumer application. |
 
 ## Release status
 
-Sillbeam Core **v0.3.0 is prepared for release acceptance**, based on v0.2.0. It adds English PHPDoc/API documentation, clearer installation guidance, Doctor JSON v1, targeted module inspection and Mermaid graph export. See the [changelog](CHANGELOG.md), [release notes](docs/releases/0.3.0.md), [upgrade guide](docs/migration/0.3.0.md) and [acceptance report](docs/development/release-0.3.0-acceptance/README.md).
+Sillbeam Core **v0.3.0 is prepared for release acceptance**, based on v0.2.0. It adds English PHPDoc/API documentation and manual JSON export, clearer installation guidance, Doctor JSON v1, compact module inspection and built-in SVG diagrams with explicit Mermaid source export. See the [changelog](CHANGELOG.md), [release notes](docs/releases/0.3.0.md), [upgrade guide](docs/migration/0.3.0.md) and [initial acceptance evidence (2026-10-29)](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/docs/development/release-0.3.0-acceptance/README.md).
 
-This checkout does not establish publication or final approval. A stable `:^0.3.0` installation requires the matching approved tag/version to become available through Packagist. Composer derives release versions from Git tags; no fixed package `version` field is added. `main` and the current `dev-0.3.x` branch alias to `0.3.x-dev`.
+This checkout does not establish publication or final approval. A stable `:^0.3.0` installation requires the matching approved tag/version to become available through Packagist. Composer derives release versions from Git tags; no fixed package `version` field is added. The current development branch is `dev-v0.3.x`. Composer aliases `dev-dev-v0.3.x`,
+`dev-dev` and `dev-main` to `0.3.x-dev`; these are development versions, not a stable
+0.3.0 release. Composer adds `dev-` to each non-numeric Git branch name. Each
+alias applies when this metadata is present on its named branch.
 
-The compatible [Flex recipe](flex-recipe/README.md) remains under `0.2/`. Its public availability is separate from the package release; manual integration remains supported. No tag, push, Packagist publication or Recipes Contrib submission is performed by the acceptance checks. Final release authorization belongs to the maintainer.
+The integration order is **`dev-v0.3.x` → `dev` (automatic CI) → maintainer approval
+→ `main` (automatic CI) → explicitly authorized release**. Push CI runs only for
+`main` and `dev`; this development branch and pull requests do not trigger it.
+Manual workflow dispatch remains available. Configured CI and historical local
+results do not establish a current remote run; see the
+[verification scope](docs/releases/0.3.0.md#verification-scope-and-release-flow).
+
+The compatible [Flex recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/flex-recipe/README.md) remains under `0.2/`. Its public availability is separate from the package release; manual integration remains supported. No tag, push, Packagist publication or Recipes Contrib submission is performed by the acceptance checks. Final release authorization belongs to the maintainer.
 
 The [v0.2 migration guide](docs/migration/0.2.0.md) remains the historical guide for the earlier package/namespace rename. Historical reports retain their original findings and scope.
 
@@ -207,7 +217,7 @@ composer test:flex-recipe
 SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 ```
 
-The example applications cover six operating variants. The isolated consumer lives under `apps/test-app`; its setup is described in the [test-app guide](docs/development/test-apps.md).
+The example applications cover six operating variants. The isolated consumer lives under `apps/test-app`; its setup is described in the [test-app guide](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/docs/development/test-apps.md).
 
 Read [Contributing](CONTRIBUTING.md) for development setup, required checks and pull request guidance, [Support](SUPPORT.md) for assistance and [Security](SECURITY.md) for private vulnerability reporting.
 

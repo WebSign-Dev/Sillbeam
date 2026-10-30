@@ -8,7 +8,8 @@ composer docs:export-json
 
 The command writes **`build/docs/api/sillbeam-core.en.json`**. This is the only
 public artifact created by the export. It is generated/ignored and is not committed.
-Existing HTML is retained; `composer docs:build` continues to build HTML independently.
+Run this explicitly in a development checkout; it is not a release or push hook.
+Automated integration tests use temporary fixture output only. Existing HTML is retained; `composer docs:build` continues to build HTML independently.
 No translation, synchronization, website integration, push/release hook or deployment
 is performed. The artifact is intended for manual translation and manual publication.
 

@@ -71,7 +71,8 @@
     "extra": {
         "branch-alias": {
             "dev-main": "0.3.x-dev",
-            "dev-dev-0.3.x": "0.3.x-dev"
+            "dev-dev": "0.3.x-dev",
+            "dev-dev-v0.3.x": "0.3.x-dev"
         }
     },
     "homepage": "https://getsillbeam.websign.de/",
@@ -79,24 +80,5 @@
         "issues": "https://github.com/WebSign-Dev/sillbeam-core/issues",
         "source": "https://github.com/WebSign-Dev/sillbeam-core",
         "docs": "https://github.com/WebSign-Dev/sillbeam-core/blob/main/docs/README.md"
-    },
-    "archive": {
-        "exclude": [
-            "/*",
-            "/.*",
-            "!/src",
-            "!/src/**",
-            "!/docs",
-            "!/docs/**",
-            "!/composer.json",
-            "!/README.md",
-            "!/LICENSE",
-            "!/CHANGELOG.md",
-            "!/CONTRIBUTING.md",
-            "!/SUPPORT.md",
-            "!/SECURITY.md",
-            "/docs/superpowers",
-            "/docs/superpowers/**"
-        ]
     }
 }

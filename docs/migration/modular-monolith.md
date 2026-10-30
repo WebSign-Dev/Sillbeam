@@ -33,4 +33,4 @@ Disabled private modules are no longer activated automatically. Active modules w
 3. Compare `sillbeam:architecture --format=json`, `debug:container`, `debug:router` and, with Doctrine, `doctrine:mapping:info`.
 4. Run application, authentication and persistence tests; review database changes separately.
 
-The test application now uses ordinary Symfony controllers and native Doctrine entities; [Test apps](../development/test-apps.md) shows the supported operating modes.
+The test application now uses ordinary Symfony controllers and native Doctrine entities; [Test apps](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/docs/development/test-apps.md) shows the supported operating modes.

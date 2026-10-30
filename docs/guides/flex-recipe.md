@@ -2,7 +2,7 @@
 
 Use the [getting-started guide](getting-started.md) for the complete Composer →
 Console adapter → Doctor → first `/hello` module path for 0.3.0. The compatible
-recipe source remains [flex-recipe/websign-dev/sillbeam-core/0.2](../../flex-recipe/README.md):
+recipe source remains [flex-recipe/websign-dev/sillbeam-core/0.2](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/flex-recipe/README.md):
 `0.2` is its minimum recipe version, not a separate installation system.
 
 The manifest performs two tasks when the developer installs this recipe:
@@ -81,4 +81,4 @@ application-owned files and manually created package options are retained.
 After removal, explicitly remove `sillbeam` options from package imports, restore
 the Console Application to Symfony and, if selected, switch an optional
 `SillbeamKernel` subclass back to Symfony. These are manual application decisions.
-See the [recipe source and submission notes](../../flex-recipe/README.md).
+See the [recipe source and submission notes](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/flex-recipe/README.md).

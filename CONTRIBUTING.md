@@ -20,13 +20,15 @@ Use PHP 8.4 or newer, Composer and the PHP extensions required by the locked dep
 ```bash
 git clone https://github.com/WebSign-Dev/sillbeam-core.git
 cd sillbeam-core
+git switch dev-v0.3.x
 composer install
-git switch -c describe-your-change
 ```
 
-If contributing through a fork, clone your fork instead. Use a descriptive branch name.
+If contributing through a fork, clone your fork instead. The current development
+line is `dev-v0.3.x`; base focused work on that line and follow the integration flow
+below. There is no automatic CI push run on this development branch.
 
-The six example application variants and the main fixtures use the root Composer autoloader. You do not need to start an external runtime to run the root test suite. The separate consumer under `apps/test-app` has its own dependencies and runtime; see the [test-app guide](docs/development/test-apps.md).
+The six example application variants and the main fixtures use the root Composer autoloader. You do not need to start an external runtime to run the root test suite. The separate consumer under `apps/test-app` has its own dependencies and runtime; see the [test-app guide](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/docs/development/test-apps.md).
 
 ## Make a focused change
 
@@ -38,6 +40,31 @@ The six example application variants and the main fixtures use the root Composer
 - Avoid unrelated dependency upgrades and generated cache or vendor files. Update Composer lockfiles when dependency changes require it.
 
 The [architecture overview](docs/architecture/overview.md) explains ownership and compilation. The [public API reference](docs/reference/public-api.md) describes the supported attributes and runtime interfaces.
+
+## Distribution contents
+
+The root `.gitattributes` is the single export policy for Composer and Git archives;
+there is no separate `composer.json` archive filter. It permits runtime `src/`,
+Composer metadata, license/support/contribution files and the handbook's user-facing
+architecture, asset, example, guide, migration, module, operations, reference and
+release-note directories. Unlisted paths and hidden placeholders are excluded. Logs, raw measurement streams,
+temporary files, backups, caches and generated `reference.php` helpers are also
+excluded inside public directories.
+
+`docs/development/` (acceptance logs, raw measurements, environment/results JSON,
+verification reports and helper scripts), `docs/superpowers/`, empty documentation
+scaffolding, tests, tools, example applications, skeleton/recipe sources, vendor,
+local caches and generated output stay in Git/development checkouts and are not
+part of the distributable package. Source archives do not replace a development
+checkout. Public links to excluded evidence/recipe sources use immutable repository
+commit URLs; links to packaged guides, schemas and images remain relative.
+
+Run `composer test:release-package` to build and inspect the real ZIP, check all
+packaged relative Markdown/image links and byte-identical runtime source, install
+that ZIP without development dependencies, and execute the packaged Quickstart.
+It also verifies that current default SVG export and module inspection work from
+the installed package. `composer test:consumer` checks the supported layouts with
+and without Doctrine. No release or tag is created by these manual test commands.
 
 ## Run the checks
 
@@ -74,7 +101,7 @@ To apply the configured formatting rules:
 php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --allow-unsupported-php-version=yes --sequential
 ```
 
-Review the resulting diff and rerun the affected checks. See [testing documentation](docs/development/testing.md) and the [CI workflow](https://github.com/WebSign-Dev/sillbeam-core/blob/main/.github/workflows/ci.yml) for coverage and the PHP/Symfony compatibility matrix. Local success on one combination does not establish that every matrix job passes.
+Review the resulting diff and rerun the affected checks. The [historical testing notes](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/docs/development/testing.md) record earlier checks; the branch policy below and the [CI workflow](https://github.com/WebSign-Dev/sillbeam-core/blob/main/.github/workflows/ci.yml) define current triggering and the PHP/Symfony compatibility matrix. Local success on one combination does not establish that every matrix job passes.
 
 ## Code documentation and API reference
 
@@ -143,14 +170,30 @@ command, with no translation, website integration, release hook or new CI trigge
 
 ## Submit a pull request
 
-Target `main` and describe:
+Target **`dev`** when integrating the `dev-v0.3.x` development line. Describe:
 
 - The concrete problem and the behavior after the change.
 - Relevant reproduction steps or examples.
 - Checks you ran, their results and any checks you could not run.
 - Compatibility implications, configuration changes or migration steps.
 
-Keep commits understandable and the diff focused. Include documentation alongside implementation changes when users need it. Maintainers may request revisions before merging.
+Keep commits in the existing Conventional Commit style (`feat:`, `fix:`, `docs:`,
+`chore:`, `ci:`), with a focused diff and user documentation alongside changes.
+Maintainers may request revisions before integration.
+
+The required promotion sequence is:
+
+1. Work on `dev-v0.3.x` and open the integration PR to `dev`.
+2. An authorized integration/push to `dev` runs automatic CI; verify its results.
+3. Obtain maintainer approval before promoting the checked integration to `main`.
+4. An authorized integration/push to `main` runs automatic CI again.
+5. A release requires separate, explicit maintainer authorization after that check.
+
+The existing workflow has push triggers **only for `main` and `dev`**, plus manual
+`workflow_dispatch`. It has no PR trigger and no automatic development-branch run;
+a PR alone does not supply a pre-merge CI result. Branch protection/review settings
+are managed separately. Neither green CI nor this guide authorizes a push, merge,
+tag, publication or release automatically.
 
 ## License
 

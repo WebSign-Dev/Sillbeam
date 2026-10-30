@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+require_once __DIR__.'/../tests/Support/PackageArchive.php';
+
 // A test-only simulated version installs the real ZIP; no Git tag or release is created.
 $repository = dirname(__DIR__);
 $temporary = sys_get_temp_dir().'/sillbeam-release-package-'.bin2hex(random_bytes(6));
@@ -9,6 +11,8 @@ mkdir($temporary, 0777, true);
 
 try {
     releaseRun(['composer', 'archive', '--format=zip', '--dir='.$temporary, '--file=sillbeam'], $repository);
+    $inventory = Sillbeam\Core\Tests\Support\PackageArchive::inspect($temporary.'/sillbeam.zip', $repository);
+    echo 'PASS ZIP contents: '.count($inventory['files']).' files, '.$inventory['source_files'].' identical runtime files, '.$inventory['markdown_links']." local documentation links\n";
     $package = json_decode((string) file_get_contents($repository.'/composer.json'), true, flags: \JSON_THROW_ON_ERROR);
     $application = $temporary.'/application';
     mkdir($application.'/config/packages', 0777, true);
@@ -44,7 +48,7 @@ try {
     releaseRun(['composer', 'check-platform-reqs'], $application);
     releaseRun(['composer', 'dump-autoload', '--optimize', '--strict-psr'], $application);
 
-    $guide = (string) file_get_contents($repository.'/docs/guides/getting-started.md');
+    $guide = (string) file_get_contents($application.'/vendor/websign-dev/sillbeam-core/docs/guides/getting-started.md');
     preg_match_all('/```php\n(.*?)\n```/s', $guide, $php);
     foreach (['HelloModule', 'Greeting', 'HelloController'] as $class) {
         $examples = array_values(array_filter($php[1], static fn (string $code): bool => str_contains($code, 'class '.$class)));
@@ -105,12 +109,14 @@ try {
     if (200 !== $response->getStatusCode() || 'Hello from Sillbeam' !== $response->getContent()) { throw new RuntimeException('Documented Hello example failed.'); }
     $application = new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel);
     $application->setAutoExit(false);
-    foreach (['sillbeam:about', 'sillbeam:architecture', 'sillbeam:graph'] as $name) {
+    foreach (['sillbeam:about', 'sillbeam:architecture'] as $name) {
         $tester = new \Symfony\Component\Console\Tester\CommandTester($application->find($name));
         if (0 !== $tester->execute([])) { throw new RuntimeException('Diagnostic command failed: '.$name); }
     }
+    $graph = new \Symfony\Component\Console\Tester\CommandTester($application->find('sillbeam:graph'));
+    if (0 !== $graph->execute(['--output' => __DIR__.'/architecture-'.$argv[1].'.svg', '--force' => true]) || !is_file(__DIR__.'/architecture-'.$argv[1].'.svg')) { throw new RuntimeException('Packaged SVG export failed.'); }
     $inspect = new \Symfony\Component\Console\Tester\CommandTester($application->find('sillbeam:inspect:module'));
-    if (0 !== $inspect->execute(['module' => 'hello']) || !str_contains($inspect->getDisplay(), 'State: active')) { throw new RuntimeException('Packaged module inspection failed.'); }
+    if (0 !== $inspect->execute(['module' => 'hello']) || !str_contains($inspect->getDisplay(), 'Module: hello — Active')) { throw new RuntimeException('Packaged module inspection failed.'); }
     $doctor = new \Symfony\Component\Console\Tester\CommandTester($application->find('sillbeam:doctor'));
     $doctor->execute(['--format' => 'json']);
     $data = json_decode($doctor->getDisplay(), true, flags: \JSON_THROW_ON_ERROR);

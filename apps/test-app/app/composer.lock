@@ -4422,7 +4422,7 @@
             "dist": {
                 "type": "path",
                 "url": "../../..",
-                "reference": "16b69f4f44ea7f69ce08a05458418b1930647591"
+                "reference": "88add025006aa6328b1e588deda2e2223c1f1596"
             },
             "require": {
                 "composer-runtime-api": "^2.2",
@@ -4453,7 +4453,8 @@
             "extra": {
                 "branch-alias": {
                     "dev-main": "0.3.x-dev",
-                    "dev-dev-0.3.x": "0.3.x-dev"
+                    "dev-dev": "0.3.x-dev",
+                    "dev-dev-v0.3.x": "0.3.x-dev"
                 }
             },
             "autoload": {
@@ -4472,25 +4473,6 @@
                     "SymfonyOnlyApp\\": "apps/symfony-only/src/",
                     "Sillbeam\\Core\\Tests\\": "tests/"
                 }
-            },
-            "archive": {
-                "exclude": [
-                    "/*",
-                    "/.*",
-                    "!/src",
-                    "!/src/**",
-                    "!/docs",
-                    "!/docs/**",
-                    "!/composer.json",
-                    "!/README.md",
-                    "!/LICENSE",
-                    "!/CHANGELOG.md",
-                    "!/CONTRIBUTING.md",
-                    "!/SUPPORT.md",
-                    "!/SECURITY.md",
-                    "/docs/superpowers",
-                    "/docs/superpowers/**"
-                ]
             },
             "scripts": {
                 "analyse": [
@@ -4516,6 +4498,9 @@
                 ],
                 "docs:build": [
                     "phpdoc --config=phpdoc.dist.xml"
+                ],
+                "docs:export-json": [
+                    "@php tools/export-phpdoc-json.php"
                 ]
             },
             "license": [
