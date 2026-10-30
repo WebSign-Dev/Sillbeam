@@ -4,6 +4,8 @@
 php bin/console sillbeam:architecture
 php bin/console sillbeam:architecture --format=json
 php bin/console sillbeam:architecture -v
+php bin/console sillbeam:graph
+php bin/console sillbeam:graph --module=Billing --output=billing.svg
 php bin/console sillbeam:graph --format=mermaid > architecture.mmd
 php bin/console sillbeam:report
 php bin/console sillbeam:report --output=docs/architecture-report.md
@@ -330,14 +332,27 @@ container compilation. Text only in 0.3.0; no `--format`/JSON mode. Exit codes a
 See [module inspection](module-inspection.md) for selection, state definitions,
 partial-evidence limits and native-container versus fresh-adapter snapshots.
 
-## Mermaid graph export
+## Architecture graph
 
-`php bin/console sillbeam:graph --format=mermaid` exports raw Mermaid source for
-redirection. It distinguishes direct declarations, observed undeclared references,
-private ownership, validated Project membership, disabled configuration and recorded
-cycle participants. Invalid or incomplete analysis remains explicitly diagnostic,
-with unknown activation and evidence warnings. See the [graph reference](mermaid-graph.md)
-for identity, escaping, determinism and exit semantics.
+`php bin/console sillbeam:graph` writes `architecture.svg` in the current working
+directory and confirms the full path. SVG requires optional Graphviz (`dot` on
+PATH); no renderer is installed automatically. `--format=svg` is explicit;
+`--output=PATH` selects an existing parent directory and `--force` permits replacing
+an existing regular file. Failed rendering leaves existing artifacts untouched.
+
+`--module=ID` selects the same identity as module inspection and includes only its
+direct incoming/outgoing declared and observed relationships. `--project=ID`
+selects ownership/activation context; cross-boundary incident evidence is retained.
+Labels emphasize module IDs; normal dependency arrows have no repeated label.
+Cycles, disabled/unknown states and observed undeclared relationships remain distinct.
+Status and legend are captions rather than disconnected module nodes.
+
+`--format=mermaid` preserves raw STDOUT export for redirection, without decoration
+or a renderer. `--output`/`--force` are SVG-only. `--quiet` suppresses messages/source
+but still writes SVG. Analysis exit codes remain 0/1/2 after successful export;
+invocation/selection errors use 3, renderer/filesystem errors 4, on STDERR.
+See the [graph reference](mermaid-graph.md) for full selection, safety and evidence
+semantics. Invalid/incomplete architecture never implies runtime activation.
 
 ## 0.3.0 command compatibility
 
@@ -347,7 +362,7 @@ for identity, escaping, determinism and exit semantics.
 | `sillbeam:architecture` | text / existing JSON schema v1 | ArchitectureReport | 0 valid, 1 violations, 2 unavailable/usage |
 | `sillbeam:report` | Markdown file | ArchitectureReport | Same architecture status; write/usage errors 2 |
 | `sillbeam:inspect:module` | text only | Same report catalog and relationship evidence | Same architecture status; selection/usage errors 2 |
-| `sillbeam:graph` | raw Mermaid only | Same report catalog, direct edges and findings | Same architecture status; usage errors 2 |
+| `sillbeam:graph` | SVG file (optional Graphviz) / raw Mermaid | Same report catalog, direct edges and findings | 0/1/2 after export; usage/selection 3; renderer/output 4 |
 
 The diagnostic formats do not change the underlying checks, runtime activation,
 Project membership or architecture rules. `enabled` never implies `active`, and

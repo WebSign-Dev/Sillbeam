@@ -1,118 +1,156 @@
-# Mermaid architecture graph
+# Architecture graph: SVG and Mermaid
 
 ```bash
-php bin/console sillbeam:graph --format=mermaid
+php bin/console sillbeam:graph
+php bin/console sillbeam:graph --format=svg --output=docs/architecture.svg
+php bin/console sillbeam:graph --module=Billing
+php bin/console sillbeam:graph --module=Billing --project=shop --output=billing.svg
+php bin/console sillbeam:graph --module='App\Module\Billing\BillingModule'
+php bin/console sillbeam:graph --output=architecture.svg --force
 php bin/console sillbeam:graph --format=mermaid > architecture.mmd
 ```
 
-`mermaid` is the default and the only supported format. STDOUT contains raw
-`flowchart LR` source with a trailing newline, without Markdown fences, CLI
-banners, ANSI codes or progress messages. No Mermaid runtime, renderer or new
-Composer dependency is installed. The file can be consumed by an existing
-Mermaid-capable documentation tool. The syntax uses conventional quoted labels,
-decimal entity escapes, subgraphs and class definitions documented in the
-[official Mermaid flowchart reference](https://mermaid.js.org/syntax/flowchart.html).
+The default creates **architecture.svg in the current working directory**, then
+prints its full absolute path. `--format=svg` selects the same behavior explicitly.
+The parent directory of `--output` must already exist and be writable. Existing
+files require `--force`; directories and symbolic links (including dangling links)
+are rejected during destination checks, even with `--force`. SVG data is staged only after successful rendering.
+Same-directory rename replaces an explicitly permitted existing file atomically
+where supported. Without `--force`, atomic hard-link publication prevents replacing
+a file created concurrently. Filesystems without these operations fail safely;
+there is no unsafe copy fallback. With `--force`, destination checks and rename
+are separate operations: a concurrent change just before rename can replace the
+new directory entry (including a newly introduced symlink). The symlink referent
+is never followed or changed. Serialize forced exports when sharing a destination;
+`--force` authorizes replacement, not compare-and-swap against the original file.
+Temporary files are removed on handled failures.
 
-The command consumes the same `ArchitectureReport` produced from
-`ArchitectureAnalyzer` / `ArchitectureAnalysisResult` as
-[module inspection](module-inspection.md). It performs no discovery, source
-parsing, dependency traversal, cycle detection or additional architecture checks.
-Existing architecture JSON and its schema are unchanged.
+## Optional renderer
 
-## Identity, scope and relationships
+SVG requires the **Graphviz `dot` executable on PATH**, with SVG support, and PHP's
+`proc_open` function enabled. Install Graphviz yourself using your operating
+system's package manager (for example `apt install graphviz`, `dnf install graphviz`
+or `brew install graphviz`). Check availability using `dot -V`.
+See [Graphviz installation](https://graphviz.org/download/) and its
+[SVG output documentation](https://graphviz.org/docs/outputs/svg/).
 
-A module's full descriptor class is its identity. Its logical ID is a label,
-not a Mermaid node ID. The export sorts full classes and assigns separate ASCII
-IDs (`m0001`, `p0001`, `u0001`, and so on). Two private modules with the same ID in
-different Projects, or a shared/private ID collision, remain distinct nodes.
-Node IDs are deterministic for the same catalog, but are not a persistent external
-identifier: adding another descriptor may change their numbering.
+Core does not install or download a renderer. Graphviz is not a Composer runtime
+requirement. There is no Node.js/browser renderer. Missing or failed `dot` produces
+a helpful error on STDERR and exit 4; it never silently returns Mermaid instead.
+The process receives an argument array (`dot`, `-Tsvg`), never an interpolated shell
+command. DOT input and renderer output/diagnostics use separate temporary streams;
+output paths never become process arguments. Rendering has a 60-second limit.
+An unsuccessful render leaves the previous SVG untouched.
 
-Shared modules appear in their own subgraph. Private modules appear in their
-owning Project's subgraph, labelled with both the Project ID and descriptor class.
-Ownership is catalog evidence, independent of activation. A private owner missing
-from the available Project catalog is explicitly labelled unknown. Project nodes
-remain visible even without private modules. Each shared module appears only once,
-including when several Projects use it.
+## Identity and presentation
+
+The graph consumes the same `ArchitectureReport` as
+[module inspection](module-inspection.md). A common presentation view supplies
+both Mermaid and DOT directly. DOT is never recovered by parsing Mermaid. No new
+discovery, parser, dependency traversal, cycle detector or architecture rules run.
+The normal Symfony command uses the compiled snapshot; the Core adapter uses the
+existing guarded reporter before container boot. Architecture JSON schemas and
+activation semantics remain unchanged.
+
+A module's **descriptor class is its identity**. The first visible line is its
+module ID. Colliding IDs receive shared/private owner context; collisions within
+one owner also receive the shortest unique descriptor suffix. Duplicate Project
+IDs receive descriptor context. Full descriptor classes remain DOT/SVG tooltips.
+Sorted descriptor classes receive generated ASCII node IDs (`m0001`, `u0001`).
+Filtering preserves these IDs within the same catalog. Adding descriptors can
+change numbering; use descriptor classes as persistent external identities.
+
+Shared modules appear once in a shared cluster; private modules are grouped by
+owning Project. Shared labels list proven Project memberships. Unknown ownership
+and unresolved target classes remain explicit. Project membership is separate from
+dependency edges; no Project-as-module nodes or membership arrows clutter the graph.
+Projects with no private modules in the view appear in the caption. Status and
+legend are graph captions, never disconnected architecture nodes. Detailed existing
+findings are retained in Mermaid comments and the Graphviz graph tooltip.
 
 | Representation | Meaning |
 | --- | --- |
-| Solid arrow labelled `declared` | Direct dependency recorded in the source module's descriptor, directed from dependent to dependency |
-| Dashed arrow labelled `observed undeclared` | Existing observed module reference whose target is absent from that source's direct declarations |
-| Dashed arrow labelled `active membership` | Existing validated Project module membership, directed from Project to module |
-| Grey module, `enabled=false` | Configuration disables the module; this alone does not establish its runtime state |
-| Red outline, `recorded cycle member` | Descriptor is listed in an existing `dependency.cycle` finding |
-| Dashed outline, `unknown` fields | Required activation/configuration evidence is unavailable |
-| `unresolved module target` | Declared/observed target class is absent from the available module catalog; not an invented module |
+| Solid arrow, no repeated label | Direct declared dependency: **dependent → required module** |
+| Dashed orange arrow | Recorded observed reference absent from direct declarations; Mermaid also labels it `observed undeclared`, SVG has a tooltip |
+| Gray module | Known disabled configuration |
+| Red border / recorded cycle member | Participant in an existing `dependency.cycle` finding |
+| Dashed node / state unknown | Activation evidence unavailable |
+| Unresolved target cluster | Target class absent from the available module catalog |
 
-Repeated declarations/references are deduplicated for display. A declared edge with
-observed references is shown once as declared. No transitive dependency edges are
-computed. Project membership may include expanded dependencies because it comes
-from the already validated report; it is explicitly labelled as membership rather
-than a declaration. Private ownership remains separate from that membership.
+Duplicate declarations/references are deduplicated; a declared relationship is not
+shown a second time as observed. All direct relationships remain visible in the
+unfiltered view. No transitive edges, reduction or dependency pruning are performed.
+The left-to-right layout uses spaced, compact nodes and Project clusters. Dense
+architectures still require space; use the module filter for a focused diagram.
 
-Cycle markers use only the participants recorded by the existing findings. They
-do not claim that every edge between marked nodes belongs to a cycle, reconstruct
-an ordered cycle path or enumerate all possible cycles. The original findings
-are also included as standalone diagnostic labels.
+## Module and Project filters
 
-## States and incomplete evidence
+`--module` accepts an ID or descriptor class, case-insensitively, with the same
+selection rules as module inspection. It retains the selected module and every
+recorded **direct outgoing and incoming** declared/observed relationship, including
+unresolved targets. It does not include edges between neighbours unless incident
+to the selected module, or follow further dependencies. Whole-analysis status and
+findings remain whole-analysis evidence, even when an unrelated node is filtered.
 
-The graph always includes a visible analysis-status node and relationship legend.
-Module labels expose `enabled`, `active` and `state` with the same meanings as
-module inspection:
+`--project` accepts a Project ID or descriptor class. It resolves private ownership
+and selects the activation context for shared modules. Shared modules remain
+selectable even when unassigned there. If a shared/private collision remains,
+pass the exact module descriptor class. Unknown/ambiguous selectors fail explicitly.
 
-- `enabled=true` is configuration availability, not proof of activation.
-- `active=true` / `active=false` are read from the validated architecture report.
-- `state=disabled` requires known disabled configuration and known inactivity.
-- `state=unassigned` requires enabled configuration and known inactivity.
-- `unknown` is retained whenever the required evidence is unavailable.
+Used alone, `--project` includes that Project's private modules and shared modules,
+including disabled/unassigned modules. **Incident cross-boundary relationships are
+retained with their endpoints**, even if they reveal a forbidden dependency on
+another Project's private module. Unrelated private modules from other Projects
+are omitted. With both filters, module selection uses the Project context, then
+retains all incident edges. Scope/ownership never changes because of filtering.
 
-Any architecture finding suppresses the validated runtime graph. The export still
-shows the available module catalog and direct dependency evidence, but clearly
-labels it **diagnostic evidence; NOT a validated runtime graph**. It never promotes
-diagnostic candidate membership into actual Project activation. Project membership
-is labelled `unknown` and no membership arrows are emitted in that case.
-A known configuration flag may still be shown while actual activation is unknown.
+## States and incomplete analysis
 
-Fatal blockers/incomplete analyses retain only available evidence. A missing
-reference-map entry, missing internal completeness metadata or incomplete analysis
-produces `Reference evidence incomplete; missing edges do not prove absence`.
-An empty/unavailable module catalog is explicitly labelled; it does not imply that
-the application has no modules. No guessed nodes, states, edges or success findings
-are added to complete a broken analysis.
+Visible states follow module inspection: `active` requires proven activation;
+`disabled` requires known disabled configuration and known inactivity;
+`unassigned` requires enabled configuration and known inactivity; otherwise the
+state is `unknown`. Known disabled configuration is still indicated independently
+when activation is unknown. Enabled configuration never establishes activation.
+With a Project context, activation is read from that Project's validated membership.
 
-Labels are quoted and external punctuation is encoded as Mermaid decimal
-entities, including quotes, entity introducers, HTML/Markdown delimiters and
-Mermaid directive characters. Controls, line separators and bidi controls are
-replaced with spaces. External text never supplies node IDs or graph statements.
-Catalogs, findings and direct edges have deterministic ordering; timestamps and
-random export IDs are not emitted.
+Invalid architecture remains **diagnostic evidence; NOT a validated runtime graph**.
+Diagnostic candidates never become runtime membership. Existing cycle findings
+mark participants only, without inventing ordered cycle paths or cycle edges.
+Incomplete analysis or missing reference completeness metadata is explicitly
+marked `Reference evidence incomplete; missing edges do not prove absence`.
+An empty/unavailable catalog does not prove that the application has no modules.
 
-## CLI, failures and limits
+## CLI streams, errors and reproducibility
+
+`--format=mermaid` writes raw `flowchart LR` source plus a trailing newline to
+STDOUT: no banners, Markdown fences, ANSI codes or confirmation. It requires no
+renderer. `--output` and `--force` are SVG-only; combining them with Mermaid is an
+invocation error. Redirect Mermaid STDOUT with your shell instead.
+
+`--quiet` suppresses source, confirmation and diagnostics, retaining exit status;
+SVG **still renders and writes**. `--help` displays the command reference. Successful
+SVG rendering can produce a diagnostic diagram and still return analysis exit 1/2.
+A confirmation means the artifact was written, not that the architecture is valid.
 
 | Exit | Meaning |
 | --- | --- |
-| 0 | Existing architecture report is valid |
-| 1 | Existing report contains architecture violations; source is still exported |
-| 2 | Analysis unavailable/incomplete, provider failure or invalid command usage |
+| 0 | Successful export; valid architecture |
+| 1 | Successful export; architecture violations |
+| 2 | Successful diagnostic export; unavailable/incomplete analysis |
+| 3 | Invalid invocation, unsupported format, missing value, unknown/ambiguous selector |
+| 4 | Renderer failure/unavailable, timeout, invalid SVG or output filesystem failure |
 
-Analysis/provider failures become an unavailable Mermaid diagnostic graph through
-the existing guarded report collector. Incidental provider output is suppressed.
-Unsupported formats, unknown options and missing option values return exit 2
-before analysis; ordinary console usage errors go to STDERR and leave STDOUT empty.
-`--quiet` suppresses source and diagnostics while retaining the exit status.
-`--help` shows command help without running analysis in the Core adapter.
-The application bootstrap itself must not print text before running the console.
+Errors use STDERR when the output exposes a separate error stream; STDOUT remains
+empty on invocation/render/write failure. A renderer/output failure takes priority
+over analysis status. Incidental provider output is suppressed by the existing
+report collector. Application bootstrap output is outside the command's control.
+The Core adapter accepts these options before or after the exact command name and
+works even when container compilation fails; see the [CLI reference](cli.md).
+Ordinary Symfony requires a bootable container and uses its existing snapshot.
 
-For a broken container, select `Sillbeam\Core\Console\Application` in the existing
-console bootstrap as described in the [CLI reference](cli.md). The exact command
-`sillbeam:graph` then uses the existing kernel reporter before container compilation
-or kernel boot. No executable or installation system is added. Configuration and
-descriptor hooks follow the same execution and side-effect boundaries as existing
-architecture reporting.
-
-Ordinary Symfony Console registers the command through the bundle and uses its
-compiled architecture snapshot. A warm production container therefore reflects
-that snapshot; this is not a live service-availability check. Use the Core adapter
-when fresh analysis must remain possible despite architecture violations.
+Node/edge/finding ordering and DOT/Mermaid source are deterministic for identical
+report evidence. External labels are safely quoted/escaped (DOT quoted strings,
+Mermaid decimal entities); input cannot supply node identifiers, attributes, HTML
+labels or graph statements. Unicode is preserved, invalid UTF-8/control characters
+are made safe. SVG layout/bytes may vary between Graphviz versions and installed
+fonts; no byte-level cross-platform SVG reproducibility is promised.

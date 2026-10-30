@@ -42,10 +42,10 @@ final class GraphCommandTest extends TestCase
         self::assertSame(0, $tester->getStatusCode());
         $text = $tester->getDisplay();
         self::assertStringStartsWith('flowchart LR'."\n", $text);
-        self::assertStringContainsString('m0001 -->|declared| m0002', $text);
-        self::assertStringContainsString('m0002 -->|declared| m0003', $text);
-        self::assertStringNotContainsString('m0001 -->|declared| m0003', $text);
-        self::assertStringContainsString('enabled=true; active=true', $text);
+        self::assertStringContainsString('m0001 --> m0002', $text);
+        self::assertStringContainsString('m0002 --> m0003', $text);
+        self::assertStringNotContainsString('m0001 --> m0003', $text);
+        self::assertStringContainsString('state#61;active', $text);
         self::assertStringNotContainsString("\033", $text);
         $data = $report->data;
         $data['modules'] = array_reverse($data['modules']);
@@ -63,8 +63,8 @@ final class GraphCommandTest extends TestCase
         self::assertSame(1, $tester->getStatusCode());
         self::assertSame(1, substr_count($tester->getDisplay(), 'm0001 -.->|observed undeclared| m0002'));
         self::assertStringContainsString('diagnostic evidence', $tester->getDisplay());
-        self::assertStringContainsString('active=unknown', $tester->getDisplay());
-        self::assertStringNotContainsString('-->|declared|', $tester->getDisplay());
+        self::assertStringContainsString('state#61;unknown', $tester->getDisplay());
+        self::assertStringNotContainsString('-->', $tester->getDisplay());
     }
 
     public function testRecordedCycleMembersAreMarkedWithoutInventingEdges(): void
@@ -74,11 +74,11 @@ final class GraphCommandTest extends TestCase
         $this->module('A', [$b]);
         $tester = $this->command($this->report());
         self::assertSame(1, $tester->getStatusCode());
-        self::assertStringContainsString('m0001 -->|declared| m0002', $tester->getDisplay());
-        self::assertStringContainsString('m0002 -->|declared| m0001', $tester->getDisplay());
+        self::assertStringContainsString('m0001 --> m0002', $tester->getDisplay());
+        self::assertStringContainsString('m0002 --> m0001', $tester->getDisplay());
         self::assertStringContainsString('class m0001,m0002 cycle;', $tester->getDisplay());
-        self::assertSame(2, substr_count($tester->getDisplay(), 'recorded cycle member'));
-        self::assertStringContainsString('dependency#46;cycle', $tester->getDisplay());
+        self::assertSame(2, substr_count($tester->getDisplay(), 'state#61;unknown#59; recorded cycle member'));
+        self::assertStringContainsString('dependency.cycle', $tester->getDisplay());
     }
 
     public function testDisabledAndUnassignedModulesRetainValidatedStates(): void
@@ -88,8 +88,8 @@ final class GraphCommandTest extends TestCase
         $this->project('Shop');
         $tester = $this->command($this->report(['modules' => ['disabled' => ['enabled' => false]]]));
         self::assertSame(0, $tester->getStatusCode());
-        self::assertStringContainsString('enabled=false; active=false; state=disabled', $tester->getDisplay());
-        self::assertStringContainsString('enabled=true; active=false; state=unassigned', $tester->getDisplay());
+        self::assertStringContainsString('state#61;disabled', $tester->getDisplay());
+        self::assertStringContainsString('state#61;unassigned', $tester->getDisplay());
         self::assertStringContainsString('class m0001 disabled;', $tester->getDisplay());
     }
 
@@ -108,9 +108,9 @@ final class GraphCommandTest extends TestCase
         self::assertStringContainsString('subgraph shared_scope["Shared modules"]', $text);
         self::assertStringContainsString('subgraph project_scope_0001["Private modules', $text);
         self::assertStringContainsString('subgraph project_scope_0002["Private modules', $text);
-        self::assertStringContainsString('p0001 -.->|active membership| m0002', $text);
-        self::assertStringContainsString('p0002 -.->|active membership| m0001', $text);
-        self::assertStringContainsString('p0002 -.->|active membership| m0003', $text);
+        self::assertStringContainsString('Private modules #124; admin', $text);
+        self::assertStringContainsString('Projects#58; shop', $text);
+        self::assertStringNotContainsString('p0002 -.->', $text);
         self::assertStringNotContainsString('p0001 -.->|active membership| m0001', $text);
         preg_match_all('/^\s+(m\d+)\["/m', $text, $matches);
         self::assertCount(3, array_unique($matches[1]));
@@ -129,9 +129,9 @@ final class GraphCommandTest extends TestCase
         $tester = $this->command($this->report());
         self::assertSame(1, $tester->getStatusCode());
         self::assertStringContainsString('unresolved module target', $tester->getDisplay());
-        self::assertStringContainsString('m0001 -->|declared| u0001', $tester->getDisplay());
-        self::assertStringContainsString('active=unknown', $tester->getDisplay());
-        self::assertStringNotContainsString('active=true', $tester->getDisplay());
+        self::assertStringContainsString('m0001 --> u0001', $tester->getDisplay());
+        self::assertStringContainsString('state#61;unknown', $tester->getDisplay());
+        self::assertStringNotContainsString('state#61;active', $tester->getDisplay());
     }
 
     public function testInvalidDescriptorProducesSourceOnlyUnavailableGraph(): void
@@ -152,9 +152,9 @@ final class GraphCommandTest extends TestCase
         $partial = new ArchitectureAnalysisResult([new ArchitectureFinding('source.parse', 'Partial analysis', [], 'fatal')], discovery: $analysis->discovery);
         $tester = $this->command(ArchitectureReport::fromAnalysis($partial));
         self::assertSame(2, $tester->getStatusCode());
-        self::assertStringContainsString('enabled=unknown; active=unknown; state=unknown', $tester->getDisplay());
+        self::assertStringContainsString('state#61;unknown', $tester->getDisplay());
         self::assertStringContainsString('Reference evidence incomplete', $tester->getDisplay());
-        self::assertStringNotContainsString('active=true', $tester->getDisplay());
+        self::assertStringNotContainsString('state#61;active', $tester->getDisplay());
     }
 
     public function testExternalLabelsCannotEscapeIntoMermaidStatements(): void
@@ -164,7 +164,7 @@ final class GraphCommandTest extends TestCase
         $data = $report->data;
         $data['modules'][0]['id'] = "end\"]\nclick m0001 \"javascript:alert(1)\"\n%%{init: {}}%%<b>&#35;`|\033";
         $text = $this->command(new ArchitectureReport($data, $report->presentation))->getDisplay();
-        self::assertStringContainsString('end#34;#93; click', $text);
+        self::assertStringContainsString('end#34;#93;<br/>click', $text);
         self::assertStringContainsString('#60;b#62;#38;#35;35#59;', $text);
         self::assertStringNotContainsString("\nclick", $text);
         self::assertStringNotContainsString('%%{', $text);
@@ -183,7 +183,7 @@ final class GraphCommandTest extends TestCase
         self::assertStringStartsWith('flowchart LR', $tester->getDisplay());
         self::assertStringNotContainsString('unwanted output', $tester->getDisplay());
         self::assertStringNotContainsString("\033", $tester->getDisplay());
-        self::assertStringContainsString('report#46;execution', $tester->getDisplay());
+        self::assertStringContainsString('report.execution', $tester->getDisplay());
     }
 
     public function testInvalidOptionsDoNotAnalyzeAndQuietRetainsExitStatus(): void
@@ -195,14 +195,14 @@ final class GraphCommandTest extends TestCase
 
                 return ArchitectureReport::unavailable(new \RuntimeException('Unexpected'));
             }));
-            self::assertSame(2, $tester->execute($arguments, ['capture_stderr_separately' => true]));
+            self::assertSame(3, $tester->execute($arguments, ['capture_stderr_separately' => true]));
             self::assertFalse($called);
             self::assertSame('', $tester->getDisplay());
             self::assertNotSame('', $tester->getErrorOutput());
         }
         $this->module('Billing', ['Missing\\Module']);
         $tester = new CommandTester(new GraphCommand($this->report()));
-        self::assertSame(1, $tester->execute([], ['verbosity' => OutputInterface::VERBOSITY_QUIET]));
+        self::assertSame(1, $tester->execute(['--format' => 'mermaid'], ['verbosity' => OutputInterface::VERBOSITY_QUIET]));
         self::assertSame('', $tester->getDisplay());
     }
 
@@ -211,6 +211,10 @@ final class GraphCommandTest extends TestCase
         $this->module('Billing');
         $this->source->write('config/packages/framework.yaml', 'framework: {secret: graph-test, test: true}');
         $this->source->write('config/services.yaml', 'services: {}');
+        $this->source->write('renderer/dot', '#!'.\PHP_BINARY."\n<?php stream_get_contents(STDIN); echo '<svg xmlns=\"http://www.w3.org/2000/svg\"></svg>';");
+        chmod($this->source->directory.'/renderer/dot', 0700);
+        $originalPath = getenv('PATH');
+        putenv('PATH='.$this->source->directory.'/renderer');
         $kernel = new TestApplicationKernel($this->source);
         try {
             foreach ([new Application($kernel), new \Symfony\Bundle\FrameworkBundle\Console\Application($kernel)] as $app) {
@@ -220,9 +224,24 @@ final class GraphCommandTest extends TestCase
                 self::assertStringStartsWith('flowchart LR', $tester->getDisplay());
                 self::assertSame(0, $tester->run(['command' => 'sillbeam:graph', '--help' => true]));
                 self::assertStringContainsString('--format', $tester->getDisplay());
+                self::assertStringContainsString('--module', $tester->getDisplay());
+                $path = $this->source->directory.'/'.str_replace('\\', '-', $app::class).'.svg';
+                self::assertSame(0, $tester->run(['command' => 'sillbeam:graph', '--output' => $path]));
+                self::assertStringContainsString($path, $tester->getDisplay());
+                self::assertFileExists($path);
+                self::assertSame(0, $tester->run(['command' => 'sillbeam:graph', '--output' => $path, '--force' => true, '--quiet' => true]));
+                self::assertSame('', $tester->getDisplay());
+                foreach ([['--unknown' => true], ['--format' => 'json'], ['--module' => 'absent']] as $options) {
+                    self::assertSame(3, $tester->run(['command' => 'sillbeam:graph'] + $options, ['capture_stderr_separately' => true]));
+                    self::assertSame('', $tester->getDisplay());
+                    self::assertStringContainsString('sillbeam:graph:', $tester->getErrorOutput());
+                }
+                self::assertSame(4, $tester->run(['command' => 'sillbeam:graph', '--output' => $path], ['capture_stderr_separately' => true]));
+                self::assertSame('', $tester->getDisplay());
             }
         } finally {
             $kernel->shutdown();
+            putenv(false === $originalPath ? 'PATH' : 'PATH='.$originalPath);
         }
     }
 
@@ -235,8 +254,8 @@ final class GraphCommandTest extends TestCase
         $this->source->php('src/Module/A/Consumer.php', 'final class Consumer { public \\'.$port.' $port; }');
         $report = $this->report();
         $text = $this->command($report)->getDisplay();
-        self::assertStringContainsString('m0001 -->|declared| m0002', $text);
-        self::assertStringContainsString('m0001 -->|declared| m0003', $text);
+        self::assertStringContainsString('m0001 --> m0002', $text);
+        self::assertStringContainsString('m0001 --> m0003', $text);
         self::assertStringNotContainsString('m0001 -.->|observed undeclared| m0002', $text);
         $data = $report->data;
         $data['modules'][0]['declared_dependencies'] = [$b, $c, $b];
@@ -250,7 +269,7 @@ final class GraphCommandTest extends TestCase
         $analysis = $this->analysis();
         $report = ArchitectureReport::fromAnalysis(new ArchitectureAnalysisResult(discovery: $analysis->discovery));
         $text = $this->command($report)->getDisplay();
-        self::assertStringContainsString('active=unknown', $text);
+        self::assertStringContainsString('state#61;unknown', $text);
         self::assertStringNotContainsString('validated architecture snapshot', $text);
     }
 
@@ -274,9 +293,9 @@ final class GraphCommandTest extends TestCase
         $data['projects'][0]['id'] = "Shop\"]\nend\nclick attack";
         $tester = $this->command(new ArchitectureReport($data, $report->presentation));
         self::assertSame(2, $tester->getStatusCode());
-        self::assertStringContainsString('m0001["same |', $tester->getDisplay());
-        self::assertStringContainsString('m0002["same |', $tester->getDisplay());
-        self::assertStringContainsString('Shop#34;#93; end click attack', $tester->getDisplay());
+        self::assertStringContainsString('m0001["same<br/>', $tester->getDisplay());
+        self::assertStringContainsString('m0002["same<br/>', $tester->getDisplay());
+        self::assertStringContainsString('Shop#34;#93;<br/>end<br/>click attack', $tester->getDisplay());
         self::assertStringNotContainsString("\nclick", $tester->getDisplay());
         self::assertStringContainsString('membership=unknown', $tester->getDisplay());
         self::assertStringNotContainsString('-.->|active membership|', $tester->getDisplay());
@@ -294,11 +313,12 @@ final class GraphCommandTest extends TestCase
         foreach ([
             [['sillbeam:graph', '--format=mermaid'], 1],
             [['--format', 'mermaid', 'sillbeam:graph'], 1],
+            [['--module', 'billing', 'sillbeam:graph', '--format=mermaid'], 1],
             [['sillbeam:graph', '--format=mermaid', '--quiet'], 1],
             [['sillbeam:graph', '--help'], 0],
-            [['sillbeam:graph', '--format=json'], 2],
-            [['sillbeam:graph', '--format'], 2],
-            [['sillbeam:graph', '--unknown'], 2],
+            [['sillbeam:graph', '--format=json'], 3],
+            [['sillbeam:graph', '--format'], 3],
+            [['sillbeam:graph', '--unknown'], 3],
         ] as [$arguments, $expected]) {
             $process = proc_open([\PHP_BINARY, $this->source->directory.'/bin/console', ...$arguments, '--ansi'], [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']], $pipes, null, ['SHELL_VERBOSITY' => '0'] + getenv());
             self::assertIsResource($process);
@@ -308,7 +328,7 @@ final class GraphCommandTest extends TestCase
             fclose($pipes[1]);
             fclose($pipes[2]);
             self::assertSame($expected, proc_close($process), $stdout.$stderr);
-            if (2 === $expected) {
+            if (3 === $expected) {
                 self::assertSame('', $stdout);
                 self::assertStringContainsString('sillbeam:graph:', $stderr);
             } else {
@@ -317,7 +337,7 @@ final class GraphCommandTest extends TestCase
                     self::assertSame('', $stdout);
                 } elseif (1 === $expected) {
                     self::assertStringStartsWith('flowchart LR', $stdout);
-                    self::assertStringContainsString('active=unknown', $stdout);
+                    self::assertStringContainsString('state#61;unknown', $stdout);
                     self::assertStringNotContainsString("\033", $stdout);
                 } else {
                     self::assertStringContainsString('--format', $stdout);
@@ -327,8 +347,93 @@ final class GraphCommandTest extends TestCase
         $kernel = new TestApplicationKernel($this->source);
         $app = new Application($kernel);
         $app->setAutoExit(false);
-        self::assertSame(1, (new ApplicationTester($app))->run(['command' => 'sillbeam:graph']));
+        self::assertSame(1, (new ApplicationTester($app))->run(['command' => 'sillbeam:graph', '--format' => 'mermaid']));
         self::assertFalse((new \ReflectionProperty($kernel, 'booted'))->getValue($kernel));
+    }
+
+    public function testModuleFilterKeepsOnlyDirectIncidentEdges(): void
+    {
+        $d = $this->module('D');
+        $c = $this->module('C', [$d]);
+        $b = $this->module('B', [$c]);
+        $this->module('A', [$b]);
+        $tester = new CommandTester(new GraphCommand($this->report()));
+        self::assertSame(0, $tester->execute(['--format' => 'mermaid', '--module' => 'B']));
+        $text = $tester->getDisplay();
+        self::assertStringContainsString('m0001 --> m0002', $text);
+        self::assertStringContainsString('m0002 --> m0003', $text);
+        self::assertStringNotContainsString('m0004[', $text);
+        self::assertStringNotContainsString('m0003 -->', $text);
+        self::assertStringNotContainsString('analysis_status[', $text);
+        self::assertStringNotContainsString('legend[', $text);
+        self::assertStringNotContainsString('|declared|', $text);
+    }
+
+    public function testProjectAndDescriptorSelectionDisambiguatePrivateModules(): void
+    {
+        $this->project('Shop');
+        $this->project('Admin');
+        $shop = $this->module('Billing', [], 'Shop');
+        $this->module('Billing', [], 'Admin');
+        $report = $this->report(['projects' => ['shop' => ['hosts' => ['shop.test']], 'admin' => ['hosts' => ['admin.test']]]]);
+        $tester = new CommandTester(new GraphCommand($report));
+        self::assertSame(3, $tester->execute(['--format' => 'mermaid', '--module' => 'billing']));
+        self::assertStringContainsString('Ambiguous module', $tester->getDisplay());
+        self::assertSame(0, $tester->execute(['--format' => 'mermaid', '--module' => 'billing', '--project' => 'shop']));
+        self::assertStringContainsString('m0002[', $tester->getDisplay());
+        self::assertStringNotContainsString('m0001[', $tester->getDisplay());
+        self::assertSame(0, $tester->execute(['--format' => 'mermaid', '--module' => $shop]));
+        self::assertStringContainsString('m0002[', $tester->getDisplay());
+    }
+
+    public function testProjectContextRetainsCrossBoundaryRelationships(): void
+    {
+        $this->project('Shop');
+        $this->project('Admin');
+        $target = $this->module('Target', [], 'Admin');
+        $source = $this->module('Source', [$target], 'Shop');
+        $this->module('Unrelated', [], 'Admin');
+        $report = $this->report(['projects' => ['shop' => ['hosts' => ['shop.test']], 'admin' => ['hosts' => ['admin.test']]]]);
+        $tester = new CommandTester(new GraphCommand($report));
+        self::assertSame(1, $tester->execute(['--format' => 'mermaid', '--project' => 'shop']));
+        self::assertStringContainsString('m0003 --> m0001', $tester->getDisplay());
+        self::assertStringNotContainsString('m0002[', $tester->getDisplay());
+        self::assertStringNotContainsString('state#61;active', $tester->getDisplay());
+        self::assertSame(1, $tester->execute(['--format' => 'mermaid', '--module' => $source, '--project' => 'shop']));
+        self::assertStringContainsString('m0003 --> m0001', $tester->getDisplay());
+    }
+
+    public function testModuleFilterKeepsObservedIncomingAndOutgoingEvidence(): void
+    {
+        $this->module('A');
+        $this->module('B');
+        $this->module('C');
+        $this->module('D');
+        $port = $this->source->php('src/Module/B/Port.php', 'interface Port {}');
+        $other = $this->source->php('src/Module/C/Port.php', 'interface Port {}');
+        $this->source->php('src/Module/A/Consumer.php', 'final class Consumer { public \\'.$port.' $port; }');
+        $this->source->php('src/Module/B/Consumer.php', 'final class Consumer { public \\'.$other.' $port; }');
+        $tester = new CommandTester(new GraphCommand($this->report()));
+        self::assertSame(1, $tester->execute(['--format' => 'mermaid', '--module' => 'b']));
+        self::assertStringContainsString('m0001 -.->|observed undeclared| m0002', $tester->getDisplay());
+        self::assertStringContainsString('m0002 -.->|observed undeclared| m0003', $tester->getDisplay());
+        self::assertStringNotContainsString('m0004[', $tester->getDisplay());
+    }
+
+    public function testTenModuleDenseGraphRetainsEveryDeclaredEdge(): void
+    {
+        $classes = [];
+        for ($index = 9; $index >= 0; --$index) {
+            $classes[] = $this->module('M'.$index, $classes);
+        }
+        $report = $this->report();
+        $text = $this->command($report)->getDisplay();
+        self::assertSame(45, substr_count($text, ' --> '));
+        self::assertSame(10, preg_match_all('/^        m[0-9]+\["/m', $text));
+        self::assertStringNotContainsString($this->source->namespace, $text);
+        $dot = (new \Sillbeam\Core\Architecture\Console\DotGraph())->render(\Sillbeam\Core\Architecture\Console\GraphView::fromReport($report));
+        self::assertSame(45, substr_count($dot, ' -> '));
+        self::assertStringNotContainsString('|declared|', $text);
     }
 
     /** @param list<string> $dependencies

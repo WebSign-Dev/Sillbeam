@@ -143,7 +143,7 @@ Run these commands from your Symfony application's root:
 | Command | Purpose |
 | :--- | :--- |
 | `php bin/console sillbeam:architecture` | Explain architecture findings and contextual next steps. |
-| `php bin/console sillbeam:graph --format=mermaid` | Export module dependency evidence as Mermaid source ([reference](docs/reference/mermaid-graph.md)). |
+| `php bin/console sillbeam:graph` | Write `architecture.svg` using optional Graphviz; use `--module=Billing` for direct relationships or `--format=mermaid` for raw source ([reference](docs/reference/mermaid-graph.md)). |
 | `php bin/console sillbeam:inspect:module Billing` | Inspect one module, its configuration, activation and dependency evidence ([reference](docs/reference/module-inspection.md)). |
 | `php bin/console sillbeam:doctor` | Inspect static installation evidence; review unverified checks manually. |
 | `php bin/console sillbeam:doctor --format=json` | Export the [versioned Doctor result](docs/reference/doctor-json.md) with stable check IDs. |
