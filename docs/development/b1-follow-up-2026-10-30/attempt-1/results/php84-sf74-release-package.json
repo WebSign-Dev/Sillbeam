@@ -1,0 +1,19 @@
+{
+  "label": "php84-sf74-release-package",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-b1-php84-sf74",
+    "composer",
+    "test:release-package"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T15:16:47.583863+00:00",
+  "log": "logs/php84-sf74-release-package.log",
+  "exit_code": 0,
+  "elapsed_seconds": 8.644,
+  "finished_utc": "2026-10-30T15:16:56.227951+00:00"
+}

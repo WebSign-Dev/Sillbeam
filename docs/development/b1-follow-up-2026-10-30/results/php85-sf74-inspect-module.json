@@ -1,0 +1,20 @@
+{
+  "label": "php85-sf74-inspect-module",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-b1-final-php85-sf74",
+    "vendor/bin/phpunit",
+    "--filter",
+    "InspectModuleTest"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T15:29:13.735759+00:00",
+  "log": "logs/php85-sf74-inspect-module.log",
+  "exit_code": 0,
+  "elapsed_seconds": 2.174,
+  "finished_utc": "2026-10-30T15:29:15.909361+00:00"
+}

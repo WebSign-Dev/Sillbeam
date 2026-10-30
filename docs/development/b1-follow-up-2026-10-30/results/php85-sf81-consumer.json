@@ -1,0 +1,19 @@
+{
+  "label": "php85-sf81-consumer",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-b1-final-php85-sf81",
+    "composer",
+    "test:consumer"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T15:30:10.322466+00:00",
+  "log": "logs/php85-sf81-consumer.log",
+  "exit_code": 0,
+  "elapsed_seconds": 57.121,
+  "finished_utc": "2026-10-30T15:31:07.443775+00:00"
+}

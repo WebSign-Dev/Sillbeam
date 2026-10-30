@@ -1,0 +1,14 @@
+{
+  "label": "red-flex",
+  "command": [
+    "composer",
+    "test:flex-recipe"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T15:12:32.821921+00:00",
+  "log": "logs/red-flex.log",
+  "exit_code": 255,
+  "elapsed_seconds": 7.037,
+  "finished_utc": "2026-10-30T15:12:39.859170+00:00"
+}

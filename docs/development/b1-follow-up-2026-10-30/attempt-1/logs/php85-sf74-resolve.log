@@ -1,0 +1,161 @@
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 0 installs, 43 updates, 1 removal
+  - Removing symfony/polyfill-deepclone (v1.42.0)
+  - Upgrading composer/semver (3.4.4 => 3.6.0)
+  - Upgrading doctrine/dbal (4.4.4 => 4.5.0)
+  - Upgrading doctrine/doctrine-bundle (3.3.2 => 3.3.4)
+  - Upgrading doctrine/inflector (2.1.0 => 2.1.1)
+  - Upgrading doctrine/lexer (3.0.1 => 3.0.3)
+  - Upgrading doctrine/orm (3.7.0 => 3.7.5)
+  - Upgrading doctrine/persistence (4.2.0 => 4.2.1)
+  - Upgrading ergebnis/agent-detector (1.2.0 => 1.3.0)
+  - Upgrading fidry/cpu-core-counter (1.3.0 => 1.4.1)
+  - Upgrading friendsofphp/php-cs-fixer (v3.95.25 => v3.95.27)
+  - Upgrading nikic/php-parser (v5.8.0 => v5.9.0)
+  - Upgrading phpstan/phpstan (2.2.13 => 2.3.4)
+  - Upgrading phpunit/php-code-coverage (12.5.7 => 12.5.8)
+  - Upgrading phpunit/php-text-template (5.0.0 => 5.0.1)
+  - Upgrading phpunit/phpunit (12.5.35 => 12.5.42)
+  - Upgrading sebastian/version (6.0.0 => 6.0.1)
+  - Downgrading symfony/cache (v8.1.6 => v7.4.22)
+  - Downgrading symfony/config (v8.1.5 => v7.4.22)
+  - Downgrading symfony/console (v8.1.6 => v7.4.22)
+  - Downgrading symfony/dependency-injection (v8.1.5 => v7.4.22)
+  - Downgrading symfony/doctrine-bridge (v8.1.6 => v7.4.22)
+  - Downgrading symfony/error-handler (v8.1.5 => v7.4.22)
+  - Downgrading symfony/event-dispatcher (v8.1.5 => v7.4.17)
+  - Downgrading symfony/filesystem (v8.1.6 => v7.4.21)
+  - Downgrading symfony/finder (v8.1.5 => v7.4.22)
+  - Downgrading symfony/framework-bundle (v8.1.6 => v7.4.22)
+  - Downgrading symfony/http-foundation (v8.1.9 => v7.4.22)
+  - Downgrading symfony/http-kernel (v8.1.6 => v7.4.22)
+  - Downgrading symfony/options-resolver (v8.1.0 => v7.4.22)
+  - Upgrading symfony/polyfill-intl-grapheme (v1.41.0 => v1.43.3)
+  - Upgrading symfony/polyfill-intl-normalizer (v1.42.0 => v1.43.0)
+  - Upgrading symfony/polyfill-mbstring (v1.38.2 => v1.43.3)
+  - Upgrading symfony/polyfill-php80 (v1.37.0 => v1.43.0)
+  - Upgrading symfony/polyfill-php84 (v1.38.1 => v1.43.0)
+  - Upgrading symfony/polyfill-php85 (v1.41.0 => v1.43.0)
+  - Upgrading symfony/polyfill-php86 (v1.41.0 => v1.43.0)
+  - Downgrading symfony/process (v8.1.6 => v7.4.22)
+  - Downgrading symfony/routing (v8.1.6 => v7.4.22)
+  - Downgrading symfony/stopwatch (v8.1.0 => v7.4.8)
+  - Downgrading symfony/string (v8.1.2 => v7.4.22)
+  - Downgrading symfony/var-dumper (v8.1.6 => v7.4.22)
+  - Downgrading symfony/var-exporter (v8.1.6 => v7.4.22)
+  - Downgrading symfony/yaml (v8.1.6 => v7.4.22)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 95 installs, 0 updates, 0 removals
+    0 [>---------------------------]    0 [->--------------------------]
+  - Installing phar-io/filesystem (2.0.1): Extracting archive
+  - Installing phar-io/executor (1.0.1): Extracting archive
+  - Installing phar-io/gnupg (1.0.3): Extracting archive
+  - Installing phar-io/composer-distributor (1.0.2): Extracting archive
+ 0/4 [>---------------------------]   0%
+ 4/4 [============================] 100%
+  - Installing phpdocumentor/shim (v3.10.0): Extracting archive
+  - Downloading artifact from https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.10.0/phpDocumentor.phar
+  - PHAR signature successfully verified
+  - Installing composer/pcre (3.4.0): Extracting archive
+  - Installing deptrac/deptrac (2.0.7): Extracting archive
+  - Installing symfony/deprecation-contracts (v3.7.1): Extracting archive
+  - Installing psr/container (2.0.2): Extracting archive
+  - Installing symfony/service-contracts (v3.7.3): Extracting archive
+  - Installing symfony/routing (v7.4.22): Extracting archive
+  - Installing symfony/polyfill-php85 (v1.43.0): Extracting archive
+  - Installing symfony/polyfill-mbstring (v1.43.3): Extracting archive
+  - Installing symfony/polyfill-ctype (v1.37.0): Extracting archive
+  - Installing symfony/http-foundation (v7.4.22): Extracting archive
+  - Installing psr/event-dispatcher (1.0.0): Extracting archive
+  - Installing symfony/event-dispatcher-contracts (v3.7.1): Extracting archive
+  - Installing symfony/event-dispatcher (v7.4.17): Extracting archive
+  - Installing symfony/var-dumper (v7.4.22): Extracting archive
+  - Installing psr/log (3.0.2): Extracting archive
+  - Installing symfony/error-handler (v7.4.22): Extracting archive
+  - Installing symfony/http-kernel (v7.4.22): Extracting archive
+  - Installing symfony/finder (v7.4.22): Extracting archive
+  - Installing symfony/filesystem (v7.4.21): Extracting archive
+  - Installing symfony/var-exporter (v7.4.22): Extracting archive
+  - Installing symfony/dependency-injection (v7.4.22): Extracting archive
+  - Installing symfony/config (v7.4.22): Extracting archive
+  - Installing psr/cache (3.0.0): Extracting archive
+  - Installing symfony/cache-contracts (v3.7.1): Extracting archive
+  - Installing symfony/cache (v7.4.22): Extracting archive
+  - Installing symfony/framework-bundle (v7.4.22): Extracting archive
+  - Installing doctrine/event-manager (2.1.1): Extracting archive
+  - Installing doctrine/deprecations (1.1.6): Extracting archive
+  - Installing doctrine/persistence (4.2.1): Extracting archive
+  - Installing symfony/doctrine-bridge (v7.4.22): Extracting archive
+  - Installing symfony/polyfill-intl-normalizer (v1.43.0): Extracting archive
+  - Installing symfony/polyfill-intl-grapheme (v1.43.3): Extracting archive
+  - Installing symfony/string (v7.4.22): Extracting archive
+  - Installing symfony/console (v7.4.22): Extracting archive
+  - Installing doctrine/sql-formatter (1.5.4): Extracting archive
+  - Installing doctrine/dbal (4.5.0): Extracting archive
+  - Installing doctrine/doctrine-bundle (3.3.4): Extracting archive
+  - Installing symfony/polyfill-php86 (v1.43.0): Extracting archive
+  - Installing doctrine/lexer (3.0.3): Extracting archive
+  - Installing doctrine/instantiator (2.1.0): Extracting archive
+  - Installing doctrine/inflector (2.1.1): Extracting archive
+  - Installing doctrine/collections (3.1.0): Extracting archive
+  - Installing doctrine/orm (3.7.5): Extracting archive
+  - Installing symfony/stopwatch (v7.4.8): Extracting archive
+  - Installing symfony/process (v7.4.22): Extracting archive
+  - Installing symfony/polyfill-php84 (v1.43.0): Extracting archive
+  - Installing symfony/polyfill-php81 (v1.38.1): Extracting archive
+  - Installing symfony/polyfill-php80 (v1.43.0): Extracting archive
+  - Installing symfony/options-resolver (v7.4.22): Extracting archive
+  - Installing sebastian/diff (7.0.1): Extracting archive
+  - Installing react/event-loop (v1.6.0): Extracting archive
+  - Installing evenement/evenement (v3.0.2): Extracting archive
+  - Installing react/stream (v1.4.0): Extracting archive
+  - Installing react/promise (v3.3.0): Extracting archive
+  - Installing react/cache (v1.2.0): Extracting archive
+  - Installing react/dns (v1.14.0): Extracting archive
+  - Installing react/socket (v1.17.0): Extracting archive
+  - Installing react/child-process (v0.6.7): Extracting archive
+  - Installing fidry/cpu-core-counter (1.4.1): Extracting archive
+  - Installing ergebnis/agent-detector (1.3.0): Extracting archive
+  - Installing composer/xdebug-handler (3.0.5): Extracting archive
+  - Installing composer/semver (3.6.0): Extracting archive
+  - Installing clue/ndjson-react (v1.3.0): Extracting archive
+  - Installing friendsofphp/php-cs-fixer (v3.95.27): Extracting archive
+  - Installing phpstan/phpstan (2.3.4): Extracting archive
+  - Installing staabm/side-effects-detector (1.0.5): Extracting archive
+  - Installing sebastian/version (6.0.1): Extracting archive
+  - Installing sebastian/type (6.0.4): Extracting archive
+  - Installing sebastian/recursion-context (7.0.1): Extracting archive
+  - Installing sebastian/object-reflector (5.0.0): Extracting archive
+  - Installing sebastian/object-enumerator (7.0.0): Extracting archive
+  - Installing sebastian/global-state (8.0.3): Extracting archive
+  - Installing sebastian/exporter (7.0.3): Extracting archive
+  - Installing sebastian/environment (8.1.2): Extracting archive
+  - Installing sebastian/comparator (7.1.8): Extracting archive
+  - Installing sebastian/cli-parser (4.2.1): Extracting archive
+  - Installing phpunit/php-timer (8.0.0): Extracting archive
+  - Installing phpunit/php-text-template (5.0.1): Extracting archive
+  - Installing phpunit/php-invoker (6.0.0): Extracting archive
+  - Installing phpunit/php-file-iterator (6.0.2): Extracting archive
+  - Installing theseer/tokenizer (2.0.1): Extracting archive
+  - Installing nikic/php-parser (v5.9.0): Extracting archive
+  - Installing sebastian/lines-of-code (4.0.1): Extracting archive
+  - Installing sebastian/complexity (5.0.0): Extracting archive
+  - Installing phpunit/php-code-coverage (12.5.8): Extracting archive
+  - Installing phar-io/version (3.2.1): Extracting archive
+  - Installing phar-io/manifest (2.0.4): Extracting archive
+  - Installing myclabs/deep-copy (1.14.0): Extracting archive
+  - Installing phpunit/phpunit (12.5.42): Extracting archive
+  - Installing symfony/yaml (v7.4.22): Extracting archive
+  0/90 [>---------------------------]   0%
+ 31/90 [=========>------------------]  34%
+ 49/90 [===============>------------]  54%
+ 64/90 [===================>--------]  71%
+ 79/90 [========================>---]  87%
+ 89/90 [===========================>]  98%
+ 90/90 [============================] 100%
+Generating autoload files
+79 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+No security vulnerability advisories found.

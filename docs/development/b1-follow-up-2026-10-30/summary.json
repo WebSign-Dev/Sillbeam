@@ -1,0 +1,450 @@
+{
+  "flex": {
+    "php84-sf74": {
+      "default": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php84-sf74-flex-default.log"
+      },
+      "fresh": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php84-sf74-flex-fresh.log"
+      },
+      "existing-route": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php84-sf74-flex-existing-route.log"
+      },
+      "doctrine": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php84-sf74-flex-doctrine.log"
+      },
+      "fresh-doctrine": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php84-sf74-flex-fresh-doctrine.log"
+      }
+    },
+    "php84-sf81": {
+      "default": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php84-sf81-flex-default.log"
+      },
+      "fresh": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php84-sf81-flex-fresh.log"
+      },
+      "existing-route": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php84-sf81-flex-existing-route.log"
+      },
+      "doctrine": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php84-sf81-flex-doctrine.log"
+      },
+      "fresh-doctrine": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php84-sf81-flex-fresh-doctrine.log"
+      }
+    },
+    "php85-sf74": {
+      "default": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php85-sf74-flex-default.log"
+      },
+      "fresh": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php85-sf74-flex-fresh.log"
+      },
+      "existing-route": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php85-sf74-flex-existing-route.log"
+      },
+      "doctrine": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php85-sf74-flex-doctrine.log"
+      },
+      "fresh-doctrine": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php85-sf74-flex-fresh-doctrine.log"
+      }
+    },
+    "php85-sf81": {
+      "default": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php85-sf81-flex-default.log"
+      },
+      "fresh": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php85-sf81-flex-fresh.log"
+      },
+      "existing-route": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php85-sf81-flex-existing-route.log"
+      },
+      "doctrine": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php85-sf81-flex-doctrine.log"
+      },
+      "fresh-doctrine": {
+        "exit_code": 0,
+        "verified": true,
+        "boots": {
+          "zero": 1,
+          "symfony-dev": 2,
+          "symfony-prod": 2,
+          "sillbeam-dev": 2,
+          "sillbeam-prod": 2
+        },
+        "log": "logs/php85-sf81-flex-fresh-doctrine.log"
+      }
+    }
+  },
+  "regressions": {
+    "php84-sf74": {
+      "validate": {
+        "exit_code": 0,
+        "log": "logs/php84-sf74-validate.log"
+      },
+      "platform": {
+        "exit_code": 0,
+        "log": "logs/php84-sf74-platform.log"
+      },
+      "phpunit": {
+        "exit_code": 0,
+        "log": "logs/php84-sf74-phpunit.log",
+        "summary": "OK (635 tests, 8363 assertions)"
+      },
+      "analyse": {
+        "exit_code": 0,
+        "log": "logs/php84-sf74-analyse.log"
+      },
+      "architecture": {
+        "exit_code": 0,
+        "log": "logs/php84-sf74-architecture.log"
+      },
+      "cs": {
+        "exit_code": 0,
+        "log": "logs/php84-sf74-cs.log"
+      },
+      "inspect-module": {
+        "exit_code": 0,
+        "log": "logs/php84-sf74-inspect-module.log",
+        "summary": "OK (27 tests, 261 assertions)"
+      },
+      "consumer": {
+        "exit_code": 0,
+        "log": "logs/php84-sf74-consumer.log"
+      },
+      "release-package": {
+        "exit_code": 0,
+        "log": "logs/php84-sf74-release-package.log"
+      },
+      "symfony": "v7.4.22",
+      "php": "PHP 8.4.26 (cli) (built: Sep 24 2026 19:13:27) (NTS)",
+      "dependency_hashes": {
+        "composer.json": "a081e020ca48a128f3088a4d01a4a440f55e8187281b42453e693df737ebe148",
+        "composer.lock": "8f778bd69a645837ea92b66e54fbbe6963cef1498d319ec0003fc4758e0d511e"
+      }
+    },
+    "php84-sf81": {
+      "validate": {
+        "exit_code": 0,
+        "log": "logs/php84-sf81-validate.log"
+      },
+      "platform": {
+        "exit_code": 0,
+        "log": "logs/php84-sf81-platform.log"
+      },
+      "phpunit": {
+        "exit_code": 0,
+        "log": "logs/php84-sf81-phpunit.log",
+        "summary": "OK (635 tests, 8223 assertions)"
+      },
+      "analyse": {
+        "exit_code": 0,
+        "log": "logs/php84-sf81-analyse.log"
+      },
+      "architecture": {
+        "exit_code": 0,
+        "log": "logs/php84-sf81-architecture.log"
+      },
+      "cs": {
+        "exit_code": 0,
+        "log": "logs/php84-sf81-cs.log"
+      },
+      "inspect-module": {
+        "exit_code": 0,
+        "log": "logs/php84-sf81-inspect-module.log",
+        "summary": "OK (27 tests, 261 assertions)"
+      },
+      "consumer": {
+        "exit_code": 0,
+        "log": "logs/php84-sf81-consumer.log"
+      },
+      "release-package": {
+        "exit_code": 0,
+        "log": "logs/php84-sf81-release-package.log"
+      },
+      "symfony": "v8.1.10",
+      "php": "PHP 8.4.26 (cli) (built: Sep 24 2026 19:13:27) (NTS)",
+      "dependency_hashes": {
+        "composer.json": "2cafd62b6a1718cb015bfe824ffd1513cee7a989c8fdceeac59831aaf4578cb6",
+        "composer.lock": "fac37f96dbbb54b639500eafaa136b31c234fbeb6548ac468774bfca42b0e9f5"
+      }
+    },
+    "php85-sf74": {
+      "validate": {
+        "exit_code": 0,
+        "log": "logs/php85-sf74-validate.log"
+      },
+      "platform": {
+        "exit_code": 0,
+        "log": "logs/php85-sf74-platform.log"
+      },
+      "phpunit": {
+        "exit_code": 0,
+        "log": "logs/php85-sf74-phpunit.log",
+        "summary": "OK (635 tests, 8363 assertions)"
+      },
+      "analyse": {
+        "exit_code": 0,
+        "log": "logs/php85-sf74-analyse.log"
+      },
+      "architecture": {
+        "exit_code": 0,
+        "log": "logs/php85-sf74-architecture.log"
+      },
+      "cs": {
+        "exit_code": 0,
+        "log": "logs/php85-sf74-cs.log"
+      },
+      "inspect-module": {
+        "exit_code": 0,
+        "log": "logs/php85-sf74-inspect-module.log",
+        "summary": "OK (27 tests, 261 assertions)"
+      },
+      "consumer": {
+        "exit_code": 0,
+        "log": "logs/php85-sf74-consumer.log"
+      },
+      "release-package": {
+        "exit_code": 0,
+        "log": "logs/php85-sf74-release-package.log"
+      },
+      "symfony": "v7.4.22",
+      "php": "PHP 8.5.11 (cli) (built: Sep 24 2026 19:06:49) (NTS)",
+      "dependency_hashes": {
+        "composer.json": "a081e020ca48a128f3088a4d01a4a440f55e8187281b42453e693df737ebe148",
+        "composer.lock": "8f778bd69a645837ea92b66e54fbbe6963cef1498d319ec0003fc4758e0d511e"
+      }
+    },
+    "php85-sf81": {
+      "validate": {
+        "exit_code": 0,
+        "log": "logs/php85-sf81-validate.log"
+      },
+      "platform": {
+        "exit_code": 0,
+        "log": "logs/php85-sf81-platform.log"
+      },
+      "phpunit": {
+        "exit_code": 0,
+        "log": "logs/php85-sf81-phpunit.log",
+        "summary": "OK (635 tests, 8223 assertions)"
+      },
+      "analyse": {
+        "exit_code": 0,
+        "log": "logs/php85-sf81-analyse.log"
+      },
+      "architecture": {
+        "exit_code": 0,
+        "log": "logs/php85-sf81-architecture.log"
+      },
+      "cs": {
+        "exit_code": 0,
+        "log": "logs/php85-sf81-cs.log"
+      },
+      "inspect-module": {
+        "exit_code": 0,
+        "log": "logs/php85-sf81-inspect-module.log",
+        "summary": "OK (27 tests, 261 assertions)"
+      },
+      "consumer": {
+        "exit_code": 0,
+        "log": "logs/php85-sf81-consumer.log"
+      },
+      "release-package": {
+        "exit_code": 0,
+        "log": "logs/php85-sf81-release-package.log"
+      },
+      "symfony": "v8.1.10",
+      "php": "PHP 8.5.11 (cli) (built: Sep 24 2026 19:06:49) (NTS)",
+      "dependency_hashes": {
+        "composer.json": "2cafd62b6a1718cb015bfe824ffd1513cee7a989c8fdceeac59831aaf4578cb6",
+        "composer.lock": "fac37f96dbbb54b639500eafaa136b31c234fbeb6548ac468774bfca42b0e9f5"
+      }
+    }
+  },
+  "smoke_boots": 180,
+  "doctrine_smoke_boots": 72,
+  "problems": [],
+  "source_changed_since_snapshot": [],
+  "historical_evidence_unchanged": true,
+  "matrix_source_differences": {
+    "php84-sf74": [],
+    "php84-sf81": [],
+    "php85-sf74": [],
+    "php85-sf81": []
+  },
+  "git_diff_check": 0
+}

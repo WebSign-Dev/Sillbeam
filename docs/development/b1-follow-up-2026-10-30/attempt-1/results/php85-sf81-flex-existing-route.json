@@ -1,0 +1,21 @@
+{
+  "label": "php85-sf81-flex-existing-route",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "-e",
+    "SILLBEAM_TEST_EXISTING_ROUTE=1",
+    "sillbeam-b1-php85-sf81",
+    "composer",
+    "test:flex-recipe"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T15:18:51.434326+00:00",
+  "log": "logs/php85-sf81-flex-existing-route.log",
+  "exit_code": 0,
+  "elapsed_seconds": 10.596,
+  "finished_utc": "2026-10-30T15:19:02.030328+00:00"
+}

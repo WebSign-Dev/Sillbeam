@@ -1,0 +1,19 @@
+{
+  "label": "php85-sf74-analyse",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-b1-php85-sf74",
+    "composer",
+    "analyse"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T15:17:48.655153+00:00",
+  "log": "logs/php85-sf74-analyse.log",
+  "exit_code": 0,
+  "elapsed_seconds": 15.67,
+  "finished_utc": "2026-10-30T15:18:04.325347+00:00"
+}

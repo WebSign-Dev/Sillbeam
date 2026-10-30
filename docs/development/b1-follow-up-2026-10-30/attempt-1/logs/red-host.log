@@ -1,0 +1,7 @@
+PHP Warning:  stream_socket_server(): Unable to connect to tcp://127.0.0.1:0 (Success) in /home/oeffe/PhpstormProjects/websign/sillbeam-core/tools/test-flex-recipe.php on line 543
+PHP Fatal error:  Uncaught RuntimeException: Unable to allocate endpoint port: Success (0). in /home/oeffe/PhpstormProjects/websign/sillbeam-core/tools/test-flex-recipe.php:546
+Stack trace:
+#0 /home/oeffe/PhpstormProjects/websign/sillbeam-core/tools/test-flex-recipe.php(82): availablePort()
+#1 {main}
+  thrown in /home/oeffe/PhpstormProjects/websign/sillbeam-core/tools/test-flex-recipe.php on line 546
+Script php tools/test-flex-recipe.php handling the test:flex-recipe event returned with error code 255

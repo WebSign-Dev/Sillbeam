@@ -1,0 +1,19 @@
+{
+  "label": "php84-sf81-analyse",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-b1-final-php84-sf81",
+    "composer",
+    "analyse"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T15:24:32.268696+00:00",
+  "log": "logs/php84-sf81-analyse.log",
+  "exit_code": 0,
+  "elapsed_seconds": 16.54,
+  "finished_utc": "2026-10-30T15:24:48.808346+00:00"
+}

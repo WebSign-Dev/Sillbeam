@@ -225,6 +225,9 @@ PHP,
         'config/routes/sillbeam.yaml',
     ], $installedFiles, 'symfony.lock does not track only the Sillbeam route import.');
 
+    // The pre-install "about" boot caches a container without Core. This fixture has
+    // no cache-clear auto-script; same-second bundle changes can still look fresh.
+    removeDirectory($applicationDirectory.'/var/cache');
     verifyOnboarding($applicationDirectory);
     // These two edits are explicit developer decisions in this disposable app,
     // not recipe or Doctor writes. Preserve the reviewed state on uninstall.
@@ -365,7 +368,7 @@ function consumerConsole(string $directory, array $arguments, int $expected): st
 function verifyOnboarding(string $directory): void
 {
     $native = consumerConsole($directory, ['sillbeam:doctor'], 1);
-    assertSame(true, str_contains($native, 'Console adapter: action required'), 'Missing adapter needs instructions.');
+    assertSame(true, str_contains($native, 'Console adapter: action required'), 'Missing adapter needs instructions: '.$native);
     $nativeJson = json_decode(consumerConsole($directory, ['sillbeam:doctor', '--format=json'], 1), true, flags: \JSON_THROW_ON_ERROR);
     assertSame(1, $nativeJson['schema_version'], 'Native Doctor JSON schema version changed.');
     assertSame('action required', $nativeJson['status'], 'Native Doctor JSON lost action items.');
@@ -467,7 +470,13 @@ try {
         $output = new \Symfony\Component\Console\Output\BufferedOutput();
         $code = $application->run(new \Symfony\Component\Console\Input\ArrayInput(['command' => 'sillbeam:inspect:module', 'module' => $module]), $output);
         $text = $output->fetch();
-        if (0 !== $code || !str_contains($text, 'ID: '.$module) || !str_contains($text, 'State: '.$state)) { throw new \RuntimeException('Compiled module inspection failed: '.$text); }
+        if (0 !== $code || !str_contains($text, 'Module: '.$module.' — '.ucfirst($state))) { throw new \RuntimeException('Compiled module inspection failed (exit '.$code.'): '.$text); }
+        $verboseOutput = new \Symfony\Component\Console\Output\BufferedOutput(\Symfony\Component\Console\Output\OutputInterface::VERBOSITY_VERBOSE);
+        $verboseCode = $application->run(new \Symfony\Component\Console\Input\ArrayInput(['command' => 'sillbeam:inspect:module', 'module' => $module]), $verboseOutput);
+        $verboseText = $verboseOutput->fetch();
+        foreach (['Module: '.$module.' — '.ucfirst($state), 'ID: '.$module, 'State: '.$state, 'Active: '.('active' === $state ? 'true' : 'false')] as $expected) {
+            if (0 !== $verboseCode || !str_contains($verboseText, $expected)) { throw new \RuntimeException('Verbose compiled module inspection failed (exit '.$verboseCode.'): '.$verboseText); }
+        }
     }
     $graphOutput = new \Symfony\Component\Console\Output\BufferedOutput();
     if (0 !== $application->run(new \Symfony\Component\Console\Input\ArrayInput(['command' => 'sillbeam:graph', '--format' => 'mermaid']), $graphOutput) || !str_starts_with($graphOutput->fetch(), 'flowchart LR')) { throw new \RuntimeException('Compiled Mermaid export failed.'); }
@@ -477,6 +486,7 @@ try {
         $manager = $kernel->getContainer()->get('doctrine.orm.entity_manager');
         if (1 !== count($manager->getMetadataFactory()->getAllMetadata())) { throw new \RuntimeException('Recipe consumer mapping failed.'); }
     }
+    echo 'PASS smoke: kernel='.get_parent_class($kernel).' env='.$argv[2].' config='.($zero ? 'zero' : 'configured').' hello=active off='.($zero ? 'active' : 'disabled').' compact+verbose inspections, Mermaid, HTTP'.('1' === $argv[1] ? ', Doctrine mapping' : '')."\n";
 } finally { $kernel->shutdown(); }
 PHP);
     $process = proc_open([\PHP_BINARY, 'smoke.php', $withDoctrine ? '1' : '0', 'dev', 'zero'], [\STDIN, \STDOUT, \STDERR], $pipes, $directory);

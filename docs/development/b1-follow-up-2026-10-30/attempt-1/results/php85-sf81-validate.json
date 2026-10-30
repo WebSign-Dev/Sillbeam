@@ -1,0 +1,20 @@
+{
+  "label": "php85-sf81-validate",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-b1-php85-sf81",
+    "composer",
+    "validate",
+    "--strict"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T15:17:11.801473+00:00",
+  "log": "logs/php85-sf81-validate.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.367,
+  "finished_utc": "2026-10-30T15:17:12.168439+00:00"
+}

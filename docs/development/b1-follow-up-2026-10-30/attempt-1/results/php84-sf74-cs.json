@@ -1,0 +1,19 @@
+{
+  "label": "php84-sf74-cs",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-b1-php84-sf74",
+    "composer",
+    "cs:check"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T15:14:28.404236+00:00",
+  "log": "logs/php84-sf74-cs.log",
+  "exit_code": 0,
+  "elapsed_seconds": 16.67,
+  "finished_utc": "2026-10-30T15:14:45.074089+00:00"
+}

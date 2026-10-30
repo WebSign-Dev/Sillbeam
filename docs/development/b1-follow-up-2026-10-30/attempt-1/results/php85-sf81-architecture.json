@@ -1,0 +1,19 @@
+{
+  "label": "php85-sf81-architecture",
+  "command": [
+    "docker",
+    "exec",
+    "--user",
+    "1000:1000",
+    "sillbeam-b1-php85-sf81",
+    "composer",
+    "architecture"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T15:18:19.596456+00:00",
+  "log": "logs/php85-sf81-architecture.log",
+  "exit_code": 0,
+  "elapsed_seconds": 1.519,
+  "finished_utc": "2026-10-30T15:18:21.115378+00:00"
+}

@@ -1,0 +1,9 @@
+{
+  "branch": "dev-v0.3.x",
+  "head": "ae7518d00662a1b2df444641b8ed8b934a82779f",
+  "changed_tracked_files": [
+    "tools/test-flex-recipe.php"
+  ],
+  "source_manifest": "source-sha256.json",
+  "note": "Final source snapshot after confirmed cache fix; complete independent rerun, prior attempt and diagnoses in attempt-1. Disposable Symfony-specific manifests/locks only; no commit."
+}

@@ -1,0 +1,168 @@
+No composer.lock file present. Updating dependencies to latest instead of installing from lock file. See https://getcomposer.org/install for more information.
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 31 installs, 0 updates, 0 removals
+  - Locking psr/cache (3.0.0)
+  - Locking psr/container (2.0.2)
+  - Locking psr/event-dispatcher (1.0.0)
+  - Locking psr/log (3.0.2)
+  - Locking symfony/cache (v8.1.10)
+  - Locking symfony/cache-contracts (v3.7.1)
+  - Locking symfony/config (v8.1.10)
+  - Locking symfony/console (v8.1.10)
+  - Locking symfony/dependency-injection (v8.1.10)
+  - Locking symfony/deprecation-contracts (v3.7.1)
+  - Locking symfony/error-handler (v8.1.10)
+  - Locking symfony/event-dispatcher (v8.1.5)
+  - Locking symfony/event-dispatcher-contracts (v3.7.1)
+  - Locking symfony/filesystem (v8.1.9)
+  - Locking symfony/finder (v8.1.10)
+  - Locking symfony/flex (v2.12.0)
+  - Locking symfony/framework-bundle (v8.1.10)
+  - Locking symfony/http-foundation (v8.1.10)
+  - Locking symfony/http-kernel (v8.1.10)
+  - Locking symfony/polyfill-ctype (v1.37.0)
+  - Locking symfony/polyfill-deepclone (v1.43.2)
+  - Locking symfony/polyfill-intl-grapheme (v1.43.3)
+  - Locking symfony/polyfill-intl-normalizer (v1.43.0)
+  - Locking symfony/polyfill-mbstring (v1.43.3)
+  - Locking symfony/polyfill-php85 (v1.43.0)
+  - Locking symfony/routing (v8.1.10)
+  - Locking symfony/service-contracts (v3.7.3)
+  - Locking symfony/string (v8.1.10)
+  - Locking symfony/var-dumper (v8.1.10)
+  - Locking symfony/var-exporter (v8.1.10)
+  - Locking symfony/yaml (v8.1.10)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 31 installs, 0 updates, 0 removals
+  - Installing symfony/flex (v2.12.0): Extracting archive
+  - Installing psr/cache (3.0.0): Extracting archive
+  - Installing symfony/cache-contracts (v3.7.1): Extracting archive
+  - Installing symfony/polyfill-mbstring (v1.43.3): Extracting archive
+  - Installing symfony/polyfill-intl-normalizer (v1.43.0): Extracting archive
+  - Installing symfony/polyfill-intl-grapheme (v1.43.3): Extracting archive
+  - Installing symfony/polyfill-ctype (v1.37.0): Extracting archive
+  - Installing symfony/string (v8.1.10): Extracting archive
+  - Installing symfony/deprecation-contracts (v3.7.1): Extracting archive
+  - Installing psr/container (2.0.2): Extracting archive
+  - Installing symfony/service-contracts (v3.7.3): Extracting archive
+  - Installing symfony/polyfill-php85 (v1.43.0): Extracting archive
+  - Installing symfony/console (v8.1.10): Extracting archive
+  - Installing psr/event-dispatcher (1.0.0): Extracting archive
+  - Installing symfony/event-dispatcher-contracts (v3.7.1): Extracting archive
+  - Installing symfony/polyfill-deepclone (v1.43.2): Extracting archive
+  - Installing symfony/var-exporter (v8.1.10): Extracting archive
+  - Installing symfony/routing (v8.1.10): Extracting archive
+  - Installing symfony/http-foundation (v8.1.10): Extracting archive
+  - Installing symfony/event-dispatcher (v8.1.5): Extracting archive
+  - Installing symfony/var-dumper (v8.1.10): Extracting archive
+  - Installing psr/log (3.0.2): Extracting archive
+  - Installing symfony/error-handler (v8.1.10): Extracting archive
+  - Installing symfony/http-kernel (v8.1.10): Extracting archive
+  - Installing symfony/finder (v8.1.10): Extracting archive
+  - Installing symfony/filesystem (v8.1.9): Extracting archive
+  - Installing symfony/dependency-injection (v8.1.10): Extracting archive
+  - Installing symfony/config (v8.1.10): Extracting archive
+  - Installing symfony/cache (v8.1.10): Extracting archive
+  - Installing symfony/framework-bundle (v8.1.10): Extracting archive
+  - Installing symfony/yaml (v8.1.10): Extracting archive
+Generating autoload files
+27 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+Warning: Accessing 127.0.0.1 over http which is an insecure protocol.
+
+Run composer recipes at any time to see the status of your Symfony recipes.
+
+Loading composer repositories with package information
+Updating dependencies
+Nothing to modify in lock file
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Nothing to install, update or remove
+Generating autoload files
+27 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+Warning: Accessing 127.0.0.1 over http which is an insecure protocol.
+
+Symfony operations: 1 recipe (c48ef67b49144c6372f353691704fbd0)
+  - Configuring symfony/framework-bundle (>=v8.1.10): From auto-generated recipe
+              
+ What's next? 
+              
+
+Some files have been created and/or updated to configure your new packages.
+Please review, edit and commit them: these files are yours.
+
+
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 2 installs, 0 updates, 0 removals
+  - Locking nikic/php-parser (v5.9.0)
+  - Locking websign-dev/sillbeam-core (0.3.0)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 2 installs, 0 updates, 0 removals
+  - Installing nikic/php-parser (v5.9.0): Extracting archive
+  - Installing websign-dev/sillbeam-core (0.3.0): Mirroring from /tmp/sillbeam-flex-recipe-4b5d6d19dc22885d/package
+Generating autoload files
+27 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+Warning: Accessing 127.0.0.1 over http which is an insecure protocol.
+
+Symfony operations: 1 recipe (5d6e792366f6fae5e72252a030c18064)
+  - Configuring websign-dev/sillbeam-core (>=0.2): From local/sillbeam-flex-recipe:main
+              
+ What's next? 
+              
+
+Some files have been created and/or updated to configure your new packages.
+Please review, edit and commit them: these files are yours.
+
+ websign-dev/sillbeam-core  instructions:
+
+  1. In bin/console use Sillbeam\Core\Console\Application; instead of Symfony's Console Application.
+     Keep the existing bootstrap and Kernel, including import aliases; this enables Doctor before boot.
+     Never overwrite application files or force a recipe reinstall to apply these instructions.
+  2. Run php bin/console sillbeam:doctor and review action required and not verified checks.
+     Confirm the bundle in config/bundles.php and exactly one type: sillbeam route import
+     in config/routes/sillbeam.yaml (or your existing route configuration).
+  3. In services.yaml append Module and Project discovery roots to existing resource exclusions.
+     Preserve existing exclusions and explicit services; custom roots need their actual paths.
+     Make the reviewed changes yourself, then rerun php bin/console sillbeam:doctor.
+  4. Create a descriptor: php bin/console sillbeam:make:module Hello
+     Add the Greeting service and /hello controller from docs/guides/getting-started.md.
+     Run php bin/console sillbeam:architecture, then php bin/console debug:router hello.
+
+No security vulnerability advisories found.
+Doctor repair, unchanged consumer files, unresolved configuration and first module creation passed.
+PASS smoke: kernel=Symfony\Component\HttpKernel\Kernel env=dev config=zero hello=active off=active compact+verbose inspections, Mermaid, HTTP
+PASS smoke: kernel=Symfony\Component\HttpKernel\Kernel env=dev config=configured hello=active off=disabled compact+verbose inspections, Mermaid, HTTP
+PASS smoke: kernel=Symfony\Component\HttpKernel\Kernel env=dev config=configured hello=active off=disabled compact+verbose inspections, Mermaid, HTTP
+PASS smoke: kernel=Symfony\Component\HttpKernel\Kernel env=prod config=configured hello=active off=disabled compact+verbose inspections, Mermaid, HTTP
+PASS smoke: kernel=Symfony\Component\HttpKernel\Kernel env=prod config=configured hello=active off=disabled compact+verbose inspections, Mermaid, HTTP
+PASS smoke: kernel=Sillbeam\Core\Kernel\SillbeamKernel env=dev config=configured hello=active off=disabled compact+verbose inspections, Mermaid, HTTP
+PASS smoke: kernel=Sillbeam\Core\Kernel\SillbeamKernel env=dev config=configured hello=active off=disabled compact+verbose inspections, Mermaid, HTTP
+PASS smoke: kernel=Sillbeam\Core\Kernel\SillbeamKernel env=prod config=configured hello=active off=disabled compact+verbose inspections, Mermaid, HTTP
+PASS smoke: kernel=Sillbeam\Core\Kernel\SillbeamKernel env=prod config=configured hello=active off=disabled compact+verbose inspections, Mermaid, HTTP
+./composer.json has been updated
+Running composer update websign-dev/sillbeam-core
+Loading composer repositories with package information
+Updating dependencies
+Lock file operations: 0 installs, 0 updates, 2 removals
+  - Removing nikic/php-parser (v5.9.0)
+  - Removing websign-dev/sillbeam-core (0.3.0)
+Writing lock file
+Installing dependencies from lock file (including require-dev)
+Package operations: 0 installs, 0 updates, 2 removals
+  - Removing websign-dev/sillbeam-core (0.3.0)
+  - Removing nikic/php-parser (v5.9.0)
+Generating autoload files
+27 packages you are using are looking for funding.
+Use the `composer fund` command to find out more!
+Warning: Accessing 127.0.0.1 over http which is an insecure protocol.
+
+Symfony operations: 1 recipe (36154c6150a00460e66183037812b5c0)
+  - Unconfiguring websign-dev/sillbeam-core (>=0.2): From local/sillbeam-flex-recipe:main
+No security vulnerability advisories found.
+Sillbeam Flex recipe installation, both consumer kernels and removal passed (existing application, without Doctrine).

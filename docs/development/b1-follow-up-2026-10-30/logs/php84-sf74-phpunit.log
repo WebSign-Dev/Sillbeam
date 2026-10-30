@@ -1,0 +1,22 @@
+PHPUnit 12.5.42 by Sebastian Bergmann and contributors.
+
+Runtime:       PHP 8.4.26
+Configuration: /workspace/phpunit.xml.dist
+
+[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "GET http://localhost/archived"" at RouterListener.php line 156
+....[error] Uncaught PHP Exception Symfony\Component\HttpKernel\Exception\NotFoundHttpException: "No route found for "GET https://public.hybrid.test/backoffice"" at RouterListener.php line 156
+...........................................................  63 / 635 (  9%)
+............................................................... 126 / 635 ( 19%)
+............................................................... 189 / 635 ( 29%)
+............................................................... 252 / 635 ( 39%)
+............................................................... 315 / 635 ( 49%)
+............................................................... 378 / 635 ( 59%)
+............................................................... 441 / 635 ( 69%)
+............................................................... 504 / 635 ( 79%)
+............................................................... 567 / 635 ( 89%)
+............................................................... 630 / 635 ( 99%)
+.....                                                           635 / 635 (100%)
+
+Time: 00:51.240, Memory: 90.50 MB
+
+[30;42mOK (635 tests, 8363 assertions)[0m

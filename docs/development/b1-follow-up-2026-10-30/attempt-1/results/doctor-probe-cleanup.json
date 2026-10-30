@@ -1,0 +1,16 @@
+{
+  "label": "doctor-probe-cleanup",
+  "command": [
+    "docker",
+    "rm",
+    "-f",
+    "sillbeam-b1-doctor-probe"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T15:20:55.382670+00:00",
+  "log": "logs/doctor-probe-cleanup.log",
+  "exit_code": 0,
+  "elapsed_seconds": 0.316,
+  "finished_utc": "2026-10-30T15:20:55.699021+00:00"
+}

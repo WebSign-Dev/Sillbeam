@@ -1,0 +1,17 @@
+{
+  "label": "php85-sf81-doctor-probe-3",
+  "command": [
+    "docker",
+    "exec",
+    "sillbeam-b1-doctor-probe",
+    "php",
+    "tools/test-flex-recipe-diagnostic.php"
+  ],
+  "cwd": "/home/oeffe/PhpstormProjects/websign/sillbeam-core",
+  "environment_overrides": {},
+  "started_utc": "2026-10-30T15:20:50.853982+00:00",
+  "log": "logs/php85-sf81-doctor-probe-3.log",
+  "exit_code": 255,
+  "elapsed_seconds": 4.528,
+  "finished_utc": "2026-10-30T15:20:55.381913+00:00"
+}
