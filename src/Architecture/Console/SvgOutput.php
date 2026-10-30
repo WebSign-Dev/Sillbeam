@@ -9,7 +9,7 @@ final class SvgOutput
 {
     /**
      * Resolves the real parent and rejects unsafe targets before expensive rendering.
-     * Parent directories must exist. Symbolic links are rejected at validation, even with --force.
+     * Missing parent directories are created recursively. Symbolic links are rejected at validation, even with --force.
      *
      * @throws \RuntimeException for unavailable parents or protected targets
      */
@@ -18,9 +18,13 @@ final class SvgOutput
         if ('' === trim($path) || preg_match('/[\x00-\x1f\x7f]/', $path)) {
             throw new \RuntimeException('Supply a nonempty SVG output path without control characters.');
         }
-        $parent = @realpath(\dirname($path));
+        $directory = \dirname($path);
+        if (!@is_dir($directory) && !@mkdir($directory, 0777, true) && !@is_dir($directory)) {
+            throw new \RuntimeException('Cannot create SVG output directory: '.$directory);
+        }
+        $parent = @realpath($directory);
         if (false === $parent || !@is_dir($parent) || !@is_writable($parent)) {
-            throw new \RuntimeException('SVG output parent directory must exist and be writable: '.\dirname($path));
+            throw new \RuntimeException('SVG output parent directory must be writable: '.\dirname($path));
         }
         $destination = $parent.\DIRECTORY_SEPARATOR.basename($path);
         $this->check($destination, $force);

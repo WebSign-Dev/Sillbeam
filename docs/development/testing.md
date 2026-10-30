@@ -81,9 +81,11 @@ use temporary projects so ordinary test runs do not update the website artifact.
 ## Architecture graph UX
 
 `vendor/bin/phpunit tests/Integration/GraphCommandTest.php tests/Integration/GraphSvgTest.php`
-checks the common Mermaid/DOT view, direct filters, Project boundaries, collisions,
-status evidence, both CLI entries and renderer/filesystem failures. Renderer test
-executables exercise actual argument-array process invocation without Graphviz.
-The real SVG integration test runs when `dot` is already executable on PATH;
-otherwise PHPUnit reports one explicit skip. No renderer is installed by tests.
-See the [UX verification report](architecture-graph-ux-2026-10-30.md).
+checks the common Mermaid/SVG view, direct filters, Project boundaries, collisions,
+status evidence, both CLI entries, actual SVG/XML generation and filesystem failures.
+SVG tests require no external renderer and run with an empty PATH and disabled
+process functions. Missing nested output directories, overwrite protection and
+concurrent creation are covered. See the
+[native SVG verification report](native-svg-2026-10-30.md). The earlier
+[Graphviz UX report](architecture-graph-ux-2026-10-30.md) records the superseded
+external-renderer implementation.

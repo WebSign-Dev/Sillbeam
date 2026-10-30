@@ -6,10 +6,10 @@ namespace Sillbeam\Core\Tests\Integration;
 
 use PHPUnit\Framework\TestCase;
 use Sillbeam\Core\Architecture\ArchitectureReport;
-use Sillbeam\Core\Architecture\Console\DotGraph;
 use Sillbeam\Core\Architecture\Console\GraphCommand;
 use Sillbeam\Core\Architecture\Console\GraphView;
-use Sillbeam\Core\Architecture\Console\GraphvizRenderer;
+use Sillbeam\Core\Architecture\Console\SvgGraph;
+use Sillbeam\Core\Architecture\Console\SvgOutput;
 use Sillbeam\Core\Tests\Support\SourceWorkspace;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -30,8 +30,7 @@ final class GraphSvgTest extends TestCase
 
     public function testDefaultSvgUsesCwdAndRefusesOverwriteUnlessForced(): void
     {
-        $renderer = $this->renderer('echo \'<svg xmlns="http://www.w3.org/2000/svg"><text>ok</text></svg>\';');
-        $tester = new CommandTester(new GraphCommand($this->report(), $renderer));
+        $tester = new CommandTester(new GraphCommand($this->report()));
         $cwd = getcwd();
         self::assertNotFalse($cwd);
         chdir($this->source->directory);
@@ -57,47 +56,47 @@ final class GraphSvgTest extends TestCase
     public function testExplicitOutputTreatsShellCharactersAsLiteralPath(): void
     {
         $path = $this->source->directory.'/graph $(touch injected); ü.svg';
-        $tester = new CommandTester(new GraphCommand($this->report('violations'), $this->renderer('echo \'<svg xmlns="http://www.w3.org/2000/svg"></svg>\';')));
+        $tester = new CommandTester(new GraphCommand($this->report('violations')));
         self::assertSame(1, $tester->execute(['--format' => 'svg', '--output' => $path]));
         self::assertFileExists($path);
         self::assertFileDoesNotExist($this->source->directory.'/injected');
         self::assertStringContainsString($path, $tester->getDisplay());
     }
 
-    public function testRendererFailuresPreserveExistingArtifactAndUseStderr(): void
+    public function testMissingOutputDirectoriesAreCreatedWithRealSvg(): void
     {
-        $path = $this->source->directory.'/architecture.svg';
-        file_put_contents($path, 'keep');
-        foreach ([new GraphvizRenderer($this->source->directory.'/missing-dot'), $this->renderer('fwrite(STDERR, "failure"); echo "partial"; exit(7);'), $this->renderer('echo "not SVG";')] as $renderer) {
-            $tester = new CommandTester(new GraphCommand($this->report(), $renderer));
-            self::assertSame(4, $tester->execute(['--output' => $path, '--force' => true], ['capture_stderr_separately' => true]));
-            self::assertSame('', $tester->getDisplay());
-            self::assertNotSame('', $tester->getErrorOutput());
-            self::assertSame('keep', file_get_contents($path));
-            self::assertSame([], glob($this->source->directory.'/.sillbeam-svg-*'));
-        }
+        $path = $this->source->directory.'/docs/deep/architecture.svg';
+        $tester = new CommandTester(new GraphCommand($this->report()));
+        self::assertSame(0, $tester->execute(['--output' => $path]));
+        $xml = simplexml_load_file($path);
+        self::assertNotFalse($xml);
+        self::assertSame('svg', $xml->getName());
+        self::assertStringContainsString('Billing', (string) file_get_contents($path));
+        self::assertStringContainsString('Payments', (string) file_get_contents($path));
     }
 
-    public function testMissingRendererExplainsOptionalInstallation(): void
+    public function testSvgNeedsNeitherPathExecutablesNorProcessExecution(): void
     {
-        $tester = new CommandTester(new GraphCommand($this->report(), new GraphvizRenderer($this->source->directory.'/no-dot')));
-        self::assertSame(4, $tester->execute(['--output' => $this->source->directory.'/new.svg'], ['capture_stderr_separately' => true]));
-        self::assertStringContainsString('Graphviz', $tester->getErrorOutput());
-        self::assertStringContainsString('install', $tester->getErrorOutput());
-        self::assertFileDoesNotExist($this->source->directory.'/new.svg');
-        self::assertSame(4, $tester->execute(['--output' => $this->source->directory.'/new.svg'], ['capture_stderr_separately' => true, 'verbosity' => OutputInterface::VERBOSITY_QUIET]));
-        self::assertSame('', $tester->getDisplay());
-        self::assertSame('', $tester->getErrorOutput());
+        $path = $this->source->directory.'/without-tools.svg';
+        $originalPath = getenv('PATH');
+        putenv('PATH=');
+        try {
+            $tester = new CommandTester(new GraphCommand($this->report()));
+            self::assertSame(0, $tester->execute(['--output' => $path]));
+            self::assertFileExists($path);
+            self::assertNotFalse(simplexml_load_file($path));
+        } finally {
+            putenv(false === $originalPath ? 'PATH' : 'PATH='.$originalPath);
+        }
     }
 
     public function testOutputErrorsAndSymlinksNeverClobberTargets(): void
     {
-        $renderer = $this->renderer('echo \'<svg xmlns="http://www.w3.org/2000/svg"></svg>\';');
         $this->source->write('keep.svg', 'keep');
         symlink($this->source->directory.'/keep.svg', $this->source->directory.'/link.svg');
         symlink($this->source->directory.'/absent.svg', $this->source->directory.'/dangling.svg');
-        foreach (['missing/graph.svg', 'src', 'link.svg', 'dangling.svg'] as $path) {
-            $tester = new CommandTester(new GraphCommand($this->report(), $renderer));
+        foreach (['keep.svg/graph.svg', 'src', 'link.svg', 'dangling.svg'] as $path) {
+            $tester = new CommandTester(new GraphCommand($this->report()));
             self::assertSame(4, $tester->execute(['--output' => $this->source->directory.'/'.$path, '--force' => true]));
         }
         self::assertSame('keep', file_get_contents($this->source->directory.'/keep.svg'));
@@ -106,10 +105,15 @@ final class GraphSvgTest extends TestCase
 
     public function testConcurrentCreationIsNotOverwritten(): void
     {
-        $path = $this->source->directory.'/race.svg';
-        $renderer = $this->renderer('file_put_contents('.var_export($path, true).', "concurrent"); echo \'<svg xmlns="http://www.w3.org/2000/svg"></svg>\';');
-        $tester = new CommandTester(new GraphCommand($this->report(), $renderer));
-        self::assertSame(4, $tester->execute(['--output' => $path]));
+        $writer = new SvgOutput();
+        $path = $writer->destination($this->source->directory.'/race.svg', false);
+        file_put_contents($path, 'concurrent');
+        try {
+            $writer->write($path, (new SvgGraph())->render(GraphView::fromReport($this->report())), false);
+            self::fail('Concurrent file must not be replaced.');
+        } catch (\RuntimeException $error) {
+            self::assertStringContainsString('--force', $error->getMessage());
+        }
         self::assertSame('concurrent', file_get_contents($path));
         self::assertSame([], glob($this->source->directory.'/.sillbeam-svg-*'));
     }
@@ -134,60 +138,91 @@ final class GraphSvgTest extends TestCase
     {
         foreach (['valid' => 0, 'violations' => 1, 'unavailable' => 2] as $status => $code) {
             $path = $this->source->directory.'/'.$status.'.svg';
-            $tester = new CommandTester(new GraphCommand($this->report($status), $this->renderer('echo \'<svg xmlns="http://www.w3.org/2000/svg"></svg>\';')));
+            $tester = new CommandTester(new GraphCommand($this->report($status)));
             self::assertSame($code, $tester->execute(['--output' => $path]));
             self::assertFileExists($path);
-            $dot = (new DotGraph())->render(GraphView::fromReport($this->report($status)));
+            $svg = (string) file_get_contents($path);
+            self::assertNotFalse(simplexml_load_string($svg));
             if (0 !== $code) {
-                self::assertStringContainsString('NOT a validated runtime graph', $dot);
-                self::assertStringNotContainsString('state=active', $dot);
-                self::assertStringContainsString('state=unknown', $dot);
+                self::assertStringContainsString('NOT a validated runtime graph', $svg);
+                self::assertStringNotContainsString('state=active', $svg);
+                self::assertStringContainsString('state=unknown', $svg);
             }
         }
     }
 
-    public function testDotUsesQuotedLabelsAndSameDirectEdgesAsReport(): void
+    public function testSvgIsDeterministicEscapesLabelsAndPreservesDirectEdges(): void
     {
-        $view = GraphView::fromReport($this->report());
-        $dot = (new DotGraph())->render($view);
-        self::assertStringContainsString('m0001 -> m0002;', $dot);
-        self::assertStringContainsString('subgraph cluster_shared_scope', $dot);
-        self::assertStringNotContainsString('analysis_status [', $dot);
-        self::assertStringContainsString('label="Billing', $dot);
-        self::assertStringContainsString('tooltip="App\\\\Billing"', $dot);
         $data = $this->report()->data;
-        $data['modules'][0]['id'] = 'x" ]; injected [URL="https://evil"] // <tag> \\N';
-        $dot = (new DotGraph())->render(GraphView::fromReport(new ArchitectureReport($data)));
-        self::assertStringContainsString('x\\" ]; injected [URL=\\"https://evil\\"] // <tag> \\\\N', $dot);
+        $data['modules'][0]['id'] = 'Bälling <script>alert("x")</script> & \\\\\Name';
+        $view = GraphView::fromReport(new ArchitectureReport($data));
+        $svg = (new SvgGraph())->render($view);
+        self::assertNotFalse(simplexml_load_string($svg));
+        self::assertStringNotContainsString('<script>', $svg);
+        self::assertStringContainsString('&lt;script&gt;', $svg);
+        self::assertStringContainsString('data-source="m0001" data-target="m0002"', $svg);
+        self::assertSame(1, substr_count($svg, 'class="dependency declared"'));
+        self::assertSame($svg, (new SvgGraph())->render($view));
+        self::assertStringContainsString('App\\Billing', $svg);
     }
 
-    public function testRealGraphvizWhenAvailable(): void
+    public function testSvgRetainsObservedCycleDisabledAndUnknownEvidence(): void
     {
-        $available = false;
-        foreach (explode(\PATH_SEPARATOR, (string) getenv('PATH')) as $directory) {
-            if (is_executable($directory.'/dot')) {
-                $available = true;
-                break;
-            }
-        }
-        if (!$available) {
-            self::markTestSkipped('Optional Graphviz dot is not installed; controlled subprocess tests still run.');
-        }
-        $svg = (new GraphvizRenderer())->render((new DotGraph())->render(GraphView::fromReport($this->report())));
+        $data = $this->report('violations')->data;
+        $data['modules'][0]['enabled'] = false;
+        $data['modules'][0]['observed_dependencies'] = ['App\\Unknown'];
+        $data['findings'][] = ['rule' => 'dependency.cycle', 'message' => 'Existing cycle finding', 'context' => ['cycle' => 'App\\Billing, App\\Payments']];
+        $svg = (new SvgGraph())->render(GraphView::fromReport(new ArchitectureReport($data)));
         $xml = simplexml_load_string($svg);
         self::assertNotFalse($xml);
-        self::assertSame('svg', $xml->getName());
-        self::assertStringContainsString('Billing', $svg);
-        self::assertStringContainsString('m0001', $svg);
+        $xml->registerXPathNamespace('s', 'http://www.w3.org/2000/svg');
+        foreach ([
+            ['//s:path[@class="dependency declared" or @class="dependency observed"]', 2],
+            ['//s:path[@class="dependency observed"][@stroke-dasharray="6 4"]', 1],
+            ['//s:g[@class="module"]/s:rect[@stroke="#c22"]', 2],
+            ['//s:g[@class="module"]/s:rect[@fill="#eee"]', 1],
+        ] as [$query, $count]) {
+            $matches = $xml->xpath($query);
+            self::assertIsArray($matches);
+            self::assertCount($count, $matches);
+        }
+        self::assertStringContainsString('unresolved module target', $svg);
+        self::assertStringContainsString('state=unknown', $svg);
+        self::assertStringNotContainsString('state=active', $svg);
     }
 
-    private function renderer(string $body): GraphvizRenderer
+    public function testExportWorksWithProcessFunctionsDisabled(): void
     {
-        $path = 'fake-dot-'.bin2hex(random_bytes(4));
-        $this->source->write($path, '#!'.\PHP_BINARY."\n<?php if ([\"-Tsvg\"] !== array_slice(\$argv, 1)) { exit(90); } if (!str_starts_with(stream_get_contents(STDIN), \"digraph architecture {\")) { exit(91); } ".$body);
-        chmod($this->source->directory.'/'.$path, 0700);
+        $autoload = var_export(\dirname(__DIR__, 2).'/vendor/autoload.php', true);
+        $data = var_export($this->report()->data, true);
+        $path = $this->source->directory.'/disabled-processes.svg';
+        $this->source->write('export.php', '<?php require '.$autoload.'; $report = new \\Sillbeam\\Core\\Architecture\\ArchitectureReport('.$data.'); $command = new \\Sillbeam\\Core\\Architecture\\Console\\GraphCommand($report); $tester = new \\Symfony\\Component\\Console\\Tester\\CommandTester($command); exit($tester->execute(["--output" => '.var_export($path, true).']));');
+        $process = proc_open([\PHP_BINARY, '-d', 'disable_functions=proc_open,exec,shell_exec,system,passthru,popen', $this->source->directory.'/export.php'], [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']], $pipes);
+        self::assertIsResource($process);
+        fclose($pipes[0]);
+        $stdout = stream_get_contents($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[1]);
+        fclose($pipes[2]);
+        self::assertSame(0, proc_close($process), $stdout.$stderr);
+        self::assertFileExists($path);
+        self::assertNotFalse(simplexml_load_file($path));
+    }
 
-        return new GraphvizRenderer($this->source->directory.'/'.$path);
+    public function testWideLabelsStayWithinTheNodeTextArea(): void
+    {
+        $data = $this->report()->data;
+        $data['modules'][0]['id'] = str_repeat('w', 72);
+        $svg = (new SvgGraph())->render(GraphView::fromReport(new ArchitectureReport($data)));
+        $xml = simplexml_load_string($svg);
+        self::assertNotFalse($xml);
+        $xml->registerXPathNamespace('s', 'http://www.w3.org/2000/svg');
+        $texts = $xml->xpath('//s:g[@id="m0001"]/s:text');
+        self::assertIsArray($texts);
+        foreach ($texts as $text) {
+            self::assertTrue(isset($text['textLength']), 'Text must have an explicit bounded SVG width.');
+            self::assertLessThanOrEqual(296, (float) $text['textLength']);
+        }
     }
 
     private function report(string $status = 'valid'): ArchitectureReport
