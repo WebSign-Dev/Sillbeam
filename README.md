@@ -59,7 +59,7 @@ composer require websign-dev/sillbeam-core
 Composer selects an available compatible release. This checkout prepares **v0.3.0**;
 a `:^0.3.0` constraint requires that release to be published. See
 [release status](#release-status). Package installation and Flex recipe availability
-are separate. The [existing Flex recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/flex-recipe/README.md) registers the bundle
+are separate. The [existing Flex recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md) registers the bundle
 and one route import when installed through your configured endpoint; it does not
 edit `bin/console` or `services.yaml`. Public Contrib approval is a separate step.
 
@@ -189,7 +189,7 @@ Manual workflow dispatch remains available. Configured CI and historical local
 results do not establish a current remote run; see the
 [verification scope](docs/releases/0.3.0.md#verification-scope-and-release-flow).
 
-The compatible [Flex recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/flex-recipe/README.md) remains under `0.2/`. Its public availability is separate from the package release; manual integration remains supported. No tag, push, Packagist publication or Recipes Contrib submission is performed by the acceptance checks. Final release authorization belongs to the maintainer.
+The compatible [Flex recipe](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md) is prepared under `0.3/` for the Contrib submission. Its public availability is separate from the package release; manual integration remains supported. No tag, push, Packagist publication or Recipes Contrib submission is performed by the acceptance checks. Final release authorization belongs to the maintainer.
 
 The [v0.2 migration guide](docs/migration/0.2.0.md) remains the historical guide for the earlier package/namespace rename. Historical reports retain their original findings and scope.
 

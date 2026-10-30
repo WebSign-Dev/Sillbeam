@@ -2,8 +2,8 @@
 
 Use the [getting-started guide](getting-started.md) for the complete Composer →
 Console adapter → Doctor → first `/hello` module path for 0.3.0. The compatible
-recipe source remains [flex-recipe/websign-dev/sillbeam-core/0.2](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/flex-recipe/README.md):
-`0.2` is its minimum recipe version, not a separate installation system.
+recipe source for the upcoming Contrib submission is [flex-recipe/websign-dev/sillbeam-core/0.3](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md):
+`0.3` is its minimum recipe version, not a separate installation system.
 
 The manifest performs two tasks when the developer installs this recipe:
 
@@ -24,12 +24,13 @@ composer require websign-dev/sillbeam-core
 ```
 
 This installs an available compatible package version. For 0.3.0 release consumers,
-use `:^0.3.0` once published. Public recipe installation additionally requires
+use `:^0.3.0`. Public recipe installation additionally requires
 Contrib approval, an eligible recipe on the configured endpoint, permission for
 the Flex plugin and the application's decision to allow Contrib recipes
 (`composer config extra.symfony.allow-contrib true`). None of these is implied by
 package installation or a package tag. See [release status](../../README.md#release-status).
-The repository tests use a local endpoint and simulated version; they do not
+The repository tests use a local endpoint with either a simulated local version or
+`SILLBEAM_TEST_RELEASED=1` for the published 0.3.0 package; they do not
 publish or submit anything. Check Composer output and `symfony.lock` rather than
 assuming the recipe ran.
 
@@ -81,4 +82,4 @@ application-owned files and manually created package options are retained.
 After removal, explicitly remove `sillbeam` options from package imports, restore
 the Console Application to Symfony and, if selected, switch an optional
 `SillbeamKernel` subclass back to Symfony. These are manual application decisions.
-See the [recipe source and submission notes](https://github.com/WebSign-Dev/sillbeam-core/blob/3f891afbff43a0ab48af4ec5991f19aa59fe80b0/flex-recipe/README.md).
+See the [recipe source and submission notes](https://github.com/WebSign-Dev/sillbeam-core/blob/main/flex-recipe/README.md).

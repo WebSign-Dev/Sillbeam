@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Symfony\Component\Yaml\Yaml;
 
 $repositoryDirectory = dirname(__DIR__);
-$recipeDirectory = $repositoryDirectory.'/flex-recipe/websign-dev/sillbeam-core/0.2';
+$recipeDirectory = $repositoryDirectory.'/flex-recipe/websign-dev/sillbeam-core/0.3';
 $autoload = $repositoryDirectory.'/vendor/autoload.php';
 
 if (!is_file($autoload)) {
@@ -77,13 +77,13 @@ try {
             ],
         ],
     ];
-    writeJson($endpointDirectory.'/websign-dev.sillbeam-core.0.2.json', $recipeResponse);
+    writeJson($endpointDirectory.'/websign-dev.sillbeam-core.0.3.json', $recipeResponse);
 
     $endpointPort = availablePort();
     $endpointBaseUrl = sprintf('http://127.0.0.1:%d', $endpointPort);
     $endpoint = [
         'recipes' => [
-            'websign-dev/sillbeam-core' => ['0.2'],
+            'websign-dev/sillbeam-core' => ['0.3'],
         ],
         'branch' => 'main',
         'is_contrib' => true,
@@ -110,7 +110,7 @@ try {
     writeJson($applicationDirectory.'/composer.json', [
         'name' => 'sillbeam/flex-recipe-test',
         'type' => 'project',
-        'repositories' => [[
+        'repositories' => '1' === getenv('SILLBEAM_TEST_RELEASED') ? [] : [[
             'type' => 'path',
             'url' => $packageDirectory,
             'options' => ['symlink' => false, 'versions' => ['websign-dev/sillbeam-core' => '0.3.0']],
@@ -218,7 +218,7 @@ PHP,
     assertSame(['sillbeam' => ['resource' => '.', 'type' => 'sillbeam']], $routes, 'The Sillbeam route loader was not installed.');
 
     $lock = decodeJson($applicationDirectory.'/symfony.lock');
-    assertSame('0.2', $lock['websign-dev/sillbeam-core']['recipe']['version'] ?? null, 'The recipe is missing from symfony.lock.');
+    assertSame('0.3', $lock['websign-dev/sillbeam-core']['recipe']['version'] ?? null, 'The recipe is missing from symfony.lock.');
     $installedFiles = $lock['websign-dev/sillbeam-core']['files'] ?? [];
     sort($installedFiles);
     assertSame([

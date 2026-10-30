@@ -13,7 +13,7 @@ the Composer package is already registered on Packagist.
 Recipe layout:
 
 ```text
-websign-dev/sillbeam-core/0.2/
+websign-dev/sillbeam-core/0.3/
 ├── manifest.json
 ├── post-install.txt
 └── config/
@@ -42,7 +42,9 @@ SILLBEAM_TEST_FRESH=1 SILLBEAM_TEST_DOCTRINE=1 composer test:flex-recipe
 ```
 
 The check builds a local Flex endpoint from this source and installs a simulated
-0.3.0 Core package into a temporary Symfony consumer through real Composer. By
+0.3.0 Core package into a temporary Symfony consumer through real Composer. Set
+`SILLBEAM_TEST_RELEASED=1` to install the actual public 0.3.0 package from Packagist
+instead of the local path repository. By
 default Symfony is installed and booted before adding Core; `SILLBEAM_TEST_FRESH=1`
 resolves the fresh consumer in one install. It diagnoses missing integration and
 service overlap, applies explicit test-authored corrections, checks read-only Doctor
@@ -55,7 +57,7 @@ The PHP package cannot load its own recipe. Until the recipe is merged into
 Symfony Recipes Contrib, consumers either register the bundle and route import manually or use
 their own Flex endpoint containing this recipe.
 
-Install an available compatible package with `composer require websign-dev/sillbeam-core`. For 0.3.0 release consumers, `:^0.3.0` requires that release to be published. See [release status](../README.md#release-status). The `0.2/` directory is the compatible minimum recipe version and remains used for this onboarding update. Recipe availability is independent of package installation; manual setup remains supported.
+Install an available compatible package with `composer require websign-dev/sillbeam-core`. The 0.3.0 release is published; use `composer require websign-dev/sillbeam-core:^0.3.0`. See [release status](../README.md#release-status). The `0.3/` directory is the minimum supported package version for this submission. Recipe availability is independent of package installation; manual setup remains supported.
 
 The package declares `type: symfony-bundle`, following [Symfony bundle installation guidance](https://symfony.com/doc/current/bundles/best_practices.html#installation). No semantically empty file is created under `config/packages`, as required by the [recipe checklist](https://github.com/symfony/recipes/blob/main/README.rst#recipe-checklist).
 
@@ -71,11 +73,10 @@ The recipe never edits `bin/console` or `services.yaml`.
 
 ## Submit to symfony/recipes-contrib
 
-1. `websign-dev/sillbeam-core` is already registered on Packagist. Once the stable
-   Core tag is available, verify that Packagist lists a matching released version
-   (at least 0.2.0) before submitting the recipe. The package must retain its MIT
+1. `websign-dev/sillbeam-core` is already registered on Packagist. Verify that Packagist still lists the released
+   0.3.0 version before submitting the recipe. The package must retain its MIT
    license and `symfony-bundle` type. A local path repository does not prove this.
-2. Copy only `websign-dev/sillbeam-core/0.2/` from this directory into a checkout
+2. Copy only `websign-dev/sillbeam-core/0.3/` from this directory into a checkout
    of `symfony/recipes-contrib`, preserving that directory structure. Do not copy
    this README, tests, endpoint fixtures or the PHP package source.
 3. Run the current official `symfony-tools/recipes-checker` from that checkout:
@@ -93,7 +94,7 @@ The recipe never edits `bin/console` or `services.yaml`.
 Publishing a compatible Core package tag alone does **not** activate this recipe. Stable
 package-version availability, recipe acceptance and endpoint availability are
 separate steps. Package registration is complete. Until recipe approval, use
-manual installation or an explicitly configured private endpoint. The `0.2` directory describes the minimum recipe version; Flex chooses
+manual installation or an explicitly configured private endpoint. The `0.3` directory describes the minimum recipe version; Flex chooses
 an eligible recipe independently of the package's own release archive.
 
 ## Source format and ownership

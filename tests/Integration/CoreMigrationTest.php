@@ -31,7 +31,7 @@ final class CoreMigrationTest extends TestCase
         self::assertSame('websign-dev/sillbeam-core', $composer['name']);
         self::assertSame(['Sillbeam\\Core\\' => 'src/'], $composer['autoload']['psr-4']);
         self::assertSame('https://github.com/WebSign-Dev/sillbeam-core', $composer['support']['source']);
-        $recipe = json_decode((string) file_get_contents($root.'/flex-recipe/websign-dev/sillbeam-core/0.2/manifest.json'), true, flags: \JSON_THROW_ON_ERROR);
+        $recipe = json_decode((string) file_get_contents($root.'/flex-recipe/websign-dev/sillbeam-core/0.3/manifest.json'), true, flags: \JSON_THROW_ON_ERROR);
         self::assertSame(['Sillbeam\\Core\\SillbeamCoreBundle' => ['all']], $recipe['bundles']);
     }
 }

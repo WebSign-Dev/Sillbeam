@@ -11,7 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 
 final class FlexRecipeTest extends TestCase
 {
-    private const RECIPE_DIRECTORY = __DIR__.'/../../flex-recipe/websign-dev/sillbeam-core/0.2';
+    private const RECIPE_DIRECTORY = __DIR__.'/../../flex-recipe/websign-dev/sillbeam-core/0.3';
 
     public function testRecipeHasRecipesContribLayoutAndRegistersOnlySillbeamCoreBundle(): void
     {
@@ -67,7 +67,7 @@ final class FlexRecipeTest extends TestCase
         $instructions = $this->read('post-install.txt');
         self::assertLessThan(strpos($instructions, 'php bin/console sillbeam:doctor'), strpos($instructions, 'use Sillbeam\\Core\\Console\\Application;'));
         self::assertStringContainsString('config/routes/sillbeam.yaml', $instructions);
-        self::assertStringContainsString('docs/guides/getting-started.md', $instructions);
+        self::assertStringContainsString('https://github.com/WebSign-Dev/sillbeam-core/blob/v0.3.0/docs/guides/getting-started.md', $instructions);
         self::assertStringContainsString('Never overwrite', $instructions);
         self::assertStringNotContainsString('sillbeam:install', $instructions);
     }

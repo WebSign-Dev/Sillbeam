@@ -1,5 +1,8 @@
 # Flex recipe verification — 2026-10-25
 
+Historical record: the source has since moved to `0.3/`. See the
+[current 0.3 submission verification](flex-recipe-submission-0.3.md).
+
 The source at `flex-recipe/websign-dev/sillbeam-core/0.2/` is prepared for an
 external Recipes Contrib submission. No publication, remote branch, external PR,
 merge or release tag was created. Production PHP sources and architecture

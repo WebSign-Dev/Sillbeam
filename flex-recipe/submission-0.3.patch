@@ -1,0 +1,44 @@
+diff --git a/websign-dev/sillbeam-core/0.3/config/routes/sillbeam.yaml b/websign-dev/sillbeam-core/0.3/config/routes/sillbeam.yaml
+new file mode 100644
+index 0000000..c03ea4c
+--- /dev/null
++++ b/websign-dev/sillbeam-core/0.3/config/routes/sillbeam.yaml
+@@ -0,0 +1,3 @@
++sillbeam:
++    resource: .
++    type: sillbeam
+diff --git a/websign-dev/sillbeam-core/0.3/manifest.json b/websign-dev/sillbeam-core/0.3/manifest.json
+new file mode 100644
+index 0000000..4323513
+--- /dev/null
++++ b/websign-dev/sillbeam-core/0.3/manifest.json
+@@ -0,0 +1,10 @@
++{
++    "bundles": {
++        "Sillbeam\\Core\\SillbeamCoreBundle": [
++            "all"
++        ]
++    },
++    "copy-from-recipe": {
++        "config/": "%CONFIG_DIR%/"
++    }
++}
+diff --git a/websign-dev/sillbeam-core/0.3/post-install.txt b/websign-dev/sillbeam-core/0.3/post-install.txt
+new file mode 100644
+index 0000000..632e4f7
+--- /dev/null
++++ b/websign-dev/sillbeam-core/0.3/post-install.txt
+@@ -0,0 +1,13 @@
++  1. In bin/console use Sillbeam\Core\Console\Application; instead of Symfony's Console Application.
++     Keep the existing bootstrap and Kernel, including import aliases; this enables Doctor before boot.
++     Never overwrite application files or force a recipe reinstall to apply these instructions.
++  2. Run php bin/console sillbeam:doctor and review action required and not verified checks.
++     Confirm the bundle in config/bundles.php and exactly one type: sillbeam route import
++     in config/routes/sillbeam.yaml (or your existing route configuration).
++  3. In services.yaml append Module and Project discovery roots to existing resource exclusions.
++     Preserve existing exclusions and explicit services; custom roots need their actual paths.
++     Make the reviewed changes yourself, then rerun php bin/console sillbeam:doctor.
++  4. Create a descriptor: php bin/console sillbeam:make:module Hello
++     Add the Greeting service and /hello controller from:
++     https://github.com/WebSign-Dev/sillbeam-core/blob/v0.3.0/docs/guides/getting-started.md
++     Run php bin/console sillbeam:architecture, then php bin/console debug:router hello.
